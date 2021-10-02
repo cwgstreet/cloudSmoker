@@ -58,6 +58,7 @@ class CWG_LCD {
 
 class CWG_Encoder {
    public:
+    void begin();
     void functionTest();
 
    private:

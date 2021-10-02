@@ -1,14 +1,14 @@
 /* *************************************************************************************
- *    CloudSmoker          
- *    V1.0_UNO   (coded for UNO before porting to ESP8266)
+ *    CloudSmoker_uno          
+ *    V1.0_UNO   (coded for UNO Rev3 before porting to ESP8266)
  *    Carl Greenstreet, Aug 2021,   
- *    Licence: MIT (do what you want with this but no functionality guarantees!)
+ *    Licence: MIT (do what you want with this code but no functionality guarantees!)
  *    
  *    Purpose:  CloudSmoker Barbecue Temperature Monitor 
  *                (LCD information display, menu, setup and operational routines)
  *    
- *    Project Repository:  https://github.com/cwgstreet/Cloud-Smoker-BBQ-Monitor
- *    Project Wiki:        https://github.com/cwgstreet/cloudSmoker/wiki 
+ *    Project Repository:  https://github.com/cwgstreet/cloudSmoker 
+ *    Project Wiki:        hhttps://github.com/cwgstreet/cloudSmoker/wiki
  *    
  *    Code intended to work with the following hardware
  *      ESP8266-V07
@@ -116,6 +116,8 @@ const int LCD_ROWS = 2;
 int ledState = LOW;
 #endif  //DEBUG
 
+CWG_Encoder rotary_encoder;
+
 void setup() {
 
     NewEncoder::EncoderState state;
@@ -137,7 +139,7 @@ void setup() {
 #endif   
 
 
-
+rotary_encoder.begin(); 
 
     // Bounce2 Library Button object set-up
     //button.attach(BUTTON_PIN, INPUT_PULLUP);  // Use internal pull-up
@@ -178,8 +180,8 @@ void loop() {
 
 #ifdef DEBUG
     // rotary encoder function test  
-    CWG_Encoder encoder;
-    encoder.functionTest();
+ 
+    rotary_encoder.functionTest();
 #endif 
 
     //button.update();  // update button press state; must call every loop

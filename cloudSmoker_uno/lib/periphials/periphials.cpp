@@ -60,6 +60,28 @@ void CWG_LCD::functionTest() {
     //  end LCD function test
 }
 
+// set-up for Rotary Encoder.  Place in set-up, not loop
+void CWG_Encoder::begin() {
+  NewEncoder::EncoderState state;
+
+  //Serial.begin(74880);
+  delay(2000);
+  Serial.println("Starting");
+
+  if (!encoder.begin()) {
+    Serial.println("Encoder Failed to Start. Check pin assignments and available interrupts. Aborting.");
+    while (1) {
+      yield();
+    }
+  } else {
+    encoder.getState(state);
+    Serial.print("Encoder Successfully Started at value = ");
+    prevEncoderValue = state.currentValue;
+    Serial.println(prevEncoderValue);
+  }
+}
+
+
 // encoder.function test to determine if rotary encoder is working properly.  Place function call in loop, not setup
 void CWG_Encoder::functionTest() {
     int16_t currentValue;
