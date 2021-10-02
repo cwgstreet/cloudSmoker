@@ -1,0 +1,11 @@
+EESchema-LIBRARY Version 2.3
+#
+# LOGO
+# pixmap size w = 252, h = 189
+#
+DEF LOGO G 0 40 Y Y 1 F N
+F0 "#G" 0 -1275 60 H I C CNN
+F1 "LOGO" 0 1275 60 H I C CNN
+DRAW
+ENDDRAW
+ENDDEF

@@ -1,0 +1,478 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 4
+Title "CloudSmoker - Wifi enabled BBQ Temperature Monitor"
+Date "2021-01-01"
+Rev "1"
+Comp "Carl Greenstreet"
+Comment1 ""
+Comment2 "Main (top) sheet"
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L Connector:Barrel_Jack_Switch J1
+U 1 1 59B9C571
+P 1200 1400
+F 0 "J1" H 1200 1610 50  0000 C CNN
+F 1 "Barrel_Jack" H 1200 1200 50  0000 C CNN
+F 2 "" H 1250 1360 50  0001 C CNN
+F 3 "" H 1250 1360 50  0001 C CNN
+	1    1200 1400
+	1    0    0    -1  
+$EndComp
+$Comp
+L device:C C1
+U 1 1 59B9C9F5
+P 2350 1550
+F 0 "C1" H 2375 1650 50  0000 L CNN
+F 1 "22uF" H 2375 1450 50  0000 L CNN
+F 2 "" H 2388 1400 50  0001 C CNN
+F 3 "" H 2350 1550 50  0001 C CNN
+	1    2350 1550
+	1    0    0    -1  
+$EndComp
+$Comp
+L power1:GND #PWR05
+U 1 1 59B9CA3D
+P 2350 1750
+F 0 "#PWR05" H 2350 1500 50  0001 C CNN
+F 1 "GND" H 2350 1600 50  0000 C CNN
+F 2 "" H 2350 1750 50  0001 C CNN
+F 3 "" H 2350 1750 50  0001 C CNN
+	1    2350 1750
+	1    0    0    -1  
+$EndComp
+$Comp
+L power1:GND #PWR01
+U 1 1 59B9CD04
+P 1000 6400
+F 0 "#PWR01" H 1000 6150 50  0001 C CNN
+F 1 "GND" H 1000 6250 50  0000 C CNN
+F 2 "" H 1000 6400 50  0001 C CNN
+F 3 "" H 1000 6400 50  0001 C CNN
+	1    1000 6400
+	1    0    0    -1  
+$EndComp
+$Comp
+L power1:PWR_FLAG #FLG01
+U 1 1 59B9CD34
+P 1000 6150
+F 0 "#FLG01" H 1000 6225 50  0001 C CNN
+F 1 "PWR_FLAG" H 1000 6300 50  0000 C CNN
+F 2 "" H 1000 6150 50  0001 C CNN
+F 3 "" H 1000 6150 50  0001 C CNN
+	1    1000 6150
+	1    0    0    -1  
+$EndComp
+$Comp
+L power1:PWR_FLAG #FLG02
+U 1 1 59B9CD50
+P 1500 6400
+F 0 "#FLG02" H 1500 6475 50  0001 C CNN
+F 1 "PWR_FLAG" H 1500 6550 50  0000 C CNN
+F 2 "" H 1500 6400 50  0001 C CNN
+F 3 "" H 1500 6400 50  0001 C CNN
+	1    1500 6400
+	-1   0    0    1   
+$EndComp
+$Sheet
+S 3200 3900 1400 1150
+U 59BAB80D
+F0 "ESP8266-07" 60
+F1 "ESP8266-07.sch" 60
+F2 "SDA" B R 4600 4850 60 
+F3 "SCL" B R 4600 5000 60 
+F4 "MUX" I R 4600 4400 60 
+F5 "CTRL-A" O R 4600 4250 60 
+F6 "CTL-B" O R 4600 4100 60 
+F7 "SW" I R 4600 3950 60 
+F8 "CLK" I R 4600 4700 60 
+F9 "DT" I R 4600 4550 60 
+$EndSheet
+$Sheet
+S 7200 3100 1450 1100
+U 59BAB9BF
+F0 "Thermistors" 60
+F1 "Thermstors.sch" 60
+F2 "CTL-A" I L 7200 4050 60 
+F3 "MUX" O R 8650 3450 60 
+F4 "CTL-B" I L 7200 3850 60 
+$EndSheet
+$Sheet
+S 7200 4850 1450 1100
+U 59BABB2A
+F0 "LCD" 60
+F1 "LCD.sch" 60
+F2 "SCL" I R 8650 5700 60 
+F3 "SDA" I R 8650 5500 60 
+F4 "CLK" I R 8650 4950 60 
+F5 "DT" I R 8650 5100 60 
+F6 "SW" I R 8650 5250 60 
+$EndSheet
+$Comp
+L power1:+5V #PWR02
+U 1 1 59B9CD1C
+P 1500 6150
+F 0 "#PWR02" H 1500 6000 50  0001 C CNN
+F 1 "+5V" H 1500 6290 50  0000 C CNN
+F 2 "" H 1500 6150 50  0001 C CNN
+F 3 "" H 1500 6150 50  0001 C CNN
+	1    1500 6150
+	1    0    0    -1  
+$EndComp
+$Comp
+L power1:PWR_FLAG #FLG03
+U 1 1 59BABC00
+P 2000 6400
+F 0 "#FLG03" H 2000 6475 50  0001 C CNN
+F 1 "PWR_FLAG" H 2000 6550 50  0000 C CNN
+F 2 "" H 2000 6400 50  0001 C CNN
+F 3 "" H 2000 6400 50  0001 C CNN
+	1    2000 6400
+	-1   0    0    1   
+$EndComp
+$Comp
+L power1:+3.3V #PWR04
+U 1 1 59BABBE5
+P 2000 6150
+F 0 "#PWR04" H 2000 6000 50  0001 C CNN
+F 1 "+3.3V" H 2000 6290 50  0000 C CNN
+F 2 "" H 2000 6150 50  0001 C CNN
+F 3 "" H 2000 6150 50  0001 C CNN
+	1    2000 6150
+	1    0    0    -1  
+$EndComp
+Text Notes 750  1750 0    47   ~ 0
+Centre positive polarity
+Text GLabel 3200 4300 2    60   Input ~ 0
+GND
+Text GLabel 3200 4100 2    60   Input ~ 0
++3.3V
+Text GLabel 7200 5100 2    60   Input ~ 0
++3.3V
+Text GLabel 7200 5300 2    60   Input ~ 0
++5V
+Text GLabel 7200 5500 2    60   Input ~ 0
+GND
+Text Label 9350 3450 2    60   ~ 0
+MUX
+Text Label 6550 3850 0    60   ~ 0
+CTL-B
+Text Label 6550 4050 0    60   ~ 0
+CTL-A
+Text Label 6550 3600 0    60   ~ 0
+GND
+Text Label 6550 3350 0    60   ~ 0
++3.3V
+Text Label 6550 5500 0    60   ~ 0
+GND
+Text Label 6550 5100 0    60   ~ 0
++3.3V
+Text Label 6550 5300 0    60   ~ 0
++5V
+Text Label 9350 4950 2    60   ~ 0
+CLK
+Text Label 9350 5100 2    60   ~ 0
+DT
+Text Label 9350 5250 2    60   ~ 0
+SW
+Text Label 9350 5500 2    60   ~ 0
+SDA
+Text Label 9350 5700 2    60   ~ 0
+SCL
+Text Label 5300 4850 2    60   ~ 0
+SDA
+Text Label 5300 5000 2    60   ~ 0
+SCL
+Text Label 5300 4550 2    60   ~ 0
+DT
+Text Label 5300 4700 2    60   ~ 0
+CLK
+Text Label 5300 4250 2    60   ~ 0
+CTL-A
+Text Label 5300 4400 2    60   ~ 0
+MUX
+Text Label 5300 3950 2    60   ~ 0
+SW
+Text Label 5300 4100 2    60   ~ 0
+CTL-B
+Text Label 2550 4100 0    60   ~ 0
++3.3V
+Text Label 2550 4300 0    60   ~ 0
+GND
+$Comp
+L Connector_Generic:Conn_01x03 J2
+U 1 1 59DEBC06
+P 5600 1700
+F 0 "J2" H 5600 1900 50  0000 C CNN
+F 1 "Conn_01x03" H 5600 1500 50  0000 C CNN
+F 2 "" H 5600 1700 50  0001 C CNN
+F 3 "" H 5600 1700 50  0001 C CNN
+	1    5600 1700
+	-1   0    0    -1  
+$EndComp
+$Comp
+L cg_off-board:5V-3V3_StepDown_module_off-board U1
+U 1 1 59DEBC0D
+P 4200 1700
+F 0 "U1" H 4200 2000 50  0000 C CNN
+F 1 "5V-3V3_StepDown_module_off-board" H 4200 1440 50  0000 C CNN
+F 2 "" H 4100 1860 50  0001 C CNN
+F 3 "" H 4200 1960 50  0001 C CNN
+	1    4200 1700
+	1    0    0    -1  
+$EndComp
+Text GLabel 6150 1600 2    60   Input ~ 0
++5V
+Text GLabel 8500 1450 2    60   Output ~ 0
++3.3V
+Text GLabel 6150 1800 2    60   Input ~ 0
+GND
+Text Notes 3700 1200 0    60   ~ 12
+Off-Board Module
+$Comp
+L device:L L1
+U 1 1 59DEBC22
+P 6900 1450
+F 0 "L1" V 6850 1450 50  0000 C CNN
+F 1 "10 uH" V 6975 1450 50  0000 C CNN
+F 2 "" H 6900 1450 50  0001 C CNN
+F 3 "" H 6900 1450 50  0001 C CNN
+	1    6900 1450
+	0    1    1    0   
+$EndComp
+$Comp
+L device:R R1
+U 1 1 59DEBC29
+P 7450 1450
+F 0 "R1" V 7530 1450 50  0000 C CNN
+F 1 "10" V 7450 1450 50  0000 C CNN
+F 2 "" V 7380 1450 50  0001 C CNN
+F 3 "" H 7450 1450 50  0001 C CNN
+	1    7450 1450
+	0    1    1    0   
+$EndComp
+$Comp
+L device:C C2
+U 1 1 59DEBC30
+P 7800 1850
+F 0 "C2" H 7825 1950 50  0000 L CNN
+F 1 "0.1uF" H 7825 1750 50  0000 L CNN
+F 2 "" H 7838 1700 50  0001 C CNN
+F 3 "" H 7800 1850 50  0001 C CNN
+	1    7800 1850
+	1    0    0    -1  
+$EndComp
+$Comp
+L power1:GND #PWR07
+U 1 1 59DEBC3C
+P 8500 2300
+F 0 "#PWR07" H 8500 2050 50  0001 C CNN
+F 1 "GND" H 8500 2150 50  0000 C CNN
+F 2 "" H 8500 2300 50  0001 C CNN
+F 3 "" H 8500 2300 50  0001 C CNN
+	1    8500 2300
+	1    0    0    -1  
+$EndComp
+Text Notes 6750 1200 0    60   ~ 0
+RLC Lowpass Power Filtering 
+$Comp
+L device:CP C3
+U 1 1 59DEBC50
+P 8200 1850
+F 0 "C3" H 8225 1950 50  0000 L CNN
+F 1 "10uF" H 8225 1750 50  0000 L CNN
+F 2 "" H 8238 1700 50  0001 C CNN
+F 3 "" H 8200 1850 50  0001 C CNN
+	1    8200 1850
+	1    0    0    -1  
+$EndComp
+Text Notes 4750 2650 0    60   ~ 12
+5V->3.3V stepdown and power regulation / stabilisation 
+$Comp
+L power1:+3V3 #PWR06
+U 1 1 59DEC909
+P 6550 1700
+F 0 "#PWR06" H 6550 1550 50  0001 C CNN
+F 1 "+3V3" H 6550 1840 50  0000 C CNN
+F 2 "" H 6550 1700 50  0001 C CNN
+F 3 "" H 6550 1700 50  0001 C CNN
+	1    6550 1700
+	1    0    0    -1  
+$EndComp
+Text GLabel 7200 3350 2    60   Input ~ 0
++3.3V
+Text GLabel 7200 3600 2    60   Input ~ 0
+GND
+Text Notes 1900 5950 0    39   Italic 0
+Filtered
+Text Notes 6450 1800 0    39   Italic 0
+Unfiltered (in)
+Text Notes 4700 1550 0    51   ~ 10
+Wired connections
+Text GLabel 2700 1300 2    60   Output ~ 0
++5V
+Wire Wire Line
+	1500 1500 1600 1500
+Wire Wire Line
+	1500 1400 1600 1400
+Wire Wire Line
+	1600 1400 1600 1500
+Connection ~ 1600 1500
+Wire Wire Line
+	1700 1500 1700 1750
+Wire Wire Line
+	2350 1700 2350 1750
+Wire Wire Line
+	2350 1400 2350 1300
+Wire Wire Line
+	1000 6150 1000 6400
+Wire Wire Line
+	1500 6150 1500 6400
+Wire Wire Line
+	2000 6400 2000 6150
+Wire Wire Line
+	8650 3450 9350 3450
+Wire Wire Line
+	7200 3850 6550 3850
+Wire Wire Line
+	7200 4050 6550 4050
+Wire Wire Line
+	7200 3600 6550 3600
+Wire Wire Line
+	7200 3350 6550 3350
+Wire Wire Line
+	7200 5500 6550 5500
+Wire Wire Line
+	7200 5100 6550 5100
+Wire Wire Line
+	7200 5300 6550 5300
+Wire Wire Line
+	8650 4950 9350 4950
+Wire Wire Line
+	8650 5100 9350 5100
+Wire Wire Line
+	8650 5250 9350 5250
+Wire Wire Line
+	8650 5500 9350 5500
+Wire Wire Line
+	8650 5700 9350 5700
+Wire Wire Line
+	4600 4850 5300 4850
+Wire Wire Line
+	4600 5000 5300 5000
+Wire Wire Line
+	4600 4550 5300 4550
+Wire Wire Line
+	4600 4700 5300 4700
+Wire Wire Line
+	4600 4250 5300 4250
+Wire Wire Line
+	4600 4400 5300 4400
+Wire Wire Line
+	4600 3950 5300 3950
+Wire Wire Line
+	4600 4100 5300 4100
+Wire Wire Line
+	3200 4100 2550 4100
+Wire Wire Line
+	3200 4300 2550 4300
+Wire Wire Line
+	5800 1600 6150 1600
+Wire Wire Line
+	5800 1700 6550 1700
+Wire Wire Line
+	5800 1800 6100 1800
+Wire Notes Line
+	5500 1600 4600 1600
+Wire Notes Line
+	5500 1700 4600 1700
+Wire Notes Line
+	5500 1800 4600 1800
+Wire Notes Line
+	3300 1050 3300 2350
+Wire Notes Line
+	3300 2350 5000 2350
+Wire Notes Line
+	5000 2350 5000 1050
+Wire Notes Line
+	5000 1050 3300 1050
+Wire Wire Line
+	6100 1800 6100 2200
+Wire Wire Line
+	6100 2200 7800 2200
+Wire Wire Line
+	8500 2200 8500 2300
+Connection ~ 6100 1800
+Wire Wire Line
+	5800 1700 5800 1600
+Wire Wire Line
+	5800 1450 6750 1450
+Connection ~ 5800 1700
+Wire Wire Line
+	7800 2000 7800 2200
+Connection ~ 7800 2200
+Wire Wire Line
+	8200 2000 8200 2200
+Connection ~ 8200 2200
+Wire Wire Line
+	7600 1450 7800 1450
+Wire Wire Line
+	8200 1450 8200 1700
+Connection ~ 8200 1450
+Wire Wire Line
+	7800 1700 7800 1450
+Connection ~ 7800 1450
+Wire Wire Line
+	7300 1450 7050 1450
+$Comp
+L power1:GND #PWR03
+U 1 1 59B9C960
+P 1700 1750
+F 0 "#PWR03" H 1700 1500 50  0001 C CNN
+F 1 "GND" H 1700 1600 50  0000 C CNN
+F 2 "" H 1700 1750 50  0001 C CNN
+F 3 "" H 1700 1750 50  0001 C CNN
+	1    1700 1750
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1600 1500 1700 1500
+Wire Wire Line
+	6100 1800 6150 1800
+Wire Wire Line
+	7800 2200 8200 2200
+Wire Wire Line
+	8200 2200 8500 2200
+Wire Wire Line
+	8200 1450 8500 1450
+Wire Wire Line
+	7800 1450 8200 1450
+$Comp
+L Device:D_Schottky D1
+U 1 1 600A90CA
+P 2000 1300
+F 0 "D1" H 2000 1083 50  0000 C CNN
+F 1 "D_Schottky" H 2000 1174 50  0000 C CNN
+F 2 "" H 2000 1300 50  0001 C CNN
+F 3 "~" H 2000 1300 50  0001 C CNN
+	1    2000 1300
+	-1   0    0    1   
+$EndComp
+Text Notes 1750 1000 0    39   ~ 0
+Reverse polarity protection\nMBRA130, BAT54, \nPMEG3020CEP or similar \nlow Vf drop diode\n
+Wire Wire Line
+	1850 1300 1500 1300
+Wire Wire Line
+	2150 1300 2350 1300
+Connection ~ 2350 1300
+Wire Wire Line
+	2350 1300 2700 1300
+Connection ~ 5800 1600
+Wire Wire Line
+	5800 1600 5800 1450
+$EndSCHEMATC

@@ -1,0 +1,120 @@
+Info: Backing up file "/Users/carlwgreenstreet/Documents/Electronics/Git/Cloud-Smoker-BBQ-Monitor/Hardware/KiCad5/sym-lib-table" to file "/Users/carlwgreenstreet/Documents/Electronics/Git/Cloud-Smoker-BBQ-Monitor/Hardware/KiCad5/rescue-backup/sym-lib-table-2020-12-28-17-29-20".
+Info: Backing up file "/Users/carlwgreenstreet/Documents/Electronics/Git/Cloud-Smoker-BBQ-Monitor/Hardware/KiCad5/CloudSmoker.sch" to file "/Users/carlwgreenstreet/Documents/Electronics/Git/Cloud-Smoker-BBQ-Monitor/Hardware/KiCad5/rescue-backup/CloudSmoker-2020-12-28-17-29-20.sch".
+Info: Backing up file "/Users/carlwgreenstreet/Documents/Electronics/Git/Cloud-Smoker-BBQ-Monitor/Hardware/KiCad5/ESP8266-07.sch" to file "/Users/carlwgreenstreet/Documents/Electronics/Git/Cloud-Smoker-BBQ-Monitor/Hardware/KiCad5/rescue-backup/ESP8266-07-2020-12-28-17-29-20.sch".
+Info: Backing up file "/Users/carlwgreenstreet/Documents/Electronics/Git/Cloud-Smoker-BBQ-Monitor/Hardware/KiCad5/Thermstors.sch" to file "/Users/carlwgreenstreet/Documents/Electronics/Git/Cloud-Smoker-BBQ-Monitor/Hardware/KiCad5/rescue-backup/Thermstors-2020-12-28-17-29-20.sch".
+Info: Backing up file "/Users/carlwgreenstreet/Documents/Electronics/Git/Cloud-Smoker-BBQ-Monitor/Hardware/KiCad5/LCD.sch" to file "/Users/carlwgreenstreet/Documents/Electronics/Git/Cloud-Smoker-BBQ-Monitor/Hardware/KiCad5/rescue-backup/LCD-2020-12-28-17-29-20.sch".
+Info: Backing up file "/Users/carlwgreenstreet/Documents/Electronics/Git/Cloud-Smoker-BBQ-Monitor/Hardware/KiCad5/CloudSmoker.pro" to file "/Users/carlwgreenstreet/Documents/Electronics/Git/Cloud-Smoker-BBQ-Monitor/Hardware/KiCad5/rescue-backup/CloudSmoker-2020-12-28-17-29-20.pro".
+Info: Backing up file "/Users/carlwgreenstreet/Documents/Electronics/Git/Cloud-Smoker-BBQ-Monitor/Hardware/KiCad5/CloudSmoker-cache.lib" to file "/Users/carlwgreenstreet/Documents/Electronics/Git/Cloud-Smoker-BBQ-Monitor/Hardware/KiCad5/rescue-backup/CloudSmoker-cache-2020-12-28-17-29-20.lib".
+Info: Backing up file "/Users/carlwgreenstreet/Documents/Electronics/Git/Cloud-Smoker-BBQ-Monitor/Hardware/KiCad5/CloudSmoker-rescue.lib" to file "/Users/carlwgreenstreet/Documents/Electronics/Git/Cloud-Smoker-BBQ-Monitor/Hardware/KiCad5/rescue-backup/CloudSmoker-rescue-2020-12-28-17-29-20.lib".
+Info: Backing up file "/Users/carlwgreenstreet/Documents/Electronics/Git/Cloud-Smoker-BBQ-Monitor/Hardware/KiCad5/CloudSmoker-rescue.dcm" to file "/Users/carlwgreenstreet/Documents/Electronics/Git/Cloud-Smoker-BBQ-Monitor/Hardware/KiCad5/rescue-backup/CloudSmoker-rescue-2020-12-28-17-29-20.dcm".
+Info: Adding library "CloudSmoker-rescue", file "${KIPRJMOD}/CloudSmoker-rescue.lib" to project symbol library table.
+Info: Adding library "power1", file "/Library/Application Support/kicad/library/power.lib" to project symbol library table.
+Info: Adding library "device", file "/Library/Application Support/kicad/library/device.lib" to project symbol library table.
+Info: Adding library "74xx1", file "/Library/Application Support/kicad/library/74xx.lib" to project symbol library table.
+Info: Adding library "audio", file "/Library/Application Support/kicad/library/audio.lib" to project symbol library table.
+Info: Adding library "interface", file "/Library/Application Support/kicad/library/interface.lib" to project symbol library table.
+Info: Adding library "74xgxx", file "/Library/Application Support/kicad/library/74xgxx.lib" to project symbol library table.
+Info: Adding library "battery_management", file "/Library/Application Support/kicad/library/battery_management.lib" to project symbol library table.
+Info: Adding library "diode", file "/Library/Application Support/kicad/library/diode.lib" to project symbol library table.
+Info: Adding library "logic_programmable", file "/Library/Application Support/kicad/library/logic_programmable.lib" to project symbol library table.
+Info: Adding library "mechanical", file "/Library/Application Support/kicad/library/mechanical.lib" to project symbol library table.
+Info: Adding library "Power_Management1", file "/Library/Application Support/kicad/library/Power_Management.lib" to project symbol library table.
+Info: Adding library "pspice1", file "/Library/Application Support/kicad/library/pspice.lib" to project symbol library table.
+Info: Adding library "triac_thyristor", file "/Library/Application Support/kicad/library/triac_thyristor.lib" to project symbol library table.
+Info: Adding library "video", file "/Library/Application Support/kicad/library/video.lib" to project symbol library table.
+Symbol "Barrel_Jack" mapped to symbol library "CloudSmoker-rescue".
+Symbol "+5V" mapped to symbol library "power1".
+Symbol "C" mapped to symbol library "device".
+Symbol "GND" mapped to symbol library "power1".
+Symbol "GND" mapped to symbol library "power1".
+Symbol "PWR_FLAG" mapped to symbol library "power1".
+Symbol "PWR_FLAG" mapped to symbol library "power1".
+Symbol "+5V" mapped to symbol library "power1".
+Symbol "PWR_FLAG" mapped to symbol library "power1".
+Symbol "+3.3V" mapped to symbol library "power1".
+Symbol "Conn_01x03" mapped to symbol library "CloudSmoker-rescue".
+Symbol "5V-3V3_StepDown_module_off-board" mapped to symbol library "CloudSmoker-rescue".
+Symbol "L" mapped to symbol library "device".
+Symbol "R" mapped to symbol library "device".
+Symbol "C" mapped to symbol library "device".
+Symbol "GND" mapped to symbol library "power1".
+Symbol "CP" mapped to symbol library "device".
+Symbol "+3V3" mapped to symbol library "power1".
+Symbol "GND" mapped to symbol library "power1".
+Symbol "ESP-07v2" mapped to symbol library "CloudSmoker-rescue".
+Symbol "GND" mapped to symbol library "power1".
+Symbol "+3.3V" mapped to symbol library "power1".
+Symbol "Conn_01x06" mapped to symbol library "CloudSmoker-rescue".
+Symbol "SW_Push" mapped to symbol library "CloudSmoker-rescue".
+Symbol "SW_Push" mapped to symbol library "CloudSmoker-rescue".
+Symbol "R" mapped to symbol library "device".
+Symbol "R" mapped to symbol library "device".
+Symbol "R" mapped to symbol library "device".
+Symbol "R" mapped to symbol library "device".
+Symbol "CP1" mapped to symbol library "device".
+Symbol "C" mapped to symbol library "device".
+Symbol "D_Zener" mapped to symbol library "device".
+Symbol "C" mapped to symbol library "device".
+Symbol "R" mapped to symbol library "device".
+Symbol "R" mapped to symbol library "device".
+Symbol "R" mapped to symbol library "device".
+Symbol "D_Schottky" mapped to symbol library "device".
+Symbol "R" mapped to symbol library "device".
+Symbol "R" mapped to symbol library "device".
+Symbol "R" mapped to symbol library "device".
+Symbol "R" mapped to symbol library "device".
+Symbol "4066" mapped to symbol library "CloudSmoker-rescue".
+Symbol "4066" mapped to symbol library "CloudSmoker-rescue".
+Symbol "4066" mapped to symbol library "CloudSmoker-rescue".
+Symbol "4066" mapped to symbol library "CloudSmoker-rescue".
+Symbol "GND" mapped to symbol library "power1".
+Symbol "+3.3V" mapped to symbol library "power1".
+Symbol "R" mapped to symbol library "device".
+Symbol "R" mapped to symbol library "device".
+Symbol "Audio-Jack-2_Switch" mapped to symbol library "CloudSmoker-rescue".
+Symbol "Audio-Jack-2_Switch" mapped to symbol library "CloudSmoker-rescue".
+Symbol "LM358" mapped to symbol library "CloudSmoker-rescue".
+Symbol "LM358" mapped to symbol library "CloudSmoker-rescue".
+Symbol "R" mapped to symbol library "device".
+Symbol "R" mapped to symbol library "device".
+Symbol "R" mapped to symbol library "device".
+Symbol "R" mapped to symbol library "device".
+Symbol "R" mapped to symbol library "device".
+Symbol "+3.3V" mapped to symbol library "power1".
+Symbol "GND" mapped to symbol library "power1".
+Symbol "C" mapped to symbol library "device".
+Symbol "GND" mapped to symbol library "power1".
+Symbol "R" mapped to symbol library "device".
+Symbol "R" mapped to symbol library "device".
+Symbol "+3.3V" mapped to symbol library "power1".
+Symbol "GND" mapped to symbol library "power1".
+Symbol "GND" mapped to symbol library "power1".
+Symbol "R" mapped to symbol library "device".
+Symbol "R" mapped to symbol library "device".
+Symbol "R" mapped to symbol library "device".
+Symbol "R" mapped to symbol library "device".
+Symbol "R" mapped to symbol library "device".
+Symbol "+3.3V" mapped to symbol library "power1".
+Symbol "GND" mapped to symbol library "power1".
+Symbol "C" mapped to symbol library "device".
+Symbol "GND" mapped to symbol library "power1".
+Symbol "GND" mapped to symbol library "power1".
+Symbol "C" mapped to symbol library "device".
+Symbol "R" mapped to symbol library "device".
+Symbol "R" mapped to symbol library "device".
+Symbol "R" mapped to symbol library "device".
+Symbol "R" mapped to symbol library "device".
+Symbol "+3.3V" mapped to symbol library "power1".
+Symbol "C" mapped to symbol library "device".
+Symbol "C" mapped to symbol library "device".
+Symbol "GND" mapped to symbol library "power1".
+Symbol "Conn_01x04" mapped to symbol library "CloudSmoker-rescue".
+Symbol "2CH_I2C_Logic_Level_Convertor_Bidirectional" mapped to symbol library "CloudSmoker-rescue".
+Symbol "+3.3V" mapped to symbol library "power1".
+Symbol "+5V" mapped to symbol library "power1".
+Symbol "GND" mapped to symbol library "power1".
+Symbol "GND" mapped to symbol library "power1".
+Symbol "LCD_16x2_I2C_OffBoard" mapped to symbol library "CloudSmoker-rescue".
+Symbol "Rotary_Encoder_Switch_off-board" mapped to symbol library "CloudSmoker-rescue".
+Symbol "Conn_01x05" mapped to symbol library "CloudSmoker-rescue".
+Info: Symbol library table mapping complete!
