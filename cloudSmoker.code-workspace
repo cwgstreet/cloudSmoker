@@ -2,6 +2,10 @@
 	"folders": [
 		{
 			"path": "."
+		},
+		{
+			"name": "cloudSmoker_uno",
+			"path": "Code/cloudSmoker_uno"
 		}
 	]
 }
