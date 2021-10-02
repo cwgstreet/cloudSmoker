@@ -36,9 +36,9 @@ A thorough project overview and description can be found in the project [Wiki](h
 
 The Hardware folder contains 1) KiCad schematics and PCB board layouts and 2) selected datasheets.
 
-### Software ###
+### cloudSmoker_uno ###
 
-The Software folder contains the full CloudSmoker sketch as well as individual (function) code blocks that made it easier to individually test functionality and to hopefully re-use in future projects.
+This folder contains the full CloudSmoker software (sketch and libraries); developed under VSCode / Platformio IDE rather than Arduino IDE so folders reflect Platformio structure
 
 ### Images ###
 
