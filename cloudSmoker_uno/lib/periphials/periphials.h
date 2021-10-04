@@ -81,7 +81,7 @@ class WrapEncoder: public NewEncoder {
     }
 
     void begin();
-    void getCount();
+    int16_t getCount();
 
   protected:
     virtual void updateValue(uint8_t updatedState);
