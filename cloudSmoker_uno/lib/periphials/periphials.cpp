@@ -14,10 +14,9 @@
 #include <hd44780ioClass/hd44780_I2Cexp.h>  // i2c expander i/o class header -> required for my YwRobot 1602 LCD
 #include <periphials.h>
 
-//Recommend setting Serial Monito speed to match ESP8266 fixed bootloader initialisation of 74880
+//Recommend setting Serial Monitor speed to match ESP8266 fixed bootloader initialisation of 74880
 //  (otherwise you will get startup gibberish characters on serial monitor before serial speed syncs)
 #define SERIAL_MONITOR_SPEED 74880
-// long baudRate = SERIAL_MONITOR_SPEED;
 
 Yabl::Button button;                               //instantiate button object from Yabl library
 hd44780_I2Cexp lcd;                                //instantiate lcd object: auto locate & auto config expander chip
@@ -30,8 +29,9 @@ CWG_LCD::CWG_LCD(const int lcdCols, const int lcdRows) {
     _numRows = lcdRows;
 }
 
-// SerialMonitor.function test to determine if monitor is working.  Place function call in setup (not loop)
-//   get single serial monitor initialisation text rather than repeat scrolling text
+// Serial Monitor function test to establish if monitor is working correctly.
+//   Place function call in setup (not loop) to ensure single occurence of serial
+//     monitor initialisation text rather than repeating scrolling text if placed in loop
 void CWG_SerialMonitor::functionTest() {
     Serial.println(F("   "));  // blank line to make easier to read
     Serial.println(F("|-------------------------------------------|"));
@@ -62,25 +62,24 @@ void CWG_LCD::functionTest() {
 
 // set-up for Rotary Encoder.  Place in set-up, not loop
 void CWG_Encoder::begin() {
-  NewEncoder::EncoderState state;
+    NewEncoder::EncoderState state;
 
-  //Serial.begin(74880);
-  delay(2000);
-  Serial.println("Starting");
+    //Serial.begin(74880);
+    delay(2000);
+    Serial.println("Starting");
 
-  if (!encoder.begin()) {
-    Serial.println("Encoder Failed to Start. Check pin assignments and available interrupts. Aborting.");
-    while (1) {
-      yield();
+    if (!encoder.begin()) {
+        Serial.println("Encoder Failed to Start. Check pin assignments and available interrupts. Aborting.");
+        while (1) {
+            yield();
+        }
+    } else {
+        encoder.getState(state);
+        Serial.print("Encoder Successfully Started at value = ");
+        prevEncoderValue = state.currentValue;
+        Serial.println(prevEncoderValue);
     }
-  } else {
-    encoder.getState(state);
-    Serial.print("Encoder Successfully Started at value = ");
-    prevEncoderValue = state.currentValue;
-    Serial.println(prevEncoderValue);
-  }
 }
-
 
 // encoder.function test to determine if rotary encoder is working properly.  Place function call in loop, not setup
 void CWG_Encoder::functionTest() {
@@ -106,5 +105,40 @@ void CWG_Encoder::functionTest() {
                 default:
                     break;
             }
+    }
+}
+
+// WrapEncoder count "wraps around" when it hits the min or max limit
+//   modified from newEncoder library example CustomEncoder.ino
+//   https://github.com/gfvalvo/NewEncoder/blob/master/examples/CustomEncoder/CustomEncoder.ino
+void ESP_ISR WrapEncoder::updateValue(uint8_t updatedState) {
+    if ((updatedState & DELTA_MASK) == INCREMENT_DELTA) {
+        liveState.currentClick = UpClick;
+        liveState.currentValue++;
+        if (liveState.currentValue > _maxValue) {
+            liveState.currentValue = _minValue;
+        }
+    } else if ((updatedState & DELTA_MASK) == DECREMENT_DELTA) {
+        liveState.currentClick = DownClick;
+        liveState.currentValue--;
+        if (liveState.currentValue < _minValue) {
+            liveState.currentValue = _maxValue;
+        }
+    }
+    stateChanged = true;
+}
+
+// set-up WrapEncoder - call function in set-up area of main sketch
+void WrapEncoder::begin() {
+    int16_t currentValue;
+    WrapEncoder::EncoderState currentEncoderState;
+
+    if (encoder.getState(currentEncoderState)) {
+        currentValue = currentEncoderState.currentValue;
+        if (currentValue != prevEncoderValue) {
+            Serial.print("Encoder: ");
+            Serial.println(currentValue);
+            prevEncoderValue = currentValue;
+        }
     }
 }

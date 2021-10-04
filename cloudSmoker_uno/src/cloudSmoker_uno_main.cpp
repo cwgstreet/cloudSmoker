@@ -59,8 +59,8 @@
 // pins below set up for Uno, not ESP8266
 #define I2C_SCL A5  //optional as hd44780 set to auto-configure
 #define I2C_SDA A4  //optional as hd44780 set to auto-configure
-#define ENCODER_DT 2
-#define ENCODER_CLK 3
+#define ENCODER_DT 2  // pinA newEncode
+#define ENCODER_CLK 3  //pinB newEncode
 #define BUTTON_PIN 4  //KY40 push switch SW == BUTTON_PIN
 
 // Baudrate:  Use 74480 baud rate for ESP8266 devices to match ESP8266 fixed bootloader initialisation speed
@@ -70,34 +70,28 @@
 #define SERIAL_MONITOR_SPEED 74880
 
 // external libraries:
-#include <Arduino.h>  //platformio requires Arduino framework to be explicitly included
-#include <Wire.h>  // must include before hd44780 libraries due to dependencies
-#include <hd44780.h>  // LCD library
-#include <hd44780ioClass/hd44780_I2Cexp.h>  // i2c expander i/o class header -> required for my YwRobot 1602 LCD
+#include <Arduino.h>  //platformio IDE requires Arduino framework to be explicitly included
 #include <Bounce2.h>
 #include <NewEncoder.h>
+#include <Wire.h>                           // must include before hd44780 libraries due to dependencies
+#include <hd44780.h>                        // LCD library
+#include <hd44780ioClass/hd44780_I2Cexp.h>  // i2c expander i/o class header -> required for my YwRobot 1602 LCD
 
 // internal libraries:
-#include <periphials.h>  // contains function tests and usuage for periphials 
-#include <press_type.h>   // wrapper library abstracting Yabl / Bounce2 routines
+#include <periphials.h>  // contains function tests and usuage for periphials
+#include <press_type.h>  // wrapper library abstracting Yabl / Bounce2 routines
 
 // define LCD geometry (YwRobot 1602 LCD)
 const int LCD_COLS = 16;
 const int LCD_ROWS = 2;
 
-// *******   surplus code?  *******
-// LCD config - auto-locate (actual address is 0x27) and auto-config backpack expander chip for lcd object
-// note: cannot declare the lcd object in both a library (ie debug.cpp) and main program or you will get 
-//   linker errors "multiple definitions of lcd"; therfore comment out following line unless debug.cpp not included
-//hd44780_I2Cexp lcd;
-// *******   end surplus code? ******
-
-
-// *******
+// *********************
 // Object instantiation and set-up
-// *******
+// *********************
 
-// newEncoder object 
+CWG_Encoder rotary_encoder;
+
+// newEncoder object
 //NewEncoder encoder(ENCODER_CLK, ENCODER_DT, -20, 20, 0, FULL_PULSE);  //NewEncoder(aPin, bPin, minValue, maxValue, initalValue, FULL_PULSE)
 //int16_t prevEncoderValue;
 
@@ -106,117 +100,48 @@ const int LCD_ROWS = 2;
 #define LED_PIN LED_BUILTIN
 #endif  //DEBUG
 
-// Instantiate a Button Object from the Bounce2 namespace
-//Bounce2::Button button = Bounce2::Button();
-//bool longPress = false;
-
 #ifdef DEBUG
 // <<<<<<<  debug - button press Function Test >>>>>>>>
 // SET A VARIABLE TO STORE THE LED STATE
 int ledState = LOW;
 #endif  //DEBUG
 
-CWG_Encoder rotary_encoder;
 
 void setup() {
-
     NewEncoder::EncoderState state;
     CWG_LCD lcd(LCD_COLS, LCD_ROWS);  //instantiate lcd object from periphials library
     Serial.begin(SERIAL_MONITOR_SPEED);
 
-// ********************** debug - periphial function tests ************************************
-
+// **********************  periphial function tests ************************************
 #ifdef DEBUG
-    // Serial monitor terminal function test  
-    Serial.begin(SERIAL_MONITOR_SPEED);
+    // Serial monitor terminal function test
     CWG_SerialMonitor terminal;  //instantiate terminal object from periphials library
     terminal.functionTest();
-#endif   
 
-#ifdef DEBUG
-    // LCD function test  
+    // LCD function test
     lcd.functionTest();
-#endif   
+#endif
 
+    rotary_encoder.begin();
 
-rotary_encoder.begin(); 
-
-    // Bounce2 Library Button object set-up
-    //button.attach(BUTTON_PIN, INPUT_PULLUP);  // Use internal pull-up
-    //button.interval(5);                       //Debounce interval in milliseconds
-    //button.setPressedState(LOW);              //Low state corresponds to physically pressing the button
-
-/* #ifdef DEBUG
+ 
+    /* #ifdef DEBUG
     // <<<<<<<  debug - setup button press Function Test >>>>>>>>
     // setup for LED toggle button function test
     pinMode(LED_PIN, OUTPUT);
     digitalWrite(LED_PIN, ledState);
 #endif */
 
-/*
-#ifdef DEBUG
-    // <<<<<<<  debug - rotary enoder Function Test >>>>>>>>
-    Serial.println(F("Starting rotary encoder function test"));
-
-    if (!encoder.begin()) {
-        Serial.println(F("Encoder Failed to Start. Check pin assignments and available interrupts. Aborting."));
-        while (1) {
-            yield();
-        }
-    } else {
-        encoder.getState(state);
-        Serial.print(F("Encoder Successfully Started at value = "));
-        prevEncoderValue = state.currentValue;
-        Serial.println(prevEncoderValue);
-    }
-    //  end rotary encoder function test
-#endif
-*/
-
 }  // end of setup
-
 
 void loop() {
 
 #ifdef DEBUG
-    // rotary encoder function test  
- 
+    // rotary encoder function test
     rotary_encoder.functionTest();
-#endif 
-
-    //button.update();  // update button press state; must call every loop
-    //int debouncedState = button.read();  //get debounced state  note unused variable!
-
-/* 
-#ifdef DEBUG
-    // <<<<<<<  debug - button press and duration type Function Test >>>>>>>>
-
-    // <Button>.pressed() RETURNS true IF THE STATE CHANGED
-    // AND THE CURRENT STATE MATCHES <Button>.setPressedState(<HIGH or LOW>);
-    if (button.pressed()) {
-        // Depreciated code in block, temporarily retaining during refactoring
-      
-      if (debouncedState == LOW && button.currentDuration() > LONG_PRESS_TIME_ms )
-      {
-        longPress = true;  //unused variable (warning - will use this in later code)
-        Serial.println(F("Long button press!"));
-      }
-      else
-      {
-        Serial.println(F("Short button press!"));
-        Serial.print(F("longPress = "));
-        Serial.println(longPress);
-      
-      } 
-      ******* end depreciated code snippet *********
-
-        // TOGGLE THE LED STATE :
-        ledState = !ledState;             // SET ledState TO THE OPPOSITE OF ledState
-        digitalWrite(LED_PIN, ledState);  // WRITE THE NEW ledState
-    }
 #endif
- */
 
+ 
     // place loop code here
 
 }  // end of loop

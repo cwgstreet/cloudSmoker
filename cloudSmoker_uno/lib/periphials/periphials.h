@@ -19,7 +19,7 @@
 #endif  // end if-block
 
 /*****************
-// Libraries for periphials function tests:
+// Libraries required for periphial function tests:
 *****************/
 
 // i2C devices
@@ -60,11 +60,33 @@ class CWG_Encoder {
    public:
     void begin();
     void functionTest();
+    
 
    private:
     //int _a_pin;
     //int _b_pin;
 };
+
+
+// modified from newEncoder library example CustomEncoder.ino
+class WrapEncoder: public NewEncoder {
+  public:
+    WrapEncoder() :
+      NewEncoder() {
+    }
+    WrapEncoder(uint8_t aPin, uint8_t bPin, int16_t minValue, int16_t maxValue, int16_t initalValue, uint8_t type = FULL_PULSE) :
+      NewEncoder(aPin, bPin, minValue, maxValue, initalValue, type) {
+    }
+    virtual ~WrapEncoder() {
+    }
+
+    void begin();
+    void getCount();
+
+  protected:
+    virtual void updateValue(uint8_t updatedState);
+};
+
 
 /* 
 // Press_Type class - wrapper class to determine press type
