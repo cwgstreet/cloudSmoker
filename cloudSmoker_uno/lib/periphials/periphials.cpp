@@ -128,8 +128,29 @@ void ESP_ISR WrapEncoder::updateValue(uint8_t updatedState) {
     stateChanged = true;
 }
 
-// set-up WrapEncoder - call function in set-up area of main sketch
+//  WrapEncoder::begin() - set-up code for WrapEncoder; call function in set-up area, main sketch
 void WrapEncoder::begin() {
+WrapEncoder::EncoderState state;
+
+  //Serial.begin(SERIAL_MONITOR_SPEED);
+  delay(2000);
+  Serial.println("Starting");
+  if (!encoder.begin()) {
+    Serial.println("Encoder Failed to Start. Check pin assignments and available interrupts. Aborting.");
+    while (1) {
+      yield();
+    }
+  } else {
+    encoder.getState(state);
+    Serial.print("Encoder Successfully Started at value = ");
+    prevEncoderValue = state.currentValue;
+    Serial.println(prevEncoderValue);
+  }
+
+}
+
+// WrapEncoder::getCount() - returns current encoder count; call function in loop area, main sketch
+int16_t WrapEncoder::getCount() {
     int16_t currentValue;
     WrapEncoder::EncoderState currentEncoderState;
 
@@ -139,6 +160,7 @@ void WrapEncoder::begin() {
             Serial.print("Encoder: ");
             Serial.println(currentValue);
             prevEncoderValue = currentValue;
+            return currentValue;
         }
     }
 }
