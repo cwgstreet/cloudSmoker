@@ -78,8 +78,8 @@
 #include <hd44780ioClass/hd44780_I2Cexp.h>  // i2c expander i/o class header -> required for my YwRobot 1602 LCD
 
 // internal libraries:
-#include <periphials.h>  // contains function tests and usuage for periphials
-#include <press_type.h>  // wrapper library abstracting Yabl / Bounce2 routines
+#include <periphials.h>   // contains function tests and usuage for periphials
+#include <press_type.h>   // wrapper library abstracting Yabl / Bounce2 routines
 #include <wrapEncoder.h>  //creates encoder object with min / max values that "wrap" around
 
 // define LCD geometry (YwRobot 1602 LCD)
@@ -102,10 +102,10 @@ int ledState = LOW;
 #endif  //DEBUG
 
 // *********************
-// Object instantiation 
+// Object instantiation
 // *********************
 
-// WrapEncoder object 
+// WrapEncoder object
 WrapEncoder encoder(2, 3, 180, 210, 203, FULL_PULSE);  //briskett usually done at 195-203F meat temp
 int16_t prevEncoderValue;
 int16_t encoderCountValue;
@@ -135,12 +135,12 @@ void setup() {
 
     // LCD function test
     lcd.functionTest();
-#endif   
-// **********************  end debug periphial function tests ************************************
+#endif
+    // **********************  end debug periphial function tests ************************************
 
     encoder.initialise();
 
-    // initialise button press type set-up code (pin, pullup mode, callback function) 
+    // initialise button press type set-up code (pin, pullup mode, callback function)
     buttonPress.begin(BUTTON_PIN);
 
     //rotary_encoder.begin();
@@ -155,29 +155,29 @@ void setup() {
 }  // end of setup
 
 void loop() {
-
 // **********************  debug - periphial function tests ************************************
 #ifdef DEBUG
     //rotary encoder function test
     //rotary_encoder.functionTest();
 #endif
-// **********************  end debug periphial function tests ************************************
+    // **********************  end debug periphial function tests ************************************
 
-WrapEncoder::EncoderState currentEncoderState;
+    buttonPress.checkPress();
+
+    WrapEncoder::EncoderState currentEncoderState;
     int16_t currentValue;
 
     menuState = Menu2_pitMin;  //test out various cases by defining test case
 
     switch (menuState) {
         case Menu1_meatDone:
+            Serial.print("menuState =");
+            Serial.println(menuState);
             encoderCountValue = encoder.getCount(currentEncoderState);
-            buttonPress.checkPress();
             break;
 
         case Menu2_pitMin:
-  
             encoderCountValue = encoder.getCount(currentEncoderState);
-
             if (encoderCountValue > 209) {
                 Serial.println("Changing Encoder Settings.");
                 encoder.newSettings(-5, 15, 0, currentEncoderState);  //previous 180, 210, 203
