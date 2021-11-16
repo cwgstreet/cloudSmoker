@@ -18,7 +18,7 @@
 //  (otherwise you will get startup gibberish characters on serial monitor before serial speed syncs)
 #define SERIAL_MONITOR_SPEED 74880
 
-Yabl::Button button;                               //instantiate button object from Yabl library
+//Yabl::Button button;                               //instantiate button object from Yabl library
 hd44780_I2Cexp lcd;                                //instantiate lcd object: auto locate & auto config expander chip
 NewEncoder encoder(2, 3, -20, 20, 0, FULL_PULSE);  // instantiate encoder object
 int16_t prevEncoderValue;
@@ -60,6 +60,8 @@ void CWG_LCD::functionTest() {
     //  end LCD function test
 }
 
+
+/* 
 // set-up for Rotary Encoder.  Place in set-up, not loop
 void CWG_Encoder::begin() {
     NewEncoder::EncoderState state;
@@ -80,7 +82,10 @@ void CWG_Encoder::begin() {
         Serial.println(prevEncoderValue);
     }
 }
+ */
 
+
+/* 
 // encoder.function test to determine if rotary encoder is working properly.  Place function call in loop, not setup
 void CWG_Encoder::functionTest() {
     int16_t currentValue;
@@ -107,21 +112,26 @@ void CWG_Encoder::functionTest() {
             }
     }
 }
+ */
+
 
 // WrapEncoder count "wraps around" when it hits the min or max limit
 //   modified from newEncoder library example CustomEncoder.ino
 //   https://github.com/gfvalvo/NewEncoder/blob/master/examples/CustomEncoder/CustomEncoder.ino
-void ESP_ISR WrapEncoder::updateValue(uint8_t updatedState) {
+/* void ESP_ISR WrapEncoder::updateValue(uint8_t updatedState) {
+    Serial.println("entering updateValue method");  // debug
     if ((updatedState & DELTA_MASK) == INCREMENT_DELTA) {
         liveState.currentClick = UpClick;
         liveState.currentValue++;
         if (liveState.currentValue > _maxValue) {
+            Serial.println("maxValue reached; resetting to minValue");  // debug
             liveState.currentValue = _minValue;
         }
     } else if ((updatedState & DELTA_MASK) == DECREMENT_DELTA) {
         liveState.currentClick = DownClick;
         liveState.currentValue--;
         if (liveState.currentValue < _minValue) {
+            Serial.println("minValue reached; resetting to maxValue");  // debug
             liveState.currentValue = _maxValue;
         }
     }
@@ -162,5 +172,5 @@ int16_t WrapEncoder::getCount() {
             prevEncoderValue = currentValue;
             return currentValue;
         }
-    }
-}
+    } */
+//}

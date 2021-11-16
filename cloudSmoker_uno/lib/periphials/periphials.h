@@ -68,7 +68,7 @@ class CWG_Encoder {
 };
 
 
-// modified from newEncoder library example CustomEncoder.ino
+/* // modified from newEncoder library example CustomEncoder.ino
 class WrapEncoder: public NewEncoder {
   public:
     WrapEncoder() :
@@ -86,7 +86,7 @@ class WrapEncoder: public NewEncoder {
   protected:
     virtual void updateValue(uint8_t updatedState);
 };
-
+ */
 
 /* 
 // Press_Type class - wrapper class to determine press type

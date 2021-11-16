@@ -56,14 +56,14 @@
  *   2         CLK      KY40 (PinA)         white
 */
 
-// pins below set up for Uno, not ESP8266
-#define I2C_SCL A5  //optional as hd44780 set to auto-configure
-#define I2C_SDA A4  //optional as hd44780 set to auto-configure
-#define ENCODER_DT 2  // pinA newEncode
+// pins set up below is for Uno, not ESP8266
+#define I2C_SCL A5     //optional as hd44780 set to auto-configure
+#define I2C_SDA A4     //optional as hd44780 set to auto-configure
+#define ENCODER_DT 2   // pinA newEncode
 #define ENCODER_CLK 3  //pinB newEncode
-#define BUTTON_PIN 4  //KY40 push switch SW == BUTTON_PIN
+#define BUTTON_PIN 4   //KY40 push switch SW == BUTTON_PIN
 
-// Baudrate:  Use 74480 baud rate for ESP8266 devices to match ESP8266 fixed bootloader initialisation speed
+// Baudrate:  Recommend 74480 baud rate for ESP8266 devices to match ESP8266 fixed bootloader initialisation speed
 //  (otherwise you will get startup gibberish characters on serial monitor before serial speed syncs)
 //  https://forum.arduino.cc/t/serial-monitor-only-shows-strange-symbols-arduino-mega-with-esp8266/640490/5
 //  note: must manually reset board after flashing for code to work correctly
@@ -80,23 +80,18 @@
 // internal libraries:
 #include <periphials.h>  // contains function tests and usuage for periphials
 #include <press_type.h>  // wrapper library abstracting Yabl / Bounce2 routines
+#include <wrapEncoder.h>  //creates encoder object with min / max values that "wrap" around
 
 // define LCD geometry (YwRobot 1602 LCD)
 const int LCD_COLS = 16;
 const int LCD_ROWS = 2;
 
-// *********************
-// Object instantiation and set-up
-// *********************
-
-CWG_Encoder rotary_encoder;
-
-// newEncoder object
-//NewEncoder encoder(ENCODER_CLK, ENCODER_DT, -20, 20, 0, FULL_PULSE);  //NewEncoder(aPin, bPin, minValue, maxValue, initalValue, FULL_PULSE)
-//int16_t prevEncoderValue;
+// **************************************************
+// periphial function testing set-up for debug tests
+// **************************************************
 
 #ifdef DEBUG
-// <<<<<<<  debug - define pin=internal LED for rotary encoder button press Function Test >>>>>>>>
+// <<<<<<<  debug - define pin = internal LED for rotary encoder button press Function Test >>>>>>>>
 #define LED_PIN LED_BUILTIN
 #endif  //DEBUG
 
@@ -106,13 +101,30 @@ CWG_Encoder rotary_encoder;
 int ledState = LOW;
 #endif  //DEBUG
 
+// *********************
+// Object instantiation 
+// *********************
+
+// WrapEncoder object 
+WrapEncoder encoder(2, 3, 180, 210, 203, FULL_PULSE);  //briskett usually done at 195-203F meat temp
+int16_t prevEncoderValue;
+int16_t encoderCountValue;
+
+//set-up menu entry case names for switch-case
+enum entryStates {
+    Menu1_meatDone = 1,  //set enum 1 to 4 rather than default 0 for first element
+    Menu2_pitMin,
+    Menu3_pitMax,
+    Menu4_unitsTemp
+};
+
+enum entryStates menuState;
 
 void setup() {
-    NewEncoder::EncoderState state;
     CWG_LCD lcd(LCD_COLS, LCD_ROWS);  //instantiate lcd object from periphials library
     Serial.begin(SERIAL_MONITOR_SPEED);
 
-// **********************  periphial function tests ************************************
+// **********************  debug - periphial function tests ************************************
 #ifdef DEBUG
     // Serial monitor terminal function test
     CWG_SerialMonitor terminal;  //instantiate terminal object from periphials library
@@ -120,11 +132,13 @@ void setup() {
 
     // LCD function test
     lcd.functionTest();
-#endif
+#endif   
+// **********************  end debug periphial function tests ************************************
 
-    rotary_encoder.begin();
+    encoder.initialise();
 
- 
+    //rotary_encoder.begin();
+
     /* #ifdef DEBUG
     // <<<<<<<  debug - setup button press Function Test >>>>>>>>
     // setup for LED toggle button function test
@@ -136,12 +150,51 @@ void setup() {
 
 void loop() {
 
+// **********************  debug - periphial function tests ************************************
 #ifdef DEBUG
-    // rotary encoder function test
-    rotary_encoder.functionTest();
+    //rotary encoder function test
+    //rotary_encoder.functionTest();
 #endif
+// **********************  end debug periphial function tests ************************************
 
- 
-    // place loop code here
+WrapEncoder::EncoderState currentEncoderState;
+    int16_t currentValue;
+
+    menuState = Menu2_pitMin;  //test out various cases by defining test case
+
+    switch (menuState) {
+        case Menu1_meatDone:
+            encoderCountValue = encoder.getCount(currentEncoderState);
+            break;
+
+        case Menu2_pitMin:
+  
+            encoderCountValue = encoder.getCount(currentEncoderState);
+
+            if (encoderCountValue > 209) {
+                Serial.println("Changing Encoder Settings.");
+                encoder.newSettings(-5, 15, 0, currentEncoderState);  //previous 180, 210, 203
+                prevEncoderValue = currentEncoderState.currentValue;
+                Serial.print("Starting Value: ");
+                Serial.println(prevEncoderValue);
+            }
+            break;
+
+        case Menu3_pitMax:
+            Serial.print("menuState =");
+            Serial.println(menuState);
+            break;
+
+        case Menu4_unitsTemp:
+            Serial.print("menuState =");
+            Serial.println(menuState);
+            break;
+
+        default:
+            Serial.print("default case!  menuState =");
+            Serial.println(menuState);
+
+            break;
+    }
 
 }  // end of loop
