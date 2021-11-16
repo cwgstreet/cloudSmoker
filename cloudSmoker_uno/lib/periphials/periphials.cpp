@@ -21,10 +21,7 @@
 //  (otherwise you will get startup gibberish characters on serial monitor before serial speed syncs)
 #define SERIAL_MONITOR_SPEED 74880
 
-//Yabl::Button button;                             //instantiate button object from Yabl library
-hd44780_I2Cexp lcd;                                //instantiate lcd object: auto locate & auto config expander chip
-//NewEncoder encoder(2, 3, -20, 20, 0, FULL_PULSE);  // instantiate encoder object
-//int16_t prevEncoderValue;
+hd44780_I2Cexp lcd;     //instantiate lcd object: auto locate & auto config expander chip
 
 //LCD constructor passing lcd rows and columns
 CWG_LCD::CWG_LCD(const int lcdCols, const int lcdRows) {

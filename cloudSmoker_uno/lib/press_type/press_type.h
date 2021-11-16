@@ -39,11 +39,11 @@ class Press_Type {
     int _pin;
 };
 
-/**************
+/***************************************************************************************************
 *  Note: unsuccessful at declaring onButtonEventfunction prototype below within Press_Type class above as 
 *     a member function without compiler error "invalid use of non-static member function" 
 *  see discussion: https://arduino.stackexchange.com/questions/33795/error-invalid-use-of-non-static-member-function-while-calling-a-function-from
-***************/
+****************************************************************************************************/
 void onButtonEvent(const EventInfo& info);
 
 #endif  // end header guard

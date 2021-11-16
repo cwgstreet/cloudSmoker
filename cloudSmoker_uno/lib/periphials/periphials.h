@@ -33,12 +33,12 @@
 //#include <NewEncoder.h>
 
 // KY40 push button
-#include <Bounce2.h>
-#include <Yabl.h>
+/* #include <Bounce2.h>
+#include <Yabl.h> */
 
-/*****************
+/******************************************************
 // Class definitions for periphial functions and tests:
-*****************/
+*******************************************************/
 
 class CWG_SerialMonitor {
    public:
@@ -55,18 +55,5 @@ class CWG_LCD {
     int _numCols;
     int _numRows;
 };
-
-/* class CWG_Encoder {
-   public:
-    void begin();
-    void functionTest();
-    
-
-   private:
-    //int _a_pin;
-    //int _b_pin;
-};
- */
-
 
 #endif  // end header guard
