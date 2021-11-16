@@ -110,7 +110,10 @@ WrapEncoder encoder(2, 3, 180, 210, 203, FULL_PULSE);  //briskett usually done a
 int16_t prevEncoderValue;
 int16_t encoderCountValue;
 
-//set-up menu entry case names for switch-case
+// Ky40 button
+Press_Type buttonPress(BUTTON_PIN);
+
+//prepare menu entry case names for switch-case
 enum entryStates {
     Menu1_meatDone = 1,  //set enum 1 to 4 rather than default 0 for first element
     Menu2_pitMin,
@@ -136,6 +139,9 @@ void setup() {
 // **********************  end debug periphial function tests ************************************
 
     encoder.initialise();
+
+    // initialise button press type set-up code (pin, pullup mode, callback function) 
+    buttonPress.begin(BUTTON_PIN);
 
     //rotary_encoder.begin();
 
@@ -165,6 +171,7 @@ WrapEncoder::EncoderState currentEncoderState;
     switch (menuState) {
         case Menu1_meatDone:
             encoderCountValue = encoder.getCount(currentEncoderState);
+            buttonPress.checkPress();
             break;
 
         case Menu2_pitMin:
