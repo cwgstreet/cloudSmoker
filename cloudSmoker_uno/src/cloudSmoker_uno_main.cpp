@@ -43,7 +43,9 @@
  */
 
 //set up debug scaffold; comment out following line to "turn off" debugging routines at pre-proccessor stage
-#define DEBUG 1
+//   #ifdef preprocessor simply tests if the symbol's been defined; therefore don't use #ifdef 0
+//     ref: https://stackoverflow.com/questions/16245633/ifdef-debug-versus-if-debug
+#define DEBUG 1 
 
 /*  Uno pinout setup:    
  *   
@@ -110,10 +112,10 @@ WrapEncoder encoder(2, 3, 180, 210, 203, FULL_PULSE);  //briskett usually done a
 int16_t prevEncoderValue;
 int16_t encoderCountValue;
 
-// Ky40 button
+// KY40 button
 Press_Type buttonPress(BUTTON_PIN);
 
-//prepare menu entry case names for switch-case
+// Prepare menu entry case names for switch-case menu stucture
 enum entryStates {
     Menu1_meatDone = 1,  //set enum 1 to 4 rather than default 0 for first element
     Menu2_pitMin,
@@ -143,14 +145,7 @@ void setup() {
     // initialise button press type set-up code (pin, pullup mode, callback function)
     buttonPress.begin(BUTTON_PIN);
 
-    //rotary_encoder.begin();
-
-    /* #ifdef DEBUG
-    // <<<<<<<  debug - setup button press Function Test >>>>>>>>
-    // setup for LED toggle button function test
-    pinMode(LED_PIN, OUTPUT);
-    digitalWrite(LED_PIN, ledState);
-#endif */
+ 
 
 }  // end of setup
 
@@ -165,7 +160,7 @@ void loop() {
     buttonPress.checkPress();
 
     WrapEncoder::EncoderState currentEncoderState;
-    int16_t currentValue;
+    //int16_t currentValue;
 
     menuState = Menu2_pitMin;  //test out various cases by defining test case
 
