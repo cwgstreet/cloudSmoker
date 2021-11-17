@@ -26,7 +26,7 @@
  *        encoder library I've come across; uses State Machine approach to software 
  *        "debounce" encoder
  *      Bounce2 Library  https://github.com/thomasfredericks/Bounce2  use for debouncing rotary   
- *         encoder switch plus differentiate long vs short button press 
+ *         encoder switch  
  *      Yabl (Yet another button library for Arduino) - https://github.com/yergin/Yabl  
  *          extends Bounce2 library by adding easy functionality to determine press 
  *          types (long, short and double press) plus trigger callback functions       
@@ -42,11 +42,6 @@
  * ************************************************************************************   
  */
 
-//set up debug scaffold; comment out following line to "turn off" debugging routines at pre-proccessor stage
-//   #ifdef preprocessor simply tests if the symbol's been defined; therefore don't use #ifdef 0
-//     ref: https://stackoverflow.com/questions/16245633/ifdef-debug-versus-if-debug
-#define DEBUG 1 
-
 /*  Uno pinout setup:    
  *   
  *   Pin      Function  Comment
@@ -57,19 +52,6 @@
  *   3         DT       KY40 (PinB)         brown
  *   2         CLK      KY40 (PinA)         white
 */
-
-// pins set up below is for Uno, not ESP8266
-#define I2C_SCL A5     //optional as hd44780 set to auto-configure
-#define I2C_SDA A4     //optional as hd44780 set to auto-configure
-#define ENCODER_DT 2   // pinA newEncode
-#define ENCODER_CLK 3  //pinB newEncode
-#define BUTTON_PIN 4   //KY40 push switch SW == BUTTON_PIN
-
-// Baudrate:  Recommend 74480 baud rate for ESP8266 devices to match ESP8266 fixed bootloader initialisation speed
-//  (otherwise you will get startup gibberish characters on serial monitor before serial speed syncs)
-//  https://forum.arduino.cc/t/serial-monitor-only-shows-strange-symbols-arduino-mega-with-esp8266/640490/5
-//  note: must manually reset board after flashing for code to work correctly
-#define SERIAL_MONITOR_SPEED 74880
 
 // external libraries:
 #include <Arduino.h>  //platformio IDE requires Arduino framework to be explicitly included
@@ -83,6 +65,24 @@
 #include <periphials.h>   // contains function tests and usuage for periphials
 #include <press_type.h>   // wrapper library abstracting Yabl / Bounce2 routines
 #include <wrapEncoder.h>  //creates encoder object with min / max values that "wrap" around
+
+//set up debug scaffold; comment out following line to "turn off" debugging routines at pre-proccessor stage
+//   #ifdef preprocessor simply tests if the symbol's been defined; therefore don't use #ifdef 0
+//     ref: https://stackoverflow.com/questions/16245633/ifdef-debug-versus-if-debug
+#define DEBUG 1 
+
+// pins set up below is for Uno, not ESP8266
+#define I2C_SCL A5     //optional as hd44780 set to auto-configure
+#define I2C_SDA A4     //optional as hd44780 set to auto-configure
+#define ENCODER_DT 2   // pinA newEncode
+#define ENCODER_CLK 3  //pinB newEncode
+#define BUTTON_PIN 4   //KY40 push switch SW == BUTTON_PIN
+
+// Baudrate:  Recommend 74480 baud rate for ESP8266 devices to match ESP8266 fixed bootloader initialisation speed
+//  (otherwise you will get startup gibberish characters on serial monitor before serial speed syncs)
+//  https://forum.arduino.cc/t/serial-monitor-only-shows-strange-symbols-arduino-mega-with-esp8266/640490/5
+//  note: must manually reset board after flashing for code to work correctly
+#define SERIAL_MONITOR_SPEED 74880
 
 // define LCD geometry (YwRobot 1602 LCD)
 const int LCD_COLS = 16;

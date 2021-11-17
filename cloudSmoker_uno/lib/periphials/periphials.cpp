@@ -17,18 +17,6 @@
 //incliude local libraries
 #include <periphials.h>
 
-//Recommend setting Serial Monitor speed to match ESP8266 fixed bootloader initialisation of 74880
-//  (otherwise you will get startup gibberish characters on serial monitor before serial speed syncs)
-#define SERIAL_MONITOR_SPEED 74880
-
-hd44780_I2Cexp lcd;     //instantiate lcd object: auto locate & auto config expander chip
-
-//LCD constructor passing lcd rows and columns
-CWG_LCD::CWG_LCD(const int lcdCols, const int lcdRows) {
-    _numCols = lcdCols;
-    _numRows = lcdRows;
-}
-
 // Serial Monitor function test to establish if monitor is working correctly.
 //   Place function call in setup (not loop) to ensure single occurence of serial
 //     monitor initialisation text rather than repeating scrolling text if placed in loop
@@ -40,6 +28,14 @@ void CWG_SerialMonitor::functionTest() {
     Serial.println(F("         G'day cloudSmoker!"));
     Serial.println(F("|-------------------------------------------|"));
     Serial.println(F("   "));
+}
+
+hd44780_I2Cexp lcd;     //instantiate lcd object: auto locate & auto config expander chip
+
+//LCD constructor passing lcd rows and columns
+CWG_LCD::CWG_LCD(const int lcdCols, const int lcdRows) {
+    _numCols = lcdCols;
+    _numRows = lcdRows;
 }
 
 // LCD.function test to determine if LCD is working properly.  Place function call in setup (not loop)

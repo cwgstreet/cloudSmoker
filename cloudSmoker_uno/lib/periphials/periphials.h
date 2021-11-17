@@ -5,7 +5,7 @@
 *  C W Greenstreet, Ver1, 27Sep21
 *    MIT Licence - Released into the public domain
 *
-** ************************************************************ */
+** ************************************************************* */
 
 #ifndef PERIPHIALS_H
 #define PERIPHIALS_H
@@ -23,18 +23,11 @@
 *****************/
 
 // i2C devices
-#include <Wire.h>  
+#include <Wire.h>
 
 //YwRobot 1602 LCD with i2c i/o exapander backpack (PCF8574 or MCP23008)
 #include <hd44780.h>
 #include <hd44780ioClass/hd44780_I2Cexp.h>  // i2c expander i/o class header -> required for my YwRobot 1602 LCD
-
-// KY40 Rotary Encoder - encoder CW / CCW counts
-//#include <NewEncoder.h>
-
-// KY40 push button
-/* #include <Bounce2.h>
-#include <Yabl.h> */
 
 /******************************************************
 // Class definitions for periphial functions and tests:
