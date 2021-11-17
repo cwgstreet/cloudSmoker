@@ -43,7 +43,6 @@ class WrapEncoder : public NewEncoder {
 
     void initialise();
     int16_t getCount(WrapEncoder::EncoderState &state);
-    //int16_t getCount();
 
    protected:
     virtual void updateValue(uint8_t updatedState);

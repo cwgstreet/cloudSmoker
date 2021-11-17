@@ -55,9 +55,7 @@ void WrapEncoder::initialise() {
 }
 
 int16_t WrapEncoder::getCount(WrapEncoder::EncoderState &state) {
-//int16_t WrapEncoder::getCount() {
     int16_t currentValue;
-    //WrapEncoder::EncoderState currentEncoderState;
 
     if (encoder.getState(state)) {
         currentValue = state.currentValue;
@@ -66,7 +64,7 @@ int16_t WrapEncoder::getCount(WrapEncoder::EncoderState &state) {
             Serial.println(currentValue);
             prevEncoderValue = currentValue;
             return currentValue;
-        }   
+        }
     }
     return 0;  // alleviates compiler warning: control reaches end of non-void function [-Wreturn-type]
 }
