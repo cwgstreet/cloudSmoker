@@ -42,7 +42,7 @@ class Press_Type {
 /***************************************************************************************************
 *  Note: unsuccessful at declaring onButtonEventfunction prototype below within the Press_Type class 
 *     above as a member function without compiler error "invalid use of non-static member function" 
-*       Work-around solution was to protype the function outside of the Class.
+*       Work-around solution was to prototype the function outside of the Class.
 *  see discussion: https://arduino.stackexchange.com/questions/33795/error-invalid-use-of-non-static-member-function-while-calling-a-function-from
 ****************************************************************************************************/
 void onButtonEvent(const EventInfo& info);
