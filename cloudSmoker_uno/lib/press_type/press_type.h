@@ -5,13 +5,13 @@
 *  C W Greenstreet, Ver1, 7Sep21
 *    MIT Licence - Released into the public domain
 *
-* This wrapper library encapsulates and integrates selected fetures from 
+* This wrapper library abstracts, encapsulates and integrates selected fetures from 
 *    1) Yabl (Yet another button library for Arduino)
 *           https://github.com/yergin/Yabl 
 *    2) Bounce2 (debouncng library)
 *           https://github.com/thomasfredericks/Bounce2 
 *
-* ************************************************************ */
+* ************************************************************* */
 
 #ifndef PRESS_TYPE_H
 #define PRESS_TYPE_H
@@ -40,8 +40,9 @@ class Press_Type {
 };
 
 /***************************************************************************************************
-*  Note: unsuccessful at declaring onButtonEventfunction prototype below within Press_Type class above as 
-*     a member function without compiler error "invalid use of non-static member function" 
+*  Note: unsuccessful at declaring onButtonEventfunction prototype below within the Press_Type class 
+*     above as a member function without compiler error "invalid use of non-static member function" 
+*       Work-around solution was to protype the function outside of the Class.
 *  see discussion: https://arduino.stackexchange.com/questions/33795/error-invalid-use-of-non-static-member-function-while-calling-a-function-from
 ****************************************************************************************************/
 void onButtonEvent(const EventInfo& info);
