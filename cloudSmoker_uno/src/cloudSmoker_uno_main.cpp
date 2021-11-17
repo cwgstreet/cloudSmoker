@@ -8,12 +8,12 @@
  *                (LCD information display, menu, setup and operational routines)
  *    
  *    Project Repository:  https://github.com/cwgstreet/cloudSmoker 
- *    Project Wiki:        hhttps://github.com/cwgstreet/cloudSmoker/wiki
+ *    Project Wiki:        https://github.com/cwgstreet/cloudSmoker/wiki 
  *    
  *    Code intended to work with the following hardware
  *      ESP8266-V07
- *         (initially developed on Uno Rev3 (waiting on a replacement NodeMCU after 
- *          letting the magic smoke out!)
+ *         (initially developed on Uno Rev3 (while waiting on a replacement NodeMCU  
+ *           after letting the magic smoke out!)
  *         NodeMCU V1 (ESP12) development board (will port over to bare bones ESP8266-07 
  *          once up, running and debugged)
  *      YwRobot 1602 LCD with i2c i/o exapander backpack (PCF8574 or MCP23008)
@@ -61,7 +61,7 @@
 #include <hd44780.h>                        // LCD library
 #include <hd44780ioClass/hd44780_I2Cexp.h>  // i2c expander i/o class header -> required for my YwRobot 1602 LCD
 
-// internal libraries:
+// internal (user) libraries:
 #include <periphials.h>   // contains function tests and usuage for periphials
 #include <press_type.h>   // wrapper library abstracting Yabl / Bounce2 routines
 #include <wrapEncoder.h>  //creates encoder object with min / max values that "wrap" around
@@ -108,7 +108,7 @@ int ledState = LOW;
 // *********************
 
 // WrapEncoder object
-WrapEncoder encoder(2, 3, 180, 210, 203, FULL_PULSE);  //briskett usually done at 195-203F meat temp
+WrapEncoder encoder(2, 3, 180, 210, 203, FULL_PULSE);  //default meatProbe; briskett usually done at 195-203F internal meat temp
 int16_t prevEncoderValue;
 int16_t encoderCountValue;
 
@@ -129,39 +129,32 @@ void setup() {
     CWG_LCD lcd(LCD_COLS, LCD_ROWS);  //instantiate lcd object from periphials library
     Serial.begin(SERIAL_MONITOR_SPEED);
 
-// **********************  debug - periphial function tests ************************************
+// **********  debug - periphial function tests **************************
 #ifdef DEBUG
     // Serial monitor terminal function test
     CWG_SerialMonitor terminal;  //instantiate terminal object from periphials library
     terminal.functionTest();
+#endif
 
+#ifdef DEBUG
     // LCD function test
     lcd.functionTest();
 #endif
-    // **********************  end debug periphial function tests ************************************
+// **********  end debug periphial function tests *************************
 
     encoder.initialise();
 
     // initialise button press type set-up code (pin, pullup mode, callback function)
     buttonPress.begin(BUTTON_PIN);
 
- 
-
 }  // end of setup
 
 void loop() {
-// **********************  debug - periphial function tests ************************************
-#ifdef DEBUG
-    //rotary encoder function test
-    //rotary_encoder.functionTest();
-#endif
-    // **********************  end debug periphial function tests ************************************
 
     buttonPress.checkPress();
 
     WrapEncoder::EncoderState currentEncoderState;
-    //int16_t currentValue;
-
+   
     menuState = Menu2_pitMin;  //test out various cases by defining test case
 
     switch (menuState) {
