@@ -14,7 +14,7 @@
 * ************************************************************ */
 
 //set up debug scaffold; comment out following line if you want to "turn off" serial monitor debugging
-#define DEBUG 1
+//#define DEBUG 1
 
 #include <Arduino.h>
 #include <Yabl.h>
@@ -68,9 +68,8 @@ void onButtonEvent(const EventInfo& info) {
     }
 }
 
-//void Press_Type::begin(int switchPin) {
+
 void Press_Type::begin(int _pin) {
-    //button.attach(switchPin, INPUT_PULLUP);  // pin configured to pull-up mode
     button.attach(_pin, INPUT_PULLUP);  // pin configured to pull-up mode
     button.callback(onButtonEvent);
 #ifdef DEBUG
@@ -81,6 +80,7 @@ void Press_Type::begin(int _pin) {
 #endif  //DEBUG
 }
 
-void Press_Type::checkPress() {
+int Press_Type::checkPress() {
     button.update();
+    return pressEventCode;
 }

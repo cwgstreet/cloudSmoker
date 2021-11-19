@@ -69,7 +69,7 @@
 //set up debug scaffold; comment out following line to "turn off" debugging routines at pre-proccessor stage
 //   #ifdef preprocessor simply tests if the symbol's been defined; therefore don't use #ifdef 0
 //     ref: https://stackoverflow.com/questions/16245633/ifdef-debug-versus-if-debug
-#define DEBUG 1 
+#define DEBUG 1
 
 // pins set up below is for Uno, not ESP8266
 #define I2C_SCL A5     //optional as hd44780 set to auto-configure
@@ -140,7 +140,7 @@ void setup() {
     // LCD function test
     lcd.functionTest();
 #endif
-// **********  end debug periphial function tests *************************
+    // **********  end debug periphial function tests *************************
 
     encoder.initialise();
 
@@ -150,11 +150,16 @@ void setup() {
 }  // end of setup
 
 void loop() {
-
-    buttonPress.checkPress();
+    int pressEventCode = 999;  // using 999 as null value flag as 0 is a short press code
+    pressEventCode = buttonPress.checkPress();  // pressEventCode SHORT_PRESS == 0, LONG_PRESS == 1, DOUBLE_PRESS == 2
+    if ( pressEventCode != 999) {
+        Serial.print("pressEventCode =");
+        Serial.println(pressEventCode);
+        pressEventCode = 999;
+    }
 
     WrapEncoder::EncoderState currentEncoderState;
-   
+
     menuState = Menu2_pitMin;  //test out various cases by defining test case
 
     switch (menuState) {

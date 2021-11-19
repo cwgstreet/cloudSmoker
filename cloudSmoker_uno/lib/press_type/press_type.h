@@ -33,7 +33,7 @@ class Press_Type {
 
     //prototype functions - see *.cpp for method code
     void begin(const int switchPin);
-    void checkPress();
+    int checkPress();
 
    private:
     int _pin;
