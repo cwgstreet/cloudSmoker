@@ -125,6 +125,8 @@ enum entryStates {
 
 enum entryStates menuState;
 
+bool doneFlag = 0; // flag to use in loop to ensure print is done once
+
 void setup() {
     CWG_LCD lcd(LCD_COLS, LCD_ROWS);  //instantiate lcd object from periphials library
     Serial.begin(SERIAL_MONITOR_SPEED);
@@ -140,7 +142,7 @@ void setup() {
     // LCD function test
     lcd.functionTest();
 #endif
-    // **********  end debug periphial function tests *************************
+// **********  end debug periphial function tests *************************
 
     encoder.initialise();
 
@@ -150,13 +152,26 @@ void setup() {
 }  // end of setup
 
 void loop() {
-    int pressEventCode = 999;  // using 999 as null value flag as 0 is a short press code
-    pressEventCode = buttonPress.checkPress();  // pressEventCode SHORT_PRESS == 0, LONG_PRESS == 1, DOUBLE_PRESS == 2
-    if ( pressEventCode != 999) {
-        Serial.print("pressEventCode =");
+    
+    buttonPress.checkPress();
+
+// **********  debug - press Type code function test  **************************
+//  pressEventCode: Short Press == 1, Long Press == 2, Double Press == 3, No Press == 0
+#ifdef DEBUG
+    if (pressEventCode == 1) {
+        Serial.print("*** Short Press! pressEventCode = ");
         Serial.println(pressEventCode);
-        pressEventCode = 999;
     }
+    if (pressEventCode == 2) {
+        Serial.print("*** Long Press! pressEventCode = ");
+        Serial.println(pressEventCode);
+    }
+    if (pressEventCode == 3) {
+        Serial.print("*** Double Press! pressEventCode = ");
+        Serial.println(pressEventCode);
+    }
+#endif  // end DEBUG
+// **********  end debug press Type function tests *************************
 
     WrapEncoder::EncoderState currentEncoderState;
 
