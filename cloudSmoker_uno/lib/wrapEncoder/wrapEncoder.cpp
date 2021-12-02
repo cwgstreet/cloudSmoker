@@ -40,7 +40,7 @@ void WrapEncoder::initialise() {
     WrapEncoder::EncoderState state;
 
     delay(2000);
-    Serial.println("Starting");
+    Serial.println("wrapenoder fail Starting");
     if (!encoder.begin()) {
         Serial.println("Encoder Failed to Start. Check pin assignments and available interrupts. Aborting.");
         while (1) {

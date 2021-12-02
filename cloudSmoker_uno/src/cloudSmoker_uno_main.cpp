@@ -74,7 +74,7 @@
 // *****************************************************************
 #define DEBUG_SERIAL  1      // uncomment to debug - Serial monitor function test
 #define DEBUG_LCD  1         // uncomment to debug - LCD function test
-#define DEBUG_PRESS-TYPE  1  // uncomment to debug - Rotary encoder button press type function test
+//#define DEBUG_PRESSTYPE  1  // uncomment to debug - Rotary encoder button press type function test
 //#define DEBUG_LED  1       // uncomment to debug LED test of rotary encoder
 //#define DEBUG_FREEMEM 1  // uncomment to debug remaining free memory
 
@@ -166,7 +166,7 @@ void loop() {
 
 // **********  debug - press Type code function test  **************************
 //  pressEventCode: Short Press == 1, Long Press == 2, Double Press == 3, No Press == 0
-#ifdef DEBUG_PRESS-TYPE
+#ifdef DEBUG_PRESSTYPE
     if (pressEventCode == 1) {
         Serial.print("*** Short Press! pressEventCode = ");
         Serial.println(pressEventCode);
@@ -199,7 +199,7 @@ void loop() {
                 Serial.println("Changing Encoder Settings.");
                 encoder.newSettings(-5, 15, 0, currentEncoderState);  //previous 180, 210, 203
                 prevEncoderValue = currentEncoderState.currentValue;
-                Serial.print("Starting Value: ");
+                Serial.print("main Starting Value: ");
                 Serial.println(prevEncoderValue);
             }
             break;

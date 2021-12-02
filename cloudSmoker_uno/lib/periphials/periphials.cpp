@@ -1,6 +1,6 @@
 /* ***************************************************************
 * periphials.h - library containing functions to test and use
-*   cloudSmoker hardware periphials
+*   cloudSmoker hardware periphials: LCD and Serial Monitor
 * 
 *  C W Greenstreet, Ver1, 27Sep21
 *    MIT Licence - Released into the public domain
@@ -50,8 +50,10 @@ void CWG_LCD::functionTest() {
     // otherwise, initalization was successful, the backlight should be on now
     // Print a message to the LCD to show LCD successfully initialised
     lcd.print(F("G'Day cloudSmkr!"));  // F-Macro to save dynamic memory
-    lcd.setCursor(0, 1);               //set cursor to first column of second row (forst position == 0)
     delay(3000);
+    lcd.clear();
     lcd.print(F("LCD test passed"));
+    lcd.setCursor(0, 1);               //set cursor to first column of second row (forst position == 0)
+    lcd.print(F("G'Day cloudSmkr!"));  // F-Macro to save dynamic memory
     //  end LCD function test
 }
