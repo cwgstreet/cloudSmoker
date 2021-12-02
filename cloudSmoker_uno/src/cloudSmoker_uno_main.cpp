@@ -67,10 +67,16 @@
 #include <press_type.h>   // wrapper library abstracting Yabl / Bounce2 routines
 #include <wrapEncoder.h>  //creates encoder object with min / max values that "wrap" around
 
-//set up debug scaffold; comment out following line to "turn off" debugging routines at pre-proccessor stage
-//   #ifdef preprocessor simply tests if the symbol's been defined; therefore don't use #ifdef 0
-//     ref: https://stackoverflow.com/questions/16245633/ifdef-debug-versus-if-debug
-//#define DEBUG 1
+// *****************  Debug Saffolding *****************************
+// Set up selective debug scaffold; comment out appropriate lines below to disable debugging tests at pre-proccessor stage
+//   Note: #ifdef preprocessor simply tests if the symbol's been defined; therefore don't use #ifdef 0
+//    Ref: https://stackoverflow.com/questions/16245633/ifdef-debug-versus-if-debug
+// *****************************************************************
+#define DEBUG_SERIAL  1      // uncomment to debug - Serial monitor function test
+#define DEBUG_LCD  1         // uncomment to debug - LCD function test
+#define DEBUG_PRESS-TYPE  1  // uncomment to debug - Rotary encoder button press type function test
+//#define DEBUG_LED  1       // uncomment to debug LED test of rotary encoder
+//#define DEBUG_FREEMEM 1  // uncomment to debug remaining free memory
 
 // pins set up below is for Uno, not ESP8266
 #define I2C_SCL A5     //optional as hd44780 set to auto-configure
@@ -92,7 +98,7 @@ const int LCD_ROWS = 2;
 // **************************************************
 // periphial function testing set-up for debug tests
 // **************************************************
-
+/*   ++++++ Consider removing this block +++++++
 #ifdef DEBUG
 // <<<<<<<  debug - define pin = internal LED for rotary encoder button press Function Test >>>>>>>>
 #define LED_PIN LED_BUILTIN
@@ -103,6 +109,8 @@ const int LCD_ROWS = 2;
 // SET A VARIABLE TO STORE THE LED STATE
 int ledState = LOW;
 #endif  //DEBUG
+ */
+
 
 // *********************
 // Object instantiation
@@ -133,13 +141,13 @@ void setup() {
     Serial.begin(SERIAL_MONITOR_SPEED);
 
 // **********  debug - periphial function tests **************************
-#ifdef DEBUG
+#ifdef DEBUG_SERIAL
     // Serial monitor terminal function test
     CWG_SerialMonitor terminal;  //instantiate terminal object from periphials library
     terminal.functionTest();
 #endif
 
-#ifdef DEBUG
+#ifdef DEBUG_LCD
     // LCD function test
     lcd.functionTest();
 #endif
@@ -158,7 +166,7 @@ void loop() {
 
 // **********  debug - press Type code function test  **************************
 //  pressEventCode: Short Press == 1, Long Press == 2, Double Press == 3, No Press == 0
-#ifdef DEBUG
+#ifdef DEBUG_PRESS-TYPE
     if (pressEventCode == 1) {
         Serial.print("*** Short Press! pressEventCode = ");
         Serial.println(pressEventCode);
@@ -213,11 +221,11 @@ void loop() {
             break;
     }
 // **********  debug - free memory check  **************************
-//#ifdef DEBUG
+#ifdef DEBUG_FREEMEM
     Serial.print("freeMemory()=");
     Serial.println(freeMemory());
     delay(1000);
-//#endif  // end DEBUG
+#endif  // end DEBUG
 // **********  end debug free memory check *************************
 
 
