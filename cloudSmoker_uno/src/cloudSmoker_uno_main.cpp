@@ -60,6 +60,7 @@
 #include <Wire.h>                           // must include before hd44780 libraries due to dependencies
 #include <hd44780.h>                        // LCD library
 #include <hd44780ioClass/hd44780_I2Cexp.h>  // i2c expander i/o class header -> required for my YwRobot 1602 LCD
+#include <MemoryFree.h>                       // https://github.com/maniacbug/MemoryFree & https://playground.arduino.cc/Code/AvailableMemory/ 
 
 // internal (user) libraries:
 #include <periphials.h>   // contains function tests and usuage for periphials
@@ -69,7 +70,7 @@
 //set up debug scaffold; comment out following line to "turn off" debugging routines at pre-proccessor stage
 //   #ifdef preprocessor simply tests if the symbol's been defined; therefore don't use #ifdef 0
 //     ref: https://stackoverflow.com/questions/16245633/ifdef-debug-versus-if-debug
-#define DEBUG 1
+//#define DEBUG 1
 
 // pins set up below is for Uno, not ESP8266
 #define I2C_SCL A5     //optional as hd44780 set to auto-configure
@@ -211,5 +212,13 @@ void loop() {
 
             break;
     }
+// **********  debug - free memory check  **************************
+//#ifdef DEBUG
+    Serial.print("freeMemory()=");
+    Serial.println(freeMemory());
+    delay(1000);
+//#endif  // end DEBUG
+// **********  end debug free memory check *************************
+
 
 }  // end of loop

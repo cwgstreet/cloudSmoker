@@ -14,7 +14,7 @@
 * ************************************************************ */
 
 //set up debug scaffold; comment out following line if you want to "turn off" serial monitor debugging
-#define DEBUG 1
+#define DEBUG 0
 
 #include <Arduino.h>
 #include <Yabl.h>
@@ -40,7 +40,7 @@ void onButtonEvent(const EventInfo& info) {
     switch (info.event) {
         case SINGLE_TAP:
             pressEventCode = SHORT_PRESS;  // pressEventCode == 1
-#ifdef DEBUG
+#if DEBUG
             Serial.print("Short Press!  pressEventCode = ");
             Serial.println(pressEventCode);
 #endif  // end DEBUG
@@ -48,7 +48,7 @@ void onButtonEvent(const EventInfo& info) {
 
         case DOUBLE_TAP:
             pressEventCode = DOUBLE_PRESS;  // pressEventCode == 2
-#ifdef DEBUG
+#if DEBUG
             Serial.print("Double Tap Press!  pressEventCode = ");
             Serial.println(pressEventCode);
 #endif  // end DEBUG
@@ -56,7 +56,7 @@ void onButtonEvent(const EventInfo& info) {
 
         case HOLD:
             pressEventCode = LONG_PRESS;  // pressEventCode == 3
-#ifdef DEBUG
+#if DEBUG
             Serial.print("Long Press!  pressEventCode = ");
             Serial.println(pressEventCode);
 #endif  // end DEBUG
@@ -74,7 +74,7 @@ void Press_Type::begin(int switchPin) {
 
 Serial.begin(BAUD_RATE);
 
-#ifdef DEBUG
+#if DEBUG
     Serial.println("   ");  //blank line for visual space
     Serial.println("     Yabl Test follows");
     Serial.println("==============================");
