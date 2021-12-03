@@ -56,11 +56,11 @@
 // external libraries:
 #include <Arduino.h>  //platformio IDE requires Arduino framework to be explicitly included
 #include <Bounce2.h>
+#include <MemoryFree.h>  // https://github.com/maniacbug/MemoryFree & https://playground.arduino.cc/Code/AvailableMemory/
 #include <NewEncoder.h>
 #include <Wire.h>                           // must include before hd44780 libraries due to dependencies
 #include <hd44780.h>                        // LCD library
 #include <hd44780ioClass/hd44780_I2Cexp.h>  // i2c expander i/o class header -> required for my YwRobot 1602 LCD
-#include <MemoryFree.h>                       // https://github.com/maniacbug/MemoryFree & https://playground.arduino.cc/Code/AvailableMemory/ 
 
 // internal (user) libraries:
 #include <periphials.h>   // contains function tests and usuage for periphials
@@ -95,8 +95,6 @@
 const int LCD_COLS = 16;
 const int LCD_ROWS = 2;
 
-
-
 // *********************
 // Object instantiation
 // *********************
@@ -119,7 +117,7 @@ enum entryStates {
 
 enum entryStates menuState;
 
-bool doneFlag = 0; // flag to use in loop to ensure print is done once
+bool doneFlag = 0;  // flag to use in loop to ensure print is done once
 
 void setup() {
     CWG_LCD lcd(LCD_COLS, LCD_ROWS);  //instantiate lcd object from periphials library
@@ -139,15 +137,15 @@ void setup() {
 // **********  end debug periphial function tests *************************
 
     encoder.initialise();
-    delay(100); // found delay necessary to clear serial buffer in encoder.initialise(); otherwise garbage characters
-
+    // delay necessary to clear serial buffer in encoder.initialise(); otherwise garbage characters
+    delay(100);  
+  
     // initialise button press type set-up code (pin, pullup mode, callback function)
     buttonPress.begin(BUTTON_PIN);
 
 }  // end of setup
 
 void loop() {
-    
     buttonPress.checkPress();
 
 // **********  debug - press Type code function test  **************************
@@ -206,13 +204,13 @@ void loop() {
 
             break;
     }
+    
 // **********  debug - free memory check  **************************
 #ifdef DEBUG_FREEMEM
     Serial.print("freeMemory()=");
     Serial.println(freeMemory());
     delay(1000);
 #endif  // end DEBUG
-// **********  end debug free memory check *************************
-
+    // **********  end debug free memory check *************************
 
 }  // end of loop
