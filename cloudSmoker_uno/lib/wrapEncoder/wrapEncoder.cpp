@@ -39,16 +39,15 @@ void ESP_ISR WrapEncoder::updateValue(uint8_t updatedState) {
 void WrapEncoder::initialise() {
     WrapEncoder::EncoderState state;
 
-    delay(2000);
-    Serial.println("wrapenoder fail Starting");
+    Serial.println("Starting");
     if (!encoder.begin()) {
-        Serial.println("Encoder Failed to Start. Check pin assignments and available interrupts. Aborting.");
+        Serial.println("1-Encoder Failed to Start. Check pin assignments and available interrupts. Aborting.");
         while (1) {
             yield();
         }
     } else {
         encoder.getState(state);
-        Serial.print("Encoder Successfully Started at value = ");
+        Serial.print("2-Encoder Successfully Started at value = ");
         prevEncoderValue = state.currentValue;
         Serial.println(prevEncoderValue);
     }
