@@ -67,7 +67,7 @@
 #include <press_type.h>   // wrapper library abstracting Yabl / Bounce2 routines
 #include <wrapEncoder.h>  //creates encoder object with min / max values that "wrap" around
 
-// *****************  Debug Saffolding *****************************
+// **************  Selective Debug Saffolding ***********************
 // Set up selective debug scaffold; comment out appropriate lines below to disable debugging tests at pre-proccessor stage
 //   Note: #ifdef preprocessor simply tests if the symbol's been defined; therefore don't use #ifdef 0
 //    Ref: https://stackoverflow.com/questions/16245633/ifdef-debug-versus-if-debug
@@ -76,7 +76,7 @@
 //#define DEBUG_LCD  1         // uncomment to debug - LCD function test
 //#define DEBUG_PRESSTYPE  1  // uncomment to debug - Rotary encoder button press type function test
 //#define DEBUG_LED  1       // uncomment to debug LED test of rotary encoder
-#define DEBUG_FREEMEM 1  // uncomment to debug remaining free memory
+//#define DEBUG_FREEMEM 1  // uncomment to debug remaining free memory
 
 // pins set up below is for Uno, not ESP8266
 #define I2C_SCL A5     //optional as hd44780 set to auto-configure
@@ -88,28 +88,13 @@
 // Baudrate:  Recommend 74480 baud rate for ESP8266 devices to match ESP8266 fixed bootloader initialisation speed
 //  (otherwise you will get startup gibberish characters on serial monitor before serial speed syncs)
 //  https://forum.arduino.cc/t/serial-monitor-only-shows-strange-symbols-arduino-mega-with-esp8266/640490/5
-//  note: must manually reset board after flashing for code to work correctly
+//  note: may have to manually reset board after flashing for code to work correctly
 #define SERIAL_MONITOR_SPEED 74880
 
 // define LCD geometry (YwRobot 1602 LCD)
 const int LCD_COLS = 16;
 const int LCD_ROWS = 2;
 
-// **************************************************
-// periphial function testing set-up for debug tests
-// **************************************************
-/*   ++++++ Consider removing this block +++++++
-#ifdef DEBUG
-// <<<<<<<  debug - define pin = internal LED for rotary encoder button press Function Test >>>>>>>>
-#define LED_PIN LED_BUILTIN
-#endif  //DEBUG
-
-#ifdef DEBUG
-// <<<<<<<  debug - button press Function Test >>>>>>>>
-// SET A VARIABLE TO STORE THE LED STATE
-int ledState = LOW;
-#endif  //DEBUG
- */
 
 
 // *********************
