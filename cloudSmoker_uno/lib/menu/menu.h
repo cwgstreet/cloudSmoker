@@ -1,5 +1,5 @@
 /* ***************************************************************
-* menu.h - lcd menu library
+*  menu.h - cloudSmoker lcd menu library
 * 
 *  C W Greenstreet, Ver1, 4Dec21
 *    MIT Licence - Released into the public domain
@@ -29,22 +29,35 @@
 //#include <hd44780ioClass/hd44780_I2Cexp.h>  // i2c expander i/o class header -> required for my YwRobot 1602 LCD
 
 
+// Prepare menu entry case names for switch-case menu stucture
+enum entryStates {
+    Menu1_bbqStatus = 1,  //set enum 1 to 4 rather than default 0 for first element
+    Menu1_setMeatDoneTemp 
+    Menu2_setPitMinTemp,
+    Menu3_setPitMaxTemp,
+    Menu4_setTempUnits
+};
+
+// menuState defined in implementation menu.cpp, hence extern keyword
+extern entryStates menuState;
+
+
 /******************************************************
 // Class definitions for lcd functions and tests:
 *******************************************************/
-/* 
-class CWG_LCD {
+
+class CloudSmoker_Menu {
    public:
-    CWG_LCD(const int lcdCols, const int lcdRows);  //constructor - will initialise lcdCols, lcdRows
+    //CWG_LCD(const int lcdCols, const int lcdRows);  //constructor - will initialise lcdCols, lcdRows
 
-    void functionTest();
-    void initialiseCustomCharSet();
-
+   void showSplashScreen();
+   void processMenu();
+    
    private:
     int _numCols;
     int _numRows;
 };
- */
+ 
 /******************************************************
 // Helper function prototype:
 *******************************************************/

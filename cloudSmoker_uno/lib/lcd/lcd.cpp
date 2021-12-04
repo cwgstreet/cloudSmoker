@@ -1,6 +1,6 @@
 /* ***************************************************************
 * lcd.h - library containing functions to use lcd, including 
-*   custom characters
+*   custom character set
 * 
 *  C W Greenstreet, Ver1, 4Dec21
 *    MIT Licence - Released into the public domain
@@ -54,6 +54,7 @@ void CWG_LCD::functionTest() {
 ////////////////////////////////////////////////////////////////////////////////
 // Custom character data - symbols mostly borrowed from Prusa Mk3 firmware, unless noted
 //   Ref: https://github.com/prusa3d/Prusa-Firmware/blob/MK3/Firmware/lcd.cpp
+//
 ////////////////////////////////////////////////////////////////////////////////
 
 const uint8_t lcd_custChar_degree[8] PROGMEM = {
@@ -148,6 +149,84 @@ void CWG_LCD::initialiseCustomCharSet() {
     lcd.createChar(6, lcd_custChar_arrdown);
     lcd.createChar(7, lcd_custChar_selectarr);
 }
+
+/* 
+// *********  animated wi-fi  *********************************
+
+byte wifi1[8] = {
+  B00000,
+  B00000,
+  B00000,
+  B00000,
+  B00000,
+  B00000,
+  B00000,
+  B00100,
+};
+
+byte wifi2[8] = {
+  B00000,
+  B00000,
+  B00000,
+  B00000,
+  B00100,
+  B01010,
+  B00000,
+  B00100,
+};
+
+byte wifi3[8] = {
+  B00000,
+  B01110,
+  B10001,
+  B00000,
+  B00100,
+  B01010,
+  B00000,
+  B00100,
+};
+
+  lcd.createChar(0, wifi1);
+  lcd.createChar(1, wifi2);
+  lcd.createChar(2, wifi3);
+
+  lcd.setCursor(15, 0);
+  lcd.write(byte(0));
+  delay(200);
+  lcd.setCursor(15, 0);
+  lcd.write(byte(1));
+  delay(200);
+  lcd.setCursor(15, 0);
+  lcd.write(byte(2));
+  delay(200);
+  lcd.setCursor(15, 0);
+  lcd.write(byte(1));
+  delay(200);
+  lcd.setCursor(15, 0);
+  lcd.write(byte(0));
+
+  while(WiFiMulti.run() != WL_CONNECTED) {
+      Serial.print(".");
+      lcd.setCursor(15, 0);
+      lcd.write(byte(0));
+      delay(200);
+      lcd.setCursor(15, 0);
+      lcd.write(byte(1));
+      delay(200);
+      lcd.setCursor(15, 0);
+      lcd.write(byte(2));
+      delay(200);
+      lcd.setCursor(15, 0);
+      lcd.write(byte(1));
+      delay(200);
+  }
+
+  Serial.println("");
+  Serial.println("WiFi connected");
+
+// *********  end animated wi-fi  *********************************
+*/
+
 
 /* 
 Note that you might want to embed a special character in a "string" to write to the LCD (

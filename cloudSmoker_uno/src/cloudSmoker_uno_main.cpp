@@ -173,40 +173,7 @@ void loop() {
 
     menuState = Menu2_pitMin;  //test out various cases by defining test case
 
-    switch (menuState) {
-        case Menu1_meatDone:
-            Serial.print("menuState =");
-            Serial.println(menuState);
-            encoderCountValue = encoder.getCount(currentEncoderState);
-            break;
-
-        case Menu2_pitMin:
-            encoderCountValue = encoder.getCount(currentEncoderState);
-            if (encoderCountValue > 209) {
-                Serial.println("Changing Encoder Settings.");
-                encoder.newSettings(-5, 15, 0, currentEncoderState);  //previous 180, 210, 203
-                prevEncoderValue = currentEncoderState.currentValue;
-                Serial.print("main Starting Value: ");
-                Serial.println(prevEncoderValue);
-            }
-            break;
-
-        case Menu3_pitMax:
-            Serial.print("menuState =");
-            Serial.println(menuState);
-            break;
-
-        case Menu4_unitsTemp:
-            Serial.print("menuState =");
-            Serial.println(menuState);
-            break;
-
-        default:
-            Serial.print("default case!  menuState =");
-            Serial.println(menuState);
-
-            break;
-    }
+    
 
 // **********  debug - free memory check  **************************
 #ifdef DEBUG_FREEMEM
