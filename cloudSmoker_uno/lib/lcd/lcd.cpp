@@ -17,7 +17,7 @@
 //incliude local libraries
 #include <lcd.h>
 
-hd44780_I2Cexp lcd;     //instantiate lcd object: auto locate & auto config expander chip
+hd44780_I2Cexp lcd;  //instantiate lcd object: auto locate & auto config expander chip
 
 //LCD constructor passing lcd rows and columns
 CWG_LCD::CWG_LCD(const int lcdCols, const int lcdRows) {
@@ -45,12 +45,11 @@ void CWG_LCD::functionTest() {
     //  end LCD function test
 }
 
-//function LCD_goto_row_col() to place the LCD cursor at a specific position, and a 
-// function LCD_write_data(),  o send a data byte to the LCD, you can put the special character 
+//function LCD_goto_row_col() to place the LCD cursor at a specific position, and a
+// function LCD_write_data(),  o send a data byte to the LCD, you can put the special character
 // on the screen like this:
 //LCD_goto_row_col(thisrow, thatcol);
 //LCD_write_data(ActiveRowIndicator);
-
 
 ////////////////////////////////////////////////////////////////////////////////
 // Custom character data - symbols mostly borrowed from Prusa Mk3 firmware, unless noted
@@ -66,6 +65,28 @@ const uint8_t lcd_custChar_degree[8] PROGMEM = {
     B00000,
     B00000,
     B00000};  // Source: Prusa
+
+// uint8_t degreeC[8]     = {0x18,0x18,0x03,0x04,0x04,0x04,0x03,0x00};
+const uint8_t lcd_custChar_degreeC[8] PROGMEM = {
+    B11000,
+    B11000,
+    B00011,
+    B00100,
+    B00100,
+    B00100,
+    B00011,
+    B00000};  //source: https://github.com/duinoWitchery/hd44780/blob/master/examples/ioClass/hd44780_I2Cexp/LCDCustomChars/LCDCustomChars.ino
+
+// uint8_t degreeF[8]     = {0x18,0x18,0x07,0x04,0x07,0x04,0x04,0x00};
+const uint8_t lcd_custChar_degreeF[8] PROGMEM = {
+    B11000,
+    B11000,
+    B00111,
+    B00100,
+    B00111,
+    B00100,
+    B00100,
+    B00000};  //source: https://github.com/duinoWitchery/hd44780/blob/master/examples/ioClass/hd44780_I2Cexp/LCDCustomChars/LCDCustomChars.ino
 
 const uint8_t lcd_custChar_thermometer[8] PROGMEM = {
     B00100,
@@ -117,27 +138,16 @@ const uint8_t lcd_custChar_selectarr[8] PROGMEM = {
     B01000,
     B00000};  // custom made
 
-// uint8_t degreeC[8]     = {0x18,0x18,0x03,0x04,0x04,0x04,0x03,0x00};
-const uint8_t lcd_custChar_degreeC[8] PROGMEM = {
-    B11000,
-    B11000,
-    B00011,
-    B00100,
-    B00100,
-    B00100,
-    B00011,
-    B00000};  //source: https://github.com/duinoWitchery/hd44780/blob/master/examples/ioClass/hd44780_I2Cexp/LCDCustomChars/LCDCustomChars.ino
-
-// uint8_t degreeF[8]     = {0x18,0x18,0x07,0x04,0x07,0x04,0x04,0x00};
-const uint8_t lcd_custChar_degreeF[8] PROGMEM = {
-    B11000,
-    B11000,
-    B00111,
-    B00100,
-    B00111,
-    B00100,
-    B00100,
-    B00000};  //source: https://github.com/duinoWitchery/hd44780/blob/master/examples/ioClass/hd44780_I2Cexp/LCDCustomChars/LCDCustomChars.ino
+void CWG_LCD::initialiseCustomCharSet() {
+    lcd.createChar(0, lcd_custChar_degree);
+    lcd.createChar(1, lcd_custChar_degreeC);
+    lcd.createChar(2, lcd_custChar_degreeF);
+    lcd.createChar(3, lcd_custChar_thermometer);
+    lcd.createChar(4, lcd_custChar_uplevel);
+    lcd.createChar(5, lcd_custChar_arrup);
+    lcd.createChar(6, lcd_custChar_arrdown);
+    lcd.createChar(7, lcd_custChar_selectarr);
+}
 
 /* 
 Note that you might want to embed a special character in a "string" to write to the LCD (

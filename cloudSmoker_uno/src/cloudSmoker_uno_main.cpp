@@ -63,8 +63,8 @@
 #include <hd44780ioClass/hd44780_I2Cexp.h>  // i2c expander i/o class header -> required for my YwRobot 1602 LCD
 
 // internal (user) libraries:
-#include <periphials.h>   // contains function tests and usuage for periphials (now just serial monitor)
 #include <lcd.h>          // lcd function tests, helper functions and custom characters
+#include <periphials.h>   // contains function tests and usuage for periphials (now just serial monitor)
 #include <press_type.h>   // wrapper library abstracting Yabl / Bounce2 routines
 #include <wrapEncoder.h>  //creates encoder object with min / max values that "wrap" around
 
@@ -122,6 +122,8 @@ bool doneFlag = 0;  // flag to use in loop to ensure print is done once
 
 void setup() {
     CWG_LCD lcd(LCD_COLS, LCD_ROWS);  //instantiate lcd object from periphials library
+    lcd.initialiseCustomCharSet();  //creates eight custom lcd charaters
+
     Serial.begin(SERIAL_MONITOR_SPEED);
 
 // **********  debug - periphial function tests **************************
@@ -135,12 +137,12 @@ void setup() {
     // LCD function test
     lcd.functionTest();
 #endif
-// **********  end debug periphial function tests *************************
+    // **********  end debug periphial function tests *************************
 
     encoder.initialise();
     // delay necessary to clear serial buffer in encoder.initialise(); otherwise garbage characters
-    delay(100);  
-  
+    delay(100);
+
     // initialise button press type set-up code (pin, pullup mode, callback function)
     buttonPress.begin(BUTTON_PIN);
 
@@ -165,7 +167,7 @@ void loop() {
         Serial.println(pressEventCode);
     }
 #endif  // end DEBUG
-// **********  end debug press Type function tests *************************
+        // **********  end debug press Type function tests *************************
 
     WrapEncoder::EncoderState currentEncoderState;
 

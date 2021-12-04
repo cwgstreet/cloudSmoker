@@ -18,9 +18,9 @@
 #include <pins_arduino.h>
 #endif  // end if-block
 
-/*****************
+/******************************************************
 // Libraries required for periphial function tests:
-*****************/
+*******************************************************/
 
 // i2C devices
 #include <Wire.h>
@@ -31,27 +31,26 @@
 
 
 /******************************************************
-// Helper function prototype:
+// Class definitions for lcd functions and tests:
 *******************************************************/
-
-
-void gotoRowCol(int thisRow, int thatCol);
-
-
-/******************************************************
-// Class definitions for periphial functions and tests:
-*******************************************************/
-
 
 class CWG_LCD {
    public:
     CWG_LCD(const int lcdCols, const int lcdRows);  //constructor - will initialise lcdCols, lcdRows
 
     void functionTest();
+    void initialiseCustomCharSet();
 
    private:
     int _numCols;
     int _numRows;
 };
+
+/******************************************************
+// Helper function prototype:
+*******************************************************/
+
+void gotoRowCol(int thisRow, int thatCol);  //move into class?
+
 
 #endif  // end header guard
