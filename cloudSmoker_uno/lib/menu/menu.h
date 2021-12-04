@@ -1,5 +1,5 @@
 /* ***************************************************************
-* menu.h - lcd menu library
+*  menu.h - cloudSmoker lcd menu library
 * 
 *  C W Greenstreet, Ver1, 4Dec21
 *    MIT Licence - Released into the public domain

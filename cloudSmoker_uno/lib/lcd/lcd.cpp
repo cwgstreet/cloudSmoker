@@ -1,6 +1,6 @@
 /* ***************************************************************
 * lcd.h - library containing functions to use lcd, including 
-*   custom characters
+*   custom character set
 * 
 *  C W Greenstreet, Ver1, 4Dec21
 *    MIT Licence - Released into the public domain
@@ -54,6 +54,7 @@ void CWG_LCD::functionTest() {
 ////////////////////////////////////////////////////////////////////////////////
 // Custom character data - symbols mostly borrowed from Prusa Mk3 firmware, unless noted
 //   Ref: https://github.com/prusa3d/Prusa-Firmware/blob/MK3/Firmware/lcd.cpp
+//
 ////////////////////////////////////////////////////////////////////////////////
 
 const uint8_t lcd_custChar_degree[8] PROGMEM = {
