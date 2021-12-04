@@ -30,9 +30,9 @@ void CWG_SerialMonitor::functionTest() {
     Serial.println(F("   "));
 }
 
-/* 
-// moved lcd fuction to lcd.h / lcd.cpp library
-//
+/* ************************************************
+// moved lcd fuction below to lcd.h / lcd.cpp library
+// VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
 
 hd44780_I2Cexp lcd;     //instantiate lcd object: auto locate & auto config expander chip
 
@@ -41,7 +41,6 @@ CWG_LCD::CWG_LCD(const int lcdCols, const int lcdRows) {
     _numCols = lcdCols;
     _numRows = lcdRows;
 }
-
 
 // LCD.function test to determine if LCD is working properly.  Place function call in setup (not loop)
 void CWG_LCD::functionTest() {
