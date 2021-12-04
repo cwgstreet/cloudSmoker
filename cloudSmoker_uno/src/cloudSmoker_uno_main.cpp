@@ -63,7 +63,8 @@
 #include <hd44780ioClass/hd44780_I2Cexp.h>  // i2c expander i/o class header -> required for my YwRobot 1602 LCD
 
 // internal (user) libraries:
-#include <periphials.h>   // contains function tests and usuage for periphials
+#include <periphials.h>   // contains function tests and usuage for periphials (now just serial monitor)
+#include <lcd.h>          // lcd function tests, helper functions and custom characters
 #include <press_type.h>   // wrapper library abstracting Yabl / Bounce2 routines
 #include <wrapEncoder.h>  //creates encoder object with min / max values that "wrap" around
 
@@ -204,7 +205,7 @@ void loop() {
 
             break;
     }
-    
+
 // **********  debug - free memory check  **************************
 #ifdef DEBUG_FREEMEM
     Serial.print("freeMemory()=");

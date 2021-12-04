@@ -1,14 +1,14 @@
 /* ***************************************************************
-* periphials.h - library containing functions to test and use
-*   cloudSmoker hardware serial monitor and LCD periphials
+* lcd.h - library containing functions to use lcd, including 
+*   custom characters
 * 
-*  C W Greenstreet, Ver1, 27Sep21
+*  C W Greenstreet, Ver1, 4Dec21
 *    MIT Licence - Released into the public domain
 *
 ** ************************************************************* */
 
-#ifndef PERIPHIALS_H
-#define PERIPHIALS_H
+#ifndef LCD_H
+#define LCD_H
 
 #if ARDUINO >= 100  // this if-else block manages depreciated versions of Arduino IDE
 #include <Arduino.h>
@@ -29,15 +29,20 @@
 #include <hd44780.h>
 #include <hd44780ioClass/hd44780_I2Cexp.h>  // i2c expander i/o class header -> required for my YwRobot 1602 LCD
 
+
+/******************************************************
+// Helper function prototype:
+*******************************************************/
+
+
+void gotoRowCol(int thisRow, int thatCol);
+
+
 /******************************************************
 // Class definitions for periphial functions and tests:
 *******************************************************/
 
-class CWG_SerialMonitor {
-   public:
-    void functionTest();
-};
-/* 
+
 class CWG_LCD {
    public:
     CWG_LCD(const int lcdCols, const int lcdRows);  //constructor - will initialise lcdCols, lcdRows
@@ -48,5 +53,5 @@ class CWG_LCD {
     int _numCols;
     int _numRows;
 };
- */
+
 #endif  // end header guard
