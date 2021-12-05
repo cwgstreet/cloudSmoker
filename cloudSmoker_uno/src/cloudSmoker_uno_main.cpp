@@ -67,6 +67,8 @@
 #include <periphials.h>   // contains function tests and usuage for periphials (now just serial monitor)
 #include <press_type.h>   // wrapper library abstracting Yabl / Bounce2 routines
 #include <wrapEncoder.h>  //creates encoder object with min / max values that "wrap" around
+#include <menu.h>  //creates encoder object with min / max values that "wrap" around
+
 
 // **************  Selective Debug Saffolding ***********************
 // Set up selective debug scaffold; comment out appropriate lines below to disable debugging tests at pre-proccessor stage
@@ -107,16 +109,6 @@ int16_t encoderCountValue;
 
 // KY40 button
 Press_Type buttonPress(BUTTON_PIN);
-
-// Prepare menu entry case names for switch-case menu stucture
-enum entryStates {
-    Menu1_meatDone = 1,  //set enum 1 to 4 rather than default 0 for first element
-    Menu2_pitMin,
-    Menu3_pitMax,
-    Menu4_unitsTemp
-};
-
-enum entryStates menuState;
 
 bool doneFlag = 0;  // flag to use in loop to ensure print is done once
 
@@ -171,7 +163,7 @@ void loop() {
 
     WrapEncoder::EncoderState currentEncoderState;
 
-    menuState = Menu2_pitMin;  //test out various cases by defining test case
+    //menuState = Menu2_pitMin;  //test out various cases by defining test case
 
     
 

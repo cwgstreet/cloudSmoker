@@ -6,8 +6,8 @@
 *
 ** ************************************************************* */
 
-#ifndef LCD_H
-#define LCD_H
+#ifndef MENU_H
+#define MENU_H
 
 #if ARDUINO >= 100  // this if-else block manages depreciated versions of Arduino IDE
 #include <Arduino.h>
@@ -21,26 +21,18 @@
 // Libraries required for periphial function tests:
 *******************************************************/
 
-// i2C devices
-//#include <Wire.h>
-
-//YwRobot 1602 LCD with i2c i/o exapander backpack (PCF8574 or MCP23008)
-//#include <hd44780.h>
-//#include <hd44780ioClass/hd44780_I2Cexp.h>  // i2c expander i/o class header -> required for my YwRobot 1602 LCD
-
+// lcd
+//#include <lcd.h>
 
 // Prepare menu entry case names for switch-case menu stucture
-enum entryStates {
-    Menu1_bbqStatus = 1,  //set enum 1 to 4 rather than default 0 for first element
-    Menu1_setMeatDoneTemp 
-    Menu2_setPitMinTemp,
-    Menu3_setPitMaxTemp,
-    Menu4_setTempUnits
-};
+enum entryStates { bbqStatus = 1,  //set enum 1 to 4 rather than default 0 for first element
+                   Menu2_setMeatDoneTemp,
+                   Menu3_setPitMinTemp,
+                   Menu4_setPitMaxTemp,
+                   Menu5_setTempUnits };
 
 // menuState defined in implementation menu.cpp, hence extern keyword
 extern entryStates menuState;
-
 
 /******************************************************
 // Class definitions for lcd functions and tests:
@@ -50,19 +42,19 @@ class CloudSmoker_Menu {
    public:
     //CWG_LCD(const int lcdCols, const int lcdRows);  //constructor - will initialise lcdCols, lcdRows
 
-   void showSplashScreen();
-   void processMenu();
-    
+    void showSplashScreen();
+    void processMenu();
+    void displayStatusScreen();
+
    private:
     int _numCols;
     int _numRows;
 };
- 
+
 /******************************************************
 // Helper function prototype:
 *******************************************************/
 
 //void gotoRowCol(int thisRow, int thatCol);  //move into class?
-
 
 #endif  // end header guard
