@@ -1,5 +1,6 @@
 /* ***************************************************************
-*  menu.h - cloudSmoker lcd menu library
+*  menu.h - cloudSmoker state maching functionality including 
+*     lcd menu 
 * 
 *  C W Greenstreet, Ver1, 4Dec21
 *    MIT Licence - Released into the public domain

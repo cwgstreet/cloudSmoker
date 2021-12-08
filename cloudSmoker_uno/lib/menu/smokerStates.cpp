@@ -1,6 +1,7 @@
 /* ***************************************************************
-*  menu.h - cloudSmoker lcd menu library 
-* 
+*  menu.h - cloudSmoker state maching functionality including 
+*     lcd menu 
+*
 *  C W Greenstreet, Ver1, 4Dec21
 *    MIT Licence - Released into the public domain
 *
@@ -16,7 +17,7 @@
  
 //incliude local libraries
 #include <lcd.h>
-#include <menu.h>
+#include <smokerStates.h>
 
 // entryStates is an enum defined in menu.h header file (as extern); menuState is global
 entryStates menuState;

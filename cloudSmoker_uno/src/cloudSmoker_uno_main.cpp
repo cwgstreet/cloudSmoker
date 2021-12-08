@@ -67,7 +67,7 @@
 #include <periphials.h>   // contains function tests and usuage for periphials (now just serial monitor)
 #include <press_type.h>   // wrapper library abstracting Yabl / Bounce2 routines
 #include <wrapEncoder.h>  //creates encoder object with min / max values that "wrap" around
-#include <menu.h>  //creates encoder object with min / max values that "wrap" around
+#include <smokerStates.h>  //cloudSmoker state machine functionality including menus
 
 
 // **************  Selective Debug Saffolding ***********************
@@ -98,6 +98,9 @@
 const int LCD_COLS = 16;
 const int LCD_ROWS = 2;
 
+// timing variables - global
+unsigned long currentMillis;
+
 // *********************
 // Object instantiation
 // *********************
@@ -110,7 +113,6 @@ int16_t encoderCountValue;
 // KY40 button
 Press_Type buttonPress(BUTTON_PIN);
 
-bool doneFlag = 0;  // flag to use in loop to ensure print is done once
 
 void setup() {
     CWG_LCD lcd(LCD_COLS, LCD_ROWS);  //instantiate lcd object from periphials library
