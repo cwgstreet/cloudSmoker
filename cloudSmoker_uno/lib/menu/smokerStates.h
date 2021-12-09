@@ -7,8 +7,8 @@
 *
 ** ************************************************************* */
 
-#ifndef MENU_H
-#define MENU_H
+#ifndef SMOKERSTATES_H
+#define SMOKERSTATES_H
 
 #if ARDUINO >= 100  // this if-else block manages depreciated versions of Arduino IDE
 #include <Arduino.h>
@@ -19,37 +19,45 @@
 #endif  // end if-block
 
 /******************************************************
-// Libraries required for periphial function tests:
+// Libraries required for ???:
 *******************************************************/
 
 // lcd
-//#include <lcd.h>
+//#include <????.h>
 
-// Prepare menu entry case names for switch-case menu stucture
-enum entryStates { bbqStatus = 1,  //set enum 1 to 4 rather than default 0 for first element
-                   Menu2_setMeatDoneTemp,
-                   Menu3_setPitMinTemp,
-                   Menu4_setPitMaxTemp,
-                   Menu5_setTempUnits };
+// Prepare case names for cloudSmoker State Machine switch-case stucture
+enum entryStates { splashScreen = 1, //set enum 1 to 11 rather than default 0 for first element
+                   startCook,          
+                   setUp,
+                   setMeatDoneTemp,
+                   setPitMinTemp,
+                   setPitMaxTemp,
+                   setTempUnits,
+                   getTemp,
+                   txTemp,
+                   lightSleep, 
+                   bbqStatus };
 
-// menuState defined in implementation menu.cpp, hence extern keyword
-extern entryStates menuState;
+// smokerState defined in implementation smokerState.cpp, hence extern keyword
+extern entryStates smokerState;
 
 /******************************************************
-// Class definitions for lcd functions and tests:
+// Class definitions for cloudSmoker state machine:
 *******************************************************/
 
-class CloudSmoker_Menu {
+class CloudSmoker_State {
    public:
     //CWG_LCD(const int lcdCols, const int lcdRows);  //constructor - will initialise lcdCols, lcdRows
 
-    void showSplashScreen();
-    void processMenu();
-    void displayStatusScreen();
+    
+    void processState();
+    
 
    private:
-    int _numCols;
-    int _numRows;
+    void showSplashScreen();
+    void showStatusScreen();
+    //int _numCols;
+    //int _numRows;
 };
 
 /******************************************************

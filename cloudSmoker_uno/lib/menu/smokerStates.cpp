@@ -7,34 +7,39 @@
 *
 ** ************************************************************* */
 
-
 // include 3rd party libraries
 #include <Arduino.h>
 #include <NewEncoder.h>
 #include <Wire.h>                           // i2C device communication
 #include <hd44780.h>                        // LCD library
 #include <hd44780ioClass/hd44780_I2Cexp.h>  // i2c expander i/o class header -> required for my YwRobot 1602 LCD
- 
+
 //incliude local libraries
 #include <lcd.h>
 #include <smokerStates.h>
 
 // entryStates is an enum defined in menu.h header file (as extern); menuState is global
-entryStates menuState;
+entryStates smokerState;
 
-void CloudSmoker_Menu::processMenu() {
-    switch (menuState) {
-        case bbqStatus:
-            displayStatusScreen();
+void CloudSmoker_State::processState() {
+    switch (smokerState) {
+        case splashScreen:
+            showSplashScreen();
             break;
 
-        case Menu2_setMeatDoneTemp:
-            Serial.print("menuState =");
-            Serial.println(menuState);
-            //encoderCountValue = encoder.getCount(currentEncoderState);
+        case startCook:
+            //code here;
             break;
 
-        case Menu3_setPitMinTemp:
+        case setUp:
+            // code here
+            break;
+
+        case setMeatDoneTemp:
+            // code here
+            break;
+
+        case setPitMinTemp:
             /* encoderCountValue = encoder.getCount(currentEncoderState);
             if (encoderCountValue > 209) {
                 Serial.println("Changing Encoder Settings.");
@@ -45,20 +50,41 @@ void CloudSmoker_Menu::processMenu() {
             }*/
             break;
 
-        case Menu5_setTempUnits:
+        case setPitMaxTemp:
+            // code here
+            break;
+
+        case setTempUnits:
             Serial.print("menuState =");
-            Serial.println(menuState);
+            
+            break;
+
+        case getTemp:
+            // code here
+            break;
+
+        case txTemp:
+            // code here
+            break;
+
+        case lightSleep:
+            // code here
+            break;
+
+        case bbqStatus:
+            // code here
             break;
 
         default:
-            menuState = bbqStatus;
+            break;
+            //menuState = bbqStatus;
     }
 }
 
-void CloudSmoker_Menu::showSplashScreen() {
+void CloudSmoker_State::showSplashScreen() {
     //splash screen lcd display code here
 }
 
-void CloudSmoker_Menu::displayStatusScreen() {
+void CloudSmoker_State::showStatusScreen() {
     //status screen lcd display code here
 }

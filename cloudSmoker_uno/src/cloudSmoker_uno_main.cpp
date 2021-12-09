@@ -165,8 +165,7 @@ void loop() {
 
     WrapEncoder::EncoderState currentEncoderState;
 
-    //menuState = Menu2_pitMin;  //test out various cases by defining test case
-
+    
     
 
 // **********  debug - free memory check  **************************
