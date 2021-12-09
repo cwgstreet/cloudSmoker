@@ -131,13 +131,13 @@ const uint8_t lcd_custChar_arrdown[8] PROGMEM = {
 
 const uint8_t lcd_custChar_selectarr[8] PROGMEM = {
     B01000,
-    B00100,
-    B00010,
-    B00001,
-    B00010,
-    B00100,
-    B01000,
-    B00000};  // custom made
+	B01100,
+	B01110,
+	B01111,
+	B01110,
+	B01100,
+	B01000,
+	B00000};  // custom made
 
 void CWG_LCD::initialiseCustomCharSet() {
     lcd.createChar(0, lcd_custChar_degree);
