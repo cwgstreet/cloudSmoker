@@ -98,6 +98,12 @@
 const int LCD_COLS = 16;
 const int LCD_ROWS = 2;
 
+//global variables
+float meatDoneTemp = 203;  // default to usual brisket internal done temp 203degF
+float pitTemp = 225;       // default to usual brisket cooking (pit) temp 225degF
+bool degCFlag = 0;          // temperature unit flag: 1 for Centigrade or 0 for Fahrenheit
+
+
 // timing variables - global
 unsigned long currentMillis;
 
@@ -115,10 +121,17 @@ Press_Type buttonPress(BUTTON_PIN);
 
 
 void setup() {
-    CWG_LCD lcd(LCD_COLS, LCD_ROWS);  //instantiate lcd object from periphials library
+     Serial.begin(SERIAL_MONITOR_SPEED);
+
+   CWG_LCD lcd(LCD_COLS, LCD_ROWS);  //instantiate lcd object from periphials library
     lcd.initialiseCustomCharSet();  //creates eight custom lcd charaters
 
-    Serial.begin(SERIAL_MONITOR_SPEED);
+// LCD function test
+    lcd.functionTest();
+
+    lcd.initialiseCustomCharSet();  //creates eight custom lcd charaters
+    //lcd.displayTest();
+    lcd.showSplashScreen(degCFlag, meatDoneTemp, pitTemp);
 
 // **********  debug - periphial function tests **************************
 #ifdef DEBUG_SERIAL
