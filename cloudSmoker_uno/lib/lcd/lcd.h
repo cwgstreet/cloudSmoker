@@ -40,6 +40,9 @@ class CWG_LCD {
 
     void functionTest();
     void initialiseCustomCharSet();
+    void showSplashScreen(bool degCFlag, float meatDoneTemp, float pitTemp);
+    void displayTest();
+
 
    private:
     int _numCols;

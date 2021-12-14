@@ -42,8 +42,8 @@ void CWG_LCD::functionTest() {
     lcd.print(F("LCD test passed"));
     lcd.setCursor(0, 1);               //set cursor to first column of second row (forst position == 0)
     lcd.print(F("G'Day cloudSmkr!"));  // F-Macro to save dynamic memory
-    //  end LCD function test
-}
+    delay(2000);
+}   //  end LCD function test
 
 //function LCD_goto_row_col() to place the LCD cursor at a specific position, and a
 // function LCD_write_data(),  o send a data byte to the LCD, you can put the special character
@@ -57,8 +57,8 @@ void CWG_LCD::functionTest() {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-const uint8_t lcd_custChar_degree[8] PROGMEM = {
-    B01100,
+const uint8_t lcd_custChar_degree[8] PROGMEM = {  //need to refer to element 0 in array as "/010", binary 8
+    B01100,                                       // alternative degree symbol is in character set "/337"
     B10010,
     B10010,
     B01100,
@@ -113,8 +113,8 @@ const uint8_t lcd_custChar_arrup[8] PROGMEM = {
     B00100,
     B01110,
     B11111,
-    B00000,
-    B00000,
+    B00100,
+    B00100,
     B00000,
     B00000,
     B00000};  // Source: Prusa
@@ -123,24 +123,25 @@ const uint8_t lcd_custChar_arrdown[8] PROGMEM = {
     B00000,
     B00000,
     B00000,
-    B00000,
-    B00000,
-    B10001,
-    B01010,
+    B00100,
+    B00100,
+    B11111,
+    B01110,
     B00100};  // Source: Prusa
 
 const uint8_t lcd_custChar_selectarr[8] PROGMEM = {
     B01000,
-	B01100,
-	B01110,
-	B01111,
-	B01110,
-	B01100,
-	B01000,
-	B00000};  // custom made
+    B01100,
+    B01110,
+    B01111,
+    B01110,
+    B01100,
+    B01000,
+    B00000};  // custom made
 
+// creates eight custom charcters to use in menu or status screens
 void CWG_LCD::initialiseCustomCharSet() {
-    lcd.createChar(0, lcd_custChar_degree);
+    lcd.createChar(0, lcd_custChar_degree);  //use \010 (binary for 8 as \000 is null termination and will cause problems
     lcd.createChar(1, lcd_custChar_degreeC);
     lcd.createChar(2, lcd_custChar_degreeF);
     lcd.createChar(3, lcd_custChar_thermometer);
@@ -148,6 +149,52 @@ void CWG_LCD::initialiseCustomCharSet() {
     lcd.createChar(5, lcd_custChar_arrup);
     lcd.createChar(6, lcd_custChar_arrdown);
     lcd.createChar(7, lcd_custChar_selectarr);
+}
+
+// confirming functionality of lcd display of special characters
+void CWG_LCD::displayTest() {
+    lcd.clear();
+    //lcd.print("\008" "\001" "\002" "\003" "\004" "\005" "\006" "\007");
+    lcd.setCursor(0, 0);
+    lcd.print(
+        "\010"
+        "\001"
+        "\002"
+        "\003"
+        "\004"
+        "\005"
+        "\006"
+        "\007"
+        "\337");
+    lcd.setCursor(0, 1);   // display second line on lcd
+    lcd.print(
+        "temp is 210"
+        "\002");
+}
+
+// format: dtostrf(float_value, min_width, num_digits_after_decimal, where_to_store_string)
+// sprintf(line0, "Temp: %-7sC", float_str); // %6s right pads the string
+
+void CWG_LCD::showSplashScreen(bool degCFlag, float meatDoneTemp, float pitTemp) {
+    lcd.clear();
+    char msg[17];                               // space for 16 charcaters + null termination
+    char meatFloatStr[4];                       // empty array to hold convert float meat temp + null
+    char pitFloatStr[4];                        
+    dtostrf(meatDoneTemp, 3, 0, meatFloatStr);  // width==3, no digits after decimal
+    dtostrf(pitTemp, 3, 0, pitFloatStr);        // width==3, no digits after decimal
+
+    if (degCFlag == 1) {
+        sprintf(msg, "Meat%s\001 Pit%s\001", meatFloatStr, pitFloatStr);
+        lcd.print("BBQ set points: ");
+        lcd.setCursor(0, 1);
+        lcd.print(msg);
+
+    } else {
+        sprintf(msg, "Meat%s\002 Pit%s\002", meatFloatStr, pitFloatStr);
+        lcd.print("BBQ set points: ");
+        lcd.setCursor(0, 1);
+        lcd.print(msg);
+    }
 }
 
 /* 
@@ -226,13 +273,3 @@ byte wifi3[8] = {
 
 // *********  end animated wi-fi  *********************************
 */
-
-
-/* 
-Note that you might want to embed a special character in a "string" to write to the LCD (
-for example: using "\x01", for special character number 1).  That would work, fine and dandy, 
-for special characters 1 through 7, but you can not (that's not) embed special character zero 
-in a "string," since \x00 will terminate the "string."
-
-For character zero, use "\x08" since all 8 custom characters are mapped to 0x08 to 0x0F as well
- */
