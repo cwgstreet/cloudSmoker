@@ -226,7 +226,7 @@ void CWG_LCD::showSettingsMenu() {
     char msg4[17] = {" Max Pit [xxx]  "};
     char msg5[17] = {" Units [F] / C  "};
     // *** function not finished; need to bring arguments in for various temps and use dtosdrf and 
-    //    sprintf to get formated string lines
+    //    sprintf to get formated string lines -> return formated line so put into one big array
 }
 // ******* end void CWG_LCD::showSettingsMenu() 
 
