@@ -22,7 +22,10 @@
 /******************************************************
 // helper function prototypes
 *******************************************************/
+float convertDegFtoDegC(float tempDegF);
 
+float getElapsedCookTime(float startCookTimeMS);
 
+float getCountMS(float tempMS);
 
 #endif  // end header guard

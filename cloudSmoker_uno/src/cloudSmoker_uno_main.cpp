@@ -63,12 +63,11 @@
 #include <hd44780ioClass/hd44780_I2Cexp.h>  // i2c expander i/o class header -> required for my YwRobot 1602 LCD
 
 // internal (user) libraries:
-#include <lcd.h>          // lcd function tests, helper functions and custom characters
-#include <periphials.h>   // contains function tests and usuage for periphials (now just serial monitor)
-#include <press_type.h>   // wrapper library abstracting Yabl / Bounce2 routines
-#include <wrapEncoder.h>  //creates encoder object with min / max values that "wrap" around
+#include <lcd.h>           // lcd function tests, helper functions and custom characters
+#include <periphials.h>    // contains function tests and usuage for periphials (now just serial monitor)
+#include <press_type.h>    // wrapper library abstracting Yabl / Bounce2 routines
 #include <smokerStates.h>  //cloudSmoker state machine functionality including menus
-
+#include <wrapEncoder.h>   //creates encoder object with min / max values that "wrap" around
 
 // **************  Selective Debug Saffolding ***********************
 // Set up selective debug scaffold; comment out appropriate lines below to disable debugging tests at pre-proccessor stage
@@ -101,8 +100,7 @@ const int LCD_ROWS = 2;
 //global variables
 float meatDoneTemp = 203;  // default to usual brisket internal done temp 203degF
 float pitTemp = 225;       // default to usual brisket cooking (pit) temp 225degF
-bool degCFlag = 0;          // temperature unit flag: 1 for Centigrade or 0 for Fahrenheit
-
+bool degCFlag = 0;         // temperature unit flag: 1 for Centigrade or 0 for Fahrenheit
 
 // timing variables - global
 unsigned long currentMillis;
@@ -119,19 +117,19 @@ int16_t encoderCountValue;
 // KY40 button
 Press_Type buttonPress(BUTTON_PIN);
 
-
 void setup() {
-     Serial.begin(SERIAL_MONITOR_SPEED);
+    Serial.begin(SERIAL_MONITOR_SPEED);
 
-   CWG_LCD lcd(LCD_COLS, LCD_ROWS);  //instantiate lcd object from periphials library
-    lcd.initialiseCustomCharSet();  //creates eight custom lcd charaters
+    CWG_LCD lcd(LCD_COLS, LCD_ROWS);  //instantiate lcd object from periphials library
+    lcd.initialiseCustomCharSet();    //creates eight custom lcd charaters
 
-// LCD function test
+    // LCD function test
     lcd.functionTest();
 
     lcd.initialiseCustomCharSet();  //creates eight custom lcd charaters
     //lcd.displayTest();
-    lcd.showSplashScreen(degCFlag, meatDoneTemp, pitTemp);
+    //lcd.showSplashScreen(degCFlag, meatDoneTemp, pitTemp);
+    lcd.showInstructionsScreen();
 
 // **********  debug - periphial function tests **************************
 #ifdef DEBUG_SERIAL
@@ -173,13 +171,10 @@ void loop() {
         Serial.print("*** Double Press! pressEventCode = ");
         Serial.println(pressEventCode);
     }
-#endif  // end DEBUG
-        // **********  end debug press Type function tests *************************
+#endif  // end DEBUG 
+    // **********  end debug press Type function tests *************************
 
     WrapEncoder::EncoderState currentEncoderState;
-
-    
-    
 
 // **********  debug - free memory check  **************************
 #ifdef DEBUG_FREEMEM

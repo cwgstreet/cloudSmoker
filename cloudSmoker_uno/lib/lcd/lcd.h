@@ -29,7 +29,6 @@
 #include <hd44780.h>
 #include <hd44780ioClass/hd44780_I2Cexp.h>  // i2c expander i/o class header -> required for my YwRobot 1602 LCD
 
-
 /******************************************************
 // Class definitions for lcd functions and tests:
 *******************************************************/
@@ -39,10 +38,11 @@ class CWG_LCD {
     CWG_LCD(const int lcdCols, const int lcdRows);  //constructor - will initialise lcdCols, lcdRows
 
     void functionTest();
+    void displayTest();
     void initialiseCustomCharSet();
     void showSplashScreen(bool degCFlag, float meatDoneTemp, float pitTemp);
-    void displayTest();
-
+    void showInstructionsScreen();
+    void showSettingsMenu();
 
    private:
     int _numCols;
@@ -53,7 +53,6 @@ class CWG_LCD {
 // Helper function prototype:
 *******************************************************/
 
-void gotoRowCol(int thisRow, int thatCol);  //move into class?
-
+//void gotoRowCol(int thisRow, int thatCol);  //move into class?
 
 #endif  // end header guard

@@ -15,6 +15,7 @@
 #include <hd44780ioClass/hd44780_I2Cexp.h>  // i2c expander i/o class header -> required for my YwRobot 1602 LCD
 
 //incliude local libraries
+#include <helper_functions.h>
 #include <lcd.h>
 
 hd44780_I2Cexp lcd;  //instantiate lcd object: auto locate & auto config expander chip
@@ -43,7 +44,7 @@ void CWG_LCD::functionTest() {
     lcd.setCursor(0, 1);               //set cursor to first column of second row (forst position == 0)
     lcd.print(F("G'Day cloudSmkr!"));  // F-Macro to save dynamic memory
     delay(2000);
-}   //  end LCD function test
+}  //  end LCD function test
 
 //function LCD_goto_row_col() to place the LCD cursor at a specific position, and a
 // function LCD_write_data(),  o send a data byte to the LCD, you can put the special character
@@ -166,7 +167,7 @@ void CWG_LCD::displayTest() {
         "\006"
         "\007"
         "\337");
-    lcd.setCursor(0, 1);   // display second line on lcd
+    lcd.setCursor(0, 1);  // display second line on lcd
     lcd.print(
         "temp is 210"
         "\002");
@@ -174,102 +175,58 @@ void CWG_LCD::displayTest() {
 
 // format: dtostrf(float_value, min_width, num_digits_after_decimal, where_to_store_string)
 // sprintf(line0, "Temp: %-7sC", float_str); // %6s right pads the string
-
+// *********************************************************************************************
 void CWG_LCD::showSplashScreen(bool degCFlag, float meatDoneTemp, float pitTemp) {
     lcd.clear();
-    char msg[17];                               // space for 16 charcaters + null termination
-    char meatFloatStr[4];                       // empty array to hold convert float meat temp + null
-    char pitFloatStr[4];                        
-    dtostrf(meatDoneTemp, 3, 0, meatFloatStr);  // width==3, no digits after decimal
-    dtostrf(pitTemp, 3, 0, pitFloatStr);        // width==3, no digits after decimal
+    char msg[17];          // space for 16 charcaters + null termination
+    char meatFloatStr[4];  // empty array to hold convert float meat temp + null
+    char pitFloatStr[4];
 
     if (degCFlag == 1) {
+        float meatDoneTempC = convertDegFtoDegC(meatDoneTemp);
+        float pitTempC = convertDegFtoDegC(pitTemp);
+        dtostrf(meatDoneTempC, 3, 0, meatFloatStr);  // (float var to convert, width==3, 0==no digits after decimal, char arra for output)
+        dtostrf(pitTempC, 3, 0, pitFloatStr);
         sprintf(msg, "Meat%s\001 Pit%s\001", meatFloatStr, pitFloatStr);
+
         lcd.print("BBQ set points: ");
         lcd.setCursor(0, 1);
         lcd.print(msg);
 
     } else {
+        dtostrf(meatDoneTemp, 3, 0, meatFloatStr);  // width==3, no digits after decimal
+        dtostrf(pitTemp, 3, 0, pitFloatStr);        // width==3, no digits after decimal sprintf(msg, "Meat%s\002 Pit%s\002", meatFloatStr, pitFloatStr);
         sprintf(msg, "Meat%s\002 Pit%s\002", meatFloatStr, pitFloatStr);
+
         lcd.print("BBQ set points: ");
         lcd.setCursor(0, 1);
         lcd.print(msg);
     }
 }
+// ******* end showSplashScreen()
 
-/* 
-// *********  animated wi-fi  *********************************
+// *********************************************************************************************
+void CWG_LCD::showInstructionsScreen() {
+    lcd.clear();
+    char msgLine0[17] = {"Cook: LongPress "};
+    char msgLine1[17] = {"Config: DblPress"};
+    lcd.print(msgLine0);
+    lcd.setCursor(0, 1);
+    lcd.print(msgLine1);
+}
+// ******* end showInstructionsScreen()
 
-byte wifi1[8] = {
-  B00000,
-  B00000,
-  B00000,
-  B00000,
-  B00000,
-  B00000,
-  B00000,
-  B00100,
-};
+// *********************************************************************************************
+void CWG_LCD::showSettingsMenu() {
+    lcd.clear();
+    char msg0[17] = {" <Press to set> "};
+    char msg1[17] = {" <Hold to exit> "};
+    char msg2[17] = {" Meat done[xxx] "};
+    char msg3[17] = {" Min Pit [xxx]  "};
+    char msg4[17] = {" Max Pit [xxx]  "};
+    char msg5[17] = {" Units [F] / C  "};
+    // *** function not finished; need to bring arguments in for various temps and use dtosdrf and 
+    //    sprintf to get formated string lines
+}
+// ******* end void CWG_LCD::showSettingsMenu() 
 
-byte wifi2[8] = {
-  B00000,
-  B00000,
-  B00000,
-  B00000,
-  B00100,
-  B01010,
-  B00000,
-  B00100,
-};
-
-byte wifi3[8] = {
-  B00000,
-  B01110,
-  B10001,
-  B00000,
-  B00100,
-  B01010,
-  B00000,
-  B00100,
-};
-
-  lcd.createChar(0, wifi1);
-  lcd.createChar(1, wifi2);
-  lcd.createChar(2, wifi3);
-
-  lcd.setCursor(15, 0);
-  lcd.write(byte(0));
-  delay(200);
-  lcd.setCursor(15, 0);
-  lcd.write(byte(1));
-  delay(200);
-  lcd.setCursor(15, 0);
-  lcd.write(byte(2));
-  delay(200);
-  lcd.setCursor(15, 0);
-  lcd.write(byte(1));
-  delay(200);
-  lcd.setCursor(15, 0);
-  lcd.write(byte(0));
-
-  while(WiFiMulti.run() != WL_CONNECTED) {
-      Serial.print(".");
-      lcd.setCursor(15, 0);
-      lcd.write(byte(0));
-      delay(200);
-      lcd.setCursor(15, 0);
-      lcd.write(byte(1));
-      delay(200);
-      lcd.setCursor(15, 0);
-      lcd.write(byte(2));
-      delay(200);
-      lcd.setCursor(15, 0);
-      lcd.write(byte(1));
-      delay(200);
-  }
-
-  Serial.println("");
-  Serial.println("WiFi connected");
-
-// *********  end animated wi-fi  *********************************
-*/
