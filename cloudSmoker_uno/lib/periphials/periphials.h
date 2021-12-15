@@ -38,19 +38,5 @@ class CWG_SerialMonitor {
     void functionTest();
 };
 
-/* ************************************************
-// moved lcd fuction below to lcd.h / lcd.cpp library
-// VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
 
-class CWG_LCD {
-   public:
-    CWG_LCD(const int lcdCols, const int lcdRows);  //constructor - will initialise lcdCols, lcdRows
-
-    void functionTest();
-
-   private:
-    int _numCols;
-    int _numRows;
-};
- */
 #endif  // end header guard
