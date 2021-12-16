@@ -64,10 +64,11 @@
 
 // internal (user) libraries:
 #include <lcd.h>           // lcd function tests, helper functions and custom characters
-#include <periphials.h>    // contains function tests and usuage for periphials (now just serial monitor)
+//#include <menu.h>          // menu functions
+#include <periphials.h>    // serial monitor function tests and usuage routines
 #include <press_type.h>    // wrapper library abstracting Yabl / Bounce2 routines
-#include <smokerStates.h>  //cloudSmoker state machine functionality including menus
-#include <wrapEncoder.h>   //creates encoder object with min / max values that "wrap" around
+#include <smokerStates.h>  // cloudSmoker state machine functionality 
+#include <wrapEncoder.h>   // creates encoder object with min / max values that "wrap" around
 
 // **************  Selective Debug Saffolding ***********************
 // Set up selective debug scaffold; comment out appropriate lines below to disable debugging tests at pre-proccessor stage

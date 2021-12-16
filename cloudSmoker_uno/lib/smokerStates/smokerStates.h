@@ -26,18 +26,45 @@
 // i2C devices
 //#include <Wire.h>
 
-//YwRobot 1602 LCD with i2c i/o exapander backpack (PCF8574 or MCP23008)
-//#include <hd44780.h>
-//#include <hd44780ioClass/hd44780_I2Cexp.h>  // i2c expander i/o class header -> required for my YwRobot 1602 LCD
+// Prepare case names for cloudSmoker State Machine switch-case stucture
+enum entryStates { splashScreen = 1, //set enum 1 to 11 rather than default 0 for first element
+                   launchPad,          
+                   changeSettings,
+                   setMeatDoneTemp,
+                   setPitMinTemp,
+                   setPitMaxTemp,
+                   setTempUnits,
+                   getTemp,
+                   txTemp,
+                   modemSleep, 
+                   bbqStatus };   // 11
+
+// smokerState defined in implementation smokerState.cpp, hence extern keyword
+extern entryStates smokerState;
 
 /******************************************************
-// Class definitions for periphial functions and tests:
+// Class definitions for cloudSmoker state machine:
 *******************************************************/
 
-/* class CWG_SerialMonitor {
+class CloudSmoker_State {
    public:
-    void functionTest();
-}; */
+    //CWG_LCD(const int lcdCols, const int lcdRows);  //constructor - will initialise lcdCols, lcdRows
 
+    
+    void processState();
+    
+
+   private:
+    void showSplashScreen();
+    void showStatusScreen();
+    //int _numCols;
+    //int _numRows;
+};
+
+/******************************************************
+// Helper function prototype:
+*******************************************************/
+
+//void gotoRowCol(int thisRow, int thatCol);  //move into class?
 
 #endif  // end header guard
