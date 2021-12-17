@@ -29,25 +29,39 @@
 #include <hd44780.h>
 #include <hd44780ioClass/hd44780_I2Cexp.h>  // i2c expander i/o class header -> required for my YwRobot 1602 LCD
 
+// global variables declared in main program but needed in this library before they are declared elsewhere
+extern float meatDoneTemp;
+extern float pitTempTarget;
+extern float currentMeatTemp;
+extern float currentPitTemp;
+extern bool degCFlag;
+
+// define LCD geometry (YwRobot 1602 LCD)
+extern const int LCD_COLS;
+extern const int LCD_ROWS;
+
 /******************************************************
 // Class definitions for lcd functions and tests:
 *******************************************************/
 
-class CWG_LCD {
+// child class of hd44780_I2Cexp which is a child of hd44780
+class CWG_LCD : public hd44780_I2Cexp {
    public:
-    CWG_LCD(const int lcdCols, const int lcdRows);  //constructor - will initialise lcdCols, lcdRows
+    CWG_LCD(const int LCD_COLS, const int LCD_ROWS);  //constructor - will initialise lcdCols, lcdRows
 
     void functionTest();
     void displayTest();
     void initialiseCustomCharSet();
-    void showSplashScreen(bool degCFlag, float meatDoneTemp, float pitTemp);
-    void showInstructionsScreen();
+    void showSplashScreen(bool degCFlag, float meatDoneTemp, float pitTempTarget);
+    void showLaunchPad();
     void showSettingsMenu();
 
    private:
     int _numCols;
     int _numRows;
 };
+
+extern CWG_LCD lcd;  // ensure lcd object is visable everywhere
 
 /******************************************************
 // Helper function prototype:

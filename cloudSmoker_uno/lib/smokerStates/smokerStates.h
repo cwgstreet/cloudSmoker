@@ -27,43 +27,24 @@
 //#include <Wire.h>
 
 // Prepare case names for cloudSmoker State Machine switch-case stucture
-enum entryStates { splashScreen = 1, //set enum 1 to 11 rather than default 0 for first element
+enum entryStates_t { splashScreen = 1, //set enum 1 to 10 rather than default 0 for first element
                    launchPad,          
                    changeSettings,
                    setMeatDoneTemp,
-                   setPitMinTemp,
-                   setPitMaxTemp,
+                   setPitTempTarget,
                    setTempUnits,
                    getTemp,
                    txTemp,
                    modemSleep, 
-                   bbqStatus };   // 11
+                   bbqStatus };   // 10
 
 // smokerState defined in implementation smokerState.cpp, hence extern keyword
-extern entryStates smokerState;
-
-/******************************************************
-// Class definitions for cloudSmoker state machine:
-*******************************************************/
-
-class CloudSmoker_State {
-   public:
-    //CWG_LCD(const int lcdCols, const int lcdRows);  //constructor - will initialise lcdCols, lcdRows
-
-    
-    void processState();
-    
-
-   private:
-    void showSplashScreen();
-    void showStatusScreen();
-    //int _numCols;
-    //int _numRows;
-};
+extern entryStates_t smokerState;
 
 /******************************************************
 // Helper function prototype:
 *******************************************************/
+void processState(CWG_LCD &lcd);   
 
 //void gotoRowCol(int thisRow, int thatCol);  //move into class?
 

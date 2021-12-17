@@ -63,11 +63,11 @@
 #include <hd44780ioClass/hd44780_I2Cexp.h>  // i2c expander i/o class header -> required for my YwRobot 1602 LCD
 
 // internal (user) libraries:
-#include <lcd.h>           // lcd function tests, helper functions and custom characters
+#include <lcd.h>  // lcd function tests, helper functions and custom characters
 //#include <menu.h>          // menu functions
 #include <periphials.h>    // serial monitor function tests and usuage routines
 #include <press_type.h>    // wrapper library abstracting Yabl / Bounce2 routines
-#include <smokerStates.h>  // cloudSmoker state machine functionality 
+#include <smokerStates.h>  // cloudSmoker state machine functionality
 #include <wrapEncoder.h>   // creates encoder object with min / max values that "wrap" around
 
 // **************  Selective Debug Saffolding ***********************
@@ -76,7 +76,7 @@
 //    Ref: https://stackoverflow.com/questions/16245633/ifdef-debug-versus-if-debug
 // *****************************************************************
 //#define DEBUG_SERIAL  1      // uncomment to debug - Serial monitor function test
-//#define DEBUG_LCD  1         // uncomment to debug - LCD function test
+#define DEBUG_LCD 1  // uncomment to debug - LCD function test
 //#define DEBUG_PRESSTYPE  1  // uncomment to debug - Rotary encoder button press type function test
 //#define DEBUG_LED  1       // uncomment to debug LED test of rotary encoder
 //#define DEBUG_FREEMEM 1  // uncomment to debug remaining free memory
@@ -94,14 +94,23 @@
 //  note: may have to manually reset board after flashing for code to work correctly
 #define SERIAL_MONITOR_SPEED 74880
 
+/* moved to lcd.cpp 
 // define LCD geometry (YwRobot 1602 LCD)
 const int LCD_COLS = 16;
-const int LCD_ROWS = 2;
+const int LCD_ROWS = 2;  */
 
-//global variables
-float meatDoneTemp = 203;  // default to usual brisket internal done temp 203degF
-float pitTemp = 225;       // default to usual brisket cooking (pit) temp 225degF
-bool degCFlag = 0;         // temperature unit flag: 1 for Centigrade or 0 for Fahrenheit
+// temperature variables- global; all temps stored in degF and converted on the fly as necessary for alternative units (eg DegC)
+float meatDoneTemp = 203;    // default to usual brisket internal done temp 203degF
+float pitTempTarget = 210;   // reasonable range around 225F long and slow target, pit temps can run 200 to 350 deg F
+float currentMeatTemp = 40;  // current meat temp; default to refridgerator temp degF
+float currentPitTemp = 225;  // current pit temp; default to long and slow brisket cooking (pit) temp=225degF
+bool degCFlag = 0;           // temperature unit flag: 1 for Centigrade or 0 for Fahrenheit
+
+/* 
+The 4-hour rule is a general food safety guideline that suggests that the internal temperature of meat 
+should increase from 40°F to 140°F within 4 hours. This is due to foodborne bacteria growing much faster 
+within this temperature range (known as the “danger zone”).  Ref https://www.totallysmokin.com/4-hour-rule-smoking/
+ */
 
 // timing variables - global
 unsigned long currentMillis;
@@ -118,19 +127,14 @@ int16_t encoderCountValue;
 // KY40 button
 Press_Type buttonPress(BUTTON_PIN);
 
+// for testing - then can remove
+//smokerState = splashScreen;
+
 void setup() {
     Serial.begin(SERIAL_MONITOR_SPEED);
 
     CWG_LCD lcd(LCD_COLS, LCD_ROWS);  //instantiate lcd object from periphials library
     lcd.initialiseCustomCharSet();    //creates eight custom lcd charaters
-
-    // LCD function test
-    lcd.functionTest();
-
-    lcd.initialiseCustomCharSet();  //creates eight custom lcd charaters
-    //lcd.displayTest();
-    //lcd.showSplashScreen(degCFlag, meatDoneTemp, pitTemp);
-    lcd.showInstructionsScreen();
 
 // **********  debug - periphial function tests **************************
 #ifdef DEBUG_SERIAL
@@ -142,8 +146,16 @@ void setup() {
 #ifdef DEBUG_LCD
     // LCD function test
     lcd.functionTest();
+    lcd.displayTest();
 #endif
     // **********  end debug periphial function tests *************************
+
+    lcd.initialiseCustomCharSet();  //creates eight custom lcd charaters
+
+    // testing functionality - delete lines below when done
+    //lcd.displayTest();
+    //lcd.showSplashScreen(degCFlag, meatDoneTemp, pitTemp);
+    //lcd.showInstructionsScreen();
 
     encoder.initialise();
     // delay necessary to clear serial buffer in encoder.initialise(); otherwise garbage characters
@@ -156,6 +168,7 @@ void setup() {
 
 void loop() {
     buttonPress.checkPress();
+    processState(lcd);
 
 // **********  debug - press Type code function test  **************************
 //  pressEventCode: Short Press == 1, Long Press == 2, Double Press == 3, No Press == 0
@@ -172,7 +185,7 @@ void loop() {
         Serial.print("*** Double Press! pressEventCode = ");
         Serial.println(pressEventCode);
     }
-#endif  // end DEBUG 
+#endif  // end DEBUG
     // **********  end debug press Type function tests *************************
 
     WrapEncoder::EncoderState currentEncoderState;

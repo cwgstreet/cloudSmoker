@@ -19,20 +19,25 @@
 #include <lcd.h>
 #include <smokerStates.h>
 
-// entryStates is an enum defined in menu.h header file (as extern); menuState is global
-entryStates smokerState;
+// entryStates is an enum variable type defined in menu.h header file (as extern); smokerState is global
+entryStates_t smokerState;
 
-void CloudSmoker_State::processState() {
+void processState(CWG_LCD &lcd) {
+    smokerState = splashScreen;  //test line - remove
+
     switch (smokerState) {
-        case splashScreen:
-            showSplashScreen();
+        case splashScreen:  // note: case splashScreen == 1 explicitly per enum assignment in smokerState.h
+            //extern void showSplashScreen(bool degCFlag, float meatDoneTemp, float pitTemp);  // don't think extern is necessary?
+            lcd.showSplashScreen(degCFlag, meatDoneTemp, pitTempTarget);
+            // initialise encoder?  or pass encoder object by reference?
+            // test for encoderstate change, if encoder state change, then smokerState = launchPad;
             break;
 
-        case startCook:
-            //code here;
+        case launchPad:
+            void showLaunchPad();
             break;
 
-        case setUp:
+        case changeSettings:
             // code here
             break;
 
@@ -40,7 +45,7 @@ void CloudSmoker_State::processState() {
             // code here
             break;
 
-        case setPitMinTemp:
+        case setPitTempTarget:
             /* encoderCountValue = encoder.getCount(currentEncoderState);
             if (encoderCountValue > 209) {
                 Serial.println("Changing Encoder Settings.");
@@ -51,13 +56,9 @@ void CloudSmoker_State::processState() {
             }*/
             break;
 
-        case setPitMaxTemp:
-            // code here
-            break;
-
         case setTempUnits:
             Serial.print("menuState =");
-            
+
             break;
 
         case getTemp:
@@ -68,7 +69,7 @@ void CloudSmoker_State::processState() {
             // code here
             break;
 
-        case lightSleep:
+        case modemSleep:
             // code here
             break;
 
@@ -82,12 +83,10 @@ void CloudSmoker_State::processState() {
     }
 }
 
-void CloudSmoker_State::showSplashScreen() {
+/* void CloudSmoker_State::showSplashScreen() {
     //splash screen lcd display code here
 }
 
 void CloudSmoker_State::showStatusScreen() {
     //status screen lcd display code here
-}
-
-
+} */
