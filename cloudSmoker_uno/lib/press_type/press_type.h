@@ -31,7 +31,7 @@ enum pressType_T { NO_PRESS,
                  LONG_PRESS,
                  DOUBLE_PRESS };
 
-// pressEventCode_T defined in implementation press_type.cpp, hence extern keyword
+// pressEventCode_T defined in implementation file, press_type.cpp, hence extern keyword
 extern pressType_T pressEventCode;
 
 extern const int BUTTON_PIN;
@@ -49,7 +49,7 @@ class Press_Type : public Button {
     int _pin;
 };
 
-//extern Press_Type button;  // ensure button object is visable everywhere
+extern Press_Type button;  // ensure button object is visable everywhere
 
 
 /*****************************************************************

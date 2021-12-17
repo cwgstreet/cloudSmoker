@@ -77,7 +77,7 @@
 // *****************************************************************
 //#define DEBUG_SERIAL  1      // uncomment to debug - Serial monitor function test
 #define DEBUG_LCD 1  // uncomment to debug - LCD function test
-//#define DEBUG_PRESSTYPE  1  // uncomment to debug - Rotary encoder button press type function test
+#define DEBUG_PRESSTYPE  1  // uncomment to debug - Rotary encoder button press type function test
 //#define DEBUG_LED  1       // uncomment to debug LED test of rotary encoder
 //#define DEBUG_FREEMEM 1  // uncomment to debug remaining free memory
 
@@ -88,10 +88,10 @@
 //#define ENCODER_CLK 3  //pinB newEncode
 //#define BUTTON_PIN 4   //KY40 push switch SW == BUTTON_PIN
 const int I2C_SCL = A5;     //optional as hd44780 set to auto-configure
-const int I2C_SDA = A4;    //optional as hd44780 set to auto-configure
-const int ENCODER_DT = 2;  // pinA newEncode
-const int  ENCODER_CLK = 3;  //pinB newEncode
-const int BUTTON_PIN = 4;  // KY40 SW (switch) pin connected to Uno pin 4
+const int I2C_SDA = A4;     //optional as hd44780 set to auto-configure
+const int ENCODER_DT = 2;   // pinA newEncode
+const int ENCODER_CLK = 3;  //pinB newEncode
+const int BUTTON_PIN = 4;   // KY40 SW (switch) pin connected to Uno pin 4
 
 // Baudrate:  Recommend 74480 baud rate for ESP8266 devices to match ESP8266 fixed bootloader initialisation speed
 //  (otherwise you will get startup gibberish characters on serial monitor before serial speed syncs)
@@ -112,6 +112,7 @@ float currentPitTemp = 225;  // current pit temp; default to long and slow brisk
 bool degCFlag = 0;           // temperature unit flag: 1 for Centigrade or 0 for Fahrenheit
 
 /* 
+To do:  add 4-hour rule check and exception notification
 The 4-hour rule is a general food safety guideline that suggests that the internal temperature of meat 
 should increase from 40°F to 140°F within 4 hours. This is due to foodborne bacteria growing much faster 
 within this temperature range (known as the “danger zone”).  Ref https://www.totallysmokin.com/4-hour-rule-smoking/
@@ -130,7 +131,7 @@ int16_t prevEncoderValue;
 int16_t encoderCountValue;
 
 // KY40 button
-Press_Type buttonPress(BUTTON_PIN);
+//Press_Type buttonPress(BUTTON_PIN);
 
 // for testing - then can remove
 //smokerState = splashScreen;
@@ -167,12 +168,12 @@ void setup() {
     delay(100);
 
     // initialise button press type set-up code (pin, pullup mode, callback function)
-    buttonPress.begin(BUTTON_PIN);
+    button.begin(BUTTON_PIN);
 
 }  // end of setup
 
 void loop() {
-    buttonPress.checkPress();
+    button.checkPress();
     processState(lcd);
 
 // **********  debug - press Type code function test  **************************
