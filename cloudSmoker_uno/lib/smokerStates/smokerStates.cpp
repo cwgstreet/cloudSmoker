@@ -23,22 +23,21 @@
 entryStates_t smokerState;
 
 void processState(CWG_LCD &lcd) {
-    smokerState = splashScreen;  //test line - remove
+    smokerState = launchPad;  //test line - remove following test
 
     switch (smokerState) {
-        case splashScreen:  // note: case splashScreen == 1 explicitly per enum assignment in smokerState.h
-            //extern void showSplashScreen(bool degCFlag, float meatDoneTemp, float pitTemp);  // don't think extern is necessary?
+        case splashScreen:  // note: case splashScreen == 1 explicitly per enum assignment in smokerState.
             lcd.showSplashScreen(degCFlag, meatDoneTemp, pitTempTarget);
             // initialise encoder?  or pass encoder object by reference?
             // test for encoderstate change, if encoder state change, then smokerState = launchPad;
             break;
 
         case launchPad:
-            void showLaunchPad();
+            lcd.showLaunchPad();
             break;
 
         case changeSettings:
-            // code here
+            // lcd.showSettingsMenu();
             break;
 
         case setMeatDoneTemp:

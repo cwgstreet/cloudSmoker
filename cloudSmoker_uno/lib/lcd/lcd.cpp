@@ -22,19 +22,13 @@
 const int LCD_COLS = 16;
 const int LCD_ROWS = 2;
 
-
-//hd44780_I2Cexp lcd;  //instantiate lcd object: auto locate & auto config expander chip
-
-
 //LCD constructor passing lcd rows and columns
 CWG_LCD::CWG_LCD(const int LCD_COLS, const int LCD_ROWS) {
     _numCols = LCD_COLS;
     _numRows = LCD_ROWS;
 }
 
-CWG_LCD lcd(LCD_COLS, LCD_ROWS) ;
-
-
+CWG_LCD lcd(LCD_COLS, LCD_ROWS);  //instantiate lcd object: auto locate & auto config expander chip
 
 // LCD.function test to determine if LCD is working properly.  Place function call in setup (not loop)
 void CWG_LCD::functionTest() {
@@ -187,10 +181,10 @@ void CWG_LCD::displayTest() {
 // sprintf(line0, "Temp: %-7sC", float_str); // %6s right pads the string
 // *********************************************************************************************
 void CWG_LCD::showSplashScreen(bool degCFlag, float meatDoneTemp, float pitTempTarget) {
-    lcd.clear();
     char msg[17];          // space for 16 charcaters + null termination
     char meatFloatStr[4];  // empty array to hold convert float meat temp + null
     char pitFloatStr[4];
+    lcd.setCursor(0, 0);
 
     if (degCFlag == 1) {
         float meatDoneTempC = convertDegFtoDegC(meatDoneTemp);
@@ -205,7 +199,7 @@ void CWG_LCD::showSplashScreen(bool degCFlag, float meatDoneTemp, float pitTempT
 
     } else {
         dtostrf(meatDoneTemp, 3, 0, meatFloatStr);  // width==3, no digits after decimal
-        dtostrf(pitTempTarget, 3, 0, pitFloatStr);        // width==3, no digits after decimal sprintf(msg, "Meat%s\002 Pit%s\002", meatFloatStr, pitFloatStr);
+        dtostrf(pitTempTarget, 3, 0, pitFloatStr);  // width==3, no digits after decimal sprintf(msg, "Meat%s\002 Pit%s\002", meatFloatStr, pitFloatStr);
         sprintf(msg, "Meat%s\002 Pit%s\002", meatFloatStr, pitFloatStr);
 
         lcd.print("BBQ set points: ");
@@ -213,18 +207,18 @@ void CWG_LCD::showSplashScreen(bool degCFlag, float meatDoneTemp, float pitTempT
         lcd.print(msg);
     }
 }
-// ******* end showSplashScreen()
+// ******* end showSplashScreen() ****
 
 // *********************************************************************************************
 void CWG_LCD::showLaunchPad() {
-    lcd.clear();
     char msgLine0[17] = {"Cook: LongPress "};
     char msgLine1[17] = {"Config: DblPress"};
+    lcd.setCursor(0, 0);
     lcd.print(msgLine0);
     lcd.setCursor(0, 1);
     lcd.print(msgLine1);
 }
-// ******* end showInstructionsScreen()
+// ******* end showLaunchPad() ******
 
 // *********************************************************************************************
 void CWG_LCD::showSettingsMenu() {
@@ -234,8 +228,7 @@ void CWG_LCD::showSettingsMenu() {
     char msg2[17] = {" Meat done[xxx] "};
     char msg3[17] = {" Pit Temp [xxx] "};
     char msg4[17] = {" Units [F] / C  "};
-    // *** function not finished; need to bring arguments in for various temps and use dtosdrf and 
+    // *** function not finished; need to bring arguments in for various temps and use dtosdrf and
     //    sprintf to get formated string lines -> return formatted line so put into one big array
 }
-// ******* end void CWG_LCD::showSettingsMenu() 
-
+// ******* end void CWG_LCD::showSettingsMenu()
