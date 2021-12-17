@@ -26,13 +26,15 @@
 
 #include <Yabl.h>
 
-enum pressType { NO_PRESS,
+enum pressType_T { NO_PRESS,
                  SHORT_PRESS,
                  LONG_PRESS,
                  DOUBLE_PRESS };
 
-// pressEventCode defined in implementation press_type.cpp, hence extern keyword
-extern pressType pressEventCode;
+// pressEventCode_T defined in implementation press_type.cpp, hence extern keyword
+extern pressType_T pressEventCode;
+
+extern const int BUTTON_PIN;
 
 // Press_Type class - wrapper class to determine press type; inherited from Yabl::Button class
 class Press_Type : public Button {
@@ -40,12 +42,15 @@ class Press_Type : public Button {
     Press_Type(const int switchPin);  //constructor - will initialise switchPin
                                       
     //prototype functions - see *.cpp for method code
-    void begin(const int switchPin);
+    void begin(const int _pin);
     void checkPress();
 
    private:
     int _pin;
 };
+
+//extern Press_Type button;  // ensure button object is visable everywhere
+
 
 /*****************************************************************
 *  Note: unsuccessful at declaring onButtonEventfunction prototype below within Press_Type class 

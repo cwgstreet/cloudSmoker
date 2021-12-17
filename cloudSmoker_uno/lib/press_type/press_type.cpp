@@ -22,15 +22,15 @@
 
 const long BAUD_RATE = 74880;  // match native ESP8266 bootup baud rate to view bootup info, otherwise gibberish
 
-Yabl::Button button;  //instantiate button object from Yabl library
+Press_Type button(BUTTON_PIN);  //instantiate button object from press_type (YABL child) library
 
 //Press_Type constructor attaching button switch
 Press_Type::Press_Type(const int switchPin) {
     _pin = switchPin;
 }
 
-// pressType is an enum defined in press_type.h header file (as extern); pressEventCode is global
-pressType pressEventCode;
+// pressType_T is an enum type defined in press_type.h header file (as extern); pressEventCode is global
+pressType_T pressEventCode;
 
 // -------------------------
 //   onButtonEvent() function purpose: perform switch-case, triggered by Yabl library callback actions
@@ -67,12 +67,11 @@ void onButtonEvent(const EventInfo& info) {
     }
 }
 
-void Press_Type::begin(int switchPin) {
-    button.attach(switchPin, INPUT_PULLUP);  // pin configured to pull-up mode
+void Press_Type::begin(int _pin) {
+    button.attach(_pin, INPUT_PULLUP);  // pin configured to pull-up mode
     button.callback(onButtonEvent);
 
-
-Serial.begin(BAUD_RATE);
+    Serial.begin(BAUD_RATE);
 
 #if DEBUG
     Serial.println("   ");  //blank line for visual space

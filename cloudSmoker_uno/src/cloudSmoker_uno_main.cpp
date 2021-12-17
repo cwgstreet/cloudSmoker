@@ -82,11 +82,16 @@
 //#define DEBUG_FREEMEM 1  // uncomment to debug remaining free memory
 
 // pins set up below is for Uno, not ESP8266
-#define I2C_SCL A5     //optional as hd44780 set to auto-configure
-#define I2C_SDA A4     //optional as hd44780 set to auto-configure
-#define ENCODER_DT 2   // pinA newEncode
-#define ENCODER_CLK 3  //pinB newEncode
-#define BUTTON_PIN 4   //KY40 push switch SW == BUTTON_PIN
+//#define I2C_SCL A5     //optional as hd44780 set to auto-configure
+//#define I2C_SDA A4     //optional as hd44780 set to auto-configure
+//#define ENCODER_DT 2   // pinA newEncode
+//#define ENCODER_CLK 3  //pinB newEncode
+//#define BUTTON_PIN 4   //KY40 push switch SW == BUTTON_PIN
+const int I2C_SCL = A5;     //optional as hd44780 set to auto-configure
+const int I2C_SDA = A4;    //optional as hd44780 set to auto-configure
+const int ENCODER_DT = 2;  // pinA newEncode
+const int  ENCODER_CLK = 3;  //pinB newEncode
+const int BUTTON_PIN = 4;  // KY40 SW (switch) pin connected to Uno pin 4
 
 // Baudrate:  Recommend 74480 baud rate for ESP8266 devices to match ESP8266 fixed bootloader initialisation speed
 //  (otherwise you will get startup gibberish characters on serial monitor before serial speed syncs)
