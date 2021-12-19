@@ -116,8 +116,8 @@ unsigned long currentMillis;
 // Object instantiation
 // *********************
 
-// WrapEncoder object
-//WrapEncoder encoder(2, 3, 180, 210, 203, FULL_PULSE);  //default meatProbe; briskett usually done at 195-203F internal meat temp
+// WrapEncoder globals - move to libary?
+//  delete this line? //WrapEncoder encoder(2, 3, 180, 210, 203, FULL_PULSE);  //default meatProbe; briskett usually done at 195-203F internal meat temp
 int16_t prevEncoderValue;
 int16_t encoderCountValue;
 

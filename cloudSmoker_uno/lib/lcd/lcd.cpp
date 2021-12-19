@@ -9,13 +9,13 @@
 
 // include 3rd party libraries
 #include <Arduino.h>
-#include <NewEncoder.h>
 #include <Wire.h>                           // i2C device communication
+#include <NewEncoder.h> // do I need this here anymore?  use is in smokerStates now?
 #include <hd44780.h>                        // LCD library
 #include <hd44780ioClass/hd44780_I2Cexp.h>  // i2c expander i/o class header -> required for my YwRobot 1602 LCD
 
 //incliude local libraries
-#include <helper_functions.h>
+#include <helper_functions.h>           // do I need this here anymore?  use is in smokerStates now?
 #include <lcd.h>
 
 // define LCD geometry (YwRobot 1602 LCD)
@@ -26,7 +26,6 @@ constexpr int LCD_ROWS = 2;
 byte menuPrintLine = 0;
 byte menuSelectLine = 0;
 char messageBuffer[17];  // 16 char LCD screen + terminating null char
-
 
 //LCD constructor passing lcd rows and columns
 CWG_LCD::CWG_LCD(const int LCD_COLS, const int LCD_ROWS) {
@@ -62,17 +61,17 @@ void CWG_LCD::functionTest() {
 //LCD_goto_row_col(thisrow, thatcol);
 //LCD_write_data(ActiveRowIndicator);
 
-////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////
 // Custom character data - symbols mostly borrowed from Prusa Mk3 firmware, unless noted
 //   Ref: https://github.com/prusa3d/Prusa-Firmware/blob/MK3/Firmware/lcd.cpp
 //
-////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 
 const uint8_t lcd_custChar_degree[8] PROGMEM = {  //need to refer to element 0 in array as "/010", binary 8
-    B01100,                                       // alternative degree symbol is in character set "/337"
-    B10010,
-    B10010,
-    B01100,
+    B01100, //   **     note: alternative degree symbol is in character set "/337"
+    B10010, //  *  *
+    B10010, //  *  *
+    B01100, //   ** 
     B00000,
     B00000,
     B00000,
@@ -80,75 +79,75 @@ const uint8_t lcd_custChar_degree[8] PROGMEM = {  //need to refer to element 0 i
 
 // uint8_t degreeC[8]     = {0x18,0x18,0x03,0x04,0x04,0x04,0x03,0x00};
 const uint8_t lcd_custChar_degreeC[8] PROGMEM = {
-    B11000,
-    B11000,
-    B00011,
-    B00100,
-    B00100,
-    B00100,
-    B00011,
+    B11000, //  **   
+    B11000, //  **   
+    B00011, //     **   
+    B00100, //    *  
+    B00100, //    *       
+    B00100, //    *     
+    B00011, //      **   
     B00000};  //source: https://github.com/duinoWitchery/hd44780/blob/master/examples/ioClass/hd44780_I2Cexp/LCDCustomChars/LCDCustomChars.ino
 
 // uint8_t degreeF[8]     = {0x18,0x18,0x07,0x04,0x07,0x04,0x04,0x00};
 const uint8_t lcd_custChar_degreeF[8] PROGMEM = {
-    B11000,
-    B11000,
-    B00111,
-    B00100,
-    B00111,
-    B00100,
-    B00100,
+    B11000,  //  **   
+    B11000,  //  **   
+    B00111,  //    ***   
+    B00100,  //    *   
+    B00111,  //    ***   
+    B00100,  //    *   
+    B00100,  //    *   
     B00000};  //source: https://github.com/duinoWitchery/hd44780/blob/master/examples/ioClass/hd44780_I2Cexp/LCDCustomChars/LCDCustomChars.ino
 
 const uint8_t lcd_custChar_thermometer[8] PROGMEM = {
-    B00100,
-    B01010,
-    B01010,
-    B01010,
-    B01010,
-    B10001,
-    B10001,
-    B01110};  // Source: Prusa
+    B00100,  //    *  
+    B01010,  //   * *
+    B01010,  //   * *
+    B01010,  //   * *
+    B01010,  //   * *
+    B10001,  //  *   *
+    B10001,  //  *   *
+    B01110}; //   ***       Source: Prusa
 
 const uint8_t lcd_custChar_uplevel[8] PROGMEM = {
-    B00100,
-    B01110,
-    B11111,
-    B00100,
-    B11100,
-    B00000,
-    B00000,
-    B00000};  // Source: Prusa
+    B00100,  //    *  
+    B01110,  //   ***  
+    B11111,  //  *****
+    B00100,  //    *
+    B11100,  //  ***
+    B00000,  //  
+    B00000,  //  
+    B00000}; //    Source: Prusa
 
 const uint8_t lcd_custChar_arrup[8] PROGMEM = {
-    B00100,
-    B01110,
-    B11111,
-    B00100,
-    B00100,
-    B00000,
-    B00000,
-    B00000};  // Source: Prusa
+    B00100,  //    *
+    B01110,  //   ***
+    B11111,  //  *****
+    B00100,  //    *
+    B00100,  //    *
+    B00000,  //  
+    B00000,  //  
+    B00000}; //         Source: Prusa
 
 const uint8_t lcd_custChar_arrdown[8] PROGMEM = {
-    B00000,
-    B00000,
-    B00000,
-    B00100,
-    B00100,
-    B11111,
-    B01110,
-    B00100};  // Source: Prusa
+    B00000,  //  
+    B00000,  //  
+    B00000,  //  
+    B00100,  //    *
+    B00100,  //    *
+    B11111,  //  *****
+    B01110,  //   ***
+    B00100}; //    *    Source: Prusa
 
 const uint8_t lcd_custChar_selectarr[8] PROGMEM = {
-    B01000,
-    B01100,
-    B01110,
-    B01111,
-    B01110,
-    B01100,
-    B01000,
-    B00000};  // custom made
+    B01000,  //   *
+    B01100,  //   **
+    B01110,  //   ***
+    B01111,  //   ****
+    B01110,  //   ***
+    B01100,  //   **
+    B01000,  //   *
+    B00000}; //         custom made
 
 // creates eight custom charcters to use in menu or status screens
 void CWG_LCD::initialiseCustomCharSet() {
