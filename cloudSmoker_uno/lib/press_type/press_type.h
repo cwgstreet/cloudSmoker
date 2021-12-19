@@ -43,6 +43,7 @@ class Press_Type : public Button {
                                       
     //prototype functions - see *.cpp for method code
     void begin(const int _pin);
+    void functionTest();
     void checkPress();
 
    private:

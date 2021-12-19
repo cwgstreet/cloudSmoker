@@ -38,5 +38,6 @@ class CWG_SerialMonitor {
     void functionTest();
 };
 
+extern CWG_SerialMonitor SerialTerminal; 
 
 #endif  // end header guard

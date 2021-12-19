@@ -21,6 +21,8 @@
 //   Place function call in setup (not loop) to ensure single occurence of serial
 //     monitor initialisation text rather than repeating scrolling text if placed in loop
 void CWG_SerialMonitor::functionTest() {
+    CWG_SerialMonitor SerialTerminal;  //instantiate terminal object from periphials library
+    
     Serial.println(F("   "));  // blank line to make easier to read
     Serial.println(F("|-------------------------------------------|"));
     Serial.println(F("  Initialising serial monitor function test"));

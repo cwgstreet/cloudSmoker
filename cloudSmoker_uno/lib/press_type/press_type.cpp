@@ -80,6 +80,21 @@ void Press_Type::begin(int _pin) {
 #endif  //DEBUG
 }
 
+void Press_Type::functionTest() {
+    if (pressEventCode == 1) {
+        Serial.print("*** Short Press! pressEventCode = ");
+        Serial.println(pressEventCode);
+    }
+    if (pressEventCode == 2) {
+        Serial.print("*** Long Press! pressEventCode = ");
+        Serial.println(pressEventCode);
+    }
+    if (pressEventCode == 3) {
+        Serial.print("*** Double Press! pressEventCode = ");
+        Serial.println(pressEventCode);
+    }
+}
+
 void Press_Type::checkPress() {
     button.update();
 }

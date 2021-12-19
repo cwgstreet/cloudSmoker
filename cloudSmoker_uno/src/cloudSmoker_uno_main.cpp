@@ -138,19 +138,22 @@ void setup() {
     //CWG_LCD lcd(LCD_COLS, LCD_ROWS);  //instantiate lcd object from periphials library
     lcd.initialiseCustomCharSet();    //creates eight custom lcd charaters
 
-// **********  debug - periphial function tests **************************
+// **********  debug - Serial monitor periphial function tests **************************
 #ifdef DEBUG_SERIAL
-    // Serial monitor terminal function test
-    CWG_SerialMonitor terminal;  //instantiate terminal object from periphials library
-    terminal.functionTest();
-#endif
+    SerialTerminal.functionTest();
+#endif  // **********  end debug periphial function tests *************************
 
-#ifdef DEBUG_LCD
+#ifdef DEBUG_LCD // **********  debug - LCD function tests **************************
     // LCD function test
     lcd.functionTest();
     lcd.displayTest();
-#endif
-    // **********  end debug periphial function tests *************************
+#endif  // **********  end debug LCD function tests *************************
+
+#ifdef DEBUG_PRESSTYPE // **********  debug - button press_type function tests **************************
+    // LCD function test
+    button.functionTest();
+#endif  // **********  end utton press_type function tests *************************
+
 
     lcd.initialiseCustomCharSet();  //creates eight custom lcd charaters
 
@@ -166,7 +169,9 @@ void loop() {
     button.checkPress();
     //processState(lcd); disable temporarily
 
-// **********  debug - press Type code function test  **************************
+
+
+/* // **********  debug - press Type function test  **************************
 //  pressEventCode: Short Press == 1, Long Press == 2, Double Press == 3, No Press == 0
 #ifdef DEBUG_PRESSTYPE
     if (pressEventCode == 1) {
@@ -183,7 +188,7 @@ void loop() {
     }
 #endif  // end DEBUG
     // **********  end debug press Type function tests *************************
-
+ */
     WrapEncoder::EncoderState currentEncoderState;
 
 // **********  debug - free memory check  **************************
