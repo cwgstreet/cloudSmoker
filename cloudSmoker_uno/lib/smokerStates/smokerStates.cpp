@@ -18,6 +18,7 @@
 //incliude local libraries
 #include <lcd.h>
 #include <smokerStates.h>
+#include <press_type.h>
 
 // entryStates is an enum variable type defined in menu.h header file (as extern); smokerState is global
 entryStates_t smokerState;
@@ -34,6 +35,26 @@ void processState(CWG_LCD &lcd) {
 
         case launchPad:
             lcd.showLaunchPad();
+            if (pressEventCode = LONG_PRESS)
+            {
+                // debug statements - remove
+                lcd.setCursor(0, 0);
+                lcd.print("  Long Press!   ");
+                lcd.setCursor(0, 1);
+                lcd.print(" state = geTemp ");
+                // debug finished
+                smokerState = getTemp;
+            }
+            if (pressEventCode = DOUBLE_PRESS)
+            {
+                /* // debug statements - remove
+                lcd.setCursor(0, 0);
+                lcd.print("  Double Press! ");
+                lcd.setCursor(0, 1);
+                lcd.print("state=changeSett");
+                // debug finished
+                smokerState = changeSettings; */
+            }
             break;
 
         case changeSettings:

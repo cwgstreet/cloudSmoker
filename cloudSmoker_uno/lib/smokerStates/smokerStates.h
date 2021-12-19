@@ -19,12 +19,6 @@
 #include <pins_arduino.h>
 #endif  // end if-block
 
-/*****************
-// Libraries required for periphial function tests:
-*****************/
-
-// i2C devices
-//#include <Wire.h>
 
 // Prepare case names for cloudSmoker State Machine switch-case stucture
 enum entryStates_t { splashScreen = 1, //set enum 1 to 10 rather than default 0 for first element
@@ -38,7 +32,7 @@ enum entryStates_t { splashScreen = 1, //set enum 1 to 10 rather than default 0 
                    modemSleep, 
                    bbqStatus };   // 10
 
-// smokerState defined in implementation smokerState.cpp, hence extern keyword
+// smokerState type defined in implementation smokerState.cpp, hence extern keyword
 extern entryStates_t smokerState;
 
 /******************************************************

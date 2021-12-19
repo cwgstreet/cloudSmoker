@@ -15,9 +15,9 @@
 #include <Arduino.h>
 #include <NewEncoder.h>
 
-extern WrapEncoder encoder;
-extern WrapEncoder::EncoderState state;
-extern int16_t prevEncoderValue;
+WrapEncoder encoder(2, 3, 180, 210, 203, FULL_PULSE);  //default meatProbe; briskett usually done at 195-203F internal meat temp
+WrapEncoder::EncoderState state;
+
 
 void ESP_ISR WrapEncoder::updateValue(uint8_t updatedState) {
     if ((updatedState & DELTA_MASK) == INCREMENT_DELTA) {

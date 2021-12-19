@@ -63,26 +63,26 @@
 #include <hd44780ioClass/hd44780_I2Cexp.h>  // i2c expander i/o class header -> required for my YwRobot 1602 LCD
 
 // internal (user) libraries:
-#include <lcd.h>  // lcd function tests, helper functions and custom characters
-//#include <menu.h>          // menu functions
 #include <periphials.h>    // serial monitor function tests and usuage routines
+#include <lcd.h>  // lcd function tests, helper functions and custom characters
 #include <press_type.h>    // wrapper library abstracting Yabl / Bounce2 routines
+#include <wrapEncoder.h>   //  encoder library including encoder object with min / max values that "wrap" around
 #include <smokerStates.h>  // cloudSmoker state machine functionality
-#include <wrapEncoder.h>   // creates encoder object with min / max values that "wrap" around
 
 // **************  Selective Debug Saffolding ***********************
 // Set up selective debug scaffold; comment out appropriate lines below to disable debugging tests at pre-proccessor stage
 //   Note: #ifdef preprocessor simply tests if the symbol's been defined; therefore don't use #ifdef 0
 //    Ref: https://stackoverflow.com/questions/16245633/ifdef-debug-versus-if-debug
 // *****************************************************************
-//#define DEBUG_SERIAL  1      // uncomment to debug - Serial monitor function test
+#define DEBUG_SERIAL  1      // uncomment to debug - Serial monitor function test
 #define DEBUG_LCD 1  // uncomment to debug - LCD function test
 #define DEBUG_PRESSTYPE  1  // uncomment to debug - Rotary encoder button press type function test
-//#define DEBUG_LED  1       // uncomment to debug LED test of rotary encoder
+#define DEBUG_LED  1       // uncomment to debug LED test of rotary encoder
 //#define DEBUG_FREEMEM 1  // uncomment to debug remaining free memory
 
 // pins set-up listed below is for Uno, not ESP8266
-//  Note to self:  constexp is better than const for variable values that should be known at compile time -> more memory efficient 
+//  Note to self:  constexp  better than const for variable values that should be known at compile 
+//     time -> more memory efficient.  Also better than simple #define
 constexpr int I2C_SCL = A5;     //optional as hd44780 set to auto-configure
 constexpr int I2C_SDA = A4;     //optional as hd44780 set to auto-configure
 constexpr int ENCODER_DT = 2;   // pinA newEncode
@@ -122,7 +122,7 @@ unsigned long currentMillis;
 // *********************
 
 // WrapEncoder object
-WrapEncoder encoder(2, 3, 180, 210, 203, FULL_PULSE);  //default meatProbe; briskett usually done at 195-203F internal meat temp
+//WrapEncoder encoder(2, 3, 180, 210, 203, FULL_PULSE);  //default meatProbe; briskett usually done at 195-203F internal meat temp
 int16_t prevEncoderValue;
 int16_t encoderCountValue;
 
@@ -135,7 +135,7 @@ int16_t encoderCountValue;
 void setup() {
     Serial.begin(SERIAL_MONITOR_SPEED);
 
-    CWG_LCD lcd(LCD_COLS, LCD_ROWS);  //instantiate lcd object from periphials library
+    //CWG_LCD lcd(LCD_COLS, LCD_ROWS);  //instantiate lcd object from periphials library
     lcd.initialiseCustomCharSet();    //creates eight custom lcd charaters
 
 // **********  debug - periphial function tests **************************
@@ -154,14 +154,8 @@ void setup() {
 
     lcd.initialiseCustomCharSet();  //creates eight custom lcd charaters
 
-    // testing functionality - delete lines below when done
-    //lcd.displayTest();
-    //lcd.showSplashScreen(degCFlag, meatDoneTemp, pitTemp);
-    //lcd.showInstructionsScreen();
-
     encoder.initialise();
-    // delay necessary to clear serial buffer in encoder.initialise(); otherwise garbage characters
-    delay(100);
+    delay(100); // delay necessary to clear serial buffer in encoder.initialise(); otherwise garbage characters
 
     // initialise button press type set-up code (pin, pullup mode, callback function)
     button.begin(BUTTON_PIN);
@@ -170,7 +164,7 @@ void setup() {
 
 void loop() {
     button.checkPress();
-    processState(lcd);
+    //processState(lcd); disable temporarily
 
 // **********  debug - press Type code function test  **************************
 //  pressEventCode: Short Press == 1, Long Press == 2, Double Press == 3, No Press == 0

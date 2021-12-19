@@ -19,8 +19,14 @@
 #include <lcd.h>
 
 // define LCD geometry (YwRobot 1602 LCD)
-const int LCD_COLS = 16;
-const int LCD_ROWS = 2;
+constexpr int LCD_COLS = 16;
+constexpr int LCD_ROWS = 2;
+
+// LCD display varibles
+byte menuPrintLine = 0;
+byte menuSelectLine = 0;
+char messageBuffer[17];  // 16 char LCD screen + terminating null char
+
 
 //LCD constructor passing lcd rows and columns
 CWG_LCD::CWG_LCD(const int LCD_COLS, const int LCD_ROWS) {
@@ -220,6 +226,7 @@ void CWG_LCD::showLaunchPad() {
 }
 // ******* end showLaunchPad() ******
 
+
 // *********************************************************************************************
 void CWG_LCD::showSettingsMenu() {
     lcd.clear();
@@ -232,3 +239,28 @@ void CWG_LCD::showSettingsMenu() {
     //    sprintf to get formated string lines -> return formatted line so put into one big array
 }
 // ******* end void CWG_LCD::showSettingsMenu()
+
+
+// *********************************************************************************************
+//   printMenuLine function adapted from Open Vapors project, MIT Licence. 
+//     Ref: https://github.com/baldengineer/Open-Vapors 
+// *********************************************************************************************
+
+void CWG_LCD::printMenuLine(char *c) {
+  int lineWidth = LCD_COLS-1;
+  lcd.setCursor(0,menuPrintLine);
+  if (menuPrintLine == menuSelectLine) {
+    lcd.print((char)lcd_custChar_selectarr);
+    lineWidth = lineWidth - 1; 
+    } else {
+      lcd.print(F(" "));
+      lineWidth = lineWidth - 1; 
+    }
+    lcd.print(c);
+    for (int x=0; x < (lineWidth-strlen(c)); x++) {
+      lcd.print(F(" "));
+    }
+    menuPrintLine++;
+    if (menuPrintLine > 1) menuPrintLine = 0;
+    //processButtons();  //do I want this function?  Need to get encoder rotate and button press values
+}

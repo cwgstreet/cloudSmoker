@@ -21,6 +21,8 @@
 #include <pins_arduino.h>
 #endif  // end if-block
 
+extern int16_t prevEncoderValue;
+
 /*****************
 // Libraries required for periphial function tests:
 *****************/
@@ -30,6 +32,7 @@
 
 /*****************L
 // Class definition:
+//   WrapEncoder is child (derrived) class of public library NewEncoder
 *****************/
 
 class WrapEncoder : public NewEncoder {
@@ -47,5 +50,10 @@ class WrapEncoder : public NewEncoder {
    protected:
     virtual void updateValue(uint8_t updatedState);
 };
+
+// ensure objects are visable everywhere (global)
+extern WrapEncoder encoder;  
+extern WrapEncoder::EncoderState state;
+
 
 #endif  // end header guard

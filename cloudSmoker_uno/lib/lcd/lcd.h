@@ -49,6 +49,8 @@ class CWG_LCD : public hd44780_I2Cexp {
    public:
     CWG_LCD(const int LCD_COLS, const int LCD_ROWS);  //constructor - will initialise lcdCols, lcdRows
 
+    void printMenuLine(char *c);
+
     void functionTest();
     void displayTest();
     void initialiseCustomCharSet();
