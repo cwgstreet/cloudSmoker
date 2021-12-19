@@ -17,6 +17,7 @@
 
 WrapEncoder encoder(2, 3, 180, 210, 203, FULL_PULSE);  //default meatProbe; briskett usually done at 195-203F internal meat temp
 WrapEncoder::EncoderState state;
+WrapEncoder::EncoderState currentEncoderState;
 
 
 void ESP_ISR WrapEncoder::updateValue(uint8_t updatedState) {

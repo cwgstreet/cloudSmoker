@@ -38,6 +38,6 @@ class CWG_SerialMonitor {
     void functionTest();
 };
 
-extern CWG_SerialMonitor SerialTerminal; 
+extern CWG_SerialMonitor SerialTerminal;  // ensure lcd object is visable everywhere
 
 #endif  // end header guard

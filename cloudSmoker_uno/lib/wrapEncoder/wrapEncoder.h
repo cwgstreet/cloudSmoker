@@ -54,6 +54,7 @@ class WrapEncoder : public NewEncoder {
 // ensure objects are visable everywhere (global)
 extern WrapEncoder encoder;  
 extern WrapEncoder::EncoderState state;
+extern  WrapEncoder::EncoderState currentEncoderState;
 
 
 #endif  // end header guard

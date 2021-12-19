@@ -95,11 +95,6 @@ constexpr int BUTTON_PIN = 4;   // KY40 SW (switch) pin connected to Uno pin 4
 //  note: may have to manually reset board after flashing for code to work correctly
 #define SERIAL_MONITOR_SPEED 74880
 
-/* moved to lcd.cpp 
-// define LCD geometry (YwRobot 1602 LCD)
-const int LCD_COLS = 16;
-const int LCD_ROWS = 2;  */
-
 // temperature variables- global; all temps stored in degF and converted on the fly as necessary for alternative units (eg DegC)
 float meatDoneTemp = 203;    // default to usual brisket internal done temp 203degF
 float pitTempTarget = 210;   // reasonable range around 225F long and slow target, pit temps can run 200 to 350 deg F
@@ -107,12 +102,12 @@ float currentMeatTemp = 40;  // current meat temp; default to refridgerator temp
 float currentPitTemp = 225;  // current pit temp; default to long and slow brisket cooking (pit) temp=225degF
 bool degCFlag = 0;           // temperature unit flag: 1 for Centigrade or 0 for Fahrenheit
 
-/* 
+/* *********
 To do:  add 4-hour rule check and exception notification
 The 4-hour rule is a general food safety guideline that suggests that the internal temperature of meat 
 should increase from 40°F to 140°F within 4 hours. This is due to foodborne bacteria growing much faster 
 within this temperature range (known as the “danger zone”).  Ref https://www.totallysmokin.com/4-hour-rule-smoking/
- */
+********** */
 
 // timing variables - global
 unsigned long currentMillis;
@@ -136,7 +131,7 @@ void setup() {
     Serial.begin(SERIAL_MONITOR_SPEED);
 
     //CWG_LCD lcd(LCD_COLS, LCD_ROWS);  //instantiate lcd object from periphials library
-    lcd.initialiseCustomCharSet();    //creates eight custom lcd charaters
+    //lcd.initialiseCustomCharSet();    //creates eight custom lcd charaters
 
 // **********  debug - Serial monitor periphial function tests **************************
 #ifdef DEBUG_SERIAL
@@ -150,12 +145,11 @@ void setup() {
 #endif  // **********  end debug LCD function tests *************************
 
 #ifdef DEBUG_PRESSTYPE // **********  debug - button press_type function tests **************************
-    // LCD function test
     button.functionTest();
-#endif  // **********  end utton press_type function tests *************************
+#endif  // **********  end button press_type function tests *************************
 
 
-    lcd.initialiseCustomCharSet();  //creates eight custom lcd charaters
+    lcd.initialiseCustomCharSet();  //creates eight custom lcd charaters, see lcd.cpp
 
     encoder.initialise();
     delay(100); // delay necessary to clear serial buffer in encoder.initialise(); otherwise garbage characters
@@ -189,7 +183,7 @@ void loop() {
 #endif  // end DEBUG
     // **********  end debug press Type function tests *************************
  */
-    WrapEncoder::EncoderState currentEncoderState;
+ //   WrapEncoder::EncoderState currentEncoderState;
 
 // **********  debug - free memory check  **************************
 #ifdef DEBUG_FREEMEM
