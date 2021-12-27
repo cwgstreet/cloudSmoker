@@ -1,6 +1,5 @@
 /* ***************************************************************
-* helper_functions.h - library containing functions to test and use
-*   cloudSmoker hardware serial monitor and LCD periphials
+* helper_functions.h - library containing genral use helper functions 
 * 
 *  C W Greenstreet, Ver1, 27Sep21
 *    MIT Licence - Released into the public domain
@@ -23,9 +22,7 @@
 // helper function prototypes
 *******************************************************/
 float convertDegFtoDegC(float tempDegF);
-
 float getElapsedCookTime(float startCookTimeMS);
-
 float getCountMS(float tempMS);
 
 #endif  // end header guard
