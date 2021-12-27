@@ -129,9 +129,8 @@ int16_t encoderCountValue;
 
 void setup() {
     Serial.begin(SERIAL_MONITOR_SPEED);
-
-    //CWG_LCD lcd(LCD_COLS, LCD_ROWS);  //instantiate lcd object from periphials library
-    //lcd.initialiseCustomCharSet();    //creates eight custom lcd charaters
+    lcd.initialiseLCD();
+    lcd.initialiseCustomCharSet();    //creates eight custom lcd charaters
 
 // **********  debug - Serial monitor periphial function tests **************************
 #ifdef DEBUG_SERIAL
@@ -139,8 +138,7 @@ void setup() {
 #endif  // **********  end debug periphial function tests *************************
 
 #ifdef DEBUG_LCD // **********  debug - LCD function tests **************************
-    // LCD function test
-    lcd.functionTest();
+    // LCD special character function test
     lcd.displayTest();
 #endif  // **********  end debug LCD function tests *************************
 
@@ -162,7 +160,7 @@ void setup() {
 void loop() {
     button.checkPress();
     encoder.getCount();
-    //processState(lcd); disable temporarily
+    processState(lcd); 
 
 
 // **********  debug - free memory check  **************************

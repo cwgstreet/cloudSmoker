@@ -24,7 +24,7 @@
 entryStates_t smokerState;
 
 void processState(CWG_LCD &lcd) {
-    smokerState = launchPad;  //test line - remove following test
+    smokerState = splashScreen;  //test line - remove following test
 
     switch (smokerState) {
         case splashScreen:  // note: case splashScreen == 1 explicitly per enum assignment in smokerState.
@@ -35,7 +35,7 @@ void processState(CWG_LCD &lcd) {
 
         case launchPad:
             lcd.showLaunchPad();
-            if (pressEventCode = LONG_PRESS)
+            if (pressEventCode == LONG_PRESS)
             {
                 // debug statements - remove
                 lcd.setCursor(0, 0);
@@ -45,7 +45,7 @@ void processState(CWG_LCD &lcd) {
                 // debug finished
                 smokerState = getTemp;
             }
-            if (pressEventCode = DOUBLE_PRESS)
+            if (pressEventCode == DOUBLE_PRESS)
             {
                 /* // debug statements - remove
                 lcd.setCursor(0, 0);

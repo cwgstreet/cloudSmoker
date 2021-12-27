@@ -25,7 +25,7 @@ constexpr int LCD_ROWS = 2;
 // LCD display varibles
 byte menuPrintLine = 0;
 byte menuSelectLine = 0;
-char messageBuffer[17];  // 16 char LCD screen + terminating null char
+char messageBuffer[17];  // empty buffer array; 16 char LCD screen + terminating null char
 
 //LCD constructor passing lcd rows and columns
 CWG_LCD::CWG_LCD(const int LCD_COLS, const int LCD_ROWS) {
@@ -35,8 +35,8 @@ CWG_LCD::CWG_LCD(const int LCD_COLS, const int LCD_ROWS) {
 
 CWG_LCD lcd(LCD_COLS, LCD_ROWS);  //instantiate lcd object: auto locate & auto config expander chip
 
-// LCD.function test to determine if LCD is working properly.  Place function call in setup (not loop)
-void CWG_LCD::functionTest() {
+// LCD initialisation.  Tests if LCD is working properly.  Place function call in setup (not loop)
+void CWG_LCD::initialiseLCD() {
     int LCDstatus;
     LCDstatus = lcd.begin(_numCols, _numRows);  // begin() automatically turns on  backlight
 
@@ -47,19 +47,14 @@ void CWG_LCD::functionTest() {
     // otherwise, initalization was successful, the backlight should be on now
     // Print a message to the LCD to show LCD successfully initialised
     lcd.print(F("G'Day cloudSmkr!"));  // F-Macro to save dynamic memory
-    delay(3000);
+    delay(1000);
     lcd.clear();
     lcd.print(F("LCD test passed"));
     lcd.setCursor(0, 1);               //set cursor to first column of second row (forst position == 0)
     lcd.print(F("G'Day cloudSmkr!"));  // F-Macro to save dynamic memory
-    delay(2000);
-}  //  end LCD function test
+    delay(1000);
+}  //  end LCD initialisation
 
-//function LCD_goto_row_col() to place the LCD cursor at a specific position, and a
-// function LCD_write_data(),  o send a data byte to the LCD, you can put the special character
-// on the screen like this:
-//LCD_goto_row_col(thisrow, thatcol);
-//LCD_write_data(ActiveRowIndicator);
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // Custom character data - symbols mostly borrowed from Prusa Mk3 firmware, unless noted
@@ -85,7 +80,7 @@ const uint8_t lcd_custChar_degreeC[8] PROGMEM = {
     B00100, //    *  
     B00100, //    *       
     B00100, //    *     
-    B00011, //      **   
+    B00011, //     **   
     B00000};  //source: https://github.com/duinoWitchery/hd44780/blob/master/examples/ioClass/hd44780_I2Cexp/LCDCustomChars/LCDCustomChars.ino
 
 // uint8_t degreeF[8]     = {0x18,0x18,0x07,0x04,0x07,0x04,0x04,0x00};
@@ -180,6 +175,7 @@ void CWG_LCD::displayTest() {
     lcd.print(
         "temp is 210"
         "\002");
+     delay(2000);   
 }
 
 // format: dtostrf(float_value, min_width, num_digits_after_decimal, where_to_store_string)
@@ -239,7 +235,7 @@ void CWG_LCD::showSettingsMenu() {
 }
 // ******* end void CWG_LCD::showSettingsMenu()
 
-
+/* 
 // *********************************************************************************************
 //   printMenuLine function adapted from Open Vapors project, MIT Licence. 
 //     Ref: https://github.com/baldengineer/Open-Vapors 
@@ -262,4 +258,4 @@ void CWG_LCD::printMenuLine(char *c) {
     menuPrintLine++;
     if (menuPrintLine > 1) menuPrintLine = 0;
     //processButtons();  //do I want this function?  Need to get encoder rotate and button press values
-}
+} */
