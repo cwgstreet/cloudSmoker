@@ -165,27 +165,6 @@ void loop() {
     //processState(lcd); disable temporarily
 
 
-
-/* // **********  debug - press Type function test  **************************
-//  pressEventCode: Short Press == 1, Long Press == 2, Double Press == 3, No Press == 0
-#ifdef DEBUG_PRESSTYPE
-    if (pressEventCode == 1) {
-        Serial.print("*** Short Press! pressEventCode = ");
-        Serial.println(pressEventCode);
-    }
-    if (pressEventCode == 2) {
-        Serial.print("*** Long Press! pressEventCode = ");
-        Serial.println(pressEventCode);
-    }
-    if (pressEventCode == 3) {
-        Serial.print("*** Double Press! pressEventCode = ");
-        Serial.println(pressEventCode);
-    }
-#endif  // end DEBUG
-    // **********  end debug press Type function tests *************************
- */
- //   WrapEncoder::EncoderState currentEncoderState;
-
 // **********  debug - free memory check  **************************
 #ifdef DEBUG_FREEMEM
     Serial.print("freeMemory()=");

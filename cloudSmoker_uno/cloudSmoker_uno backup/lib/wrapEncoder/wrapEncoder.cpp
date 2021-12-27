@@ -19,9 +19,7 @@ WrapEncoder encoder(2, 3, 180, 210, 203, FULL_PULSE);  //default meatProbe; bris
 WrapEncoder::EncoderState state;   // EncoderState is a public enum datatype
 WrapEncoder::EncoderState currentEncoderState;
 
-// trying to fix bug /var/folders/ns/cny531dn0jd44vjymdmwfqgc0000gn/T//ccCjSrfX.ltrans0.ltrans.o:(.rodata+0x7a): 
-//   undefined reference to `WrapEncoder::updateValue(unsigned char)'
-//WrapEncoder::~WrapEncoder() {}
+
 
 void ESP_ISR WrapEncoder::updateValue(uint8_t updatedState) {
     if ((updatedState & DELTA_MASK) == INCREMENT_DELTA) {
