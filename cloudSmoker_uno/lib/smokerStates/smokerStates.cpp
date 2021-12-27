@@ -17,8 +17,9 @@
 
 //incliude local libraries
 #include <lcd.h>
-#include <smokerStates.h>
 #include <press_type.h>
+#include <smokerStates.h>
+#include <wrapEncoder.h>
 
 // entryStates is an enum variable type defined in menu.h header file (as extern); smokerState is global
 entryStates_t smokerState;
@@ -29,14 +30,32 @@ void processState(CWG_LCD &lcd) {
     switch (smokerState) {
         case splashScreen:  // note: case splashScreen == 1 explicitly per enum assignment in smokerState.
             lcd.showSplashScreen(degCFlag, meatDoneTemp, pitTempTarget);
-            // initialise encoder?  or pass encoder object by reference?
-            // test for encoderstate change, if encoder state change, then smokerState = launchPad;
+             
+            /*  Code block below not functioning correctly
+            // test for encoderstate change, if encoder state (rotation) change, then smokerState = launchPad;
+            int16_t currentValue;
+
+            if (encoder.getState(state)) {
+                currentValue = state.currentValue;
+                if (currentValue != prevEncoderValue) {
+                    //test section
+                    char msgLine0[17] = {"                "};
+                    char msgLine1[17] = {"state =launchPad"};
+                    lcd.setCursor(0, 0);
+                    lcd.print(msgLine0);
+                    lcd.setCursor(0, 1);
+                    lcd.print(msgLine1);
+                    // end test section
+
+                    smokerState = launchPad;
+                }
+            }
+ */
             break;
 
         case launchPad:
             lcd.showLaunchPad();
-            if (pressEventCode == LONG_PRESS)
-            {
+            /* if (pressEventCode == LONG_PRESS) {
                 // debug statements - remove
                 lcd.setCursor(0, 0);
                 lcd.print("  Long Press!   ");
@@ -45,16 +64,15 @@ void processState(CWG_LCD &lcd) {
                 // debug finished
                 smokerState = getTemp;
             }
-            if (pressEventCode == DOUBLE_PRESS)
-            {
-                /* // debug statements - remove
+            if (pressEventCode == DOUBLE_PRESS) {
+                // debug statements - remove
                 lcd.setCursor(0, 0);
                 lcd.print("  Double Press! ");
                 lcd.setCursor(0, 1);
                 lcd.print("state=changeSett");
                 // debug finished
-                smokerState = changeSettings; */
-            }
+                smokerState = changeSettings; 
+    }*/
             break;
 
         case changeSettings:
