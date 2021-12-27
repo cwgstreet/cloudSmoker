@@ -16,7 +16,7 @@
 #include <NewEncoder.h>
 
 WrapEncoder encoder(2, 3, 180, 210, 203, FULL_PULSE);  //default meatProbe; briskett usually done at 195-203F internal meat temp
-WrapEncoder::EncoderState state;                       // EncoderState is a public enum datatype
+WrapEncoder::EncoderState state;                       // EncoderState is a public struct datatype
 WrapEncoder::EncoderState currentEncoderState;
 
 void ESP_ISR WrapEncoder::updateValue(uint8_t updatedState) {

@@ -14,7 +14,7 @@
 * ************************************************************ */
 
 //set up debug scaffold; comment out following line if you want to "turn off" serial monitor debugging
-#define DEBUG 1
+//#define DEBUG 1
 
 #include <Arduino.h>
 #include <Yabl.h>

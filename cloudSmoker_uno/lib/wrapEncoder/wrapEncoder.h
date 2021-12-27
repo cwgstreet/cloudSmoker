@@ -44,7 +44,6 @@ class WrapEncoder : public NewEncoder {
     virtual ~WrapEncoder() {
     } 
 
-    //virtual ~WrapEncoder() ;  //prob area?
 
     void initialise();
     // int16_t getCount(WrapEncoder::EncoderState &state);  old

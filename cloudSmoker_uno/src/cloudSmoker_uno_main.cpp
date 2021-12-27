@@ -74,10 +74,10 @@
 //   Note: #ifdef preprocessor simply tests if the symbol's been defined; therefore don't use #ifdef 0
 //    Ref: https://stackoverflow.com/questions/16245633/ifdef-debug-versus-if-debug
 // *****************************************************************
-#define DEBUG_SERIAL  1      // uncomment to debug - Serial monitor function test
-#define DEBUG_LCD 1  // uncomment to debug - LCD function test
-#define DEBUG_PRESSTYPE  1  // uncomment to debug - Rotary encoder button press type function test
-#define DEBUG_LED  1       // uncomment to debug LED test of rotary encoder
+//#define DEBUG_SERIAL  1      // uncomment to debug - Serial monitor function test
+//#define DEBUG_LCD 1  // uncomment to debug - LCD function test
+//#define DEBUG_PRESSTYPE  1  // uncomment to debug - Rotary encoder button press type function test
+//#define DEBUG_LED  1       // uncomment to debug LED test of rotary encoder
 //#define DEBUG_FREEMEM 1  // uncomment to debug remaining free memory
 
 // pins set-up listed below is for Uno, not ESP8266
