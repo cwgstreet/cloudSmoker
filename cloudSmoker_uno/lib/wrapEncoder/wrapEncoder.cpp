@@ -16,9 +16,12 @@
 #include <NewEncoder.h>
 
 WrapEncoder encoder(2, 3, 180, 210, 203, FULL_PULSE);  //default meatProbe; briskett usually done at 195-203F internal meat temp
-WrapEncoder::EncoderState state;
+WrapEncoder::EncoderState state;   // EncoderState is a public enum datatype
 WrapEncoder::EncoderState currentEncoderState;
 
+// trying to fix bug /var/folders/ns/cny531dn0jd44vjymdmwfqgc0000gn/T//ccCjSrfX.ltrans0.ltrans.o:(.rodata+0x7a): 
+//   undefined reference to `WrapEncoder::updateValue(unsigned char)'
+//WrapEncoder::~WrapEncoder() {}
 
 void ESP_ISR WrapEncoder::updateValue(uint8_t updatedState) {
     if ((updatedState & DELTA_MASK) == INCREMENT_DELTA) {
@@ -35,11 +38,12 @@ void ESP_ISR WrapEncoder::updateValue(uint8_t updatedState) {
         }
     }
     stateChanged = true;
-}
+} 
 
 void WrapEncoder::initialise() {
-    WrapEncoder::EncoderState state;
+    // WrapEncoder::EncoderState state; // now defined at top of wrapEncoder.cpp
 
+    delay(500);   //can remove if blocking - for asthetics
     Serial.println("Starting");
     if (!encoder.begin()) {
         Serial.println("1-Encoder Failed to Start. Check pin assignments and available interrupts. Aborting.");
@@ -54,7 +58,9 @@ void WrapEncoder::initialise() {
     }
 }
 
-int16_t WrapEncoder::getCount(WrapEncoder::EncoderState &state) {
+//int16_t WrapEncoder::getCount(WrapEncoder::EncoderState &state) { old
+int16_t WrapEncoder::getCount() {
+    //WrapEncoder::EncoderState currentEncoderState;
     int16_t currentValue;
 
     if (encoder.getState(state)) {

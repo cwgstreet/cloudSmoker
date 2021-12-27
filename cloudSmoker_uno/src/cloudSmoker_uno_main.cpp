@@ -110,7 +110,7 @@ within this temperature range (known as the “danger zone”).  Ref https://www
 ********** */
 
 // timing variables - global
-unsigned long currentMillis;
+//unsigned long currentMillis;
 
 // *********************
 // Object instantiation
@@ -161,6 +161,7 @@ void setup() {
 
 void loop() {
     button.checkPress();
+    encoder.getCount();
     //processState(lcd); disable temporarily
 
 
