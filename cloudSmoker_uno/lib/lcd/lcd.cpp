@@ -134,7 +134,8 @@ const uint8_t lcd_custChar_arrdown[8] PROGMEM = {
     B01110,  //   ***
     B00100}; //    *    Source: Prusa
 
-const uint8_t lcd_custChar_selectarr[8] PROGMEM = {
+//const uint8_t lcd_custChar_selectarr[8] PROGMEM = {
+const char lcd_custChar_selectarr[8] PROGMEM = {
     B01000,  //   *
     B01100,  //   **
     B01110,  //   ***
@@ -225,37 +226,38 @@ void CWG_LCD::showLaunchPad() {
 // *********************************************************************************************
 void CWG_LCD::showSettingsMenu() {
     lcd.clear();
-    char msg0[17] = {" <Press to set> "};
+     /* char msg0[17] = {" <Press to set> "};
     char msg1[17] = {" <Hold to exit> "};
     char msg2[17] = {" Meat done[xxx] "};
     char msg3[17] = {" Pit Temp [xxx] "};
-    char msg4[17] = {" Units [F] / C  "};
+    char msg4[17] = {" Units [F] / C  "}; */
     // *** function not finished; need to bring arguments in for various temps and use dtosdrf and
     //    sprintf to get formated string lines -> return formatted line so put into one big array
 }
 // ******* end void CWG_LCD::showSettingsMenu()
 
-/* 
+
 // *********************************************************************************************
 //   printMenuLine function adapted from Open Vapors project, MIT Licence. 
 //     Ref: https://github.com/baldengineer/Open-Vapors 
 // *********************************************************************************************
 
-void CWG_LCD::printMenuLine(char *c) {
-  int lineWidth = LCD_COLS-1;
-  lcd.setCursor(0,menuPrintLine);
-  if (menuPrintLine == menuSelectLine) {
-    lcd.print((char)lcd_custChar_selectarr);
-    lineWidth = lineWidth - 1; 
+void CWG_LCD::printMenuLine(const char *c) {
+    unsigned int lineWidth = LCD_COLS - 1;
+    lcd.setCursor(0, menuPrintLine);
+    if (menuPrintLine == menuSelectLine) {
+        lcd.print((char)0x7e);   // 0x7e is arrow in LCD character set
+        lineWidth = lineWidth - 1;
     } else {
-      lcd.print(F(" "));
-      lineWidth = lineWidth - 1; 
+        lcd.print(F(" "));
+        lineWidth = lineWidth - 1;
     }
     lcd.print(c);
-    for (int x=0; x < (lineWidth-strlen(c)); x++) {
-      lcd.print(F(" "));
+    for (unsigned int x = 0; x < (lineWidth - strlen(c)); x++) {
+        lcd.print(F(" "));
     }
     menuPrintLine++;
     if (menuPrintLine > 1) menuPrintLine = 0;
-    //processButtons();  //do I want this function?  Need to get encoder rotate and button press values
-} */
+    //processButtons();
+
+}
