@@ -162,7 +162,7 @@ void setup() {
 void loop() {
     button.checkPress();
     encoder.getCount();
-    //processState(lcd); disable temporarily
+    processState(lcd); disable temporarily
 
 
 

@@ -72,3 +72,9 @@ int16_t WrapEncoder::getCount() {
     }
     return 0;  // alleviates compiler warning: control reaches end of non-void function [-Wreturn-type]
 }
+
+
+bool WrapEncoder::detectRotation() {
+
+}
+

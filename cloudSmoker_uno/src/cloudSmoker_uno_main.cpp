@@ -63,25 +63,25 @@
 #include <hd44780ioClass/hd44780_I2Cexp.h>  // i2c expander i/o class header -> required for my YwRobot 1602 LCD
 
 // internal (user) libraries:
+#include <lcd.h>           // lcd function tests, helper functions and custom characters
 #include <periphials.h>    // serial monitor function tests and usuage routines
-#include <lcd.h>  // lcd function tests, helper functions and custom characters
 #include <press_type.h>    // wrapper library abstracting Yabl / Bounce2 routines
-#include <wrapEncoder.h>   //  encoder library including encoder object with min / max values that "wrap" around
 #include <smokerStates.h>  // cloudSmoker state machine functionality
+#include <wrapEncoder.h>   //  encoder library including encoder object with min / max values that "wrap" around
 
 // **************  Selective Debug Saffolding ***********************
 // Set up selective debug scaffold; comment out appropriate lines below to disable debugging tests at pre-proccessor stage
 //   Note: #ifdef preprocessor simply tests if the symbol's been defined; therefore don't use #ifdef 0
 //    Ref: https://stackoverflow.com/questions/16245633/ifdef-debug-versus-if-debug
 // *****************************************************************
-#define DEBUG_SERIAL  1      // uncomment to debug - Serial monitor function test
+//#define DEBUG_SERIAL 1  // uncomment to debug - Serial monitor function test
 //#define DEBUG_LCD 1  // uncomment to debug - LCD function test
 //#define DEBUG_PRESSTYPE  1  // uncomment to debug - Rotary encoder button press type function test
 //#define DEBUG_LED  1       // uncomment to debug LED test of rotary encoder
 //#define DEBUG_FREEMEM 1  // uncomment to debug remaining free memory
 
 // pins set-up listed below is for Uno, not ESP8266
-//  Note to self:  constexp  better than const for variable values that should be known at compile 
+//  Note to self:  constexp  better than const for variable values that should be known at compile
 //     time -> more memory efficient.  Also better than simple #define
 constexpr int I2C_SCL = A5;     //optional as hd44780 set to auto-configure
 constexpr int I2C_SDA = A4;     //optional as hd44780 set to auto-configure
@@ -130,27 +130,26 @@ int16_t encoderCountValue;
 void setup() {
     Serial.begin(SERIAL_MONITOR_SPEED);
     lcd.initialiseLCD();
-    lcd.initialiseCustomCharSet();    //creates eight custom lcd charaters
+    lcd.initialiseCustomCharSet();  //creates eight custom lcd charaters
 
 // **********  debug - Serial monitor periphial function tests **************************
 #ifdef DEBUG_SERIAL
     SerialTerminal.functionTest();
 #endif  // **********  end debug periphial function tests *************************
 
-#ifdef DEBUG_LCD // **********  debug - LCD function tests **************************
+#ifdef DEBUG_LCD  // **********  debug - LCD function tests **************************
     // LCD special character function test
     lcd.displayTest();
 #endif  // **********  end debug LCD function tests *************************
 
-#ifdef DEBUG_PRESSTYPE // **********  debug - button press_type function tests **************************
+#ifdef DEBUG_PRESSTYPE  // **********  debug - button press_type function tests **************************
     button.functionTest();
 #endif  // **********  end button press_type function tests *************************
-
 
     lcd.initialiseCustomCharSet();  //creates eight custom lcd charaters, see lcd.cpp
 
     encoder.initialise();
-    delay(100); // delay necessary to clear serial buffer in encoder.initialise(); otherwise garbage characters
+    delay(100);  // delay necessary to clear serial buffer in encoder.initialise(); otherwise garbage characters
 
     // initialise button press type set-up code (pin, pullup mode, callback function)
     button.begin(BUTTON_PIN);
@@ -159,9 +158,10 @@ void setup() {
 
 void loop() {
     button.checkPress();
-    encoder.getCount();
-    processState(lcd); 
+    processState(lcd);
 
+
+    //encoder.getCount();  // moved; do this inside of smokerState processState() function
 
 // **********  debug - free memory check  **************************
 #ifdef DEBUG_FREEMEM
