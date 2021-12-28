@@ -30,13 +30,13 @@ void processState(CWG_LCD &lcd) {
     switch (smokerState) {
         case splashScreen:  // note: case splashScreen == 1 explicitly per enum assignment in smokerState.
             lcd.showSplashScreen(degCFlag, meatDoneTemp, pitTempTarget);
-             
-            /*  Code block below not functioning correctly
+    /*          
+            //  Code block below not functioning correctly
             // test for encoderstate change, if encoder state (rotation) change, then smokerState = launchPad;
             int16_t currentValue;
-
-            if (encoder.getState(state)) {
-                currentValue = state.currentValue;
+    
+            if (encoder.getState(currentEncoderState)) {
+                currentValue = currentEncoderState.currentValue;
                 if (currentValue != prevEncoderValue) {
                     //test section
                     char msgLine0[17] = {"                "};
@@ -50,7 +50,7 @@ void processState(CWG_LCD &lcd) {
                     smokerState = launchPad;
                 }
             }
- */
+   */
             break;
 
         case launchPad:
