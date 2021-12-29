@@ -32,14 +32,7 @@ void processState(CWG_LCD &lcd) {
             lcd.showSplashScreen(degCFlag, meatDoneTemp, pitTempTarget);
             delay(1000);
 
-            int prevEncoderCount = 0;
-            int currentEncoderCount = encoder.getCount();
-
-            if (currentEncoderCount != prevEncoderCount) {
-                /* //test section
-                lcd.printMenuLine("splashscrn 2n1");
-                lcd.printMenuLine("splashscrn 2n2");
-                // end test section */
+            if (encoder.moved() ) {
                 smokerState = launchPad;
             }
 
@@ -61,7 +54,7 @@ void processState(CWG_LCD &lcd) {
         case changeSettings:
             // lcd.printMenuLine("changeSettings");  // temporary to confirm navigation branch
             lcd.showSettingsMenu();
-            // lcd.showSettingsMenu();
+            
             break;
 
         case setMeatDoneTemp:
