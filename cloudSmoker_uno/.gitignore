@@ -6,3 +6,4 @@
 
 # ignore test subdirectory
 test/
+backup cloudSmoker_uno backup/
