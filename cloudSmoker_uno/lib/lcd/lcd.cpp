@@ -205,8 +205,8 @@ void CWG_LCD::showSplashScreen(bool degCFlag, float meatDoneTemp, float pitTempT
         sprintf(msg, "Meat%s\002 Pit%s\002", meatFloatStr, pitFloatStr);
 
         lcd.printMenuLine_noArrow("BBQ set points:");
-        lcd.printMenuLine_noArrow(msg); 
-    } 
+        lcd.printMenuLine_noArrow(msg);
+    }
 }
 // ******* end showSplashScreen() ****
 
@@ -250,36 +250,35 @@ void CWG_LCD::printMenuLine(const char *c) {
         lineWidth = lineWidth - 1;
     }
     // test for character overflow error; causes blank line on LCD if printing more characters than display width
-    if (strlen(c) == LCD_COLS) {
-        lcd.print(F("Overflow error! "));
+    if (strlen(c) > lineWidth) {
+        lcd.print(F("Overflow error!"));
     } else {
         lcd.print(c);
-        for (unsigned int x = 0; x < (lineWidth - strlen(c)); x++) {  // printing blank lines due to overflow?  adjusted below
-                                                                      //  for (unsigned int x = 0; x < (LCD_COLS - strlen(c)); x++) {
+        for (unsigned int x = 0; x < (lineWidth - strlen(c)); x++) {
             lcd.print(F(" "));
         }
-        menuPrintLine++;
-        if (menuPrintLine > 1) menuPrintLine = 0;
-        //processButtons();
     }
+    menuPrintLine++;
+    if (menuPrintLine > 1) menuPrintLine = 0;
+    //processButtons();
 }
 
 void CWG_LCD::printMenuLine_noArrow(const char *c) {
     unsigned int lineWidth = LCD_COLS;  // linewidth == 16
     lcd.setCursor(0, menuPrintLine);
-    
+
     // test for character overflow error; causes blank line on LCD if printing more characters than display width
     if (strlen(c) > LCD_COLS) {
-        //lcd.print(F("Too many chars!"));
-        lcd.print(F("Overflow error! "));
-
+        lcd.print(F("Overflow error!"));
     } else {
         lcd.print(c);
-        for (unsigned int x = 0; x < (lineWidth - strlen(c)); x++) {  
+        for (unsigned int x = 0; x < (lineWidth - strlen(c)); x++) {
             lcd.print(F(" "));
         }
-        menuPrintLine++;
-        if (menuPrintLine > 1) menuPrintLine = 0;
-        //processButtons();
     }
+    menuPrintLine++;
+    if (menuPrintLine > 1) {
+        menuPrintLine = 0;
+    }
+    //processButtons();
 }

@@ -154,13 +154,23 @@ void setup() {
     // initialise button press type set-up code (pin, pullup mode, callback function)
     button.begin(BUTTON_PIN);
 
-    lcd.showSplashScreen(degCFlag, meatDoneTemp, pitTempTarget);
-    
+/* 
+    // ****** test code - REMOVE WHEN DONE ******
+    lcd.printMenuLine("12345678901234");
+    lcd.printMenuLine("234567890123456");
+    delay(500);
+    lcd.printMenuLine("323456789012345678");
+    lcd.printMenuLine("42345678901234");
+    // ******  test code - REMOVE WHEN DONE ******
+ */
+smokerState = splashScreen;  //temporarily disable for testing
+
 }  // end of setup
 
 void loop() {
     button.checkPress();
-    //processState(lcd); //temporarily disable
+    
+    processState(lcd); //temporarily disable for testing
 
 
     //encoder.getCount();  // moved; do this inside of smokerState processState() function
