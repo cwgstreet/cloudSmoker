@@ -54,6 +54,7 @@ class CWG_LCD : public hd44780_I2Cexp {
     void displayTest();
     void initialiseCustomCharSet();
     void printMenuLine(const char *c);
+    void printMenuLine_noArrow(const char *c);
     void showSplashScreen(bool degCFlag, float meatDoneTemp, float pitTempTarget);
     void showLaunchPad();
     void showSettingsMenu();

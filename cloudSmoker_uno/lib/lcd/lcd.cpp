@@ -9,13 +9,13 @@
 
 // include 3rd party libraries
 #include <Arduino.h>
+#include <NewEncoder.h>                     // do I need this here anymore?  use is in smokerStates now?
 #include <Wire.h>                           // i2C device communication
-#include <NewEncoder.h> // do I need this here anymore?  use is in smokerStates now?
 #include <hd44780.h>                        // LCD library
 #include <hd44780ioClass/hd44780_I2Cexp.h>  // i2c expander i/o class header -> required for my YwRobot 1602 LCD
 
 //incliude local libraries
-#include <helper_functions.h>           // do I need this here anymore?  use is in smokerStates now?
+#include <helper_functions.h>  // do I need this here anymore?  use is in smokerStates now?
 #include <lcd.h>
 
 // define LCD geometry (YwRobot 1602 LCD)
@@ -55,7 +55,6 @@ void CWG_LCD::initialiseLCD() {
     delay(1000);
 }  //  end LCD initialisation
 
-
 /////////////////////////////////////////////////////////////////////////////////////////
 // Custom character data - symbols mostly borrowed from Prusa Mk3 firmware, unless noted
 //   Ref: https://github.com/prusa3d/Prusa-Firmware/blob/MK3/Firmware/lcd.cpp
@@ -63,10 +62,10 @@ void CWG_LCD::initialiseLCD() {
 ////////////////////////////////////////////////////////////////////////////////////////
 
 const uint8_t lcd_custChar_degree[8] PROGMEM = {  //need to refer to element 0 in array as "/010", binary 8
-    B01100, //   **     note: alternative degree symbol is in character set "/337"
-    B10010, //  *  *
-    B10010, //  *  *
-    B01100, //   ** 
+    B01100,                                       //   **     note: alternative degree symbol is in character set "/337"
+    B10010,                                       //  *  *
+    B10010,                                       //  *  *
+    B01100,                                       //   **
     B00000,
     B00000,
     B00000,
@@ -74,76 +73,76 @@ const uint8_t lcd_custChar_degree[8] PROGMEM = {  //need to refer to element 0 i
 
 // uint8_t degreeC[8]     = {0x18,0x18,0x03,0x04,0x04,0x04,0x03,0x00};
 const uint8_t lcd_custChar_degreeC[8] PROGMEM = {
-    B11000, //  **   
-    B11000, //  **   
-    B00011, //     **   
-    B00100, //    *  
-    B00100, //    *       
-    B00100, //    *     
-    B00011, //     **   
+    B11000,   //  **
+    B11000,   //  **
+    B00011,   //     **
+    B00100,   //    *
+    B00100,   //    *
+    B00100,   //    *
+    B00011,   //     **
     B00000};  //source: https://github.com/duinoWitchery/hd44780/blob/master/examples/ioClass/hd44780_I2Cexp/LCDCustomChars/LCDCustomChars.ino
 
 // uint8_t degreeF[8]     = {0x18,0x18,0x07,0x04,0x07,0x04,0x04,0x00};
 const uint8_t lcd_custChar_degreeF[8] PROGMEM = {
-    B11000,  //  **   
-    B11000,  //  **   
-    B00111,  //    ***   
-    B00100,  //    *   
-    B00111,  //    ***   
-    B00100,  //    *   
-    B00100,  //    *   
+    B11000,   //  **
+    B11000,   //  **
+    B00111,   //    ***
+    B00100,   //    *
+    B00111,   //    ***
+    B00100,   //    *
+    B00100,   //    *
     B00000};  //source: https://github.com/duinoWitchery/hd44780/blob/master/examples/ioClass/hd44780_I2Cexp/LCDCustomChars/LCDCustomChars.ino
 
 const uint8_t lcd_custChar_thermometer[8] PROGMEM = {
-    B00100,  //    *  
-    B01010,  //   * *
-    B01010,  //   * *
-    B01010,  //   * *
-    B01010,  //   * *
-    B10001,  //  *   *
-    B10001,  //  *   *
-    B01110}; //   ***       Source: Prusa
+    B00100,   //    *
+    B01010,   //   * *
+    B01010,   //   * *
+    B01010,   //   * *
+    B01010,   //   * *
+    B10001,   //  *   *
+    B10001,   //  *   *
+    B01110};  //   ***       Source: Prusa
 
 const uint8_t lcd_custChar_uplevel[8] PROGMEM = {
-    B00100,  //    *  
-    B01110,  //   ***  
-    B11111,  //  *****
-    B00100,  //    *
-    B11100,  //  ***
-    B00000,  //  
-    B00000,  //  
-    B00000}; //    Source: Prusa
+    B00100,   //    *
+    B01110,   //   ***
+    B11111,   //  *****
+    B00100,   //    *
+    B11100,   //  ***
+    B00000,   //
+    B00000,   //
+    B00000};  //    Source: Prusa
 
 const uint8_t lcd_custChar_arrup[8] PROGMEM = {
-    B00100,  //    *
-    B01110,  //   ***
-    B11111,  //  *****
-    B00100,  //    *
-    B00100,  //    *
-    B00000,  //  
-    B00000,  //  
-    B00000}; //         Source: Prusa
+    B00100,   //    *
+    B01110,   //   ***
+    B11111,   //  *****
+    B00100,   //    *
+    B00100,   //    *
+    B00000,   //
+    B00000,   //
+    B00000};  //         Source: Prusa
 
 const uint8_t lcd_custChar_arrdown[8] PROGMEM = {
-    B00000,  //  
-    B00000,  //  
-    B00000,  //  
-    B00100,  //    *
-    B00100,  //    *
-    B11111,  //  *****
-    B01110,  //   ***
-    B00100}; //    *    Source: Prusa
+    B00000,   //
+    B00000,   //
+    B00000,   //
+    B00100,   //    *
+    B00100,   //    *
+    B11111,   //  *****
+    B01110,   //   ***
+    B00100};  //    *    Source: Prusa
 
 //const uint8_t lcd_custChar_selectarr[8] PROGMEM = {
 const char lcd_custChar_selectarr[8] PROGMEM = {
-    B01000,  //   *
-    B01100,  //   **
-    B01110,  //   ***
-    B01111,  //   ****
-    B01110,  //   ***
-    B01100,  //   **
-    B01000,  //   *
-    B00000}; //         custom made
+    B01000,   //   *
+    B01100,   //   **
+    B01110,   //   ***
+    B01111,   //   ****
+    B01110,   //   ***
+    B01100,   //   **
+    B01000,   //   *
+    B00000};  //         custom made
 
 // creates eight custom charcters to use in menu or status screens
 void CWG_LCD::initialiseCustomCharSet() {
@@ -176,13 +175,15 @@ void CWG_LCD::displayTest() {
     lcd.print(
         "temp is 210"
         "\002");
-     delay(2000);   
+    delay(2000);
 }
 
 // format: dtostrf(float_value, min_width, num_digits_after_decimal, where_to_store_string)
 // sprintf(line0, "Temp: %-7sC", float_str); // %6s right pads the string
 // *********************************************************************************************
 void CWG_LCD::showSplashScreen(bool degCFlag, float meatDoneTemp, float pitTempTarget) {
+    //lcd.printMenuLine("test works1");         //test code - REMOVE
+    // lcd.printMenuLine("test works234567");   //test code - REMOVE
     char msg[17];          // space for 16 charcaters + null termination
     char meatFloatStr[4];  // empty array to hold convert float meat temp + null
     char pitFloatStr[4];
@@ -195,19 +196,17 @@ void CWG_LCD::showSplashScreen(bool degCFlag, float meatDoneTemp, float pitTempT
         dtostrf(pitTempTargetC, 3, 0, pitFloatStr);
         sprintf(msg, "Meat%s\001 Pit%s\001", meatFloatStr, pitFloatStr);
 
-        lcd.print("BBQ set points: ");
-        lcd.setCursor(0, 1);
-        lcd.print(msg);
+        lcd.printMenuLine_noArrow("BBQ set points:");
+        lcd.printMenuLine_noArrow(msg);
 
     } else {
         dtostrf(meatDoneTemp, 3, 0, meatFloatStr);  // width==3, no digits after decimal
         dtostrf(pitTempTarget, 3, 0, pitFloatStr);  // width==3, no digits after decimal sprintf(msg, "Meat%s\002 Pit%s\002", meatFloatStr, pitFloatStr);
         sprintf(msg, "Meat%s\002 Pit%s\002", meatFloatStr, pitFloatStr);
 
-        lcd.print("BBQ set points: ");
-        lcd.setCursor(0, 1);
-        lcd.print(msg);
-    }
+        lcd.printMenuLine_noArrow("BBQ set points:");
+        lcd.printMenuLine_noArrow(msg); 
+    } 
 }
 // ******* end showSplashScreen() ****
 
@@ -222,11 +221,10 @@ void CWG_LCD::showLaunchPad() {
 }
 // ******* end showLaunchPad() ******
 
-
 // *********************************************************************************************
 void CWG_LCD::showSettingsMenu() {
     lcd.clear();
-     /* char msg0[17] = {" <Press to set> "};
+    /* char msg0[17] = {" <Press to set> "};
     char msg1[17] = {" <Hold to exit> "};
     char msg2[17] = {" Meat done[xxx] "};
     char msg3[17] = {" Pit Temp [xxx] "};
@@ -236,28 +234,52 @@ void CWG_LCD::showSettingsMenu() {
 }
 // ******* end void CWG_LCD::showSettingsMenu()
 
-
 // *********************************************************************************************
-//   printMenuLine function adapted from Open Vapors project, MIT Licence. 
-//     Ref: https://github.com/baldengineer/Open-Vapors 
+//   printMenuLine function adapted from Open Vapors project, MIT Licence.
+//     Ref: https://github.com/baldengineer/Open-Vapors
 // *********************************************************************************************
 
 void CWG_LCD::printMenuLine(const char *c) {
-    unsigned int lineWidth = LCD_COLS - 1;
+    unsigned int lineWidth = LCD_COLS;  // linewidth == 16
     lcd.setCursor(0, menuPrintLine);
     if (menuPrintLine == menuSelectLine) {
-        lcd.print((char)0x7e);   // 0x7e is arrow in LCD character set
+        lcd.print((char)0x7e);  // 0x7e is arrow in LCD character set
         lineWidth = lineWidth - 1;
     } else {
         lcd.print(F(" "));
         lineWidth = lineWidth - 1;
     }
-    lcd.print(c);
-    for (unsigned int x = 0; x < (lineWidth - strlen(c)); x++) {
-        lcd.print(F(" "));
+    // test for character overflow error; causes blank line on LCD if printing more characters than display width
+    if (strlen(c) == LCD_COLS) {
+        lcd.print(F("Overflow error! "));
+    } else {
+        lcd.print(c);
+        for (unsigned int x = 0; x < (lineWidth - strlen(c)); x++) {  // printing blank lines due to overflow?  adjusted below
+                                                                      //  for (unsigned int x = 0; x < (LCD_COLS - strlen(c)); x++) {
+            lcd.print(F(" "));
+        }
+        menuPrintLine++;
+        if (menuPrintLine > 1) menuPrintLine = 0;
+        //processButtons();
     }
-    menuPrintLine++;
-    if (menuPrintLine > 1) menuPrintLine = 0;
-    //processButtons();
+}
 
+void CWG_LCD::printMenuLine_noArrow(const char *c) {
+    unsigned int lineWidth = LCD_COLS;  // linewidth == 16
+    lcd.setCursor(0, menuPrintLine);
+    
+    // test for character overflow error; causes blank line on LCD if printing more characters than display width
+    if (strlen(c) > LCD_COLS) {
+        //lcd.print(F("Too many chars!"));
+        lcd.print(F("Overflow error! "));
+
+    } else {
+        lcd.print(c);
+        for (unsigned int x = 0; x < (lineWidth - strlen(c)); x++) {  
+            lcd.print(F(" "));
+        }
+        menuPrintLine++;
+        if (menuPrintLine > 1) menuPrintLine = 0;
+        //processButtons();
+    }
 }

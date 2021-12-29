@@ -154,11 +154,13 @@ void setup() {
     // initialise button press type set-up code (pin, pullup mode, callback function)
     button.begin(BUTTON_PIN);
 
+    lcd.showSplashScreen(degCFlag, meatDoneTemp, pitTempTarget);
+    
 }  // end of setup
 
 void loop() {
     button.checkPress();
-    processState(lcd);
+    //processState(lcd); //temporarily disable
 
 
     //encoder.getCount();  // moved; do this inside of smokerState processState() function
