@@ -15,7 +15,7 @@
 #include <Arduino.h>
 #include <NewEncoder.h>
 
-WrapEncoder encoder(2, 3, 0, 1, 0, FULL_PULSE);  // default encoder is 0,1 wrapping ( for two line LCD)
+WrapEncoder encoder(2, 3, 0, 1, 0, FULL_PULSE);  // default encoder is 0,1 wrapping (for two-line LCD)
 WrapEncoder::EncoderState state;                       // EncoderState is a public struct datatype
 WrapEncoder::EncoderState currentEncoderState;
 

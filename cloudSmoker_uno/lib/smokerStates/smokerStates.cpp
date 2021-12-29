@@ -34,53 +34,27 @@ void processState(CWG_LCD &lcd) {
             int prevEncoderCount = 0;
             int currentEncoderCount = encoder.getCount();
 
-            //  Code block below not functioning correctly
-            // test for encoderstate change, if encoder state (rotation) change, then smokerState = launchPad;
-
             if (currentEncoderCount != prevEncoderCount) {
-                //test section
+                /* //test section
                 lcd.printMenuLine("splashscrn 2n1");
                 lcd.printMenuLine("splashscrn 2n2");
-                // end test section
+                // end test section */
                 smokerState = launchPad;
             }
-            //smokerState = launchPad;
+
         } break;
 
         case launchPad: {
             lcd.showLaunchPad();
 
             if (pressEventCode == DOUBLE_PRESS) {
-                smokerState = changeSettings;  // enter config screens
+                smokerState = changeSettings;   // enter config screens
             }
 
             if (pressEventCode == LONG_PRESS) {
-                smokerState = getTemp;  // start bbq cook
+                smokerState = getTemp;          // start bbq cook
                 // To do - FUNCTION TO BE CODED: set timer going
             }
-
-            //lcd.printMenuLine("launchpad");
-            //lcd.printMenuLine("Cook: LongPress");
-            //lcd.printMenuLine("Config: DblPress");
-            //lcd.showLaunchPad();
-            /* if (pressEventCode == LONG_PRESS) {
-                // debug statements - remove
-                lcd.setCursor(0, 0);
-                lcd.print("  Long Press!   ");
-                lcd.setCursor(0, 1);
-                lcd.print(" state = geTemp ");
-                // debug finished
-                smokerState = getTemp;
-            }
-            if (pressEventCode == DOUBLE_PRESS) {
-                // debug statements - remove
-                lcd.setCursor(0, 0);
-                lcd.print("  Double Press! ");
-                lcd.setCursor(0, 1);
-                lcd.print("state=changeSett");
-                // debug finished
-                smokerState = changeSettings; 
-    }*/
         } break;
 
         case changeSettings:
