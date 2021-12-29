@@ -20,6 +20,7 @@
 #include <press_type.h>
 #include <smokerStates.h>
 #include <wrapEncoder.h>
+#include <helper_functions.h>
 
 // entryStates is an enum variable type defined in menu.h header file (as extern); smokerState is global
 entryStates_t smokerState;
@@ -53,12 +54,13 @@ void processState(CWG_LCD &lcd) {
 
             if (pressEventCode == LONG_PRESS) {
                 smokerState = getTemp;          // start bbq cook
-                // To do - FUNCTION TO BE CODED: set timer going
+                long unsigned startCookTimeMS = millis();  // start cook time; var defined as global (extern in helper_functions.h)
             }
         } break;
 
         case changeSettings:
-            lcd.printMenuLine("changeSettings");  // temporary to confirm navigation branch
+            // lcd.printMenuLine("changeSettings");  // temporary to confirm navigation branch
+            lcd.showSettingsMenu();
             // lcd.showSettingsMenu();
             break;
 

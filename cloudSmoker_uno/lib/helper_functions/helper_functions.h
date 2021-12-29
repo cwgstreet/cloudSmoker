@@ -18,13 +18,13 @@
 #endif  // end if-block
 
 
-
+extern long unsigned startCookTimeMS; 
 
 /******************************************************
 // helper function prototypes
 *******************************************************/
 float convertDegFtoDegC(float tempDegF);
-float getElapsedCookTime(float startCookTimeMS);
+float getElapsedCookTime(long unsigned startCookTimeMS);
 float getCountMS(float tempMS);
 
 #endif  // end header guard

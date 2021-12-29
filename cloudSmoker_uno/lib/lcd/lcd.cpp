@@ -178,6 +178,53 @@ void CWG_LCD::displayTest() {
     delay(2000);
 }
 
+// *********************************************************************************************
+//   printMenuLine function adapted from Open Vapors project, MIT Licence.
+//     Ref: https://github.com/baldengineer/Open-Vapors
+// *********************************************************************************************
+
+void CWG_LCD::printMenuLine(const char *c) {
+    unsigned int lineWidth = LCD_COLS;
+    lcd.setCursor(0, menuPrintLine);
+    if (menuPrintLine == menuSelectLine) {
+        lcd.print((char)0x7e);  // 0x7e is arrow in LCD character set
+        lineWidth = lineWidth - 1;
+    } else {
+        lcd.print(F(" "));
+        lineWidth = lineWidth - 1;
+    }
+    // test for character overflow error; causes blank LCD line if printing more characters than display width
+    if (strlen(c) > lineWidth) {
+        lcd.print(F("Overflow error!"));
+    } else {
+        lcd.print(c);
+        for (unsigned int x = 0; x < (lineWidth - strlen(c)); x++) {
+            lcd.print(F(" "));
+        }
+    }
+    menuPrintLine++;
+    if (menuPrintLine > 1) menuPrintLine = 0;
+}
+
+void CWG_LCD::printMenuLine_noArrow(const char *c) {
+    unsigned int lineWidth = LCD_COLS;
+    lcd.setCursor(0, menuPrintLine);
+
+    // test for character overflow error; causes blank LCD line if printing more characters than display width
+    if (strlen(c) > LCD_COLS) {
+        lcd.print(F("Overflow error!"));
+    } else {
+        lcd.print(c);
+        for (unsigned int x = 0; x < (lineWidth - strlen(c)); x++) {
+            lcd.print(F(" "));
+        }
+    }
+    menuPrintLine++;
+    if (menuPrintLine > 1) {
+        menuPrintLine = 0;
+    }
+}
+
 // format: dtostrf(float_value, min_width, num_digits_after_decimal, where_to_store_string)
 // sprintf(line0, "Temp: %-7sC", float_str); // %6s right pads the string
 // *********************************************************************************************
@@ -208,73 +255,25 @@ void CWG_LCD::showSplashScreen(bool degCFlag, float meatDoneTemp, float pitTempT
         lcd.printMenuLine_noArrow(msg);
     }
 }
-// ******* end showSplashScreen() ****
 
-// ******************************************
 void CWG_LCD::showLaunchPad() {
     lcd.printMenuLine_noArrow("Cook: LongPress");
-    lcd.printMenuLine_noArrow("Config: DblPress");   
+    lcd.printMenuLine_noArrow("Config: DblPress");
 }
-// ******* end showLaunchPad() *************
 
-// *********************************************************************************************
 void CWG_LCD::showSettingsMenu() {
-    lcd.clear();
-    /* char msg0[17] = {" <Press to set> "};
-    char msg1[17] = {" <Hold to exit> "};
-    char msg2[17] = {" Meat done[xxx] "};
-    char msg3[17] = {" Pit Temp [xxx] "};
-    char msg4[17] = {" Units [F] / C  "}; */
+    
+    char msg0[] = {" <Press to set> "};
+    char msg1[] = {" <Hold to exit> "};
+    lcd.printMenuLine_noArrow(msg0);
+    lcd.printMenuLine_noArrow(msg1);
+    
+    
+    
+
+    /* char msg2_meatDone[] = {"Meat done[xxx]"};
+    char msg3_pitTemp[] = {"Pit Temp [xxx]"};
+    char msg4_unitsF[] = {"Units [F] / C"}; */
     // *** function not finished; need to bring arguments in for various temps and use dtosdrf and
     //    sprintf to get formated string lines -> return formatted line so put into one big array
-}
-// ******* end void CWG_LCD::showSettingsMenu()
-
-// *********************************************************************************************
-//   printMenuLine function adapted from Open Vapors project, MIT Licence.
-//     Ref: https://github.com/baldengineer/Open-Vapors
-// *********************************************************************************************
-
-void CWG_LCD::printMenuLine(const char *c) {
-    unsigned int lineWidth = LCD_COLS;  // linewidth == 16
-    lcd.setCursor(0, menuPrintLine);
-    if (menuPrintLine == menuSelectLine) {
-        lcd.print((char)0x7e);  // 0x7e is arrow in LCD character set
-        lineWidth = lineWidth - 1;
-    } else {
-        lcd.print(F(" "));
-        lineWidth = lineWidth - 1;
-    }
-    // test for character overflow error; causes blank line on LCD if printing more characters than display width
-    if (strlen(c) > lineWidth) {
-        lcd.print(F("Overflow error!"));
-    } else {
-        lcd.print(c);
-        for (unsigned int x = 0; x < (lineWidth - strlen(c)); x++) {
-            lcd.print(F(" "));
-        }
-    }
-    menuPrintLine++;
-    if (menuPrintLine > 1) menuPrintLine = 0;
-    //processButtons();
-}
-
-void CWG_LCD::printMenuLine_noArrow(const char *c) {
-    unsigned int lineWidth = LCD_COLS;  // linewidth == 16
-    lcd.setCursor(0, menuPrintLine);
-
-    // test for character overflow error; causes blank line on LCD if printing more characters than display width
-    if (strlen(c) > LCD_COLS) {
-        lcd.print(F("Overflow error!"));
-    } else {
-        lcd.print(c);
-        for (unsigned int x = 0; x < (lineWidth - strlen(c)); x++) {
-            lcd.print(F(" "));
-        }
-    }
-    menuPrintLine++;
-    if (menuPrintLine > 1) {
-        menuPrintLine = 0;
-    }
-    //processButtons();
 }
