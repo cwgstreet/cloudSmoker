@@ -25,31 +25,43 @@
 entryStates_t smokerState;
 
 void processState(CWG_LCD &lcd) {
-    
-
     switch (smokerState) {
         case splashScreen:  // note: case splashScreen == 1 explicitly per enum assignment in smokerState.
-            
+        {
             lcd.showSplashScreen(degCFlag, meatDoneTemp, pitTempTarget);
             delay(1000);
+
             int prevEncoderCount = 0;
             int currentEncoderCount = encoder.getCount();
-             
+
             //  Code block below not functioning correctly
             // test for encoderstate change, if encoder state (rotation) change, then smokerState = launchPad;
-    
-                if (currentEncoderCount != prevEncoderCount) {
-                    /* //test section
-                    lcd.printMenuLine("splashscrn 2n1");
-                    lcd.printMenuLine("splashscrn 2n2");
-                    // end test section */
-                    smokerState = launchPad;
-                }
-             //smokerState = launchPad;
-            
-            break;
 
-        case launchPad:
+            if (currentEncoderCount != prevEncoderCount) {
+                //test section
+                lcd.printMenuLine("splashscrn 2n1");
+                lcd.printMenuLine("splashscrn 2n2");
+                // end test section
+                smokerState = launchPad;
+            }
+            //smokerState = launchPad;
+        } break;
+
+        case launchPad: {
+            lcd.showLaunchPad();
+
+            if (pressEventCode == DOUBLE_PRESS) {
+                smokerState = changeSettings;  // enter config screens
+            }
+
+            if (pressEventCode == LONG_PRESS) {
+                smokerState = getTemp;  // start bbq cook
+                // To do - FUNCTION TO BE CODED: set timer going
+            }
+
+            //lcd.printMenuLine("launchpad");
+            //lcd.printMenuLine("Cook: LongPress");
+            //lcd.printMenuLine("Config: DblPress");
             //lcd.showLaunchPad();
             /* if (pressEventCode == LONG_PRESS) {
                 // debug statements - remove
@@ -69,17 +81,20 @@ void processState(CWG_LCD &lcd) {
                 // debug finished
                 smokerState = changeSettings; 
     }*/
-            break;
+        } break;
 
         case changeSettings:
+            lcd.printMenuLine("changeSettings");  // temporary to confirm navigation branch
             // lcd.showSettingsMenu();
             break;
 
         case setMeatDoneTemp:
+            lcd.printMenuLine("MeatDoneTemp");  // temporary to confirm navigation branch
             // code here
             break;
 
         case setPitTempTarget:
+            lcd.printMenuLine("set pitTemp");  // temporary to confirm navigation branch
             /* encoderCountValue = encoder.getCount(currentEncoderState);
             if (encoderCountValue > 209) {
                 Serial.println("Changing Encoder Settings.");
@@ -91,29 +106,33 @@ void processState(CWG_LCD &lcd) {
             break;
 
         case setTempUnits:
-            Serial.print("menuState =");
-
+            lcd.printMenuLine("set pitTemp");  // temporary to confirm navigation branch
             break;
 
         case getTemp:
+            lcd.printMenuLine("get Temp");  // temporary to confirm navigation branch
             // code here
             break;
 
         case txTemp:
+            lcd.printMenuLine("txTemp");  // temporary to confirm navigation branch
+
             // code here
             break;
 
         case modemSleep:
+            lcd.printMenuLine("modemSleep");  // temporary to confirm navigation branch
             // code here
             break;
 
         case bbqStatus:
+            lcd.printMenuLine("bbqStatus");  // temporary to confirm navigation branch
             // code here
             break;
 
         default:
+            smokerState = bbqStatus;
             break;
-            //menuState = bbqStatus;
     }
 }
 

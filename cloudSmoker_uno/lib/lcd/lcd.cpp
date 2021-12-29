@@ -210,16 +210,12 @@ void CWG_LCD::showSplashScreen(bool degCFlag, float meatDoneTemp, float pitTempT
 }
 // ******* end showSplashScreen() ****
 
-// *********************************************************************************************
+// ******************************************
 void CWG_LCD::showLaunchPad() {
-    char msgLine0[17] = {"Cook: LongPress "};
-    char msgLine1[17] = {"Config: DblPress"};
-    lcd.setCursor(0, 0);
-    lcd.print(msgLine0);
-    lcd.setCursor(0, 1);
-    lcd.print(msgLine1);
+    lcd.printMenuLine_noArrow("Cook: LongPress");
+    lcd.printMenuLine_noArrow("Config: DblPress");   
 }
-// ******* end showLaunchPad() ******
+// ******* end showLaunchPad() *************
 
 // *********************************************************************************************
 void CWG_LCD::showSettingsMenu() {
