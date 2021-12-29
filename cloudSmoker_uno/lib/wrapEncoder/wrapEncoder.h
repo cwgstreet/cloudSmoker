@@ -44,12 +44,10 @@ class WrapEncoder : public NewEncoder {
     virtual ~WrapEncoder() {
     } 
 
-
     void initialise();
     // int16_t getCount(WrapEncoder::EncoderState &state);  old
     int16_t getCount();
     bool moved();
-
 
    protected:
     virtual void updateValue(uint8_t updatedState);
