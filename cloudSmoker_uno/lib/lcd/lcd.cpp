@@ -261,18 +261,55 @@ void CWG_LCD::showLaunchPad() {
     lcd.printMenuLine_noArrow("Config: DblPress");
 }
 
-void CWG_LCD::showSettingsMenu() {
-    const char * settingsMsg[] = {" <Press to set> ", " <Hold to exit> ", "Meat done[xxx]", "Pit Temp [xxx]","Units [F] / C" };
+// ref https://www.arduino.cc/reference/en/language/variables/utilities/progmem/ for
+//    discussion on Array of Strings code adapted below
+void CWG_LCD::showSettingsMenu(int16_t currentEncoderValue) {
+    const char msg_0[] PROGMEM = " <Press to set> ";
+    const char msg_1[] PROGMEM = " <Hold to exit> ";
+    const char msg_2[] PROGMEM = "Meat done[xxx]";
+    const char msg_3[] PROGMEM = "Pit Temp [xxx]";
+    const char msg_4[] PROGMEM = "Units [F] / C";
 
-    
-    //lcd.printMenuLine_noArrow(msg0);
+    // table set-up to refer to msg strings
+    const char *const msg_table[] PROGMEM = {msg_0, msg_1, msg_2, msg_3, msg_4};
+
+    switch (currentEncoderValue) {
+        case 0:
+            strcpy_P(messageBuffer, (char *)pgm_read_word(&(msg_table[0])));
+            lcd.printMenuLine(messageBuffer);
+            strcpy_P(messageBuffer, (char *)pgm_read_word(&(msg_table[1])));
+            lcd.printMenuLine_noArrow("Config: DblPress");
+            break;
+
+        case 1:
+            lcd.printMenuLine_noArrow("case 1");  // test code to be replaced
+            break;
+
+        case 2:
+            lcd.printMenuLine_noArrow("case 2");  // test code to be replaced            
+            break;
+
+        case 3:
+            lcd.printMenuLine_noArrow("case 3");  // test code to be replaced            
+            break;
+
+        case 4:
+            lcd.printMenuLine_noArrow("case 4");  // test code to be replaced            
+            break;
+
+        default:
+            lcd.printMenuLine_noArrow("Menu Error!");
+            break;
+    }
+
+    // using messageBuffer[17] defined earlier in lcd.cpp implementation file
+
+   /*  for (int i = 0; i < 2; i++) {
+        strcpy_P(messageBuffer, (char *)pgm_read_word(&(msg_table[i])));
+        lcd.printMenuLine_noArrow(messageBuffer);
+    } */
+    //lcd.printMenuLine_noArrow(msg_)0);
     //lcd.printMenuLine_noArrow(msg1);
 
-    /* 
-    char msg0[] = {" <Press to set> "};
-    char msg1[] = {" <Hold to exit> "};char msg2_meatDone[] = {"Meat done[xxx]"};
-    char msg3_pitTemp[] = {"Pit Temp [xxx]"};
-    char msg4_unitsF[] = {"Units [F] / C"}; */
-    // *** function not finished; need to bring arguments in for various temps and use dtosdrf and
-    //    sprintf to get formated string lines -> return formatted line so put into one big array
+    
 }

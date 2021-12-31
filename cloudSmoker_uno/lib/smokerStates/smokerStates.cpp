@@ -16,11 +16,11 @@
 #include <hd44780ioClass/hd44780_I2Cexp.h>  // i2c expander i/o class header -> required for my YwRobot 1602 LCD
 
 //incliude local libraries
+#include <helper_functions.h>
 #include <lcd.h>
 #include <press_type.h>
 #include <smokerStates.h>
 #include <wrapEncoder.h>
-#include <helper_functions.h>
 
 // entryStates is an enum variable type defined in menu.h header file (as extern); smokerState is global
 entryStates_t smokerState;
@@ -32,7 +32,7 @@ void processState(CWG_LCD &lcd) {
             lcd.showSplashScreen(degCFlag, meatDoneTemp, pitTempTarget);
             delay(1000);
 
-            if (encoder.moved() ) {
+            if (encoder.moved()) {
                 smokerState = launchPad;
             }
 
@@ -42,24 +42,26 @@ void processState(CWG_LCD &lcd) {
             lcd.showLaunchPad();
 
             if (pressEventCode == DOUBLE_PRESS) {
-                smokerState = changeSettings;   // enter config screens
+                smokerState = changeSettings;  // enter config screens
             }
 
             if (pressEventCode == LONG_PRESS) {
-                smokerState = getTemp;          // start bbq cook
+                smokerState = getTemp;                     // start bbq cook
                 long unsigned startCookTimeMS = millis();  // start cook time; var defined as global (extern in helper_functions.h)
             }
         } break;
 
-        case changeSettings:
-            // lcd.printMenuLine("changeSettings");  // temporary to confirm navigation branch
-            lcd.showSettingsMenu();
-            
-            if (encoder.moved() ) {
-                // code smokerState = launchPad;
-            }
+        case changeSettings: {
+            //lcd.printMenuLine("changeSettings");  // temporary to confirm navigation branch
 
-            break;
+            // set new wrap encoder range for 5-row menu
+            encoder.newSettings(0, 4, 0, currentEncoderState);
+            int16_t currentEncoderValue = encoder.getCount();
+            
+            //lcd.showSettingsMenu(currentEncoderValue); 
+
+            
+        } break;
 
         case setMeatDoneTemp:
             lcd.printMenuLine("MeatDoneTemp");  // temporary to confirm navigation branch
