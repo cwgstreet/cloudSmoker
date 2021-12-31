@@ -262,16 +262,15 @@ void CWG_LCD::showLaunchPad() {
 }
 
 void CWG_LCD::showSettingsMenu() {
-    
-    char msg0[] = {" <Press to set> "};
-    char msg1[] = {" <Hold to exit> "};
-    lcd.printMenuLine_noArrow(msg0);
-    lcd.printMenuLine_noArrow(msg1);
-    
-    
-    
+    const char * settingsMsg[] = {" <Press to set> ", " <Hold to exit> ", "Meat done[xxx]", "Pit Temp [xxx]","Units [F] / C" };
 
-    /* char msg2_meatDone[] = {"Meat done[xxx]"};
+    
+    //lcd.printMenuLine_noArrow(msg0);
+    //lcd.printMenuLine_noArrow(msg1);
+
+    /* 
+    char msg0[] = {" <Press to set> "};
+    char msg1[] = {" <Hold to exit> "};char msg2_meatDone[] = {"Meat done[xxx]"};
     char msg3_pitTemp[] = {"Pit Temp [xxx]"};
     char msg4_unitsF[] = {"Units [F] / C"}; */
     // *** function not finished; need to bring arguments in for various temps and use dtosdrf and

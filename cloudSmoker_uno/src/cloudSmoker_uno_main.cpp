@@ -170,14 +170,14 @@ smokerState = splashScreen;  //temporarily disable for testing
 void loop() {
     button.checkPress();
     
-    processState(lcd); //temporarily disable for testing
+    processState(lcd); //temporarily disable for testing, as needed
 
 
     //encoder.getCount();  // moved; do this inside of smokerState processState() function
 
 // **********  debug - free memory check  **************************
 #ifdef DEBUG_FREEMEM
-    Serial.print("freeMemory()=");
+    Serial.print(F("freeMemory()="));
     Serial.println(freeMemory());
     delay(1000);
 #endif  // end DEBUG

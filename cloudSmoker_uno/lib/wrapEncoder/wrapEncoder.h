@@ -45,8 +45,7 @@ class WrapEncoder : public NewEncoder {
     } 
 
     void initialise();
-    // int16_t getCount(WrapEncoder::EncoderState &state);  old
-    int16_t getCount();
+    int16_t getCount();  
     bool moved();
 
    protected:

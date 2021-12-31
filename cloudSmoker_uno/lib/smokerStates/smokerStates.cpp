@@ -55,6 +55,10 @@ void processState(CWG_LCD &lcd) {
             // lcd.printMenuLine("changeSettings");  // temporary to confirm navigation branch
             lcd.showSettingsMenu();
             
+            if (encoder.moved() ) {
+                // code smokerState = launchPad;
+            }
+
             break;
 
         case setMeatDoneTemp:
