@@ -266,14 +266,14 @@ void CWG_LCD::showLaunchPad() {
 void CWG_LCD::showSettingsMenu(int16_t currentEncoderValue) {
     Serial.println(F("entered showSettingsMenu "));
 
-    const char msg_0[] PROGMEM = " <Press to set> ";
-    const char msg_1[] PROGMEM = " <Hold to exit> ";
-    const char msg_2[] PROGMEM = "Meat done[xxx]";
-    const char msg_3[] PROGMEM = "Pit Temp [xxx]";
-    const char msg_4[] PROGMEM = "Units [F] / C";
+    const static char msg_0[] PROGMEM = " <Press to set> ";
+    const static char msg_1[] PROGMEM = " <Hold to exit> ";
+    const static char msg_2[] PROGMEM = "Meat done[xxx]";
+    const static char msg_3[] PROGMEM = "Pit Temp [xxx]";
+    const static char msg_4[] PROGMEM = "Units [F] / C";
 
     // table set-up to refer to msg strings
-    const char *const msg_table[] PROGMEM = {msg_0, msg_1, msg_2, msg_3, msg_4};
+    const static char *const msg_table[] PROGMEM = {msg_0, msg_1, msg_2, msg_3, msg_4};
 
     switch (currentEncoderValue) {
         case 0:
