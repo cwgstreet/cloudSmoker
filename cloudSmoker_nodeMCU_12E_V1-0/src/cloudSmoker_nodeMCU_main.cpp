@@ -84,7 +84,7 @@
 //#define DEBUG_LED  1       // uncomment to debug LED test of rotary encoder  **CHECK THIS MISSING??**
 //#define DEBUG_FREEMEM 1  // uncomment to debug remaining free memory
 
-// pins set-up listed below is for Uno, not ESP8266
+// pins set-up listed below for nodeMCU ESP8266
 //  Note to self:  constexp  better than const for variable values that should be known at compile
 //     time -> more memory efficient.  Also better than simple #define
 constexpr int I2C_SCL = D1;     //optional as hd44780 set to auto-configure

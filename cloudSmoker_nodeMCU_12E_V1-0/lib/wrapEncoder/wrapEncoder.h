@@ -57,6 +57,9 @@ extern WrapEncoder encoder;
 extern WrapEncoder::EncoderState state;
 extern  WrapEncoder::EncoderState currentEncoderState;
 
+// globals - must define in main 
 extern bool hasRunFlag;
+extern const int ENCODER_DT;
+extern const int ENCODER_CLK;
 
 #endif  // end header guard
