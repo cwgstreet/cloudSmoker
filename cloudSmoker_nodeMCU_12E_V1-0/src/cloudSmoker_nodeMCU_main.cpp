@@ -1,6 +1,6 @@
 /* *************************************************************************************
  *    CloudSmoker_uno          
- *    V2.NodeMCU   (ported from UNO Rev3 to NodeMCU (ESP12) V1.0 (v2))
+ *    V2.NodeMCU   (ported from UNO Rev3 to NodeMCU V1.0 (v2) (ESP12E based) )
  *    Carl Greenstreet, Aug 2021,   
  *    Licence: MIT (do what you want with this code but no functionality guarantees!)
  *    
@@ -37,8 +37,9 @@
  *         public domain C++ State Machine demo code by Pierre Rossel
  *    
  *    Revisions:
- *      2021.12.31    V1 partially complete but ran into Uno 2kb SRAM memory limitation  
- *      
+ *      2021.12.31    V1 partially complete but ran into Uno 2kb SRAM memory limitation wall  
+ *      2022.01.02    V2 ported code to ESP8266 (NodeMCU V1.0 ESP12E 80kb!)
+ * 
  * ************************************************************************************   
  */
 
