@@ -1,6 +1,6 @@
 /* *************************************************************************************
  *    CloudSmoker_uno          
- *    V1.0_UNO   (coded for UNO Rev3 before porting to ESP8266)
+ *    V2.NodeMCU   (ported from UNO Rev3 to NodeMCU (ESP12) V1.0 (v2))
  *    Carl Greenstreet, Aug 2021,   
  *    Licence: MIT (do what you want with this code but no functionality guarantees!)
  *    
@@ -14,7 +14,7 @@
  *      ESP8266-V07
  *         (initially developed on Uno Rev3 (while waiting on a replacement NodeMCU  
  *           after letting the magic smoke out!)
- *         NodeMCU V1 (ESP12) development board (will port over to bare bones ESP8266-07 
+ *         NodeMCU V1.0 (ESP12) development board (will port over to bare bones ESP8266-07 
  *          once up, running and debugged)
  *      YwRobot 1602 LCD with i2c i/o exapander backpack (PCF8574 or MCP23008)
  *      KY40 Rotary Encoder
@@ -37,20 +37,23 @@
  *         public domain C++ State Machine demo code by Pierre Rossel
  *    
  *    Revisions:
- *      2021.8.15    fixed blah blah blah  
+ *      2021.12.31    V1 partially complete but ran into Uno 2kb SRAM memory limitation  
  *      
  * ************************************************************************************   
  */
 
-/*  Uno pinout setup:    
+/*  NodeMCU V1.0 pinout setup:    
  *   
- *   Pin      Function  Comment
- *   -------  --------  -----------------------------------------------
- *   A5        SCL      YwRobot LCD (via 4.7k ohm pullup resistor)
- *   A4        SDA      YwRobot LCD (via 4.7k ohm pullup resistor)
- *   4         SW       KY40 Push switch    grey 
- *   3         DT       KY40 (PinB)         brown
- *   2         CLK      KY40 (PinA)         white
+ *   Pin        Function  Comment
+ *   -------    --------  -----------------------------------------------
+ *   D0          LED      NodeMCU built-in LED
+ *   D1 (GPIO5)  SCL      YwRobot LCD (via 4.7k ohm pullup resistor)  green
+ *   D2 (GPIO4)  SDA      YwRobot LCD (via 4.7k ohm pullup resistor)  white
+ *   D3          SW       KY40 Push switch    white 
+ *   D4 (GPIO2)  DT       KY40 (PinB)         yellow
+ *   D5 (GPI014) CLK      KY40 (PinA)         green
+ * 
+ *  See github cloudSmoker wiki for breadboard hookup picture
 */
 
 // external libraries:
@@ -77,17 +80,17 @@
 //#define DEBUG_SERIAL 1  // uncomment to debug - Serial monitor function test
 //#define DEBUG_LCD 1  // uncomment to debug - LCD function test
 //#define DEBUG_PRESSTYPE  1  // uncomment to debug - Rotary encoder button press type function test
-//#define DEBUG_LED  1       // uncomment to debug LED test of rotary encoder
+//#define DEBUG_LED  1       // uncomment to debug LED test of rotary encoder  **CHECK THIS MISSING??**
 //#define DEBUG_FREEMEM 1  // uncomment to debug remaining free memory
 
 // pins set-up listed below is for Uno, not ESP8266
 //  Note to self:  constexp  better than const for variable values that should be known at compile
 //     time -> more memory efficient.  Also better than simple #define
-constexpr int I2C_SCL = A5;     //optional as hd44780 set to auto-configure
-constexpr int I2C_SDA = A4;     //optional as hd44780 set to auto-configure
-constexpr int ENCODER_DT = 2;   // pinA newEncode
-constexpr int ENCODER_CLK = 3;  //pinB newEncode
-constexpr int BUTTON_PIN = 4;   // KY40 SW (switch) pin connected to Uno pin 4
+constexpr int I2C_SCL = D1;     //optional as hd44780 set to auto-configure
+constexpr int I2C_SDA = D2;     //optional as hd44780 set to auto-configure
+constexpr int ENCODER_DT = D4;   // pinA newEncode
+constexpr int ENCODER_CLK = D5;  //pinB newEncode
+constexpr int BUTTON_PIN = D3;   // KY40 SW (switch) pin connected to Uno pin 4
 
 // Baudrate:  Recommend 74480 baud rate for ESP8266 devices to match ESP8266 fixed bootloader initialisation speed
 //  (otherwise you will get startup gibberish characters on serial monitor before serial speed syncs)
