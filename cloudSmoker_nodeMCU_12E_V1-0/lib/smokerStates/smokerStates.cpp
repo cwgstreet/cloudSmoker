@@ -41,14 +41,14 @@ void processState(CWG_LCD &lcd) {
         case launchPad: {
             lcd.showLaunchPad();
 
-            /* if (pressEventCode == DOUBLE_PRESS) {
+            if (pressEventCode == DOUBLE_PRESS) {
                 smokerState = changeSettings;  // enter config screens
             }
 
             if (pressEventCode == LONG_PRESS) {
                 smokerState = getTemp;                     // start bbq cook
                 long unsigned startCookTimeMS = millis();  // start cook time; var defined as global (extern in helper_functions.h)
-            } */
+            }
         } break;
 
         case changeSettings: {
