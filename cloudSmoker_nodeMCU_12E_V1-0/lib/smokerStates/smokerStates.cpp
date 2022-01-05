@@ -62,7 +62,7 @@ void processState(CWG_LCD &lcd) {
                 hasRunFlag = 1;  // make sure settings are only changed once as function call is in loop()
             }
 
-            lcd.showSettingsMenu(currentEncoderValue);
+            //lcd.showSettingsMenu(currentEncoderValue);
 
         } break;
 
