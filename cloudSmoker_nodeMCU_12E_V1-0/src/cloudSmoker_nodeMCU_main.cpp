@@ -73,7 +73,7 @@
 #include <smokerStates.h>  // cloudSmoker state machine functionality
 #include <wrapEncoder.h>   //  encoder library including encoder object with min / max values that "wrap" around
 
-// **************  Selective Debug Saffolding ***********************
+// *****  Selective Debug Saffolding *****
 // Set up selective debug scaffold; comment out appropriate lines below to disable debugging tests at pre-proccessor stage
 //   Note: #ifdef preprocessor simply tests if the symbol's been defined; therefore don't use #ifdef 0
 //    Ref: https://stackoverflow.com/questions/16245633/ifdef-debug-versus-if-debug
@@ -87,10 +87,10 @@
 // pins set-up listed below for nodeMCU ESP8266
 //  Note to self:  constexp  better than const for variable values that should be known at compile
 //     time -> more memory efficient.  Also better than simple #define
-constexpr int I2C_SCL = D1;     //optional as hd44780 set to auto-configure
-constexpr int I2C_SDA = D2;     //optional as hd44780 set to auto-configure
-constexpr int ENCODER_DT = D4;   // pinA newEncode
-constexpr int ENCODER_CLK = D5;  //pinB newEncode
+constexpr int I2C_SCL = D1;      //optional as hd44780 set to auto-configure
+constexpr int I2C_SDA = D2;      //optional as hd44780 set to auto-configure
+constexpr int ENCODER_DT = D4;   // pinB newEncoder
+constexpr int ENCODER_CLK = D5;  //pinA newEncoder
 constexpr int BUTTON_PIN = D3;   // KY40 SW (switch) pin connected to Uno pin 4
 
 // Baudrate:  Recommend 74480 baud rate for ESP8266 devices to match ESP8266 fixed bootloader initialisation speed
@@ -99,7 +99,6 @@ constexpr int BUTTON_PIN = D3;   // KY40 SW (switch) pin connected to Uno pin 4
 //  note: may have to manually reset board after flashing for code to work correctly
 #define SERIAL_MONITOR_SPEED 74880
 
-
 // temperature variables- global; all temps stored in degF and converted on the fly as necessary for alternative units (eg DegC)
 float meatDoneTemp = 203;    // default to usual brisket internal done temp 203degF
 float pitTempTarget = 210;   // reasonable range around 225F long and slow target, pit temps can run 200 to 350 deg F
@@ -107,12 +106,12 @@ float currentMeatTemp = 40;  // current meat temp; default to refridgerator temp
 float currentPitTemp = 225;  // current pit temp; default to long and slow brisket cooking (pit) temp=225degF
 bool degCFlag = 0;           // temperature unit flag: 1 for Centigrade or 0 for Fahrenheit
 
-/* *********
+/* *****
 To do:  add 4-hour rule check and exception notification
 The 4-hour rule is a general food safety guideline that suggests that the internal temperature of meat 
 should increase from 40°F to 140°F within 4 hours. This is due to foodborne bacteria growing much faster 
 within this temperature range (known as the “danger zone”).  Ref https://www.totallysmokin.com/4-hour-rule-smoking/
-********** */
+***** */
 
 // timing variables - global
 //unsigned long currentMillis;
@@ -120,17 +119,9 @@ within this temperature range (known as the “danger zone”).  Ref https://www
 // run once flag to use in functions called in loop - global
 bool hasRunFlag = 0;
 
-// *********************
-// Object instantiation
-// *********************
-
 // WrapEncoder globals - move to libary?
-//  delete this line? //WrapEncoder encoder(2, 3, 180, 210, 203, FULL_PULSE);  //default meatProbe; briskett usually done at 195-203F internal meat temp
 int16_t prevEncoderValue;
 int16_t encoderCountValue;
-
-// KY40 button
-//Press_Type buttonPress(BUTTON_PIN);
 
 // for testing - then can remove
 //smokerState = splashScreen;
@@ -140,55 +131,42 @@ void setup() {
     lcd.initialiseLCD();
     lcd.initialiseCustomCharSet();  //creates eight custom lcd charaters
 
-// **********  debug - Serial monitor periphial function tests **************************
+// *****  debug - Serial monitor periphial function tests *****
 #ifdef DEBUG_SERIAL
     SerialTerminal.functionTest();
-#endif  // **********  end debug periphial function tests *************************
+#endif  // *****  end debug periphial function tests *****
 
-#ifdef DEBUG_LCD  // **********  debug - LCD function tests **************************
+#ifdef DEBUG_LCD  // *****  debug - LCD function tests *****
     // LCD special character function test
     lcd.displayTest();
-#endif  // **********  end debug LCD function tests *************************
+#endif  // *****  end debug LCD function tests *****
 
-#ifdef DEBUG_PRESSTYPE  // **********  debug - button press_type function tests **************************
+#ifdef DEBUG_PRESSTYPE  // *****  debug - button press_type function tests *****
     button.functionTest();
-#endif  // **********  end button press_type function tests *************************
-
-    lcd.initialiseCustomCharSet();  //creates eight custom lcd charaters, see lcd.cpp
+#endif  // *****  end button press_type function tests *****
 
     encoder.initialise();
-    delay(100);  // delay necessary to clear serial buffer in encoder.initialise(); otherwise garbage characters
+    delay(100);  // *** TEST THIS *** delay necessary to clear serial buffer in encoder.initialise(); otherwise garbage characters
 
     // initialise button press type set-up code (pin, pullup mode, callback function)
     button.begin(BUTTON_PIN);
 
-/* 
-    // ****** test code - REMOVE WHEN DONE ******
-    lcd.printMenuLine("12345678901234");
-    lcd.printMenuLine("234567890123456");
-    delay(500);
-    lcd.printMenuLine("323456789012345678");
-    lcd.printMenuLine("42345678901234");
-    // ******  test code - REMOVE WHEN DONE ******
- */
-smokerState = splashScreen;  //temporarily disable for testing
+    smokerState = splashScreen;  //temporarily disable for testing
 
 }  // end of setup
 
 void loop() {
     button.checkPress();
-    
-    processState(lcd); //temporarily disable for testing, as needed
 
+    processState(lcd);  //temporarily disable for testing, as needed
+    //encoder.getCount();  // need to enable this if line above is commented out for testing
 
-    //encoder.getCount();  // moved; do this inside of smokerState processState() function
-
-// **********  debug - free memory check  **************************
+// *****  debug - free memory check  *****
 #ifdef DEBUG_FREEMEM
     Serial.print(F("freeMemory()="));
     Serial.println(freeMemory());
     delay(1000);
 #endif  // end DEBUG
-    // **********  end debug free memory check *************************
+    // *****  end debug free memory check *****
 
 }  // end of loop
