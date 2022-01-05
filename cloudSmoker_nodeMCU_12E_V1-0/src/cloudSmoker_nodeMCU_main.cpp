@@ -99,6 +99,7 @@ constexpr int BUTTON_PIN = D3;   // KY40 SW (switch) pin connected to Uno pin 4
 //  note: may have to manually reset board after flashing for code to work correctly
 #define SERIAL_MONITOR_SPEED 74880
 
+
 // temperature variables- global; all temps stored in degF and converted on the fly as necessary for alternative units (eg DegC)
 float meatDoneTemp = 203;    // default to usual brisket internal done temp 203degF
 float pitTempTarget = 210;   // reasonable range around 225F long and slow target, pit temps can run 200 to 350 deg F
