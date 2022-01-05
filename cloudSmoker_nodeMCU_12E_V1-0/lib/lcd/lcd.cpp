@@ -17,6 +17,7 @@
 //incliude local libraries
 #include <helper_functions.h>  // do I need this here anymore?  use is in smokerStates now?
 #include <lcd.h>
+#include <wrapEncoder.h>
 
 // define LCD geometry (YwRobot 1602 LCD)
 constexpr int LCD_COLS = 16;
@@ -261,57 +262,60 @@ void CWG_LCD::showLaunchPad() {
     lcd.printMenuLine_noArrow("Config: DblPress");
 }
 
-// ref https://www.arduino.cc/reference/en/language/variables/utilities/progmem/ for
-//    discussion on Array of Strings code adapted below
+//int16_t CWG_LCD::showSettingsMenu(int16_t currentEncoderValue) {
 void CWG_LCD::showSettingsMenu(int16_t currentEncoderValue) {
-    Serial.println(F("entered showSettingsMenu "));
-
-    const static char msg_0[] PROGMEM = " <Press to set> ";
-    const static char msg_1[] PROGMEM = " <Hold to exit> ";
-    const static char msg_2[] PROGMEM = "Meat done[xxx]";
-    const static char msg_3[] PROGMEM = "Pit Temp [xxx]";
-    const static char msg_4[] PROGMEM = "Units [F] / C";
-
-    // table set-up to refer to msg strings
-    const static char *const msg_table[] PROGMEM = {msg_0, msg_1, msg_2, msg_3, msg_4};
+    //Serial.println(F("entered showSettingsMenu "));
 
     switch (currentEncoderValue) {
         case 0:
-            Serial.println(F("showSettingsMenu Case0"));
-            strcpy_P(messageBuffer, (char *)pgm_read_word(&(msg_table[0])));
-            lcd.printMenuLine(messageBuffer);
-            strcpy_P(messageBuffer, (char *)pgm_read_word(&(msg_table[1])));
-            lcd.printMenuLine_noArrow("Config: DblPress");
+            Serial.print(F("Case 0: currentEncoderValue = "));
+            Serial.println(currentEncoderValue);
+            lcd.printMenuLine(" <Press to set>");
+            lcd.printMenuLine_noArrow(" <Hold to exit>");
+            //currentEncoderValue = 99;  // use 99 as null value
+            //return currentEncoderValue; 
             break;
 
         case 1:
-            Serial.println(F("showSettingsMenu Case1"));
 
-            lcd.printMenuLine_noArrow("case 1");  // test code to be replaced
+            menuSelectLine = 1;
+            lcd.printMenuLine_noArrow(" <1Press to set>");
+            lcd.printMenuLine(" <1Hold to exit>");
+            //currentEncoderValue = 99;  // use 99 as null value
+            //return currentEncoderValue;
+
             break;
 
         case 2:
             Serial.println(F("showSettingsMenu Case2"));
 
             lcd.printMenuLine_noArrow("case 2");  // test code to be replaced
+            currentEncoderValue = 99;             // use 99 as null value
+            //return currentEncoderValue;
             break;
 
         case 3:
             Serial.println(F("showSettingsMenu Case3"));
 
             lcd.printMenuLine_noArrow("case 3");  // test code to be replaced
+            currentEncoderValue = 99;             // use 99 as null value
+            //return currentEncoderValue;
             break;
 
         case 4:
             Serial.println(F("showSettingsMenu Case4"));
 
             lcd.printMenuLine_noArrow("case 4");  // test code to be replaced
+            currentEncoderValue = 99;             // use 99 as null value
+            //return currentEncoderValue;
             break;
 
         default:
             Serial.println(F("menu error!"));
 
             lcd.printMenuLine_noArrow("Menu Error!");
+
+            //return 99;
             break;
     }
 
