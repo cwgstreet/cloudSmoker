@@ -71,6 +71,7 @@ bool WrapEncoder::moved() {
     int prevEncoderCount = 0;
     int currentEncoderCount = encoder.getCount();
     if (currentEncoderCount != prevEncoderCount) {
+        Serial.println(F("   **WrapEncoder::moved() => Encoder Moved!"));  //debug
         return 1;  // true if encoder value changes
     } else {
         return 0;  // false if encoder value does not change
