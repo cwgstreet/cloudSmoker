@@ -262,7 +262,6 @@ void CWG_LCD::showLaunchPad() {
     lcd.printMenuLine_noArrow("Config: DblPress");
 }
 
-//int16_t CWG_LCD::showSettingsMenu(int16_t currentEncoderValue) {
 void CWG_LCD::showSettingsMenu(int16_t currentEncoderValue) {
     //Serial.println(F("entered showSettingsMenu "));
 
@@ -273,7 +272,7 @@ void CWG_LCD::showSettingsMenu(int16_t currentEncoderValue) {
             lcd.printMenuLine(" <Press to set>");
             lcd.printMenuLine_noArrow(" <Hold to exit>");
             //currentEncoderValue = 99;  // use 99 as null value
-            //return currentEncoderValue; 
+            //return currentEncoderValue;
             break;
 
         case 1:

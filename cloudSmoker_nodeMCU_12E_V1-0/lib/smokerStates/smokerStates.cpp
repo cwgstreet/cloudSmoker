@@ -42,7 +42,7 @@ void processState(CWG_LCD &lcd) {
             lcd.showLaunchPad();
 
             if (pressEventCode == DOUBLE_PRESS) {
-                smokerState = changeSettings;  // enter config screens
+                smokerState = changeSettings;  // enter config menu
             }
 
             if (pressEventCode == LONG_PRESS) {
@@ -52,17 +52,21 @@ void processState(CWG_LCD &lcd) {
         } break;
 
         case changeSettings: {
-            lcd.printMenuLine("changeSettings");  // temporary to confirm navigation branch
+            //lcd.printMenuLine("changeSettings");  // temporary to confirm navigation branch
 
             int16_t currentEncoderValue = encoder.getCount();
-            
+
             if (hasRunFlag == 0) {
                 Serial.println(F("Changing Encoder Settings."));
                 encoder.newSettings(0, 4, 0, currentEncoderState);
                 hasRunFlag = 1;  // make sure settings are only changed once as function call is in loop()
             }
 
-            //lcd.showSettingsMenu(currentEncoderValue);
+            if (encoder.moved()) {
+                lcd.showSettingsMenu(currentEncoderValue);
+                Serial.print(F("currentEncoderValue = "));  //debug
+                Serial.println(currentEncoderValue);  //debug
+            }
 
         } break;
 

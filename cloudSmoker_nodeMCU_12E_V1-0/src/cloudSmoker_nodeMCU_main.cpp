@@ -106,6 +106,7 @@ float currentMeatTemp = 40;  // current meat temp; default to refridgerator temp
 float currentPitTemp = 225;  // current pit temp; default to long and slow brisket cooking (pit) temp=225degF
 bool degCFlag = 0;           // temperature unit flag: 1 for Centigrade or 0 for Fahrenheit
 
+
 /* *****
 To do:  add 4-hour rule check and exception notification
 The 4-hour rule is a general food safety guideline that suggests that the internal temperature of meat 
