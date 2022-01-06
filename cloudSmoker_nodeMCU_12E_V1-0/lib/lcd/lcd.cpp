@@ -266,64 +266,48 @@ void CWG_LCD::showSettingsMenu(int16_t currentEncoderValue) {
     //Serial.println(F("entered showSettingsMenu "));
 
     switch (currentEncoderValue) {
-        case 0:
-            Serial.print(F("CWG_LCD::showSettingsMenu Case 0: currentEncoderValue = "));
+        case 1:
+            //menuSelectLine = 0;
+            Serial.print(F("CWG_LCD::showSettingsMenu Case 1: currentEncoderValue = "));
             Serial.println(currentEncoderValue);
+            Serial.println();
             lcd.printMenuLine(" <Press to set>");
             lcd.printMenuLine_noArrow(" <Hold to exit>");
-            //currentEncoderValue = 99;  // use 99 as null value
-            //return currentEncoderValue;
-            break;
-
-        case 1:
-
-            menuSelectLine = 1;
-            lcd.printMenuLine_noArrow(" <1Press to set>");
-            lcd.printMenuLine(" <1Hold to exit>");
-            //currentEncoderValue = 99;  // use 99 as null value
-            //return currentEncoderValue;
-
             break;
 
         case 2:
-            Serial.println(F("showSettingsMenu Case2"));
-
-            lcd.printMenuLine_noArrow("case 2");  // test code to be replaced
-            currentEncoderValue = 99;             // use 99 as null value
-            //return currentEncoderValue;
+            menuSelectLine = 1;
+            lcd.printMenuLine_noArrow(" <Press to set>");
+            lcd.printMenuLine(" <Hold to exit>");
+            Serial.print(F("CWG_LCD::showSettingsMenu Case 2: currentEncoderValue = "));
+            Serial.println(currentEncoderValue);
+            Serial.println();
             break;
 
         case 3:
-            Serial.println(F("showSettingsMenu Case3"));
-
-            lcd.printMenuLine_noArrow("case 3");  // test code to be replaced
-            currentEncoderValue = 99;             // use 99 as null value
-            //return currentEncoderValue;
+            lcd.printMenuLine_noArrow("Case 3");  // test code to be replaced
+            Serial.print(F("CWG_LCD::showSettingsMenu Case 3: currentEncoderValue = "));
+            Serial.println(currentEncoderValue);
+            Serial.println();
             break;
 
         case 4:
-            Serial.println(F("showSettingsMenu Case4"));
-
             lcd.printMenuLine_noArrow("case 4");  // test code to be replaced
-            currentEncoderValue = 99;             // use 99 as null value
-            //return currentEncoderValue;
+            Serial.print(F("CWG_LCD::showSettingsMenu Case 4: currentEncoderValue = "));
+            Serial.println(currentEncoderValue);
+            Serial.println();
+            break;
+
+        case 5:
+            lcd.printMenuLine_noArrow("case 5");  // test code to be replaced
+            Serial.print(F("CWG_LCD::showSettingsMenu Case 5: currentEncoderValue = "));
+            Serial.println(currentEncoderValue);
+            Serial.println();
             break;
 
         default:
-            Serial.println(F("menu error!"));
-
+            Serial.println(F("default case - menu error!"));
             lcd.printMenuLine_noArrow("Menu Error!");
-
-            //return 99;
             break;
     }
-
-    // using messageBuffer[17] defined earlier in lcd.cpp implementation file
-
-    /*  for (int i = 0; i < 2; i++) {
-        strcpy_P(messageBuffer, (char *)pgm_read_word(&(msg_table[i])));
-        lcd.printMenuLine_noArrow(messageBuffer);
-    } */
-    //lcd.printMenuLine_noArrow(msg_)0);
-    //lcd.printMenuLine_noArrow(msg1);
 }

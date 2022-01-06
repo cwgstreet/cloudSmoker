@@ -72,6 +72,8 @@ bool WrapEncoder::moved() {
 
     if (encoder.getState(currentEncoderState)) {
         currentValue = currentEncoderState.currentValue;
+        Serial.print("moved() -> Encoder: ");  //debug
+        Serial.println(currentValue);          //debug
     }
     if (currentValue != prevEncoderValue) {
         Serial.println(F("   **WrapEncoder::moved() => Encoder Moved!"));  //debug

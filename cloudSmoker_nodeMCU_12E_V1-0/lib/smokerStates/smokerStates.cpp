@@ -52,13 +52,13 @@ void processState(CWG_LCD &lcd) {
         } break;
 
         case changeSettings: {
-            //lcd.printMenuLine("changeSettings");  // temporary to confirm navigation branch
-
             int16_t currentEncoderValue = encoder.getCount();
 
+            // first need to reset encoder scale to match number of Settings menu items
             if (hasRunFlag == 0) {
                 Serial.println(F("Changing Encoder Settings."));
-                encoder.newSettings(0, 4, 0, currentEncoderState);
+                encoder.newSettings(1, 5, 1, currentEncoderState);
+                currentEncoderValue = 1;  // look into changing this to currentEncoderValue = currentEncoderState.currentValue;
                 hasRunFlag = 1;  // make sure settings are only changed once as function call is in loop()
             }
 
