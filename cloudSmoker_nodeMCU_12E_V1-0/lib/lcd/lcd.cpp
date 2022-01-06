@@ -267,7 +267,7 @@ void CWG_LCD::showSettingsMenu(int16_t currentEncoderValue) {
 
     switch (currentEncoderValue) {
         case 0:
-            Serial.print(F("Case 0: currentEncoderValue = "));
+            Serial.print(F("CWG_LCD::showSettingsMenu Case 0: currentEncoderValue = "));
             Serial.println(currentEncoderValue);
             lcd.printMenuLine(" <Press to set>");
             lcd.printMenuLine_noArrow(" <Hold to exit>");
