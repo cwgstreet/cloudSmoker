@@ -15,7 +15,7 @@
 #include <Arduino.h>
 #include <NewEncoder.h>
 
-WrapEncoder encoder(ENCODER_CLK, ENCODER_DT, 0, 1, 0, FULL_PULSE);  // default encoder is 0,1 wrapping (for two-line LCD)
+WrapEncoder encoder(ENCODER_CLK, ENCODER_DT, 0, 1, 0, FULL_PULSE);  // default encoder is 0,1 wrapping (for two-line LCD).  Args: pinA, pinB, min, max, start, full or half pulse
 WrapEncoder::EncoderState state;                                    // EncoderState is a public struct datatype
 WrapEncoder::EncoderState currentEncoderState;
 
@@ -69,7 +69,6 @@ int16_t WrapEncoder::getCount() {
 
 bool WrapEncoder::moved() {
     int16_t currentValue;
-    //NewEncoder::EncoderState currentEncoderState;
 
     if (encoder.getState(currentEncoderState)) {
         currentValue = currentEncoderState.currentValue;
