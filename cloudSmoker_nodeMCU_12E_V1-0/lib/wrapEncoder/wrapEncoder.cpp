@@ -16,7 +16,7 @@
 #include <NewEncoder.h>
 
 WrapEncoder encoder(ENCODER_CLK, ENCODER_DT, 0, 1, 0, FULL_PULSE);  // default encoder is 0,1 wrapping (for two-line LCD)
-WrapEncoder::EncoderState state;                 // EncoderState is a public struct datatype
+WrapEncoder::EncoderState state;                                    // EncoderState is a public struct datatype
 WrapEncoder::EncoderState currentEncoderState;
 
 void ESP_ISR WrapEncoder::updateValue(uint8_t updatedState) {
@@ -68,22 +68,20 @@ int16_t WrapEncoder::getCount() {
 }
 
 bool WrapEncoder::moved() {
-    int prevEncoderCount = 0;
-    int currentEncoderCount = encoder.getCount();
-    if (currentEncoderCount != prevEncoderCount) {
+    int16_t currentValue;
+    //NewEncoder::EncoderState currentEncoderState;
+
+    if (encoder.getState(currentEncoderState)) {
+        currentValue = currentEncoderState.currentValue;
+    }
+    if (currentValue != prevEncoderValue) {
         Serial.println(F("   **WrapEncoder::moved() => Encoder Moved!"));  //debug
-        return 1;  // true if encoder value changes
+        prevEncoderValue = currentValue;
+        return 1;   // true if encoder value changes
     } else {
         return 0;  // false if encoder value does not change
     }
 }
-/* 
-int16_t WrapEncoder::newScale() {
-    int16_t currentEncoderValue = encoder.getCount();
-    Serial.println("Changing Encoder Settings.");
-    encoder.newSettings(0, 4, 0, currentEncoderState);
-    prevEncoderValue = currentEncoderState.currentValue;
-    Serial.print("Starting Value: ");
-    Serial.println(prevEncoderValue);
-}
- */
+
+
+
