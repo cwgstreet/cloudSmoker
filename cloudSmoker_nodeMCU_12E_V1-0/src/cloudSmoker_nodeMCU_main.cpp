@@ -108,7 +108,7 @@ bool degCFlag = 0;           // temperature unit flag: 1 for Centigrade or 0 for
 
 
 /* *****
-To do:  add 4-hour rule check and exception notification
+TO-DO:  add 4-hour rule check and exception notification
 The 4-hour rule is a general food safety guideline that suggests that the internal temperature of meat 
 should increase from 40°F to 140°F within 4 hours. This is due to foodborne bacteria growing much faster 
 within this temperature range (known as the “danger zone”).  Ref https://www.totallysmokin.com/4-hour-rule-smoking/
