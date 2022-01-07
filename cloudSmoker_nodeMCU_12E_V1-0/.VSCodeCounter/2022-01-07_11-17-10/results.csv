@@ -1,0 +1,16 @@
+"filename", "language", "C++", "Ini", "comment", "blank", "total"
+"/Users/carlwgreenstreet/Documents/PlatformIO/Projects/cloudSmoker/cloudSmoker_nodeMCU_12E_V1-0/lib/helper_functions/helper_functions.cpp", "C++", 10, 0, 14, 6, 30
+"/Users/carlwgreenstreet/Documents/PlatformIO/Projects/cloudSmoker/cloudSmoker_nodeMCU_12E_V1-0/lib/helper_functions/helper_functions.h", "C++", 14, 0, 10, 6, 30
+"/Users/carlwgreenstreet/Documents/PlatformIO/Projects/cloudSmoker/cloudSmoker_nodeMCU_12E_V1-0/lib/lcd/lcd.cpp", "C++", 237, 0, 40, 37, 314
+"/Users/carlwgreenstreet/Documents/PlatformIO/Projects/cloudSmoker/cloudSmoker_nodeMCU_12E_V1-0/lib/lcd/lcd.h", "C++", 36, 0, 25, 15, 76
+"/Users/carlwgreenstreet/Documents/PlatformIO/Projects/cloudSmoker/cloudSmoker_nodeMCU_12E_V1-0/lib/periphials/periphials.cpp", "C++", 12, 0, 17, 5, 34
+"/Users/carlwgreenstreet/Documents/PlatformIO/Projects/cloudSmoker/cloudSmoker_nodeMCU_12E_V1-0/lib/periphials/periphials.h", "C++", 18, 0, 16, 9, 43
+"/Users/carlwgreenstreet/Documents/PlatformIO/Projects/cloudSmoker/cloudSmoker_nodeMCU_12E_V1-0/lib/press_type/press_type.cpp", "C++", 64, 0, 21, 16, 101
+"/Users/carlwgreenstreet/Documents/PlatformIO/Projects/cloudSmoker/cloudSmoker_nodeMCU_12E_V1-0/lib/press_type/press_type.h", "C++", 28, 0, 23, 13, 64
+"/Users/carlwgreenstreet/Documents/PlatformIO/Projects/cloudSmoker/cloudSmoker_nodeMCU_12E_V1-0/lib/smokerStates/smokerStates.cpp", "C++", 71, 0, 33, 24, 128
+"/Users/carlwgreenstreet/Documents/PlatformIO/Projects/cloudSmoker/cloudSmoker_nodeMCU_12E_V1-0/lib/smokerStates/smokerStates.h", "C++", 22, 0, 15, 8, 45
+"/Users/carlwgreenstreet/Documents/PlatformIO/Projects/cloudSmoker/cloudSmoker_nodeMCU_12E_V1-0/lib/wrapEncoder/wrapEncoder.cpp", "C++", 64, 0, 12, 13, 89
+"/Users/carlwgreenstreet/Documents/PlatformIO/Projects/cloudSmoker/cloudSmoker_nodeMCU_12E_V1-0/lib/wrapEncoder/wrapEncoder.h", "C++", 32, 0, 21, 12, 65
+"/Users/carlwgreenstreet/Documents/PlatformIO/Projects/cloudSmoker/cloudSmoker_nodeMCU_12E_V1-0/platformio.ini", "Ini", 0, 11, 13, 3, 27
+"/Users/carlwgreenstreet/Documents/PlatformIO/Projects/cloudSmoker/cloudSmoker_nodeMCU_12E_V1-0/src/cloudSmoker_nodeMCU_main.cpp", "C++", 54, 0, 94, 25, 173
+"Total", "-", 662, 11, 354, 192, 1219

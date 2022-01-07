@@ -7,6 +7,9 @@
 *
 ** ************************************************************* */
 
+//set up debug scaffold; comment out following line if you want to "turn off" serial monitor debugging
+//#define DEBUG 1
+
 // include 3rd party libraries
 #include <Arduino.h>
 #include <NewEncoder.h>                     // do I need this here anymore?  use is in smokerStates now?
@@ -267,47 +270,77 @@ void CWG_LCD::showSettingsMenu(int16_t currentEncoderValue) {
 
     switch (currentEncoderValue) {
         case 1:
-            //menuSelectLine = 0;
+            menuSelectLine = 0;
+            lcd.printMenuLine("<Press to set>");
+            lcd.printMenuLine("<Hold to exit>");
+#ifdef DEBUG
             Serial.print(F("CWG_LCD::showSettingsMenu Case 1: currentEncoderValue = "));
             Serial.println(currentEncoderValue);
             Serial.println();
-            lcd.printMenuLine(" <Press to set>");
-            lcd.printMenuLine_noArrow(" <Hold to exit>");
+#endif
             break;
 
         case 2:
             menuSelectLine = 1;
-            lcd.printMenuLine_noArrow(" <Press to set>");
-            lcd.printMenuLine(" <Hold to exit>");
+            lcd.printMenuLine("<Press to set>");
+            lcd.printMenuLine("<Hold to exit>");
+#ifdef DEBUG
             Serial.print(F("CWG_LCD::showSettingsMenu Case 2: currentEncoderValue = "));
             Serial.println(currentEncoderValue);
             Serial.println();
+#endif
             break;
 
         case 3:
-            lcd.printMenuLine_noArrow("Case 3");  // test code to be replaced
+            menuSelectLine = 1;
+            lcd.printMenuLine("<Hold to exit>");
+            lcd.printMenuLine("Meat done[xxx]F");
+#ifdef DEBUG
             Serial.print(F("CWG_LCD::showSettingsMenu Case 3: currentEncoderValue = "));
             Serial.println(currentEncoderValue);
             Serial.println();
+#endif
             break;
 
         case 4:
-            lcd.printMenuLine_noArrow("case 4");  // test code to be replaced
+            menuSelectLine = 1;
+            lcd.printMenuLine("Meat done[xxx]F");
+            lcd.printMenuLine("Pit temp [xxx]F");
+#ifdef DEBUG
             Serial.print(F("CWG_LCD::showSettingsMenu Case 4: currentEncoderValue = "));
             Serial.println(currentEncoderValue);
             Serial.println();
+#endif
             break;
 
         case 5:
-            lcd.printMenuLine_noArrow("case 5");  // test code to be replaced
+            menuSelectLine = 1;
+            lcd.printMenuLine("Pit temp [xxx]F");
+            lcd.printMenuLine("Units [F]/C");
+#ifdef DEBUG
             Serial.print(F("CWG_LCD::showSettingsMenu Case 5: currentEncoderValue = "));
             Serial.println(currentEncoderValue);
             Serial.println();
+#endif
             break;
 
-        default:
-            Serial.println(F("default case - menu error!"));
-            lcd.printMenuLine_noArrow("Menu Error!");
+        case 6:
+            menuSelectLine = 1;
+            lcd.printMenuLine("Units [F]/C");
+            lcd.printMenuLine("<Press to set>");
+#ifdef DEBUG
+            Serial.print(F("CWG_LCD::showSettingsMenu Case 5: currentEncoderValue = "));
+            Serial.println(currentEncoderValue);
+            Serial.println();
+#endif
             break;
     }
 }
+/* 
+char getMeatDoneMsg() {
+    char msg[17];          // space for 16 charcaters + null termination
+    char meatFloatStr[4];  // empty array to hold convert float meat temp + null
+
+return msg[];
+}
+ */
