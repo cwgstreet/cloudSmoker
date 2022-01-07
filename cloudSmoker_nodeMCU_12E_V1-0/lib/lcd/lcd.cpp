@@ -236,24 +236,24 @@ void CWG_LCD::showSplashScreen(bool degCFlag, float meatDoneTemp, float pitTempT
     //lcd.printMenuLine("test works1");         //test code - REMOVE
     // lcd.printMenuLine("test works234567");   //test code - REMOVE
     char msg[17];          // space for 16 charcaters + null termination
-    char meatFloatStr[4];  // empty array to hold convert float meat temp + null
-    char pitFloatStr[4];
+    char currentMeatTempStr[4];  // empty array to hold converted (to string) float meat temp + null
+    char currentPitTempStr[4];
     lcd.setCursor(0, 0);
 
     if (degCFlag == 1) {
         float meatDoneTempC = convertDegFtoDegC(meatDoneTemp);
         float pitTempTargetC = convertDegFtoDegC(pitTempTarget);
-        dtostrf(meatDoneTempC, 3, 0, meatFloatStr);  // (float var to convert, width==3, 0==no digits after decimal, char arra for output)
-        dtostrf(pitTempTargetC, 3, 0, pitFloatStr);
-        sprintf(msg, "Meat%s\001 Pit%s\001", meatFloatStr, pitFloatStr);
+        dtostrf(meatDoneTempC, 3, 0, currentMeatTempStr);  // (float var to convert, width==3, 0==no digits after decimal, char arra for output)
+        dtostrf(pitTempTargetC, 3, 0, currentPitTempStr);
+        sprintf(msg, "Meat%s\001 Pit%s\001", currentMeatTempStr, currentPitTempStr);
 
         lcd.printMenuLine_noArrow("BBQ set points:");
         lcd.printMenuLine_noArrow(msg);
 
     } else {
-        dtostrf(meatDoneTemp, 3, 0, meatFloatStr);  // width==3, no digits after decimal
-        dtostrf(pitTempTarget, 3, 0, pitFloatStr);  // width==3, no digits after decimal sprintf(msg, "Meat%s\002 Pit%s\002", meatFloatStr, pitFloatStr);
-        sprintf(msg, "Meat%s\002 Pit%s\002", meatFloatStr, pitFloatStr);
+        dtostrf(meatDoneTemp, 3, 0, currentMeatTempStr);  // width==3, no digits after decimal
+        dtostrf(pitTempTarget, 3, 0, currentPitTempStr);  // width==3, no digits after decimal sprintf(msg, "Meat%s\002 Pit%s\002", currentMeatTempStr, currentPitTempStr);
+        sprintf(msg, "Meat%s\002 Pit%s\002", currentMeatTempStr, currentPitTempStr);
 
         lcd.printMenuLine_noArrow("BBQ set points:");
         lcd.printMenuLine_noArrow(msg);
@@ -337,7 +337,7 @@ void CWG_LCD::showSettingsMenu(int16_t currentEncoderValue) {
     }
 }
 /* 
-char getMeatDoneMsg() {
+void getMeatDoneMsg( ) {
     char msg[17];          // space for 16 charcaters + null termination
     char meatFloatStr[4];  // empty array to hold convert float meat temp + null
 
