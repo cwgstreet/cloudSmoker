@@ -235,7 +235,7 @@ void CWG_LCD::printMenuLine_noArrow(const char *c) {
 void CWG_LCD::showSplashScreen(bool degCFlag, float meatDoneTemp, float pitTempTarget) {
     //lcd.printMenuLine("test works1");         //test code - REMOVE
     // lcd.printMenuLine("test works234567");   //test code - REMOVE
-    char msg[17];          // space for 16 charcaters + null termination
+    char msg[17];                // space for 16 charcaters + null termination
     char currentMeatTempStr[4];  // empty array to hold converted (to string) float meat temp + null
     char currentPitTempStr[4];
     lcd.setCursor(0, 0);
@@ -336,11 +336,35 @@ void CWG_LCD::showSettingsMenu(int16_t currentEncoderValue) {
             break;
     }
 }
-/* 
-void getMeatDoneMsg( ) {
-    char msg[17];          // space for 16 charcaters + null termination
-    char meatFloatStr[4];  // empty array to hold convert float meat temp + null
 
-return msg[];
+void getMeatDoneTempMsg(char (&messageBuffer)[17], bool degCFlag, float meatDoneTemp) {
+    char meatDoneTempStr[4];  // empty array to hold converted (to string) float meat temp + null
+
+    // TO-DO: array out of bounds error checking
+    if (degCFlag == 1) {
+        float meatDoneTempC = convertDegFtoDegC(meatDoneTemp);
+        dtostrf(meatDoneTempC, 3, 0, meatDoneTempStr);  // (float var to convert, width==3, 0==no digits after decimal, char arra for output)
+        // sprintf:  15 characters + null; Octal escape chars: \x5B = [  \x5D = ], /001 = degC custom char
+        sprintf(messageBuffer, "Meat done\x5B%s\x5D\001", meatDoneTempStr);
+    } else {
+        dtostrf(meatDoneTemp, 3, 0, meatDoneTempStr);  // width==3, no digits after decimal
+        // sprintf:  15 characters + null; Octal escape chars: \x5B = [  \x5D = ], /001 = degC custom char
+        sprintf(messageBuffer, "Meat done\x5B%s\x5D\002", meatDoneTempStr);
+    }
 }
- */
+
+void getPitTempTargetMsg(char (&messageBuffer)[17], bool degCFlag, float pitTempTarget) {
+    char pitTempTargetStr[4];  // empty array to hold converted (to string) float meat temp + null
+
+    // TO-DO: array out of bounds error checking
+    if (degCFlag == 1) {
+        float pitTempTargetC = convertDegFtoDegC(pitTempTarget);
+        dtostrf(pitTempTargetC, 3, 0, pitTempTargetStr);  // (float var to convert, width==3, 0==no digits after decimal, char arra for output)
+        // sprintf:  15 characters + null; Octal escape chars: \x5B = [  \x5D = ], /001 = degC custom char
+        sprintf(messageBuffer, "Meat done\x5B%s\x5D\001", pitTempTargetStr);
+    } else {
+        dtostrf(pitTempTarget, 3, 0, pitTempTargetStr);  // width==3, no digits after decimal
+        // sprintf:  15 characters + null; Octal escape chars: \x5B = [  \x5D = ], /001 = degF custom char
+        sprintf(messageBuffer, "Meat done\x5B%s\x5D\002", pitTempTargetStr);
+    }
+}

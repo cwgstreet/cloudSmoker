@@ -1,10 +1,10 @@
 # Details
 
-Date : 2022-01-07 11:17:10
+Date : 2022-01-08 10:23:54
 
 Directory /Users/carlwgreenstreet/Documents/PlatformIO/Projects/cloudSmoker/cloudSmoker_nodeMCU_12E_V1-0
 
-Total : 14 files,  673 codes, 354 comments, 192 blanks, all 1219 lines
+Total : 14 files,  696 codes, 363 comments, 192 blanks, all 1251 lines
 
 [summary](results.md)
 
@@ -13,7 +13,7 @@ Total : 14 files,  673 codes, 354 comments, 192 blanks, all 1219 lines
 | :--- | :--- | ---: | ---: | ---: | ---: |
 | [lib/helper_functions/helper_functions.cpp](/lib/helper_functions/helper_functions.cpp) | C++ | 10 | 14 | 6 | 30 |
 | [lib/helper_functions/helper_functions.h](/lib/helper_functions/helper_functions.h) | C++ | 14 | 10 | 6 | 30 |
-| [lib/lcd/lcd.cpp](/lib/lcd/lcd.cpp) | C++ | 237 | 40 | 37 | 314 |
+| [lib/lcd/lcd.cpp](/lib/lcd/lcd.cpp) | C++ | 260 | 49 | 37 | 346 |
 | [lib/lcd/lcd.h](/lib/lcd/lcd.h) | C++ | 36 | 25 | 15 | 76 |
 | [lib/periphials/periphials.cpp](/lib/periphials/periphials.cpp) | C++ | 12 | 17 | 5 | 34 |
 | [lib/periphials/periphials.h](/lib/periphials/periphials.h) | C++ | 18 | 16 | 9 | 43 |

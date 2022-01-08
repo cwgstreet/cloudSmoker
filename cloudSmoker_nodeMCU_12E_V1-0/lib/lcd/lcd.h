@@ -58,7 +58,8 @@ class CWG_LCD : public hd44780_I2Cexp {
     void showSplashScreen(bool degCFlag, float meatDoneTemp, float pitTempTarget);
     void showLaunchPad();
     void showSettingsMenu(int16_t currentEncoderValue);
-    //char getMeatDoneMsg();  // need to write this https://stackoverflow.com/questions/5660527/how-do-i-return-a-char-array-from-a-function/5660589
+    void getMeatDoneTempMsg(char (&messageBuffer)[17], bool degCFlag, float meatDoneTemp);
+    void getPitTempTargetMsg(char (&messageBuffer)[17], bool degCFlag, float pitTempTarget);
 
    private:
     int _numCols;
