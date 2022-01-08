@@ -271,8 +271,8 @@ void CWG_LCD::showSettingsMenu(int16_t currentEncoderValue) {
     switch (currentEncoderValue) {
         case 1:
             menuSelectLine = 0;
-            lcd.printMenuLine("<Press to set>");
-            lcd.printMenuLine("<Hold to exit>");
+            lcd.printMenuLine_noArrow("<Turn to scroll>");
+            lcd.printMenuLine("<Press to set");
 #ifdef DEBUG
             Serial.print(F("CWG_LCD::showSettingsMenu Case 1: currentEncoderValue = "));
             Serial.println(currentEncoderValue);
@@ -281,7 +281,7 @@ void CWG_LCD::showSettingsMenu(int16_t currentEncoderValue) {
             break;
 
         case 2:
-            menuSelectLine = 1;
+            menuSelectLine = 0;
             lcd.printMenuLine("<Press to set>");
             lcd.printMenuLine("<Hold to exit>");
 #ifdef DEBUG
@@ -293,10 +293,10 @@ void CWG_LCD::showSettingsMenu(int16_t currentEncoderValue) {
 
         case 3:
             menuSelectLine = 1;
+            lcd.printMenuLine("<Press to set>");
             lcd.printMenuLine("<Hold to exit>");
-            lcd.printMenuLine("Meat done[xxx]F");
 #ifdef DEBUG
-            Serial.print(F("CWG_LCD::showSettingsMenu Case 3: currentEncoderValue = "));
+            Serial.print(F("CWG_LCD::showSettingsMenu Case 2: currentEncoderValue = "));
             Serial.println(currentEncoderValue);
             Serial.println();
 #endif
@@ -304,10 +304,11 @@ void CWG_LCD::showSettingsMenu(int16_t currentEncoderValue) {
 
         case 4:
             menuSelectLine = 1;
-            lcd.printMenuLine("Meat done[xxx]F");
-            lcd.printMenuLine("Pit temp [xxx]F");
+            lcd.printMenuLine("<Hold to exit>");
+            getMeatDoneTempMsg(messageBuffer, degCFlag, meatDoneTemp);
+            lcd.printMenuLine(messageBuffer);
 #ifdef DEBUG
-            Serial.print(F("CWG_LCD::showSettingsMenu Case 4: currentEncoderValue = "));
+            Serial.print(F("CWG_LCD::showSettingsMenu Case 3: currentEncoderValue = "));
             Serial.println(currentEncoderValue);
             Serial.println();
 #endif
@@ -315,7 +316,21 @@ void CWG_LCD::showSettingsMenu(int16_t currentEncoderValue) {
 
         case 5:
             menuSelectLine = 1;
-            lcd.printMenuLine("Pit temp [xxx]F");
+            getMeatDoneTempMsg(messageBuffer, degCFlag, meatDoneTemp);
+            lcd.printMenuLine(messageBuffer);
+            getPitTempTargetMsg(messageBuffer, degCFlag, pitTempTarget);
+            lcd.printMenuLine(messageBuffer);
+#ifdef DEBUG
+            Serial.print(F("CWG_LCD::showSettingsMenu Case 4: currentEncoderValue = "));
+            Serial.println(currentEncoderValue);
+            Serial.println();
+#endif
+            break;
+
+        case 6:
+            menuSelectLine = 1;
+            getPitTempTargetMsg(messageBuffer, degCFlag, pitTempTarget);
+            lcd.printMenuLine(messageBuffer);
             lcd.printMenuLine("Units [F]/C");
 #ifdef DEBUG
             Serial.print(F("CWG_LCD::showSettingsMenu Case 5: currentEncoderValue = "));
@@ -324,10 +339,10 @@ void CWG_LCD::showSettingsMenu(int16_t currentEncoderValue) {
 #endif
             break;
 
-        case 6:
+        case 7:
             menuSelectLine = 1;
             lcd.printMenuLine("Units [F]/C");
-            lcd.printMenuLine("<Press to set>");
+            lcd.printMenuLine_noArrow("<Turn to scroll>");
 #ifdef DEBUG
             Serial.print(F("CWG_LCD::showSettingsMenu Case 5: currentEncoderValue = "));
             Serial.println(currentEncoderValue);
@@ -337,7 +352,7 @@ void CWG_LCD::showSettingsMenu(int16_t currentEncoderValue) {
     }
 }
 
-void getMeatDoneTempMsg(char (&messageBuffer)[17], bool degCFlag, float meatDoneTemp) {
+void CWG_LCD::getMeatDoneTempMsg(char (&messageBuffer)[17], bool degCFlag, float meatDoneTemp) {
     char meatDoneTempStr[4];  // empty array to hold converted (to string) float meat temp + null
 
     // TO-DO: array out of bounds error checking
@@ -353,7 +368,7 @@ void getMeatDoneTempMsg(char (&messageBuffer)[17], bool degCFlag, float meatDone
     }
 }
 
-void getPitTempTargetMsg(char (&messageBuffer)[17], bool degCFlag, float pitTempTarget) {
+void CWG_LCD::getPitTempTargetMsg(char (&messageBuffer)[17], bool degCFlag, float pitTempTarget) {
     char pitTempTargetStr[4];  // empty array to hold converted (to string) float meat temp + null
 
     // TO-DO: array out of bounds error checking
@@ -361,10 +376,27 @@ void getPitTempTargetMsg(char (&messageBuffer)[17], bool degCFlag, float pitTemp
         float pitTempTargetC = convertDegFtoDegC(pitTempTarget);
         dtostrf(pitTempTargetC, 3, 0, pitTempTargetStr);  // (float var to convert, width==3, 0==no digits after decimal, char arra for output)
         // sprintf:  15 characters + null; Octal escape chars: \x5B = [  \x5D = ], /001 = degC custom char
-        sprintf(messageBuffer, "Meat done\x5B%s\x5D\001", pitTempTargetStr);
+        sprintf(messageBuffer, "Pit temp\x5B%s\x5D\001", pitTempTargetStr);
     } else {
         dtostrf(pitTempTarget, 3, 0, pitTempTargetStr);  // width==3, no digits after decimal
         // sprintf:  15 characters + null; Octal escape chars: \x5B = [  \x5D = ], /001 = degF custom char
-        sprintf(messageBuffer, "Meat done\x5B%s\x5D\002", pitTempTargetStr);
+        sprintf(messageBuffer, "Pit temp\x5B%s\x5D\002", pitTempTargetStr);
     }
 }
+/* 
+// TO-DO geraricise function - combine these into a single function.  Tricky part is text in message
+void CWG_LCD::getTempMsg(char (&messageBuffer)[17], bool degCFlag, float tempVariable) {
+    char temperatureVariableStr[4];  // empty array to hold converted (to string) float meat temp + null
+
+    // TO-DO: array out of bounds error checking
+    if (degCFlag == 1) {
+        float tempVariableC = convertDegFtoDegC(tempVariable);
+        dtostrf(tempVariableC, 3, 0, temperatureVariableStr);  // (float var to convert, width==3, 0==no digits after decimal, char arra for output)
+        // sprintf:  15 characters + null; Octal escape chars: \x5B = [  \x5D = ], /001 = degC custom char
+        sprintf(messageBuffer, "Meat done\x5B%s\x5D\001", temperatureVariableStr);
+    } else {
+        dtostrf(tempVariable, 3, 0, temperatureVariableStr);  // width==3, no digits after decimal
+        // sprintf:  15 characters + null; Octal escape chars: \x5B = [  \x5D = ], /001 = degF custom char
+        sprintf(messageBuffer, "Meat done\x5B%s\x5D\002", temperatureVariableStr);
+    }
+} */
