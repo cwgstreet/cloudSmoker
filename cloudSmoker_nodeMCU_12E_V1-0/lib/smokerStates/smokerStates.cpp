@@ -31,64 +31,66 @@ void processState(CWG_LCD &lcd) {
         {
             lcd.showSplashScreen(degCFlag, meatDoneTemp, pitTempTarget);
             delay(1000);
-
             if (encoder.moved()) {
                 smokerState = launchPad;
             }
-
         } break;
 
         case launchPad: {
             lcd.showLaunchPad();
-
             if (pressEventCode == DOUBLE_PRESS) {
                 smokerState = changeSettings;  // enter config menu
             }
-
             if (pressEventCode == LONG_PRESS) {
                 smokerState = getTemp;                     // start bbq cook
-                long unsigned startCookTimeMS = millis();  // start cook time; var defined as global (extern in helper_functions.h)
+                long unsigned startCookTimeMS = millis();  // capture cook start time; var defined as global (extern in helper_functions.h)
             }
         } break;
 
         case changeSettings: {
             int16_t currentEncoderValue = encoder.getCount();
 
-            // first need to reset encoder scale to match number of Settings menu items
+            // firstly, reset encoder scale to match number of Settings menu items (1 to 7)
             if (hasRunFlag == 0) {
                 Serial.println(F("Changing Encoder Settings."));
                 encoder.newSettings(1, 7, 1, currentEncoderState);
                 currentEncoderValue = 1;  // look into changing this to currentEncoderValue = currentEncoderState.currentValue;
-                hasRunFlag = 1;  // make sure settings are only changed once as function call is in loop()
+                hasRunFlag = 1;           // make sure settings are only changed once as function call is in loop()
+            }
+
+            if (button.triggered(SINGLE_TAP)) {
+                Serial.print(F(" !!!  Button Triggered !!! "));
+                Serial.print(F("processStates smokerState = "));
+                Serial.println(smokerState);
+
+                if (prevEncoderValue == 4) {
+                    smokerState = setMeatDoneTemp;  // enter sub-menu to set meat done temperature target
+                    Serial.print(F("CWG_LCD::showSettingsMenu [if (currentEncoderValue == 3)] smokerState = "));
+                    Serial.println(smokerState);
+                    break;
+                }
             }
 
             if (encoder.moved()) {
                 lcd.showSettingsMenu(currentEncoderValue);
                 Serial.print(F("currentEncoderValue = "));  //debug
-                Serial.println(currentEncoderValue);  //debug
+                Serial.println(currentEncoderValue);        //debug
             }
-
         } break;
 
         case setMeatDoneTemp:
-            lcd.printMenuLine("MeatDoneTemp");  // temporary to confirm navigation branch
+            lcd.printMenuLine("sm MeatDoneTemp");  // temporary to confirm navigation branch
             // code here
             break;
 
         case setPitTempTarget:
-            lcd.printMenuLine("set pitTemp");  // temporary to confirm navigation branch
-            /* encoderCountValue = encoder.getCount(currentEncoderState);
-            if (encoderCountValue > 209) {
-                Serial.println("Changing Encoder Settings.");
-                encoder.newSettings(-5, 15, 0, currentEncoderState);  //previous 180, 210, 203
-                prevEncoderValue = currentEncoderState.currentValue; 
-                Serial.print("main Starting Value: ");
-                //Serial.println(prevEncoderValue);
-            }*/
+            lcd.printMenuLine("sm setpitTemp");  // temporary to confirm navigation branch
+            // code here           
             break;
 
         case setTempUnits:
-            lcd.printMenuLine("set pitTemp");  // temporary to confirm navigation branch
+            lcd.printMenuLine("sm setTempUnits");  // temporary to confirm navigation branch
+            // code here
             break;
 
         case getTemp:
@@ -98,7 +100,6 @@ void processState(CWG_LCD &lcd) {
 
         case txTemp:
             lcd.printMenuLine("txTemp");  // temporary to confirm navigation branch
-
             // code here
             break;
 

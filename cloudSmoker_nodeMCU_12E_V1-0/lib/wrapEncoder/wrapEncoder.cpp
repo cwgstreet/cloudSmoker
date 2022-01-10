@@ -58,7 +58,7 @@ int16_t WrapEncoder::getCount() {
     if (encoder.getState(state)) {
         currentValue = state.currentValue;
         if (currentValue != prevEncoderValue) {
-            Serial.print("Encoder: ");
+            Serial.print(F("WrapEncoder::getCount() Encoder: currentValue "));
             Serial.println(currentValue);
             prevEncoderValue = currentValue;
             return currentValue;
@@ -72,17 +72,22 @@ bool WrapEncoder::moved() {
 
     if (encoder.getState(currentEncoderState)) {
         currentValue = currentEncoderState.currentValue;
-        Serial.print("moved() -> Encoder: ");  //debug
-        Serial.println(currentValue);          //debug
+        //debug statements:
+        Serial.println();
+        Serial.print(F("WrapEncoder::moved() -> prevEncoderValue: "));  //debug
+        Serial.println(prevEncoderValue);   
+        // end debug statements:
     }
     if (currentValue != prevEncoderValue) {
-        Serial.println(F("   **WrapEncoder::moved() => Encoder Moved!"));  //debug
+        //debug statements:
+        Serial.println(F("   **WrapEncoder::moved() => Encoder Moved!"));   //debug
+        Serial.print(F("WrapEncoder::moved() -> encoder currentValue: "));  //debug
+        Serial.println(currentValue);                                       
+        Serial.println();
+        // end debug statements:
         prevEncoderValue = currentValue;
-        return 1;   // true if encoder value changes
+        return 1;  // true if encoder value changes
     } else {
         return 0;  // false if encoder value does not change
     }
 }
-
-
-

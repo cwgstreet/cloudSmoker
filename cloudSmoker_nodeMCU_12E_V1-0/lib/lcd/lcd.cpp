@@ -8,7 +8,7 @@
 ** ************************************************************* */
 
 //set up debug scaffold; comment out following line if you want to "turn off" serial monitor debugging
-//#define DEBUG 1
+#define DEBUG 1
 
 // include 3rd party libraries
 #include <Arduino.h>
@@ -20,6 +20,8 @@
 //incliude local libraries
 #include <helper_functions.h>  // do I need this here anymore?  use is in smokerStates now?
 #include <lcd.h>
+#include <press_type.h>
+#include <smokerStates.h>
 #include <wrapEncoder.h>
 
 // define LCD geometry (YwRobot 1602 LCD)
@@ -296,7 +298,7 @@ void CWG_LCD::showSettingsMenu(int16_t currentEncoderValue) {
             lcd.printMenuLine("<Press to set>");
             lcd.printMenuLine("<Hold to exit>");
 #ifdef DEBUG
-            Serial.print(F("CWG_LCD::showSettingsMenu Case 2: currentEncoderValue = "));
+            Serial.print(F("CWG_LCD::showSettingsMenu Case 3: currentEncoderValue = "));
             Serial.println(currentEncoderValue);
             Serial.println();
 #endif
@@ -308,9 +310,9 @@ void CWG_LCD::showSettingsMenu(int16_t currentEncoderValue) {
             getMeatDoneTempMsg(messageBuffer, degCFlag, meatDoneTemp);
             lcd.printMenuLine(messageBuffer);
 #ifdef DEBUG
-            Serial.print(F("CWG_LCD::showSettingsMenu Case 3: currentEncoderValue = "));
-            Serial.println(currentEncoderValue);
             Serial.println();
+            Serial.print(F("CWG_LCD::showSettingsMenu Case 4: currentEncoderValue = "));
+            Serial.println(currentEncoderValue);
 #endif
             break;
 
@@ -321,10 +323,15 @@ void CWG_LCD::showSettingsMenu(int16_t currentEncoderValue) {
             getPitTempTargetMsg(messageBuffer, degCFlag, pitTempTarget);
             lcd.printMenuLine(messageBuffer);
 #ifdef DEBUG
-            Serial.print(F("CWG_LCD::showSettingsMenu Case 4: currentEncoderValue = "));
+            Serial.print(F("CWG_LCD::showSettingsMenu Case 5: currentEncoderValue = "));
             Serial.println(currentEncoderValue);
             Serial.println();
 #endif
+            /* if (pressEventCode == SHORT_PRESS) {
+                smokerState = setPitTempTarget;  // enter sub-menu to set pit temperature target
+                Serial.print(F("CWG_LCD::showSettingsMenu smokerState = "));
+                Serial.println(smokerState);
+            } */
             break;
 
         case 6:
@@ -332,11 +339,17 @@ void CWG_LCD::showSettingsMenu(int16_t currentEncoderValue) {
             getPitTempTargetMsg(messageBuffer, degCFlag, pitTempTarget);
             lcd.printMenuLine(messageBuffer);
             lcd.printMenuLine("Units [F]/C");
+
 #ifdef DEBUG
-            Serial.print(F("CWG_LCD::showSettingsMenu Case 5: currentEncoderValue = "));
+            Serial.print(F("CWG_LCD::showSettingsMenu Case 6: currentEncoderValue = "));
             Serial.println(currentEncoderValue);
             Serial.println();
 #endif
+            /* if (pressEventCode == SHORT_PRESS) {
+                smokerState = setTempUnits;  // enter sub-menu to set temperature units
+                Serial.print(F("CWG_LCD::showSettingsMenu smokerState = "));
+                Serial.println(smokerState);
+            } */
             break;
 
         case 7:
@@ -344,7 +357,7 @@ void CWG_LCD::showSettingsMenu(int16_t currentEncoderValue) {
             lcd.printMenuLine("Units [F]/C");
             lcd.printMenuLine_noArrow("<Turn to scroll>");
 #ifdef DEBUG
-            Serial.print(F("CWG_LCD::showSettingsMenu Case 5: currentEncoderValue = "));
+            Serial.print(F("CWG_LCD::showSettingsMenu Case 7: currentEncoderValue = "));
             Serial.println(currentEncoderValue);
             Serial.println();
 #endif

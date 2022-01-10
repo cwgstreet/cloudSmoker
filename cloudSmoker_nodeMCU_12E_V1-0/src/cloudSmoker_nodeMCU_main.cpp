@@ -78,7 +78,7 @@
 //   Note: #ifdef preprocessor simply tests if the symbol's been defined; therefore don't use #ifdef 0
 //    Ref: https://stackoverflow.com/questions/16245633/ifdef-debug-versus-if-debug
 // *****************************************************************
-#define DEBUG_SERIAL 1  // uncomment to debug - Serial monitor function test
+//#define DEBUG_SERIAL 1  // uncomment to debug - Serial monitor function test
 //#define DEBUG_LCD 1  // uncomment to debug - LCD function test
 //#define DEBUG_PRESSTYPE  1  // uncomment to debug rotary encoder button press type function test
 //#define DEBUG_LED  1       // uncomment to debug LED test of rotary encoder  **CHECK THIS MISSING??**
@@ -122,7 +122,7 @@ bool hasRunFlag = 0;
 
 // WrapEncoder globals - move to libary?
 int16_t prevEncoderValue;
-int16_t encoderCountValue;
+//int16_t encoderCountValue;
 
 // for testing - then can remove
 //smokerState = splashScreen;
@@ -157,7 +157,8 @@ void setup() {
 }  // end of setup
 
 void loop() {
-    button.checkPress();
+    button.update();
+    //button.checkPress();
 
     processState(lcd);  //temporarily disable for testing, as needed
     //encoder.getCount();  // need to enable this if line above is commented out for testing

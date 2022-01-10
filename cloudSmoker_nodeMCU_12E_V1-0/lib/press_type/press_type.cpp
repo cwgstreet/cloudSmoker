@@ -95,6 +95,9 @@ void Press_Type::functionTest() {
     }
 }
 
+// uneccessary code - can go stright to inherited button.update()
+/* 
 void Press_Type::checkPress() {
     button.update();
 }
+ */
