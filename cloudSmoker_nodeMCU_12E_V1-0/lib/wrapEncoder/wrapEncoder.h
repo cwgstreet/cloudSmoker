@@ -22,6 +22,8 @@
 #endif  // end if-block
 
 extern int16_t prevEncoderValue;
+extern int16_t currentEncoderValue;
+
 
 /*****************
 // Libraries required for periphial function tests:
@@ -54,8 +56,7 @@ class WrapEncoder : public NewEncoder {
 
 // ensure objects are visable everywhere (global)
 extern WrapEncoder encoder;  
-extern WrapEncoder::EncoderState state;
-extern  WrapEncoder::EncoderState currentEncoderState;
+extern  WrapEncoder::EncoderState currentEncoderState;  
 
 // globals - must define in main 
 extern bool hasRunFlag;

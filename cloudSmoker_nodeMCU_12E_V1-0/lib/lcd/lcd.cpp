@@ -20,9 +20,10 @@
 //incliude local libraries
 #include <helper_functions.h>  // do I need this here anymore?  use is in smokerStates now?
 #include <lcd.h>
+#include <wrapEncoder.h>
 #include <press_type.h>
 #include <smokerStates.h>
-#include <wrapEncoder.h>
+
 
 // define LCD geometry (YwRobot 1602 LCD)
 constexpr int LCD_COLS = 16;
@@ -56,7 +57,7 @@ void CWG_LCD::initialiseLCD() {
     delay(1000);
     lcd.clear();
     lcd.print(F("LCD test passed"));
-    lcd.setCursor(0, 1);               //set cursor to first column of second row (forst position == 0)
+    lcd.setCursor(0, 1);               //set cursor to first column of second row (first position == 0)
     lcd.print(F("G'Day cloudSmkr!"));  // F-Macro to save dynamic memory
     delay(1000);
 }  //  end LCD initialisation
@@ -276,9 +277,11 @@ void CWG_LCD::showSettingsMenu(int16_t currentEncoderValue) {
             lcd.printMenuLine_noArrow("<Turn to scroll>");
             lcd.printMenuLine("<Press to set");
 #ifdef DEBUG
-            Serial.print(F("CWG_LCD::showSettingsMenu Case 1: currentEncoderValue = "));
-            Serial.println(currentEncoderValue);
             Serial.println();
+            Serial.print(F("CWG_LCD::showSettingsMenu Case 1: -> prevEncoderValue:  "));
+            Serial.print(prevEncoderValue);
+            Serial.print(F(" / currentEncoderValue: "));                    //debug
+            Serial.println(currentEncoderValue);
 #endif
             break;
 
@@ -287,9 +290,12 @@ void CWG_LCD::showSettingsMenu(int16_t currentEncoderValue) {
             lcd.printMenuLine("<Press to set>");
             lcd.printMenuLine("<Hold to exit>");
 #ifdef DEBUG
-            Serial.print(F("CWG_LCD::showSettingsMenu Case 2: currentEncoderValue = "));
-            Serial.println(currentEncoderValue);
             Serial.println();
+            Serial.print(F("CWG_LCD::showSettingsMenu Case 2: -> prevEncoderValue:  "));
+            Serial.print(prevEncoderValue);
+            Serial.print(F(" / currentEncoderValue: "));                    //debug
+            Serial.println(currentEncoderValue);
+
 #endif
             break;
 
@@ -298,9 +304,11 @@ void CWG_LCD::showSettingsMenu(int16_t currentEncoderValue) {
             lcd.printMenuLine("<Press to set>");
             lcd.printMenuLine("<Hold to exit>");
 #ifdef DEBUG
-            Serial.print(F("CWG_LCD::showSettingsMenu Case 3: currentEncoderValue = "));
-            Serial.println(currentEncoderValue);
             Serial.println();
+            Serial.print(F("CWG_LCD::showSettingsMenu Case 3: -> prevEncoderValue:  "));
+            Serial.print(prevEncoderValue);
+            Serial.print(F(" / currentEncoderValue: "));                    //debug
+            Serial.println(currentEncoderValue);
 #endif
             break;
 
@@ -311,7 +319,9 @@ void CWG_LCD::showSettingsMenu(int16_t currentEncoderValue) {
             lcd.printMenuLine(messageBuffer);
 #ifdef DEBUG
             Serial.println();
-            Serial.print(F("CWG_LCD::showSettingsMenu Case 4: currentEncoderValue = "));
+            Serial.print(F("CWG_LCD::showSettingsMenu Case 4: -> prevEncoderValue:  "));
+            Serial.print(prevEncoderValue);
+            Serial.print(F(" / currentEncoderValue: "));                    //debug
             Serial.println(currentEncoderValue);
 #endif
             break;
@@ -323,9 +333,11 @@ void CWG_LCD::showSettingsMenu(int16_t currentEncoderValue) {
             getPitTempTargetMsg(messageBuffer, degCFlag, pitTempTarget);
             lcd.printMenuLine(messageBuffer);
 #ifdef DEBUG
-            Serial.print(F("CWG_LCD::showSettingsMenu Case 5: currentEncoderValue = "));
-            Serial.println(currentEncoderValue);
             Serial.println();
+            Serial.print(F("CWG_LCD::showSettingsMenu Case 5: -> prevEncoderValue:  "));
+            Serial.print(prevEncoderValue);
+            Serial.print(F(" / currentEncoderValue: "));                    //debug
+            Serial.println(currentEncoderValue);
 #endif
             /* if (pressEventCode == SHORT_PRESS) {
                 smokerState = setPitTempTarget;  // enter sub-menu to set pit temperature target
@@ -341,9 +353,11 @@ void CWG_LCD::showSettingsMenu(int16_t currentEncoderValue) {
             lcd.printMenuLine("Units [F]/C");
 
 #ifdef DEBUG
-            Serial.print(F("CWG_LCD::showSettingsMenu Case 6: currentEncoderValue = "));
-            Serial.println(currentEncoderValue);
             Serial.println();
+            Serial.print(F("CWG_LCD::showSettingsMenu Case 6: -> prevEncoderValue:  "));
+            Serial.print(prevEncoderValue);
+            Serial.print(F(" / currentEncoderValue: "));                    //debug
+            Serial.println(currentEncoderValue);
 #endif
             /* if (pressEventCode == SHORT_PRESS) {
                 smokerState = setTempUnits;  // enter sub-menu to set temperature units
@@ -357,9 +371,11 @@ void CWG_LCD::showSettingsMenu(int16_t currentEncoderValue) {
             lcd.printMenuLine("Units [F]/C");
             lcd.printMenuLine_noArrow("<Turn to scroll>");
 #ifdef DEBUG
-            Serial.print(F("CWG_LCD::showSettingsMenu Case 7: currentEncoderValue = "));
-            Serial.println(currentEncoderValue);
             Serial.println();
+            Serial.print(F("CWG_LCD::showSettingsMenu Case 7: -> prevEncoderValue:  "));
+            Serial.print(prevEncoderValue);
+            Serial.print(F(" / currentEncoderValue: "));                    //debug
+            Serial.println(currentEncoderValue);
 #endif
             break;
     }

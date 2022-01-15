@@ -69,9 +69,9 @@
 // internal (user) libraries:
 #include <lcd.h>           // lcd function tests, helper functions and custom characters
 #include <periphials.h>    // serial monitor function tests and usuage routines
+#include <wrapEncoder.h>   //  encoder library including encoder object with min / max values that "wrap" around
 #include <press_type.h>    // wrapper library abstracting Yabl / Bounce2 routines
 #include <smokerStates.h>  // cloudSmoker state machine functionality
-#include <wrapEncoder.h>   //  encoder library including encoder object with min / max values that "wrap" around
 
 // *****  Selective Debug Saffolding *****
 // Set up selective debug scaffold; comment out appropriate lines below to disable debugging tests at pre-proccessor stage
@@ -84,14 +84,14 @@
 //#define DEBUG_LED  1       // uncomment to debug LED test of rotary encoder  **CHECK THIS MISSING??**
 //#define DEBUG_FREEMEM 1  // uncomment to debug remaining free memory
 
-// pins set-up listed below for nodeMCU ESP8266
-//  Note to self:  constexp  better than const for variable values that should be known at compile
+// pins set-up listed below are for nodeMCU ESP8266
+//  Note to self:  constexp better than const for variable values that should be known at compile
 //     time -> more memory efficient.  Also better than simple #define
-constexpr int I2C_SCL = D1;      //optional as hd44780 set to auto-configure
-constexpr int I2C_SDA = D2;      //optional as hd44780 set to auto-configure
-constexpr int ENCODER_DT = D4;   // pinB newEncoder
-constexpr int ENCODER_CLK = D5;  //pinA newEncoder
-constexpr int BUTTON_PIN = D3;   // KY40 SW (switch) pin connected to Uno pin 4
+//constexpr int I2C_SCL = D1;      // optional as hd44780 set to auto-configure
+//constexpr int I2C_SDA = D2;      // optional as hd44780 set to auto-configure
+constexpr int ENCODER_DT = D4;   // pinB newEncoder lib config
+constexpr int ENCODER_CLK = D5;  // pinA newEncoder lib config
+constexpr int BUTTON_PIN = D3;   // KY40 SW (switch) pin (connected to Uno pin 4)
 
 // Baudrate:  Recommend 74480 baud rate for ESP8266 devices to match ESP8266 fixed bootloader initialisation speed
 //  (otherwise you will get startup gibberish characters on serial monitor before serial speed syncs)
@@ -104,8 +104,7 @@ float meatDoneTemp = 203;    // default to usual brisket internal done temp 203d
 float pitTempTarget = 210;   // reasonable range around 225F long and slow target, pit temps can run 200 to 350 deg F
 float currentMeatTemp = 40;  // current meat temp; default to refridgerator temp degF
 float currentPitTemp = 225;  // current pit temp; default to long and slow brisket cooking (pit) temp=225degF
-bool degCFlag = 0;           // temperature unit flag: 1 for Centigrade or 0 for Fahrenheit
-
+bool degCFlag = 0;           // temperature unit flag: 1 for Centigrade or 0 for Fahrenheit (default)
 
 /* *****
 TO-DO:  add 4-hour rule check and exception notification
@@ -122,16 +121,29 @@ bool hasRunFlag = 0;
 
 // WrapEncoder globals - move to libary?
 int16_t prevEncoderValue;
-//int16_t encoderCountValue;
+// int16_t currentEncoderValue;
 
 // for testing - then can remove
 //smokerState = splashScreen;
+
+//debug code for testing - then can remove
+//  int loopcounter = 0;
 
 void setup() {
     Serial.begin(SERIAL_MONITOR_SPEED);
     lcd.initialiseLCD();
     lcd.initialiseCustomCharSet();  //creates eight custom lcd charaters
+    encoder.initialise();
+    delay(100);  // *** TEST THIS as blocking *** is delay necessary to clear serial buffer in encoder.initialise(); otherwise garbage characters
 
+    // initialise button press type set-up code (pin, pullup mode, callback function)
+    button.begin(BUTTON_PIN);
+
+    smokerState = splashScreen;  //temporarily disable for testing
+
+// ***************************
+// ** Debug - function tests
+// ***************************
 // *****  debug - Serial monitor periphial function tests *****
 #ifdef DEBUG_SERIAL
     SerialTerminal.functionTest();
@@ -146,22 +158,22 @@ void setup() {
     button.functionTest();
 #endif  // *****  end button press_type function tests *****
 
-    encoder.initialise();
-    delay(100);  // *** TEST THIS *** delay necessary to clear serial buffer in encoder.initialise(); otherwise garbage characters
-
-    // initialise button press type set-up code (pin, pullup mode, callback function)
-    button.begin(BUTTON_PIN);
-
-    smokerState = splashScreen;  //temporarily disable for testing
-
 }  // end of setup
 
 void loop() {
     button.update();
-    //button.checkPress();
 
     processState(lcd);  //temporarily disable for testing, as needed
     //encoder.getCount();  // need to enable this if line above is commented out for testing
+
+       /*  // debug code - serial print out prevEncoderValue every n loops
+   loopcounter = loopcounter + 1;
+    if ((loopcounter % 10) == 0) {
+        Serial.println();
+        Serial.print(F("    >>>> Loop: -> prevEncoderValue = "));
+        Serial.println(prevEncoderValue);
+        Serial.println();
+    } */
 
 // *****  debug - free memory check  *****
 #ifdef DEBUG_FREEMEM

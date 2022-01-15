@@ -41,7 +41,8 @@ void onButtonEvent(const EventInfo& info) {
         case SINGLE_TAP:
             pressEventCode = SHORT_PRESS;  // pressEventCode == 1
 #if DEBUG
-            Serial.print("Short Press!  pressEventCode = ");
+            Serial.println();
+            Serial.print(F("Short Press!  pressEventCode = "));
             Serial.println(pressEventCode);
 #endif  // end DEBUG
             break;
@@ -49,7 +50,8 @@ void onButtonEvent(const EventInfo& info) {
         case DOUBLE_TAP:
             pressEventCode = DOUBLE_PRESS;  // pressEventCode == 2
 #if DEBUG
-            Serial.print("Double Tap Press!  pressEventCode = ");
+            Serial.println();
+            Serial.print(F("Double Tap Press!  pressEventCode = "));
             Serial.println(pressEventCode);
 #endif  // end DEBUG
             break;
@@ -57,7 +59,8 @@ void onButtonEvent(const EventInfo& info) {
         case HOLD:
             pressEventCode = LONG_PRESS;  // pressEventCode == 3
 #if DEBUG
-            Serial.print("Long Press!  pressEventCode = ");
+            Serial.println();
+            Serial.print(F("Long Press!  pressEventCode = "));
             Serial.println(pressEventCode);
 #endif  // end DEBUG
             break;
@@ -77,6 +80,7 @@ void Press_Type::begin(int _pin) {
     Serial.println("   ");  //blank line for visual space
     Serial.println("     Yabl Test follows");
     Serial.println("==============================");
+    Serial.println();
 #endif  //DEBUG
 }
 

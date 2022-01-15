@@ -30,8 +30,8 @@ void processState(CWG_LCD &lcd) {
         case splashScreen:  // note: case splashScreen == 1 explicitly per enum assignment in smokerState.
         {
             lcd.showSplashScreen(degCFlag, meatDoneTemp, pitTempTarget);
-            delay(1000);
-            if (encoder.moved()) {
+            //delay(1000);  // get rid of this?  blocking
+            if (encoder.getState(currentEncoderState)) {  // check for encoder movement (state change)
                 smokerState = launchPad;
             }
         } break;
@@ -39,9 +39,11 @@ void processState(CWG_LCD &lcd) {
         case launchPad: {
             lcd.showLaunchPad();
             if (pressEventCode == DOUBLE_PRESS) {
+                yield();                       // Do (almost) nothing -- yield allows ESP8266 background functions
                 smokerState = changeSettings;  // enter config menu
             }
             if (pressEventCode == LONG_PRESS) {
+                yield();                                   // Do (almost) nothing -- yield allows ESP8266 background functions
                 smokerState = getTemp;                     // start bbq cook
                 long unsigned startCookTimeMS = millis();  // capture cook start time; var defined as global (extern in helper_functions.h)
             }
@@ -52,29 +54,62 @@ void processState(CWG_LCD &lcd) {
 
             // firstly, reset encoder scale to match number of Settings menu items (1 to 7)
             if (hasRunFlag == 0) {
-                Serial.println(F("Changing Encoder Settings."));
+                Serial.println(F("Run Once! (hasRunFlag == 0); Changing Encoder Settings."));
                 encoder.newSettings(1, 7, 1, currentEncoderState);
-                currentEncoderValue = 1;  // look into changing this to currentEncoderValue = currentEncoderState.currentValue;
-                hasRunFlag = 1;           // make sure settings are only changed once as function call is in loop()
+                currentEncoderValue = currentEncoderState.currentValue;
+                Serial.println(currentEncoderValue);
+                prevEncoderValue = currentEncoderValue;
+
+                hasRunFlag = 1;  // ensure settings are only changed once given this is part of loop()
+
+                //debug statements
+                Serial.println();
+                Serial.print(F("processStates hasRunFlag block triggered (==0) -> prevEncoderValue: "));  //debug
+                Serial.println(prevEncoderValue);
+                // end debug
             }
 
             if (button.triggered(SINGLE_TAP)) {
+                //debug statements
+                Serial.println();
                 Serial.print(F(" !!!  Button Triggered !!! "));
                 Serial.print(F("processStates smokerState = "));
                 Serial.println(smokerState);
+                Serial.print(F("processStates -> Encoder: currentEncoderValue = "));
+                Serial.print(currentEncoderValue);
+                Serial.print(F(" / prevEncoderValue = "));
+                Serial.println(prevEncoderValue);
+                // end debug
 
                 if (prevEncoderValue == 4) {
                     smokerState = setMeatDoneTemp;  // enter sub-menu to set meat done temperature target
-                    Serial.print(F("CWG_LCD::showSettingsMenu [if (currentEncoderValue == 3)] smokerState = "));
+
+                    //debug statements
+                    Serial.println();
+                    Serial.print(F("processStates -> [if (prevEncoderValue == 4)] smokerState = "));
                     Serial.println(smokerState);
+                    Serial.print(F("processStates -> [if (prevEncoderValue == 4)]: currentEncoderValue = "));
+                    Serial.print(currentEncoderValue);
+                    Serial.print(F(" / prevEncoderValue = "));
+                    Serial.println(prevEncoderValue);
+                    // end debug
+
                     break;
                 }
             }
 
-            if (encoder.moved()) {
-                lcd.showSettingsMenu(currentEncoderValue);
-                Serial.print(F("currentEncoderValue = "));  //debug
-                Serial.println(currentEncoderValue);        //debug
+            // if (encoder.moved()) {
+            if (encoder.getState(currentEncoderState)) {  // check for encoder movement (state change)
+                currentEncoderValue = currentEncoderState.currentValue;
+                lcd.showSettingsMenu(prevEncoderValue);
+
+                Serial.print(F("processStates -> [if (encoder.moved() Ln96]: currentEncoderValue = "));
+                Serial.print(currentEncoderValue);
+                Serial.print(F(" / prevEncoderValue = "));
+                Serial.println(prevEncoderValue);
+                // end debug
+
+                prevEncoderValue = currentEncoderValue;
             }
         } break;
 
@@ -85,7 +120,7 @@ void processState(CWG_LCD &lcd) {
 
         case setPitTempTarget:
             lcd.printMenuLine("sm setpitTemp");  // temporary to confirm navigation branch
-            // code here           
+            // code here
             break;
 
         case setTempUnits:

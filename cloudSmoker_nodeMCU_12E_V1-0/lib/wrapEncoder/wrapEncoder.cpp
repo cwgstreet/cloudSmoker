@@ -16,8 +16,7 @@
 #include <NewEncoder.h>
 
 WrapEncoder encoder(ENCODER_CLK, ENCODER_DT, 0, 1, 0, FULL_PULSE);  // default encoder is 0,1 wrapping (for two-line LCD).  Args: pinA, pinB, min, max, start, full or half pulse
-WrapEncoder::EncoderState state;                                    // EncoderState is a public struct datatype
-WrapEncoder::EncoderState currentEncoderState;
+WrapEncoder::EncoderState currentEncoderState;                      // note EncoderState is a public struct datatype (currentEncoderState is global per extern declaration in wrapEncoder.h)
 
 void ESP_ISR WrapEncoder::updateValue(uint8_t updatedState) {
     if ((updatedState & DELTA_MASK) == INCREMENT_DELTA) {
@@ -38,16 +37,16 @@ void ESP_ISR WrapEncoder::updateValue(uint8_t updatedState) {
 
 void WrapEncoder::initialise() {
     //delay(500);   //can remove if blocking - for asthetics
-    Serial.println("Starting");
+    Serial.println(F("Starting"));
     if (!encoder.begin()) {
-        Serial.println("1-Encoder Failed to Start. Check pin assignments and available interrupts. Aborting.");
+        Serial.println(F("WrapEncoder::initialise -> Encoder Failed to Start. Check pin assignments and available interrupts. Aborting."));
         while (1) {
             yield();
         }
     } else {
-        encoder.getState(state);
-        Serial.print("2-Encoder Successfully Started at value = ");
-        prevEncoderValue = state.currentValue;
+        encoder.getState(currentEncoderState);
+        prevEncoderValue = currentEncoderState.currentValue;
+        Serial.print(F("WrapEncoder::initialise -> Encoder Successfully Started at value (prevEncoderValue = currentEncoderState.currentValue) = "));
         Serial.println(prevEncoderValue);
     }
 }
@@ -55,12 +54,15 @@ void WrapEncoder::initialise() {
 int16_t WrapEncoder::getCount() {
     int16_t currentValue;
 
-    if (encoder.getState(state)) {
-        currentValue = state.currentValue;
+    if (encoder.getState(currentEncoderState)) {
+        currentValue = currentEncoderState.currentValue;
         if (currentValue != prevEncoderValue) {
-            Serial.print(F("WrapEncoder::getCount() Encoder: currentValue "));
-            Serial.println(currentValue);
             prevEncoderValue = currentValue;
+            Serial.println();
+            Serial.print(F("WrapEncoder::getCount() Encoder: currentValue = "));
+            Serial.print(currentValue);
+            Serial.print(F(" / prevEncoderValue = "));
+            Serial.println(prevEncoderValue);
             return currentValue;
         }
     }
@@ -68,24 +70,28 @@ int16_t WrapEncoder::getCount() {
 }
 
 bool WrapEncoder::moved() {
-    int16_t currentValue;
+    int16_t currentEncoderValue;
 
     if (encoder.getState(currentEncoderState)) {
-        currentValue = currentEncoderState.currentValue;
+        currentEncoderValue = currentEncoderState.currentValue;
         //debug statements:
         Serial.println();
         Serial.print(F("WrapEncoder::moved() -> prevEncoderValue: "));  //debug
-        Serial.println(prevEncoderValue);   
+        Serial.print(prevEncoderValue);
+        Serial.print(F(" / currentEncoderValue = currentEncoderState.currentValue: "));  //debug
+        Serial.println(currentEncoderValue);
         // end debug statements:
     }
-    if (currentValue != prevEncoderValue) {
+    if (currentEncoderValue != prevEncoderValue) {
+        prevEncoderValue = currentEncoderValue;
         //debug statements:
-        Serial.println(F("   **WrapEncoder::moved() => Encoder Moved!"));   //debug
-        Serial.print(F("WrapEncoder::moved() -> encoder currentValue: "));  //debug
-        Serial.println(currentValue);                                       
         Serial.println();
+        Serial.println(F("   **WrapEncoder::moved() => Encoder Moved!"));  //debug
+        Serial.print(F("WrapEncoder::moved() -> prevEncoderValue: "));     //debug
+        Serial.print(prevEncoderValue);
+        Serial.print(F(" / currentEncoderValue: "));  //debug
+        Serial.println(currentEncoderValue);
         // end debug statements:
-        prevEncoderValue = currentValue;
         return 1;  // true if encoder value changes
     } else {
         return 0;  // false if encoder value does not change
