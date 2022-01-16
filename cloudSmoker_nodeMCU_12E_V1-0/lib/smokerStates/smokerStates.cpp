@@ -31,7 +31,7 @@ void processState(CWG_LCD &lcd) {
         {
             lcd.showSplashScreen(degCFlag, meatDoneTemp, pitTempTarget);
             //delay(1000);  // get rid of this?  blocking
-            if (encoder.getState(currentEncoderState)) {  // check for encoder movement (state change)
+            if (encoder.moved()) {
                 smokerState = launchPad;
             }
         } break;
@@ -39,7 +39,8 @@ void processState(CWG_LCD &lcd) {
         case launchPad: {
             lcd.showLaunchPad();
             if (pressEventCode == DOUBLE_PRESS) {
-                yield();                       // Do (almost) nothing -- yield allows ESP8266 background functions
+                yield();  // Do (almost) nothing -- yield allows ESP8266 background functions
+
                 smokerState = changeSettings;  // enter config menu
             }
             if (pressEventCode == LONG_PRESS) {
@@ -50,13 +51,14 @@ void processState(CWG_LCD &lcd) {
         } break;
 
         case changeSettings: {
+            lcd.showSettingsMenu(prevEncoderValue);
             int16_t currentEncoderValue = encoder.getCount();
 
             // firstly, reset encoder scale to match number of Settings menu items (1 to 7)
             if (hasRunFlag == 0) {
                 Serial.println(F("Run Once! (hasRunFlag == 0); Changing Encoder Settings."));
                 encoder.newSettings(1, 7, 1, currentEncoderState);
-                currentEncoderValue = currentEncoderState.currentValue;
+                currentEncoderValue = currentEncoderState.currentValue;  //do I need this line?  Check
                 Serial.println(currentEncoderValue);
                 prevEncoderValue = currentEncoderValue;
 
@@ -67,6 +69,10 @@ void processState(CWG_LCD &lcd) {
                 Serial.print(F("processStates hasRunFlag block triggered (==0) -> prevEncoderValue: "));  //debug
                 Serial.println(prevEncoderValue);
                 // end debug
+            }
+
+            if (encoder.moved()) {
+                lcd.showSettingsMenu(currentEncoderValue);
             }
 
             if (button.triggered(SINGLE_TAP)) {
@@ -93,17 +99,23 @@ void processState(CWG_LCD &lcd) {
                     Serial.print(F(" / prevEncoderValue = "));
                     Serial.println(prevEncoderValue);
                     // end debug
+                    break;
+                }
+                if (prevEncoderValue == 5) {
+                    smokerState = setPitTempTarget;  // enter sub-menu to set meat done temperature target
+                    break;
+                }
 
+                if (prevEncoderValue == 6) {
+                    smokerState = setTempUnits;  // enter sub-menu to set meat done temperature target
                     break;
                 }
             }
 
-            // if (encoder.moved()) {
-            if (encoder.getState(currentEncoderState)) {  // check for encoder movement (state change)
+            if (encoder.moved()) {
                 currentEncoderValue = currentEncoderState.currentValue;
-                lcd.showSettingsMenu(prevEncoderValue);
 
-                Serial.print(F("processStates -> [if (encoder.moved() Ln96]: currentEncoderValue = "));
+                Serial.print(F("processStates -> [if (encoder.moved() Ln118]: currentEncoderValue = "));
                 Serial.print(currentEncoderValue);
                 Serial.print(F(" / prevEncoderValue = "));
                 Serial.println(prevEncoderValue);

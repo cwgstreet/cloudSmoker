@@ -52,18 +52,20 @@ void WrapEncoder::initialise() {
 }
 
 int16_t WrapEncoder::getCount() {
-    int16_t currentValue;
+    int16_t currentEncoderValue;
 
     if (encoder.getState(currentEncoderState)) {
-        currentValue = currentEncoderState.currentValue;
-        if (currentValue != prevEncoderValue) {
-            prevEncoderValue = currentValue;
+        currentEncoderValue = currentEncoderState.currentValue;
+        if (currentEncoderValue != prevEncoderValue) {
+            
             Serial.println();
-            Serial.print(F("WrapEncoder::getCount() Encoder: currentValue = "));
-            Serial.print(currentValue);
+            Serial.print(F("WrapEncoder::getCount() Encoder: currentEncoderValue = "));
+            Serial.print(currentEncoderValue);
             Serial.print(F(" / prevEncoderValue = "));
             Serial.println(prevEncoderValue);
-            return currentValue;
+            
+            prevEncoderValue = currentEncoderValue;
+            return currentEncoderValue;
         }
     }
     return 0;  // alleviates compiler warning: control reaches end of non-void function [-Wreturn-type]
@@ -72,7 +74,7 @@ int16_t WrapEncoder::getCount() {
 bool WrapEncoder::moved() {
     int16_t currentEncoderValue;
 
-    if (encoder.getState(currentEncoderState)) {
+    if (encoder.getState(currentEncoderState)) {  // checks for state change (movement)
         currentEncoderValue = currentEncoderState.currentValue;
         //debug statements:
         Serial.println();
@@ -82,12 +84,14 @@ bool WrapEncoder::moved() {
         Serial.println(currentEncoderValue);
         // end debug statements:
     }
+    currentEncoderValue = currentEncoderState.currentValue;
+
     if (currentEncoderValue != prevEncoderValue) {
         prevEncoderValue = currentEncoderValue;
         //debug statements:
         Serial.println();
-        Serial.println(F("   **WrapEncoder::moved() => Encoder Moved!"));  //debug
-        Serial.print(F("WrapEncoder::moved() -> prevEncoderValue: "));     //debug
+        Serial.println(F("   **WrapEncoder::moved() => Encoder Moved!  if (currentEncoderValue != prevEncoderValue)"));  //debug
+        Serial.print(F("exiting WrapEncoder::moved() -> prevEncoderValue: "));                                                   //debug
         Serial.print(prevEncoderValue);
         Serial.print(F(" / currentEncoderValue: "));  //debug
         Serial.println(currentEncoderValue);

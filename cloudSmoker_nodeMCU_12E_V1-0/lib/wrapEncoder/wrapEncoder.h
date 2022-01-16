@@ -22,7 +22,7 @@
 #endif  // end if-block
 
 extern int16_t prevEncoderValue;
-extern int16_t currentEncoderValue;
+//extern int16_t currentEncoderValue;
 
 
 /*****************
