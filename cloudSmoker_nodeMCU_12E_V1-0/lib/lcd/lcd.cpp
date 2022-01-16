@@ -437,15 +437,41 @@ void CWG_LCD::showSetTempUnitsMenu(int16_t currentEncoderValue) {
     // reset encoder - to 0,1,0 must run once
     switch (currentEncoderValue) {
         case 0:
-            lcd.printMenuLine("Units [F]/C");
+            //Serial.println("case 0 SetTempUnits");
+            menuSelectLine = 0;
+            lcd.printMenuLine("Units [F] / C");
+            lcd.printMenuLine("Units  F / [C]");
+
+#ifdef DEBUG
+            if (encoder.moved()) {
+                Serial.println();
+                Serial.print(F("CWG_LCD::showSetTempUnitsMenu Case 0: -> prevEncoderValue:  "));
+                Serial.print(prevEncoderValue);
+                Serial.print(F(" / currentEncoderValue: "));  //debug
+                Serial.println(currentEncoderValue);
+            }
+#endif
             break;
+
         case 1:
+            //Serial.println("case 1 SetTempUnits");
             menuSelectLine = 1;
-            lcd.printMenuLine("Units F/[C]");
+            lcd.printMenuLine("Units [F] / C");
+            lcd.printMenuLine("Units  F / [C]");
+
+#ifdef DEBUG
+            if (encoder.moved()) {
+                Serial.println();
+                Serial.print(F("CWG_LCD::showSetTempUnitsMenu Case 1: -> prevEncoderValue:  "));
+                Serial.print(prevEncoderValue);
+                Serial.print(F(" / currentEncoderValue: "));  //debug
+                Serial.println(currentEncoderValue);
+            }
+#endif
             break;
     }
 }
-    
+
 /* 
 // TO-DO geraricise function - combine these into a single function.  Tricky part is text in message
 void CWG_LCD::getTempMsg(char (&messageBuffer)[17], bool degCFlag, float tempVariable) {
