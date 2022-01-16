@@ -27,8 +27,7 @@ entryStates_t smokerState;
 
 void processState(CWG_LCD &lcd) {
     switch (smokerState) {
-        case splashScreen:  // note: case splashScreen == 1 explicitly per enum assignment in smokerState.
-        {
+        case splashScreen: {  // note: case splashScreen == 1 explicitly per enum assignment in smokerState.
             lcd.showSplashScreen(degCFlag, meatDoneTemp, pitTempTarget);
             //delay(1000);  // get rid of this?  blocking
             if (encoder.moved()) {
@@ -125,44 +124,52 @@ void processState(CWG_LCD &lcd) {
             }
         } break;
 
-        case setMeatDoneTemp:
+        case setMeatDoneTemp: {
             lcd.printMenuLine("sm MeatDoneTemp");  // temporary to confirm navigation branch
             // code here
-            break;
+        } break;
 
-        case setPitTempTarget:
+        case setPitTempTarget: {
             lcd.printMenuLine("sm setpitTemp");  // temporary to confirm navigation branch
             // code here
-            break;
+        } break;
 
-        case setTempUnits:
-            lcd.printMenuLine("sm setTempUnits");  // temporary to confirm navigation branch
-            // code here
-            break;
+        case setTempUnits: {
+            //lcd.printMenuLine("sm setTempUnits");  // temporary to confirm navigation branch
+            int16_t currentEncoderValue = encoder.getCount();
+            lcd.showSetTempUnitsMenu(currentEncoderValue);
 
-        case getTemp:
+            if (button.triggered(SINGLE_TAP)) {
+                if (prevEncoderValue == 1) {
+                    degCFlag = 1;
+                    Serial.println(F("degC Flag set - units now in degC!"));  //debug
+                }
+            }
+        } break;
+
+        case getTemp: {
             lcd.printMenuLine("get Temp");  // temporary to confirm navigation branch
             // code here
-            break;
+        } break;
 
-        case txTemp:
+        case txTemp: {
             lcd.printMenuLine("txTemp");  // temporary to confirm navigation branch
             // code here
-            break;
+        } break;
 
-        case modemSleep:
+        case modemSleep: {
             lcd.printMenuLine("modemSleep");  // temporary to confirm navigation branch
             // code here
-            break;
+        } break;
 
-        case bbqStatus:
+        case bbqStatus: {
             lcd.printMenuLine("bbqStatus");  // temporary to confirm navigation branch
             // code here
-            break;
+        } break;
 
-        default:
+        default: {
             smokerState = bbqStatus;
-            break;
+        } break;
     }
 }
 

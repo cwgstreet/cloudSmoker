@@ -429,15 +429,23 @@ void CWG_LCD::showSetMeatDoneTempMenu(int16_t currentEncoderValue) {
     // code here
 }
 
-
 void CWG_LCD::showSetPitTempTargetMenu(int16_t currentEncoderValue) {
     // code here
 }
 
 void CWG_LCD::showSetTempUnitsMenu(int16_t currentEncoderValue) {
-    // code here
+    // reset encoder - to 0,1,0 must run once
+    switch (currentEncoderValue) {
+        case 0:
+            lcd.printMenuLine("Units [F]/C");
+            break;
+        case 1:
+            menuSelectLine = 1;
+            lcd.printMenuLine("Units F/[C]");
+            break;
+    }
 }
-
+    
 /* 
 // TO-DO geraricise function - combine these into a single function.  Tricky part is text in message
 void CWG_LCD::getTempMsg(char (&messageBuffer)[17], bool degCFlag, float tempVariable) {
