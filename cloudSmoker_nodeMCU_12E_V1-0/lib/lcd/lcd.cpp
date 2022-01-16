@@ -424,6 +424,20 @@ void CWG_LCD::getPitTempTargetMsg(char (&messageBuffer)[17], bool degCFlag, floa
         sprintf(messageBuffer, "Pit temp\x5B%s\x5D\002", pitTempTargetStr);
     }
 }
+
+void CWG_LCD::showSetMeatDoneTempMenu(int16_t currentEncoderValue) {
+    // code here
+}
+
+
+void CWG_LCD::showSetPitTempTargetMenu(int16_t currentEncoderValue) {
+    // code here
+}
+
+void CWG_LCD::showSetTempUnitsMenu(int16_t currentEncoderValue) {
+    // code here
+}
+
 /* 
 // TO-DO geraricise function - combine these into a single function.  Tricky part is text in message
 void CWG_LCD::getTempMsg(char (&messageBuffer)[17], bool degCFlag, float tempVariable) {
