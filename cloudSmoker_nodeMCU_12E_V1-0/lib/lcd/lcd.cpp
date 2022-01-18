@@ -270,7 +270,7 @@ void CWG_LCD::showLaunchPad() {
 void CWG_LCD::showSettingsMenu(int16_t currentEncoderValue) {
     switch (currentEncoderValue) {
         case 1:
-            menuSelectLine = 0;
+            menuSelectLine = 1;
             lcd.printMenuLine_noArrow("<Turn to scroll>");
             lcd.printMenuLine("<Press to set");
 #ifdef DEBUG
@@ -439,8 +439,13 @@ void CWG_LCD::showSetTempUnitsMenu(int16_t currentEncoderValue) {
         case 0:
             //Serial.println("case 0 SetTempUnits");
             menuSelectLine = 0;
-            lcd.printMenuLine("Units [F] / C");
-            lcd.printMenuLine("Units  F / [C]");
+            if (degCFlag == 0) {
+                lcd.printMenuLine("Tap to set unit");
+                lcd.printMenuLine("Units [F] / C");  //degF are selected temperature units
+            } else {
+                lcd.printMenuLine("Tap to set unit");
+                lcd.printMenuLine("Units  F /[C]");  //degC are selected temperature units
+            }
 
 #ifdef DEBUG
             if (encoder.moved()) {
@@ -456,13 +461,40 @@ void CWG_LCD::showSetTempUnitsMenu(int16_t currentEncoderValue) {
         case 1:
             //Serial.println("case 1 SetTempUnits");
             menuSelectLine = 1;
-            lcd.printMenuLine("Units [F] / C");
-            lcd.printMenuLine("Units  F / [C]");
+            if (degCFlag == 0) {
+                lcd.printMenuLine("Tap to set unit");
+                lcd.printMenuLine("Units [F] / C");
+            } else {
+                lcd.printMenuLine("Tap to set unit");
+                lcd.printMenuLine("Units  F /[C]");
+            }
 
 #ifdef DEBUG
             if (encoder.moved()) {
                 Serial.println();
                 Serial.print(F("CWG_LCD::showSetTempUnitsMenu Case 1: -> prevEncoderValue:  "));
+                Serial.print(prevEncoderValue);
+                Serial.print(F(" / currentEncoderValue: "));  //debug
+                Serial.println(currentEncoderValue);
+            }
+#endif
+            break;
+
+        case 2:
+            //Serial.println("case 2 SetTempUnits");
+            menuSelectLine = 1;
+            if (degCFlag == 0) {
+                lcd.printMenuLine("Units [F] / C");
+                lcd.printMenuLine("Hold to Return\004");
+            } else {
+                lcd.printMenuLine("Units  F /[C]");
+                lcd.printMenuLine("Hold to Return\004");
+            }
+
+#ifdef DEBUG
+            if (encoder.moved()) {
+                Serial.println();
+                Serial.print(F("CWG_LCD::showSetTempUnitsMenu Case 2: -> prevEncoderValue:  "));
                 Serial.print(prevEncoderValue);
                 Serial.print(F(" / currentEncoderValue: "));  //debug
                 Serial.println(currentEncoderValue);

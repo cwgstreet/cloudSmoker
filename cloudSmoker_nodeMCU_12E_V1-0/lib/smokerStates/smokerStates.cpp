@@ -148,23 +148,31 @@ void processState(CWG_LCD &lcd) {
             // reset encoder scale to match number of menu list items
             if (hasRunFlag == 0) {
                 Serial.println(F("Run Once! (hasRunFlag == 0); Changing Encoder Settings - setTempUnits."));
-                encoder.newSettings(0, 1, 0, currentEncoderState);
+                encoder.newSettings(0, 2, 0, currentEncoderState);
                 currentEncoderValue = currentEncoderState.currentValue;  //do I need this line?  Check
                 Serial.println(currentEncoderValue);
                 prevEncoderValue = currentEncoderValue;
 
                 hasRunFlag = 1;  // ensure settings are only changed once given this is part of loop()
             }
-            //if (encoder.moved()) {
-                lcd.showSetTempUnitsMenu(prevEncoderValue);
-                //prevEncoderValue = currentEncoderValue;
-            //}
+
+            lcd.showSetTempUnitsMenu(prevEncoderValue);
 
             if (button.triggered(SINGLE_TAP)) {
-                if (prevEncoderValue == 1) {
-                    degCFlag = 1;
-                    Serial.println(F("degC Flag set - units now in degC!"));  //debug
+                if (prevEncoderValue == 1) {  //ensure termperature unit change line is selected
+                    if (degCFlag == 0) {
+                        degCFlag = 1;
+                        Serial.println(F("degC Flag set - Temperature units now in degC!"));  //debug
+                    } else {
+                        degCFlag = 0;
+                        Serial.println(F("degF Flag set - Temperature units now in degF!"));  //debug
+                    }
                 }
+            }
+
+            if (button.triggered(HOLD)) {
+                smokerState = changeSettings;  // return to config menu (one level up)
+                hasRunFlag = 0;                // allow another reset of encoder scale range
             }
 
             break;
