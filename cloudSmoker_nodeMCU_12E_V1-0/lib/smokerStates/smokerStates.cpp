@@ -38,12 +38,12 @@ void processState(CWG_LCD &lcd) {
 
         case launchPad: {
             lcd.showLaunchPad();
-            if (pressEventCode == DOUBLE_PRESS) {
+            if (button.triggered(DOUBLE_TAP)) {
                 yield();  // Do (almost) nothing -- yield allows ESP8266 background functions
 
                 smokerState = changeSettings;  // enter config menu
             }
-            if (pressEventCode == LONG_PRESS) {
+            if (button.triggered(SINGLE_TAP)) {
                 yield();                                   // Do (almost) nothing -- yield allows ESP8266 background functions
                 smokerState = getTemp;                     // start bbq cook
                 long unsigned startCookTimeMS = millis();  // capture cook start time; var defined as global (extern in helper_functions.h)
@@ -58,7 +58,7 @@ void processState(CWG_LCD &lcd) {
             // firstly, reset encoder scale to match number of Settings menu items (1 to 7)
             if (hasRunFlag == 0) {
                 Serial.println(F("Run Once! (hasRunFlag == 0); Changing Encoder Settings."));
-                encoder.newSettings(1, 7, 1, currentEncoderState);
+                encoder.newSettings(1, 8, 1, currentEncoderState);
                 //currentEncoderState.currentValue;  //do I need this line?  Check
                 Serial.println(currentEncoderValue);
                 prevEncoderValue = currentEncoderValue;
@@ -115,6 +115,11 @@ void processState(CWG_LCD &lcd) {
                     smokerState = setTempUnits;  // enter sub-menu to set meat done temperature target
                     break;
                 }
+            }
+
+            if (button.triggered(HOLD)) {
+                smokerState = launchPad;  // return to launchPad menu (one level up)
+                hasRunFlag = 0;           // allow another reset of encoder scale range
             }
 
             /* if (encoder.moved()) {

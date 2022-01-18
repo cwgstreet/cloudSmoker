@@ -263,7 +263,7 @@ void CWG_LCD::showSplashScreen(bool degCFlag, float meatDoneTemp, float pitTempT
 }
 
 void CWG_LCD::showLaunchPad() {
-    lcd.printMenuLine_noArrow("Cook: LongPress");
+    lcd.printMenuLine_noArrow("Cook: ShortPress");
     lcd.printMenuLine_noArrow("Config: DblPress");
 }
 
@@ -379,6 +379,21 @@ void CWG_LCD::showSettingsMenu(int16_t currentEncoderValue) {
         case 7:
             menuSelectLine = 1;
             lcd.printMenuLine("Units [F]/C");
+            lcd.printMenuLine("Hold to Return\004");
+#ifdef DEBUG
+            if (encoder.moved()) {
+                Serial.println();
+                Serial.print(F("CWG_LCD::showSettingsMenu Case 7: -> prevEncoderValue:  "));
+                Serial.print(prevEncoderValue);
+                Serial.print(F(" / currentEncoderValue: "));  //debug
+                Serial.println(currentEncoderValue);
+            }
+#endif
+            break;
+
+        case 8:
+            menuSelectLine = 1;
+            lcd.printMenuLine("Hold to Return\004");
             lcd.printMenuLine_noArrow("<Turn to scroll>");
 #ifdef DEBUG
             if (encoder.moved()) {
