@@ -58,8 +58,12 @@ class CWG_LCD : public hd44780_I2Cexp {
     void showSplashScreen(bool degCFlag, float meatDoneTemp, float pitTempTarget);
     void showLaunchPad();
     void showSettingsMenu(int16_t currentEncoderValue);
-    void getMeatDoneTempMsg(char (&messageBuffer)[17], bool degCFlag, float meatDoneTemp);
-    void getPitTempTargetMsg(char (&messageBuffer)[17], bool degCFlag, float pitTempTarget);
+    //void getMeatDoneTempMsg(char (&messageBuffer)[17], bool degCFlag, float meatDoneTemp);
+    //void getPitTempTargetMsg(char (&messageBuffer)[17], bool degCFlag, float pitTempTarget);
+    
+    // degCFlag == 1 for Deg C, meatTargetFlag == 1 for meatTemp else pitTemp, adjTempFlag == 1 for setting temperatures
+    void getTargetTemperatureMsg(char (&messageBuffer)[17], bool degCFlag, float targetTemperature, bool meatTargetFlag, bool adjTempFlag);
+
     void showSetMeatDoneTempMenu(int16_t currentEncoderValue);
     void showSetPitTempTargetMenu(int16_t currentEncoderValue);
     void showSetTempUnitsMenu(int16_t currentEncoderValue);
