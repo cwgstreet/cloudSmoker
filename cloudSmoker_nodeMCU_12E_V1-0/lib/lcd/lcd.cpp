@@ -143,13 +143,13 @@ const uint8_t lcd_custChar_arrdown[8] PROGMEM = {
  */
 
 const uint8_t lcd_custChar_selectArrLeft[8] PROGMEM = {
-    B01000,   //      *
-    B01100,   //     **
+    B00010,   //      *
+    B00110,   //     **
     B01110,   //    ***
-    B01111,   //   ****
+    B11110,   //   ****
     B01110,   //    ***
-    B01100,   //     **
-    B01000,   //      *
+    B00110,   //     **
+    B00010,   //      *
     B00000};  //         custom made
 
 //const uint8_t lcd_custChar_selectArrRight[8] PROGMEM = {
