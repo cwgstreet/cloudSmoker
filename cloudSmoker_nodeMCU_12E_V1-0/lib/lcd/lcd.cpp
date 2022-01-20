@@ -437,9 +437,6 @@ void CWG_LCD::showSettingsMenu(int16_t currentEncoderValue) {
     }
 }
 
-// TO-DO:  combine getMeatDoneTempMsg and getPitTempTargetMsg functions into single function
-//            perhaps using a meat or pit focus flag as an argument?
-
 void CWG_LCD::getTargetTemperatureMsg(char (&messageBuffer)[17], bool degCFlag, float targetTemperature, bool meatTargetFlag, bool adjTempFlag) {
     char TemperatureStr[4];  // empty array to hold converted (to string) float meat temp + null
 
@@ -479,37 +476,6 @@ void CWG_LCD::getTargetTemperatureMsg(char (&messageBuffer)[17], bool degCFlag, 
     }
 }
 
-/* void CWG_LCD::getMeatDoneTempMsg(char (&messageBuffer)[17], bool degCFlag, float meatDoneTemp) {
-    char meatDoneTempStr[4];  // empty array to hold converted (to string) float meat temp + null
-
-    // TO-DO: array out of bounds error checking
-    if (degCFlag == 1) {
-        float meatDoneTempC = convertDegFtoDegC(meatDoneTemp);
-        dtostrf(meatDoneTempC, 3, 0, meatDoneTempStr);  // (float var to convert, width==3, 0==no digits after decimal, char arra for output)
-        // sprintf:  15 characters + null; Octal escape chars: \x5B = [  \x5D = ], /001 = degC custom char
-        sprintf(messageBuffer, "Meat done\x5B%s\x5D\001", meatDoneTempStr);
-    } else {
-        dtostrf(meatDoneTemp, 3, 0, meatDoneTempStr);  // width==3, no digits after decimal
-        // sprintf:  15 characters + null; Octal escape chars: \x5B = [  \x5D = ], /001 = degC custom char
-        sprintf(messageBuffer, "Meat done\x5B%s\x5D\002", meatDoneTempStr);
-    }
-}
-
-void CWG_LCD::getPitTempTargetMsg(char (&messageBuffer)[17], bool degCFlag, float pitTempTarget) {
-    char pitTempTargetStr[4];  // empty array to hold converted (to string) float meat temp + null
-
-    // TO-DO: array out of bounds error checking
-    if (degCFlag == 1) {
-        float pitTempTargetC = convertDegFtoDegC(pitTempTarget);
-        dtostrf(pitTempTargetC, 3, 0, pitTempTargetStr);  // (float var to convert, width==3, 0==no digits after decimal, char arra for output)
-        // sprintf:  15 characters + null; Octal escape chars: \x5B = [  \x5D = ], /001 = degC custom char
-        sprintf(messageBuffer, "Pit temp\x5B%s\x5D\001", pitTempTargetStr);
-    } else {
-        dtostrf(pitTempTarget, 3, 0, pitTempTargetStr);  // width==3, no digits after decimal
-        // sprintf:  15 characters + null; Octal escape chars: \x5B = [  \x5D = ], /001 = degF custom char
-        sprintf(messageBuffer, "Pit temp\x5B%s\x5D\002", pitTempTargetStr);
-    }
-} */
 
 void CWG_LCD::showSetMeatDoneTempMenu(int16_t prevEncoderValue) {
     /* Serial.println();
