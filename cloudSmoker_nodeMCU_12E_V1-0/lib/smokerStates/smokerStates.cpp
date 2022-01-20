@@ -93,6 +93,7 @@ void processState(CWG_LCD &lcd) {
 
                 if (prevEncoderValue == 4) {
                     smokerState = setMeatDoneTemp;  // enter sub-menu to set meat done temperature target
+                    hasRunFlag = 0;                 //reset flag for next encoder scale change
 
                     //debug statements
                     Serial.println();
@@ -136,10 +137,56 @@ void processState(CWG_LCD &lcd) {
         } break;
 
         case setMeatDoneTemp: {
-            lcd.printMenuLine("sm MeatDoneTemp");  // temporary to confirm navigation branch
-            // code here
-        } break;
+            lcd.showSetMeatDoneTempMenu(prevEncoderValue);
+            currentEncoderValue = encoder.getCount();
 
+            // reset encoder scale to match number of menu list items
+            if (hasRunFlag == 0) {
+                Serial.println(F("Run Once! (hasRunFlag == 0); Changing Encoder Settings - setMeatDoneTemp"));
+                encoder.newSettings(0, 2, 0, currentEncoderState);
+                currentEncoderValue = currentEncoderState.currentValue;  //do I need this line?  Check
+                Serial.println(currentEncoderValue);
+                prevEncoderValue = currentEncoderValue;
+
+                Serial.print(F("hasRunFlag Block SetMeatDoneTemp -> prevEncoderValue = "));
+                Serial.println(prevEncoderValue);
+
+                hasRunFlag = 1;  // ensure settings are only changed once given this is part of loop()
+            }
+
+            // Select & Tap to set meatDoneTemp setting
+            if (button.triggered(SINGLE_TAP)) {
+                if (prevEncoderValue == 1) {
+                    hasRunFlag = 0;  //reset hasRunFlag
+                    bool adjustTempFlag = 1;
+                    float temporaryMeatDoneTemp;  // temporary variable while desired meat done temperature is being adjusted
+
+                    while (adjustTempFlag) {
+                        /* set
+                        1) set new encoder range - run once block  
+                        2) run show adjust temp 
+                        3)  get encoder count
+                        4)  
+                        4)   call function CWG_LCD:: adjustMeatDoneTempMsg
+
+                        */
+
+                        // exit temperature adjustment loop upon next button press
+                        if (button.triggered(SINGLE_TAP)) {
+                            adjustTempFlag = 0;
+                            meatDoneTemp = temporaryMeatDoneTemp;
+                        }
+                    }
+                }
+
+                // hold to exit
+                if (button.triggered(HOLD)) {
+                    smokerState = launchPad;  // return to launchPad menu (one level up)
+                    hasRunFlag = 0;           // allow another reset of encoder scale range
+                }
+            }
+            break;
+        }
         case setPitTempTarget: {
             lcd.printMenuLine("sm setpitTemp");  // temporary to confirm navigation branch
             // code here

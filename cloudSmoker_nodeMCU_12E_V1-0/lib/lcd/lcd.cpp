@@ -129,6 +129,8 @@ const uint8_t lcd_custChar_arrup[8] PROGMEM = {
     B00000,   //
     B00000};  //         Source: Prusa
 
+// Surplus symbol - swapped out as not used and limited to 8 special characters
+/* 
 const uint8_t lcd_custChar_arrdown[8] PROGMEM = {
     B00000,   //
     B00000,   //
@@ -138,9 +140,20 @@ const uint8_t lcd_custChar_arrdown[8] PROGMEM = {
     B11111,   //  *****
     B01110,   //   ***
     B00100};  //    *    Source: Prusa
+ */
 
-//const uint8_t lcd_custChar_selectarr[8] PROGMEM = {
-const char lcd_custChar_selectarr[8] PROGMEM = {
+const char lcd_custChar_selectArrLeft[8] PROGMEM = {
+    B01000,   //      *
+    B01100,   //     **
+    B01110,   //    ***
+    B01111,   //   ****
+    B01110,   //    ***
+    B01100,   //     **
+    B01000,   //      *
+    B00000};  //         custom made
+
+//const uint8_t lcd_custChar_selectArrRight[8] PROGMEM = {
+const char lcd_custChar_selectArrRight[8] PROGMEM = {
     B01000,   //   *
     B01100,   //   **
     B01110,   //   ***
@@ -158,8 +171,9 @@ void CWG_LCD::initialiseCustomCharSet() {
     lcd.createChar(3, lcd_custChar_thermometer);
     lcd.createChar(4, lcd_custChar_uplevel);
     lcd.createChar(5, lcd_custChar_arrup);
-    lcd.createChar(6, lcd_custChar_arrdown);
-    lcd.createChar(7, lcd_custChar_selectarr);
+    //lcd.createChar(6, lcd_custChar_arrdown); // substituted out for symbol below
+    lcd.createChar(6, lcd_custChar_selectArrLeft);
+    lcd.createChar(7, lcd_custChar_selectArrRight);
 }
 
 // confirming functionality of lcd display of special characters
@@ -269,7 +283,7 @@ void CWG_LCD::showLaunchPad() {
 
 void CWG_LCD::showSettingsMenu(int16_t currentEncoderValue) {
     switch (currentEncoderValue) {
-        case 1:
+        case 1:  // first line instructions
             menuSelectLine = 1;
             lcd.printMenuLine_noArrow("<Turn to scroll>");
             lcd.printMenuLine("<Press to set");
@@ -284,7 +298,7 @@ void CWG_LCD::showSettingsMenu(int16_t currentEncoderValue) {
 #endif
             break;
 
-        case 2:
+        case 2:  // next line instructions
             menuSelectLine = 0;
             lcd.printMenuLine("<Press to set>");
             lcd.printMenuLine("<Hold to exit>");
@@ -301,7 +315,7 @@ void CWG_LCD::showSettingsMenu(int16_t currentEncoderValue) {
 #endif
             break;
 
-        case 3:
+        case 3:  // 3rd line instructions
             menuSelectLine = 1;
             lcd.printMenuLine("<Press to set>");
             lcd.printMenuLine("<Hold to exit>");
@@ -316,10 +330,12 @@ void CWG_LCD::showSettingsMenu(int16_t currentEncoderValue) {
 #endif
             break;
 
-        case 4:
+        case 4: {  // meatTemperatureTarget setting
             menuSelectLine = 1;
             lcd.printMenuLine("<Hold to exit>");
-            getMeatDoneTempMsg(messageBuffer, degCFlag, meatDoneTemp);
+            bool meatTargetFlag = 1;
+            bool adjTempFlag = 0;
+            getTargetTemperatureMsg(messageBuffer, degCFlag, meatDoneTemp, meatTargetFlag, adjTempFlag);
             lcd.printMenuLine(messageBuffer);
 #ifdef DEBUG
             if (encoder.moved()) {
@@ -330,13 +346,17 @@ void CWG_LCD::showSettingsMenu(int16_t currentEncoderValue) {
                 Serial.println(currentEncoderValue);
             }
 #endif
-            break;
+        } break;
 
-        case 5:
+        case 5: {  // pitTemperatureTarget setting
             menuSelectLine = 1;
-            getMeatDoneTempMsg(messageBuffer, degCFlag, meatDoneTemp);
+            bool meatTargetFlag = 1;
+            bool adjTempFlag = 0;
+            getTargetTemperatureMsg(messageBuffer, degCFlag, meatDoneTemp, meatTargetFlag, adjTempFlag);
             lcd.printMenuLine(messageBuffer);
-            getPitTempTargetMsg(messageBuffer, degCFlag, pitTempTarget);
+            meatTargetFlag = 0;
+            adjTempFlag = 0;
+            getTargetTemperatureMsg(messageBuffer, degCFlag, pitTempTarget, meatTargetFlag, adjTempFlag);
             lcd.printMenuLine(messageBuffer);
 #ifdef DEBUG
             if (encoder.moved()) {
@@ -352,11 +372,13 @@ void CWG_LCD::showSettingsMenu(int16_t currentEncoderValue) {
                 Serial.print(F("CWG_LCD::showSettingsMenu smokerState = "));
                 Serial.println(smokerState);
             } */
-            break;
+        } break;
 
-        case 6:
-            menuSelectLine = 1;
-            getPitTempTargetMsg(messageBuffer, degCFlag, pitTempTarget);
+        case 6: {
+            menuSelectLine = 1;  // Temperature Units setting
+            bool meatTargetFlag = 0;
+            bool adjTempFlag = 0;
+            getTargetTemperatureMsg(messageBuffer, degCFlag, pitTempTarget, meatTargetFlag, adjTempFlag);
             lcd.printMenuLine(messageBuffer);
             lcd.printMenuLine("Units [F]/C");
 
@@ -374,9 +396,9 @@ void CWG_LCD::showSettingsMenu(int16_t currentEncoderValue) {
                 Serial.print(F("CWG_LCD::showSettingsMenu smokerState = "));
                 Serial.println(smokerState);
             } */
-            break;
+        } break;
 
-        case 7:
+        case 7: {  // instruction to go up level
             menuSelectLine = 1;
             lcd.printMenuLine("Units [F]/C");
             lcd.printMenuLine("Hold to Return\004");
@@ -389,9 +411,9 @@ void CWG_LCD::showSettingsMenu(int16_t currentEncoderValue) {
                 Serial.println(currentEncoderValue);
             }
 #endif
-            break;
+        } break;
 
-        case 8:
+        case 8: {  // wrap to beginning
             menuSelectLine = 1;
             lcd.printMenuLine("Hold to Return\004");
             lcd.printMenuLine_noArrow("<Turn to scroll>");
@@ -404,11 +426,53 @@ void CWG_LCD::showSettingsMenu(int16_t currentEncoderValue) {
                 Serial.println(currentEncoderValue);
             }
 #endif
-            break;
+        } break;
     }
 }
 
-void CWG_LCD::getMeatDoneTempMsg(char (&messageBuffer)[17], bool degCFlag, float meatDoneTemp) {
+// TO-DO:  combine getMeatDoneTempMsg and getPitTempTargetMsg functions into single function
+//            perhaps using a meat or pit focus flag as an argument?
+
+void CWG_LCD::getTargetTemperatureMsg(char (&messageBuffer)[17], bool degCFlag, float targetTemperature, bool meatTargetFlag, bool adjTempFlag) {
+    char TemperatureStr[4];  // empty array to hold converted (to string) float meat temp + null
+
+    // TO-DO: array out of bounds error checking
+    if (degCFlag == 1) {  // degC branch
+        float targetTemperatureC = convertDegFtoDegC(targetTemperature);
+        dtostrf(targetTemperatureC, 3, 0, TemperatureStr);  // (float var to convert, width==3, 0==no digits after decimal, char arra for output)
+        // sprintf:  15 characters + null; Octal escape chars: \x5B = [  \x5D = ], /001 = degC custom char,  /007 /008 (/x7 or /x8) are custom character arrows
+        if (meatTargetFlag) {  // focus: meatDoneTemp
+            sprintf(messageBuffer, "Meat done\x5B%s\x5D\001", TemperatureStr);
+            if (adjTempFlag) {
+                sprintf(messageBuffer, "Meat done\x8%s\x7\001", TemperatureStr);
+            }
+        } else {  // else focus: pitTemp
+            sprintf(messageBuffer, "Pit temp\x5B%s\x5D\001", TemperatureStr);
+            if (adjTempFlag) {
+                sprintf(messageBuffer, "Pit temp\x8%s\x7\001", TemperatureStr);
+            }
+        }
+    } else {
+        // else degF branch
+        dtostrf(targetTemperature, 3, 0, TemperatureStr);  // width==3, no digits after decimal
+        // sprintf:  15 characters + null; Octal escape chars: \x5B = [  \x5D = ], /001 = degC custom char
+        if (meatTargetFlag) {
+            // focus: meatDoneTemp branch
+            sprintf(messageBuffer, "Meat done\x5B%s\x5D\002", TemperatureStr);
+            if (adjTempFlag) {
+                sprintf(messageBuffer, "Meat done\x8%s\x7\002", TemperatureStr);
+            }
+        } else {
+            // else focus: pitTemp
+            sprintf(messageBuffer, "Pit temp\x5B%s\x5D\002", TemperatureStr);
+            if (adjTempFlag) {
+                sprintf(messageBuffer, "Pit temp\x8%s\x7\002", TemperatureStr);
+            }
+        }
+    }
+}
+
+/* void CWG_LCD::getMeatDoneTempMsg(char (&messageBuffer)[17], bool degCFlag, float meatDoneTemp) {
     char meatDoneTempStr[4];  // empty array to hold converted (to string) float meat temp + null
 
     // TO-DO: array out of bounds error checking
@@ -438,18 +502,78 @@ void CWG_LCD::getPitTempTargetMsg(char (&messageBuffer)[17], bool degCFlag, floa
         // sprintf:  15 characters + null; Octal escape chars: \x5B = [  \x5D = ], /001 = degF custom char
         sprintf(messageBuffer, "Pit temp\x5B%s\x5D\002", pitTempTargetStr);
     }
-}
+} */
 
-void CWG_LCD::showSetMeatDoneTempMenu(int16_t currentEncoderValue) {
-    // code here
+void CWG_LCD::showSetMeatDoneTempMenu(int16_t prevEncoderValue) {
+    /* Serial.println();
+    Serial.println(F("entering showSetMeatDoneTempMenu "));  //debug
+ */
+    switch (prevEncoderValue) {
+        case 0: {
+            menuSelectLine = 0;
+            lcd.printMenuLine_noArrow(" Select&Tap\007 set");
+            //lcd.printMenuLine("Tap to set temp");
+            bool meatTargetFlag = 1;
+            bool adjTempFlag = 0;
+            getTargetTemperatureMsg(messageBuffer, degCFlag, meatDoneTemp, meatTargetFlag, adjTempFlag);
+            lcd.printMenuLine(messageBuffer);
+#ifdef DEBUG
+            if (encoder.moved()) {
+                Serial.println();
+                Serial.print(F("Case 0 showSetMeatDoneTempMenu -> prevEncoderValue = "));
+                Serial.println(prevEncoderValue);
+            }
+#endif
+        } break;
+
+        case 1: {
+            menuSelectLine = 1;
+            lcd.printMenuLine("Select&Tap\007 set");
+            //lcd.printMenuLine("Tap to set temp");
+            bool meatTargetFlag = 1;
+            bool adjTempFlag = 0;
+            getTargetTemperatureMsg(messageBuffer, degCFlag, meatDoneTemp, meatTargetFlag, adjTempFlag);
+            lcd.printMenuLine(messageBuffer);
+#ifdef DEBUG
+            if (encoder.moved()) {
+                Serial.println();
+                Serial.print(F("Case 1 showSetMeatDoneTempMenu -> prevEncoderValue = "));
+                Serial.println(prevEncoderValue);
+            }
+#endif
+        } break;
+
+        case 2: {
+            menuSelectLine = 1;
+            bool meatTargetFlag = 1;
+            bool adjTempFlag = 0;
+            getTargetTemperatureMsg(messageBuffer, degCFlag, meatDoneTemp, meatTargetFlag, adjTempFlag);
+            lcd.printMenuLine(messageBuffer);
+            lcd.printMenuLine("Hold to Return\004");
+#ifdef DEBUG
+            if (encoder.moved()) {
+                Serial.println();
+                Serial.print(F("Case 2 showSetMeatDoneTempMenu -> prevEncoderValue = "));
+                Serial.println(prevEncoderValue);
+            }
+#endif
+        } break;
+    }
 }
 
 void CWG_LCD::showSetPitTempTargetMenu(int16_t currentEncoderValue) {
-    // code here
+    /* switch (currentEncoderValue) {
+        case 0:
+            // code
+            break;
+
+        case 1:
+            // code
+            break;
+    } */
 }
 
 void CWG_LCD::showSetTempUnitsMenu(int16_t currentEncoderValue) {
-    // reset encoder - to 0,1,0 must run once
     switch (currentEncoderValue) {
         case 0:
             //Serial.println("case 0 SetTempUnits");
