@@ -66,6 +66,9 @@ class CWG_LCD : public hd44780_I2Cexp {
     void showSetPitTempTargetMenu(int16_t currentEncoderValue);
     void showSetTempUnitsMenu(int16_t currentEncoderValue);
 
+    // meatTargetFlag = 1 for meatDoneTemp, else pitTemp
+    void showTemeratureTargetAdjustment(int16_t currentEncoderValue, bool meatTargetFlag);
+
     //void getTempMsg(char (&messageBuffer)[17], bool degCFlag, float tempVariable);  //need to finish
 
    private:

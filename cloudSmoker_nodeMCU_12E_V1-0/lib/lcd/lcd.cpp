@@ -476,7 +476,6 @@ void CWG_LCD::getTargetTemperatureMsg(char (&messageBuffer)[17], bool degCFlag, 
     }
 }
 
-
 void CWG_LCD::showSetMeatDoneTempMenu(int16_t prevEncoderValue) {
     /* Serial.println();
     Serial.println(F("entering showSetMeatDoneTempMenu "));  //debug
@@ -614,6 +613,14 @@ void CWG_LCD::showSetTempUnitsMenu(int16_t currentEncoderValue) {
 #endif
             break;
     }
+}
+
+void CWG_LCD::showTemeratureTargetAdjustment(int16_t currentEncoderValue, bool meatTargetFlag) {
+    bool adjTempFlag = 1;
+    menuSelectLine = 1;
+    lcd.printMenuLine("Set: Rotate/tap");
+    getTargetTemperatureMsg(messageBuffer, degCFlag, prevEncoderValue, meatTargetFlag, adjTempFlag);
+    lcd.printMenuLine(messageBuffer);
 }
 
 /* 

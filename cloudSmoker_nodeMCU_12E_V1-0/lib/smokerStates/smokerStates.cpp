@@ -162,6 +162,28 @@ void processState(CWG_LCD &lcd) {
                     float temporaryMeatDoneTemp;  // temporary variable while desired meat done temperature is being adjusted
 
                     while (adjustTempFlag) {
+                        // reset encoder scale to match number of menu list items
+                        if (hasRunFlag == 0) {
+                            Serial.println(F("Run Once! (hasRunFlag == 0); Changing Encoder Settings - setMeatDoneTemp inside block"));
+                            if (degCFlag) {
+                                encoder.newSettings(90, 105, 95, currentEncoderState);
+                            } else {
+                                encoder.newSettings(122, 220, 203, currentEncoderState);
+                            }
+                            currentEncoderValue = currentEncoderState.currentValue;  //do I need this line?  Check
+                            Serial.println(currentEncoderValue);
+                            prevEncoderValue = currentEncoderValue;
+
+                            Serial.print(F("hasRunFlag2 Inside Block SetMeatDoneTemp -> prevEncoderValue = "));
+                            Serial.println(prevEncoderValue);
+
+                            hasRunFlag = 1;  // ensure settings are only changed once given this is part of loop()
+                        }
+
+                        bool meatTargetFlag = 1; 
+                        lcd.showTemeratureTargetAdjustment(prevEncoderValue, meatTargetFlag);
+                        currentEncoderValue = encoder.getCount();
+
                         /* set
                         1) set new encoder range - run once block  
                         2) run show adjust temp 
