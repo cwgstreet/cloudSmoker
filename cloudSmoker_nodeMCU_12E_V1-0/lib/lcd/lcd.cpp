@@ -142,7 +142,7 @@ const uint8_t lcd_custChar_arrdown[8] PROGMEM = {
     B00100};  //    *    Source: Prusa
  */
 
-const char lcd_custChar_selectArrLeft[8] PROGMEM = {
+const uint8_t lcd_custChar_selectArrLeft[8] PROGMEM = {
     B01000,   //      *
     B01100,   //     **
     B01110,   //    ***
@@ -153,7 +153,7 @@ const char lcd_custChar_selectArrLeft[8] PROGMEM = {
     B00000};  //         custom made
 
 //const uint8_t lcd_custChar_selectArrRight[8] PROGMEM = {
-const char lcd_custChar_selectArrRight[8] PROGMEM = {
+const uint8_t lcd_custChar_selectArrRight[8] PROGMEM = {
     B01000,   //   *
     B01100,   //   **
     B01110,   //   ***
@@ -437,6 +437,7 @@ void CWG_LCD::showSettingsMenu(int16_t currentEncoderValue) {
     }
 }
 
+// getTargetTemperatureMsg(messageBuffer, degCFlag, temporaryTemperatureTarget, meatTargetFlag, adjTempFlag);
 void CWG_LCD::getTargetTemperatureMsg(char (&messageBuffer)[17], bool degCFlag, float targetTemperature, bool meatTargetFlag, bool adjTempFlag) {
     char TemperatureStr[4];  // empty array to hold converted (to string) float meat temp + null
 
@@ -448,12 +449,12 @@ void CWG_LCD::getTargetTemperatureMsg(char (&messageBuffer)[17], bool degCFlag, 
         if (meatTargetFlag) {  // focus: meatDoneTemp
             sprintf(messageBuffer, "Meat done\x5B%s\x5D\001", TemperatureStr);
             if (adjTempFlag) {
-                sprintf(messageBuffer, "Meat done\x8%s\x7\001", TemperatureStr);
+                sprintf(messageBuffer, "Meat done\x6%s\x7\001", TemperatureStr);
             }
         } else {  // else focus: pitTemp
             sprintf(messageBuffer, "Pit temp\x5B%s\x5D\001", TemperatureStr);
             if (adjTempFlag) {
-                sprintf(messageBuffer, "Pit temp\x8%s\x7\001", TemperatureStr);
+                sprintf(messageBuffer, "Pit temp\x6%s\x7\001", TemperatureStr);
             }
         }
     } else {
@@ -464,13 +465,13 @@ void CWG_LCD::getTargetTemperatureMsg(char (&messageBuffer)[17], bool degCFlag, 
             // focus: meatDoneTemp branch
             sprintf(messageBuffer, "Meat done\x5B%s\x5D\002", TemperatureStr);
             if (adjTempFlag) {
-                sprintf(messageBuffer, "Meat done\x8%s\x7\002", TemperatureStr);
+                sprintf(messageBuffer, "Meat done\x6%s\x7\002", TemperatureStr);  // PROBLEM: \x6 not working -> displaying as \x7
             }
         } else {
             // else focus: pitTemp
             sprintf(messageBuffer, "Pit temp\x5B%s\x5D\002", TemperatureStr);
             if (adjTempFlag) {
-                sprintf(messageBuffer, "Pit temp\x8%s\x7\002", TemperatureStr);
+                sprintf(messageBuffer, "Pit temp\x6%s\x7\002", TemperatureStr);
             }
         }
     }
@@ -615,11 +616,21 @@ void CWG_LCD::showSetTempUnitsMenu(int16_t currentEncoderValue) {
     }
 }
 
-void CWG_LCD::showTemeratureTargetAdjustment(int16_t currentEncoderValue, bool meatTargetFlag) {
+void CWG_LCD::showTemeratureTargetAdjustment(float temporaryTemperatureTarget, bool meatTargetFlag) {
     bool adjTempFlag = 1;
+
+    //debug
+    Serial.print(F("showTemeratureTargetAdjustment -> temporaryTemperatureTarget = "));
+    Serial.print(temporaryTemperatureTarget);
+    Serial.print(F(" / meatTargetFlag = "));
+    Serial.print(meatTargetFlag);
+    Serial.print(F(" / adjTempFlag = "));
+    Serial.println(adjTempFlag);
+    // end debug
+
     menuSelectLine = 1;
     lcd.printMenuLine("Set: Rotate/tap");
-    getTargetTemperatureMsg(messageBuffer, degCFlag, prevEncoderValue, meatTargetFlag, adjTempFlag);
+    getTargetTemperatureMsg(messageBuffer, degCFlag, temporaryTemperatureTarget, meatTargetFlag, adjTempFlag);
     lcd.printMenuLine(messageBuffer);
 }
 

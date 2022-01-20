@@ -1,0 +1,47 @@
+Date : 2022-01-20 15:59:42
+Directory : /Users/carlwgreenstreet/Documents/PlatformIO/Projects/cloudSmoker/cloudSmoker_nodeMCU_12E_V1-0
+Total : 14 files,  1041 codes, 479 comments, 234 blanks, all 1754 lines
+
+Languages
++----------+------------+------------+------------+------------+------------+
+| language | files      | code       | comment    | blank      | total      |
++----------+------------+------------+------------+------------+------------+
+| C++      |         13 |      1,030 |        466 |        231 |      1,727 |
+| Ini      |          1 |         11 |         13 |          3 |         27 |
++----------+------------+------------+------------+------------+------------+
+
+Directories
++------------------------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                                                                     | files      | code       | comment    | blank      | total      |
++------------------------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                                                        |         14 |      1,041 |        479 |        234 |      1,754 |
+| lib                                                                                                                                      |         12 |        980 |        355 |        206 |      1,541 |
+| lib/helper_functions                                                                                                                     |          2 |         24 |         24 |         12 |         60 |
+| lib/lcd                                                                                                                                  |          2 |        527 |        129 |         74 |        730 |
+| lib/periphials                                                                                                                           |          2 |         30 |         33 |         14 |         77 |
+| lib/press_type                                                                                                                           |          2 |         93 |         50 |         28 |        171 |
+| lib/smokerStates                                                                                                                         |          2 |        200 |         81 |         52 |        333 |
+| lib/wrapEncoder                                                                                                                          |          2 |        106 |         38 |         26 |        170 |
+| src                                                                                                                                      |          1 |         50 |        111 |         25 |        186 |
++------------------------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++------------------------------------------------------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| filename                                                                                                                                 | language | code       | comment    | blank      | total      |
++------------------------------------------------------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| /Users/carlwgreenstreet/Documents/PlatformIO/Projects/cloudSmoker/cloudSmoker_nodeMCU_12E_V1-0/lib/helper_functions/helper_functions.cpp | C++      |         10 |         14 |          6 |         30 |
+| /Users/carlwgreenstreet/Documents/PlatformIO/Projects/cloudSmoker/cloudSmoker_nodeMCU_12E_V1-0/lib/helper_functions/helper_functions.h   | C++      |         14 |         10 |          6 |         30 |
+| /Users/carlwgreenstreet/Documents/PlatformIO/Projects/cloudSmoker/cloudSmoker_nodeMCU_12E_V1-0/lib/lcd/lcd.cpp                           | C++      |        486 |        102 |         55 |        643 |
+| /Users/carlwgreenstreet/Documents/PlatformIO/Projects/cloudSmoker/cloudSmoker_nodeMCU_12E_V1-0/lib/lcd/lcd.h                             | C++      |         41 |         27 |         19 |         87 |
+| /Users/carlwgreenstreet/Documents/PlatformIO/Projects/cloudSmoker/cloudSmoker_nodeMCU_12E_V1-0/lib/periphials/periphials.cpp             | C++      |         12 |         17 |          5 |         34 |
+| /Users/carlwgreenstreet/Documents/PlatformIO/Projects/cloudSmoker/cloudSmoker_nodeMCU_12E_V1-0/lib/periphials/periphials.h               | C++      |         18 |         16 |          9 |         43 |
+| /Users/carlwgreenstreet/Documents/PlatformIO/Projects/cloudSmoker/cloudSmoker_nodeMCU_12E_V1-0/lib/press_type/press_type.cpp             | C++      |         65 |         27 |         15 |        107 |
+| /Users/carlwgreenstreet/Documents/PlatformIO/Projects/cloudSmoker/cloudSmoker_nodeMCU_12E_V1-0/lib/press_type/press_type.h               | C++      |         28 |         23 |         13 |         64 |
+| /Users/carlwgreenstreet/Documents/PlatformIO/Projects/cloudSmoker/cloudSmoker_nodeMCU_12E_V1-0/lib/smokerStates/smokerStates.cpp         | C++      |        178 |         66 |         44 |        288 |
+| /Users/carlwgreenstreet/Documents/PlatformIO/Projects/cloudSmoker/cloudSmoker_nodeMCU_12E_V1-0/lib/smokerStates/smokerStates.h           | C++      |         22 |         15 |          8 |         45 |
+| /Users/carlwgreenstreet/Documents/PlatformIO/Projects/cloudSmoker/cloudSmoker_nodeMCU_12E_V1-0/lib/wrapEncoder/wrapEncoder.cpp           | C++      |         75 |         16 |         13 |        104 |
+| /Users/carlwgreenstreet/Documents/PlatformIO/Projects/cloudSmoker/cloudSmoker_nodeMCU_12E_V1-0/lib/wrapEncoder/wrapEncoder.h             | C++      |         31 |         22 |         13 |         66 |
+| /Users/carlwgreenstreet/Documents/PlatformIO/Projects/cloudSmoker/cloudSmoker_nodeMCU_12E_V1-0/platformio.ini                            | Ini      |         11 |         13 |          3 |         27 |
+| /Users/carlwgreenstreet/Documents/PlatformIO/Projects/cloudSmoker/cloudSmoker_nodeMCU_12E_V1-0/src/cloudSmoker_nodeMCU_main.cpp          | C++      |         50 |        111 |         25 |        186 |
+| Total                                                                                                                                    |          |      1,041 |        479 |        234 |      1,754 |
++------------------------------------------------------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
