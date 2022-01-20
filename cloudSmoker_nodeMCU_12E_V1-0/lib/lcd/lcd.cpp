@@ -380,8 +380,11 @@ void CWG_LCD::showSettingsMenu(int16_t currentEncoderValue) {
             bool adjTempFlag = 0;
             getTargetTemperatureMsg(messageBuffer, degCFlag, pitTempTarget, meatTargetFlag, adjTempFlag);
             lcd.printMenuLine(messageBuffer);
-            lcd.printMenuLine("Units [F]/C");
-
+            if (degCFlag) {
+                lcd.printMenuLine("Units F/[C]");
+            } else {
+                lcd.printMenuLine("Units [F]/C");
+            }
 #ifdef DEBUG
             if (encoder.moved()) {
                 Serial.println();
@@ -400,7 +403,11 @@ void CWG_LCD::showSettingsMenu(int16_t currentEncoderValue) {
 
         case 7: {  // instruction to go up level
             menuSelectLine = 1;
-            lcd.printMenuLine("Units [F]/C");
+            if (degCFlag) {
+                lcd.printMenuLine("Units F/[C]");
+            } else {
+                lcd.printMenuLine("Units [F]/C");
+            }
             lcd.printMenuLine("Hold to Return\004");
 #ifdef DEBUG
             if (encoder.moved()) {
