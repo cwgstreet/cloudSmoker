@@ -47,10 +47,10 @@ void processState(CWG_LCD &lcd) {
 
                 hasRunFlag = 1;  // ensure settings are only changed once given this is part of loop()
             }
-            
+
             lcd.showLaunchPad();
             if (button.triggered(DOUBLE_TAP)) {
-                yield();  // Do (almost) nothing -- yield allows ESP8266 background functions
+                yield();         // Do (almost) nothing -- yield allows ESP8266 background functions
                 hasRunFlag = 0;  // reset flag for next encoder scale change
 
                 smokerState = changeSettings;  // enter config menu
@@ -141,9 +141,6 @@ void processState(CWG_LCD &lcd) {
                 Serial.println(currentEncoderValue);
                 prevEncoderValue = currentEncoderValue;
 
-                //Serial.print(F("hasRunFlag Block SetMeatDoneTemp -> prevEncoderValue = "));
-                //Serial.println(prevEncoderValue);
-
                 hasRunFlag = 1;  // ensure settings are only changed once given this is part of loop()
             }
 
@@ -167,28 +164,10 @@ void processState(CWG_LCD &lcd) {
                             Serial.println(currentEncoderValue);
                             prevEncoderValue = currentEncoderValue;
                             hasRunFlag = 1;  // ensure settings are only changed once given this is part of loop()
-
-                            /* Serial.print(F("hasRunFlag2 Inside Block SetMeatDoneTemp -> prevEncoderValue = "));
-                            Serial.println(prevEncoderValue);
-                            Serial.print(F(" / adjustTempFlag ="));
-                            Serial.print(adjustTempFlag); */
                         }
-                        
-                        // debug
-                        //Serial.println(F("while (adjustTempFlag) -> exited hasRunTest"));
-
                         bool meatTargetFlag = 1;
                         currentEncoderValue = encoder.getCount();
                         temporaryTemperatureTarget = prevEncoderValue;  // implicit conversion of int16_t prevEncoderValue to float temporaryTemperatureTarget
-
-                        //debug
-                        //if (encoder.moved()) {
-                        //Serial.print(F("while (adjustTempFlag) -> temporaryTemperatureTarget = "));
-                        //Serial.print(temporaryTemperatureTarget);
-                        //Serial.print(F(" / meatTargetFlag = "));
-                        //Serial.print(meatTargetFlag);
-                        //}
-                        // end debug
 
                         yield();  // Do (almost) nothing -- yield allows ESP8266 background functions
                         lcd.showTemeratureTargetAdjustment(temporaryTemperatureTarget, meatTargetFlag);
@@ -198,7 +177,7 @@ void processState(CWG_LCD &lcd) {
                             if (button.triggered(SINGLE_TAP)) {
                                 adjustTempFlag = 0;
                                 meatDoneTemp = temporaryTemperatureTarget;
-                                hasRunFlag = 0;                // allow another reset of encoder scale range
+                                hasRunFlag = 0;  // allow another reset of encoder scale range
                                 //smokerState = changeSettings;  // go up one level next loop
 
                                 //debug
@@ -227,16 +206,26 @@ void processState(CWG_LCD &lcd) {
 
                 // hold to exit
                 if (button.update()) {
-                    if (button.triggered(HOLD)) {
-                        smokerState = launchPad;  // return to launchPad menu (one level up)
-                        Serial.print(F("Hold press - going up one level; smokerState = "));
-                        Serial.println(smokerState);
-                        hasRunFlag = 0;           // allow another reset of encoder scale range
-                    }
+                //     if (button.triggered(HOLD)) {
+                //         smokerState = launchPad;  // return to launchPad menu (one level up)
+                //         Serial.print(F("Hold press - going up one level; smokerState = "));
+                //         Serial.println(smokerState);
+                //         hasRunFlag = 0;  // allow another reset of encoder scale range
+                //     }
                 }
             }
-            break;
-        }
+            //insert here
+            // hold to exit
+            // if (button.update()) {
+            //     if (button.triggered(HOLD)) {
+            //         smokerState = launchPad;  // return to launchPad menu (one level up)
+            //         Serial.print(F("Hold press - going up one level; smokerState = "));
+            //         Serial.println(smokerState);
+            //         //hasRunFlag = 0;  // allow another reset of encoder scale range
+            //     }
+            // }
+            
+        } break;
         case setPitTempTarget: {
             lcd.printMenuLine("sm setpitTemp");  // temporary to confirm navigation branch
             // code here
