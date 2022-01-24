@@ -37,9 +37,21 @@ void processState(CWG_LCD &lcd) {
         } break;
 
         case launchPad: {
+            // if neccessary, reset encoder scale to match number of menu list items
+            if (hasRunFlag == 0) {
+                Serial.println(F("Run Once! (launchPad::hasRunFlag == 0); Changing Encoder Settings - setTempUnits 0,1,0"));
+                encoder.newSettings(0, 1, 1, currentEncoderState);
+                currentEncoderValue = currentEncoderState.currentValue;  //do I need this line?  Check
+                Serial.println(currentEncoderValue);
+                prevEncoderValue = currentEncoderValue;
+
+                hasRunFlag = 1;  // ensure settings are only changed once given this is part of loop()
+            }
+            
             lcd.showLaunchPad();
             if (button.triggered(DOUBLE_TAP)) {
                 yield();  // Do (almost) nothing -- yield allows ESP8266 background functions
+                hasRunFlag = 0;  // reset flag for next encoder scale change
 
                 smokerState = changeSettings;  // enter config menu
             }
@@ -57,7 +69,7 @@ void processState(CWG_LCD &lcd) {
 
             // firstly, reset encoder scale to match number of Settings menu items (1 to 7)
             if (hasRunFlag == 0) {
-                Serial.println(F("Run Once! (hasRunFlag == 0); Changing Encoder Settings."));
+                Serial.println(F("Run Once! (changeSettings::hasRunFlag == 0); Changing Encoder Settings 1,8,1"));
                 encoder.newSettings(1, 8, 1, currentEncoderState);
                 //currentEncoderState.currentValue;  //do I need this line?  Check
                 Serial.println(currentEncoderValue);
@@ -86,7 +98,7 @@ void processState(CWG_LCD &lcd) {
 
                 if (prevEncoderValue == 4) {
                     smokerState = setMeatDoneTemp;  // enter sub-menu to set meat done temperature target
-                    hasRunFlag = 0;                 //reset flag for next encoder scale change
+                    hasRunFlag = 0;                 //reset flag to allow next encoder scale change
 
                     //debug statements
                     Serial.println();
@@ -115,7 +127,7 @@ void processState(CWG_LCD &lcd) {
                 smokerState = launchPad;  // return to launchPad menu (one level up)
                 hasRunFlag = 0;           // allow another reset of encoder scale range
             }
-         } break;
+        } break;
 
         case setMeatDoneTemp: {
             lcd.showSetMeatDoneTempMenu(prevEncoderValue);
@@ -123,14 +135,14 @@ void processState(CWG_LCD &lcd) {
 
             // reset encoder scale to match number of menu list items
             if (hasRunFlag == 0) {
-                Serial.println(F("Run Once! (hasRunFlag == 0); Changing Encoder Settings - setMeatDoneTemp"));
+                Serial.println(F("Run Once! (setMeatDoneTemp::hasRunFlag == 0); Changing Encoder Settings - "));
                 encoder.newSettings(0, 2, 0, currentEncoderState);
                 currentEncoderValue = currentEncoderState.currentValue;  //do I need this line?  Check
                 Serial.println(currentEncoderValue);
                 prevEncoderValue = currentEncoderValue;
 
-                Serial.print(F("hasRunFlag Block SetMeatDoneTemp -> prevEncoderValue = "));
-                Serial.println(prevEncoderValue);
+                //Serial.print(F("hasRunFlag Block SetMeatDoneTemp -> prevEncoderValue = "));
+                //Serial.println(prevEncoderValue);
 
                 hasRunFlag = 1;  // ensure settings are only changed once given this is part of loop()
             }
@@ -145,7 +157,7 @@ void processState(CWG_LCD &lcd) {
                     while (adjustTempFlag) {
                         // reset encoder scale to match number of menu list items
                         if (hasRunFlag == 0) {
-                            Serial.println(F("Run Once! (hasRunFlag == 0); Changing Encoder Settings - setMeatDoneTemp inside block"));
+                            Serial.println(F("Run Once! (setMeatDoneTemp inside block::hasRunFlag == 0); Changing Encoder Settings 122,220,203 or 90,105,95 "));
                             if (degCFlag) {
                                 encoder.newSettings(90, 105, 95, currentEncoderState);
                             } else {
@@ -154,31 +166,73 @@ void processState(CWG_LCD &lcd) {
                             currentEncoderValue = currentEncoderState.currentValue;  //do I need this line?  Check
                             Serial.println(currentEncoderValue);
                             prevEncoderValue = currentEncoderValue;
-
-                            Serial.print(F("hasRunFlag2 Inside Block SetMeatDoneTemp -> prevEncoderValue = "));
-                            Serial.println(prevEncoderValue);
-
                             hasRunFlag = 1;  // ensure settings are only changed once given this is part of loop()
+
+                            /* Serial.print(F("hasRunFlag2 Inside Block SetMeatDoneTemp -> prevEncoderValue = "));
+                            Serial.println(prevEncoderValue);
+                            Serial.print(F(" / adjustTempFlag ="));
+                            Serial.print(adjustTempFlag); */
                         }
-
-                        bool meatTargetFlag = 1; 
-                        currentEncoderValue = encoder.getCount();
-
-                        temporaryTemperatureTarget = prevEncoderValue; // implicit conversion of int16_t prevEncoderValue to float temporaryTemperatureTarget
-                        lcd.showTemeratureTargetAdjustment(temporaryTemperatureTarget, meatTargetFlag);
                         
+                        // debug
+                        //Serial.println(F("while (adjustTempFlag) -> exited hasRunTest"));
+
+                        bool meatTargetFlag = 1;
+                        currentEncoderValue = encoder.getCount();
+                        temporaryTemperatureTarget = prevEncoderValue;  // implicit conversion of int16_t prevEncoderValue to float temporaryTemperatureTarget
+
+                        //debug
+                        //if (encoder.moved()) {
+                        //Serial.print(F("while (adjustTempFlag) -> temporaryTemperatureTarget = "));
+                        //Serial.print(temporaryTemperatureTarget);
+                        //Serial.print(F(" / meatTargetFlag = "));
+                        //Serial.print(meatTargetFlag);
+                        //}
+                        // end debug
+
+                        yield();  // Do (almost) nothing -- yield allows ESP8266 background functions
+                        lcd.showTemeratureTargetAdjustment(temporaryTemperatureTarget, meatTargetFlag);
+
                         // exit temperature adjustment loop upon next button press
-                        if (button.triggered(SINGLE_TAP)) {
-                            adjustTempFlag = 0;
-                            meatDoneTemp = temporaryTemperatureTarget;
+                        if (button.update()) {
+                            if (button.triggered(SINGLE_TAP)) {
+                                adjustTempFlag = 0;
+                                meatDoneTemp = temporaryTemperatureTarget;
+                                hasRunFlag = 0;                // allow another reset of encoder scale range
+                                //smokerState = changeSettings;  // go up one level next loop
+
+                                //debug
+                                Serial.println();
+                                Serial.print(F("New meatDoneTemp value set -> new meatDoneTemp = "));
+                                Serial.println(meatDoneTemp);
+                                // end debug
+                                // reset encoder scale to match number of menu list items
+                                if (hasRunFlag == 0) {
+                                    Serial.println(F("Run Once! (return to changeSettings::hasRunFlag == 0); Changing Encoder Settings - setMeatDoneTemp 0,2,0"));
+                                    encoder.newSettings(0, 2, 0, currentEncoderState);
+                                    currentEncoderValue = currentEncoderState.currentValue;  //do I need this line?  Check
+                                    Serial.println(currentEncoderValue);
+                                    prevEncoderValue = currentEncoderValue;
+
+                                    //Serial.print(F("hasRunFlag Block SetMeatDoneTemp -> prevEncoderValue = "));
+                                    //Serial.println(prevEncoderValue);
+
+                                    hasRunFlag = 1;  // ensure settings are only changed once given this is part of loop()
+                                }
+                            }
                         }
                     }  // end While
+                    Serial.println(F("while (adjustTempFlag) -> exited while loop"));
                 }  //end if
 
                 // hold to exit
-                if (button.triggered(HOLD)) {
-                    smokerState = launchPad;  // return to launchPad menu (one level up)
-                    hasRunFlag = 0;           // allow another reset of encoder scale range
+                if (button.update()) {
+                    if (button.triggered(HOLD)) {
+                        smokerState = launchPad;  // return to launchPad menu (one level up)
+                        Serial.print(F("Hold press - going up one level; smokerState = "));
+                        Serial.println(smokerState);
+                        hasRunFlag = 0;           // allow another reset of encoder scale range
+                    }
                 }
             }
             break;
@@ -195,7 +249,7 @@ void processState(CWG_LCD &lcd) {
 
             // reset encoder scale to match number of menu list items
             if (hasRunFlag == 0) {
-                Serial.println(F("Run Once! (hasRunFlag == 0); Changing Encoder Settings - setTempUnits."));
+                Serial.println(F("Run Once! (setTempUnits::hasRunFlag == 0); Changing Encoder Settings 0,2,0"));
                 encoder.newSettings(0, 2, 0, currentEncoderState);
                 currentEncoderValue = currentEncoderState.currentValue;  //do I need this line?  Check
                 Serial.println(currentEncoderValue);

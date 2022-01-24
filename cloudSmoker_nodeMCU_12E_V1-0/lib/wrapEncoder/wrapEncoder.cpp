@@ -41,7 +41,7 @@ void WrapEncoder::initialise() {
     if (!encoder.begin()) {
         Serial.println(F("WrapEncoder::initialise -> Encoder Failed to Start. Check pin assignments and available interrupts. Aborting."));
         while (1) {
-            yield();
+            yield();  // Do (almost) nothing -- yield allows ESP8266 background functions
         }
     } else {
         encoder.getState(currentEncoderState);
@@ -57,13 +57,12 @@ int16_t WrapEncoder::getCount() {
     if (encoder.getState(currentEncoderState)) {
         currentEncoderValue = currentEncoderState.currentValue;
         if (currentEncoderValue != prevEncoderValue) {
-            
             Serial.println();
             Serial.print(F("WrapEncoder::getCount() Encoder: currentEncoderValue = "));
             Serial.print(currentEncoderValue);
             Serial.print(F(" / prevEncoderValue = "));
             Serial.println(prevEncoderValue);
-            
+
             prevEncoderValue = currentEncoderValue;
             return currentEncoderValue;
         }
@@ -91,7 +90,7 @@ bool WrapEncoder::moved() {
         //debug statements:
         Serial.println();
         Serial.println(F("   **WrapEncoder::moved() => Encoder Moved!  if (currentEncoderValue != prevEncoderValue)"));  //debug
-        Serial.print(F("exiting WrapEncoder::moved() -> prevEncoderValue: "));                                                   //debug
+        Serial.print(F("exiting WrapEncoder::moved() -> prevEncoderValue: "));                                           //debug
         Serial.print(prevEncoderValue);
         Serial.print(F(" / currentEncoderValue: "));  //debug
         Serial.println(currentEncoderValue);
