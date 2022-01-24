@@ -101,7 +101,7 @@ constexpr int BUTTON_PIN = D3;   // KY40 SW (switch) pin (connected to Uno pin 4
 
 // temperature variables- global; all temps stored in degF and converted on the fly as necessary for alternative units (eg DegC)
 float meatDoneTemp = 203;    // default to usual brisket internal done temp 203degF
-float pitTempTarget = 210;   // reasonable range around 225F long and slow target, pit temps can run 200 to 350 deg F
+float pitTempTarget = 225;   // reasonable range around 225F long and slow target, pit temps can run 200 to 350 deg F
 float currentMeatTemp = 40;  // current meat temp; default to refridgerator temp degF
 float currentPitTemp = 225;  // current pit temp; default to long and slow brisket cooking (pit) temp=225degF
 bool degCFlag = 0;           // temperature unit flag: 1 for Centigrade or 0 for Fahrenheit (default)

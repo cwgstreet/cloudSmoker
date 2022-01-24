@@ -62,8 +62,8 @@ class CWG_LCD : public hd44780_I2Cexp {
     // degCFlag == 1 for Deg C, meatTargetFlag == 1 for meatTemp else pitTemp, adjTempFlag == 1 for setting temperatures
     void getTargetTemperatureMsg(char (&messageBuffer)[17], bool degCFlag, float targetTemperature, bool meatTargetFlag, bool adjTempFlag);
 
-    void showSetMeatDoneTempMenu(int16_t currentEncoderValue);
-    void showSetPitTempTargetMenu(int16_t currentEncoderValue);
+    void showSetMeatDoneTempMenu(int16_t prevEncoderValue);
+    void showSetPitTempTargetMenu(int16_t prevEncoderValue);
     void showSetTempUnitsMenu(int16_t currentEncoderValue);
 
     // meatTargetFlag = 1 for meatDoneTemp, else pitTemp

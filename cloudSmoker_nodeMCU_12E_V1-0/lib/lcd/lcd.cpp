@@ -533,17 +533,61 @@ void CWG_LCD::showSetMeatDoneTempMenu(int16_t prevEncoderValue) {
     }
 }
 
-void CWG_LCD::showSetPitTempTargetMenu(int16_t currentEncoderValue) {
-    /* switch (currentEncoderValue) {
-        case 0:
-            // code
-            break;
+void CWG_LCD::showSetPitTempTargetMenu(int16_t prevEncoderValue) {
+   switch (prevEncoderValue) {
+        case 0: {
+            menuSelectLine = 0;
+            lcd.printMenuLine_noArrow(" Select&Tap\007 set");
+            //lcd.printMenuLine("Tap to set temp");
+            bool meatTargetFlag = 0;  // 0 for pitTempTarget
+            bool adjTempFlag = 0;
+            getTargetTemperatureMsg(messageBuffer, degCFlag, pitTempTarget, meatTargetFlag, adjTempFlag);
+            lcd.printMenuLine(messageBuffer);
+#ifdef DEBUG
+            if (encoder.moved()) {
+                Serial.println();
+                Serial.print(F("Case 0 showSetPitTempTargetMenu -> prevEncoderValue = "));
+                Serial.println(prevEncoderValue);
+            }
+#endif
+        } break;
 
-        case 1:
-            // code
-            break;
-    } */
-}
+        case 1: {
+            menuSelectLine = 1;
+            lcd.printMenuLine("Select&Tap\007 set");
+            //lcd.printMenuLine("Tap to set temp");
+            bool meatTargetFlag = 0; // 0 for pitTempTarget
+            bool adjTempFlag = 0;
+            getTargetTemperatureMsg(messageBuffer, degCFlag, pitTempTarget, meatTargetFlag, adjTempFlag);
+            lcd.printMenuLine(messageBuffer);
+#ifdef DEBUG
+            if (encoder.moved()) {
+                Serial.println();
+                Serial.print(F("Case 1 showSetPitTempTargetMenu -> prevEncoderValue = "));
+                Serial.println(prevEncoderValue);
+            }
+#endif
+        } break;
+
+        case 2: {
+            menuSelectLine = 1;
+            bool meatTargetFlag = 0; // 0 for pitTempTarget
+            bool adjTempFlag = 0;
+            getTargetTemperatureMsg(messageBuffer, degCFlag, pitTempTarget, meatTargetFlag, adjTempFlag);
+            lcd.printMenuLine(messageBuffer);
+            lcd.printMenuLine("Hold to Return\004");
+#ifdef DEBUG
+            if (encoder.moved()) {
+                Serial.println();
+                Serial.print(F("Case 2 showSetPitTempTargetMenu -> prevEncoderValue = "));
+                Serial.println(prevEncoderValue);
+            }
+#endif
+        } break;
+    }
+} 
+
+
 
 void CWG_LCD::showSetTempUnitsMenu(int16_t currentEncoderValue) {
     switch (currentEncoderValue) {
@@ -617,7 +661,7 @@ void CWG_LCD::showSetTempUnitsMenu(int16_t currentEncoderValue) {
 
 void CWG_LCD::showTemeratureTargetAdjustment(float temporaryTemperatureTarget, bool meatTargetFlag) {
     bool adjTempFlag = 1;
-/* 
+    /* 
     //debug
     if (encoder.moved()) {
         Serial.println();
@@ -635,4 +679,3 @@ void CWG_LCD::showTemeratureTargetAdjustment(float temporaryTemperatureTarget, b
     getTargetTemperatureMsg(messageBuffer, degCFlag, temporaryTemperatureTarget, meatTargetFlag, adjTempFlag);
     lcd.printMenuLine(messageBuffer);
 }
-
