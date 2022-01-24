@@ -185,6 +185,7 @@ void processState(CWG_LCD &lcd) {
                                 Serial.print(F("New meatDoneTemp value set -> new meatDoneTemp = "));
                                 Serial.println(meatDoneTemp);
                                 // end debug
+
                                 // reset encoder scale to match number of menu list items
                                 if (hasRunFlag == 0) {
                                     Serial.println(F("Run Once! (return to changeSettings::hasRunFlag == 0); Changing Encoder Settings - setMeatDoneTemp 0,2,0"));
@@ -192,9 +193,6 @@ void processState(CWG_LCD &lcd) {
                                     currentEncoderValue = currentEncoderState.currentValue;  //do I need this line?  Check
                                     Serial.println(currentEncoderValue);
                                     prevEncoderValue = currentEncoderValue;
-
-                                    //Serial.print(F("hasRunFlag Block SetMeatDoneTemp -> prevEncoderValue = "));
-                                    //Serial.println(prevEncoderValue);
 
                                     hasRunFlag = 1;  // ensure settings are only changed once given this is part of loop()
                                 }
@@ -204,28 +202,19 @@ void processState(CWG_LCD &lcd) {
                     Serial.println(F("while (adjustTempFlag) -> exited while loop"));
                 }  //end if
 
-                // hold to exit
-                if (button.update()) {
-                //     if (button.triggered(HOLD)) {
-                //         smokerState = launchPad;  // return to launchPad menu (one level up)
-                //         Serial.print(F("Hold press - going up one level; smokerState = "));
-                //         Serial.println(smokerState);
-                //         hasRunFlag = 0;  // allow another reset of encoder scale range
-                //     }
-                }
+                button.update();
             }
-            //insert here
-            // hold to exit
-            // if (button.update()) {
-            //     if (button.triggered(HOLD)) {
-            //         smokerState = launchPad;  // return to launchPad menu (one level up)
-            //         Serial.print(F("Hold press - going up one level; smokerState = "));
-            //         Serial.println(smokerState);
-            //         //hasRunFlag = 0;  // allow another reset of encoder scale range
-            //     }
-            // }
+
+            // hold button to exit (go up one level)
+            if (button.triggered(HOLD)) {
+                smokerState = launchPad;  // return to launchPad menu (one level up)
+                Serial.print(F("Hold press - going up one level; smokerState = "));
+                Serial.println(smokerState);
+                hasRunFlag = 0;  // allow another reset of encoder scale range
+            }
             
         } break;
+
         case setPitTempTarget: {
             lcd.printMenuLine("sm setpitTemp");  // temporary to confirm navigation branch
             // code here
