@@ -205,14 +205,14 @@ void processState(CWG_LCD &lcd) {
                 button.update();
             }
 
-            // hold button to exit (go up one level)
+            // hold button to exit 
             if (button.triggered(HOLD)) {
-                smokerState = launchPad;  // return to launchPad menu (one level up)
+                smokerState = splashScreen;  // return to launchPad menu (one level up)
                 Serial.print(F("Hold press - going up one level; smokerState = "));
                 Serial.println(smokerState);
                 hasRunFlag = 0;  // allow another reset of encoder scale range
             }
-            
+
         } break;
 
         case setPitTempTarget: {
