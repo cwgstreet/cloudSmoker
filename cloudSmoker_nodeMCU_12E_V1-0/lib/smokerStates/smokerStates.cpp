@@ -135,7 +135,7 @@ void processState(CWG_LCD &lcd) {
 
             // reset encoder scale to match number of menu list items
             if (hasRunFlag == 0) {
-                Serial.println(F("Run Once! (setMeatDoneTemp::hasRunFlag == 0); Changing Encoder Settings - "));
+                Serial.println(F("Run Once! (setMeatDoneTemp::hasRunFlag == 0); Changing Encoder Settings 0,2,0 "));
                 encoder.newSettings(0, 2, 0, currentEncoderState);
                 currentEncoderValue = currentEncoderState.currentValue;  //do I need this line?  Check
                 Serial.println(currentEncoderValue);
