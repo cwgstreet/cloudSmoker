@@ -19,6 +19,8 @@
 #include <Arduino.h>
 #include <Yabl.h>
 #include <press_type.h>
+#include <myConstants.h>   // all constants in one file
+
 
 const long BAUD_RATE = 74880;  // match native ESP8266 bootup baud rate to view bootup info, otherwise gibberish
 

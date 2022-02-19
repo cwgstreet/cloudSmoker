@@ -11,6 +11,8 @@
 ** ************************************************************ */
 
 #include "wrapEncoder.h"
+#include <myConstants.h>   // all constants in one file
+
 
 #include <Arduino.h>
 #include <NewEncoder.h>
