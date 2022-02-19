@@ -44,34 +44,9 @@
 
 /* ******************************************************
  *   Pin-out Summaries
- *     See github cloudSmoker wiki for schematic and breadboard hookup picture
+ *     See myConstants.lib for pin-out table plus github cloudSmoker wiki 
+ *       for schematic and breadboard hookup picture
  * *******************************************************/
-
-/*  NodeMCU V1.0 (ESP12E) microcontroller pinout setup:
- *   Pin        Function  Comment
- *   -------    --------  -----------------------------------------------
- *   D0          LED      NodeMCU built-in LED
- *   D1 (GPIO5)  SCL      YwRobot LCD (via 4.7k ohm pullup resistor)  green
- *   D2 (GPIO4)  SDA      YwRobot LCD (via 4.7k ohm pullup resistor)  white
- *   D3          SW       KY40 Push switch    white
- *   D4 (GPIO2)  DT       KY40 (PinB)         yellow
- *   D5 (GPI014) CLK      KY40 (PinA)         green
- */
-
-/* ADS1015 ADS pinout setup
- *   Pin        Function  Comment
- *   -------    --------  -----------------------------------------------
- *   VDD        5V        red //TODO Investigate benefits of driving off 3.3V
- *   GND        GND       black
- *   SCL        D1        green (via 4.7k ohm pullup resistor)
- *   SCA        D2        white (via 4.7k ohm pullup resistor)
- *   ADDR       GND       sets address at hex 0x48; configurable to other addresses
- *   ALRT       float     not used (float per datasheet)
- *   A0         5V        monitor battery voltage
- *   A1         GND
- *   A2         PIT       Pit probe thermistor jack  (measured 81.2 kohm 5% bias resistor - vs 1% 75kohm design)
- *   A3         MEAT      Meat probe thermistor jack (measured 9.96 kohm 1% bias resistor - vs 1% 9.09kohm design)
- */
 
 // external libraries:
 #include <ADS1X15.h>  //Arduino library for I2C ADC ADS1x15 devices https://github.com/RobTillaart/ADS1X15
@@ -83,14 +58,17 @@
 #include <hd44780.h>                        // LCD library
 #include <hd44780ioClass/hd44780_I2Cexp.h>  // i2c expander i/o class header -> required for my YwRobot 1602 LCD
 
+
 // internal (user) libraries:
+#include <cwg_ads1x15.h>   // ADS1x15 I2C ADC device functionality
 #include <lcd.h>           // lcd function tests, helper functions and custom characters
+#include <myConstants.h>   // all constants in one file
 #include <periphials.h>    // serial monitor function tests and usuage routines
 #include <press_type.h>    // wrapper library abstracting Yabl / Bounce2 routines
 #include <smokerStates.h>  // cloudSmoker state machine functionality
 #include <wrapEncoder.h>   //  encoder library including encoder object with min / max values that "wrap" around
 
-// *****  Selective Debug Saffolding *****
+// *****  Selective Debug Scaffolding *****
 // Set up selective debug scaffold; comment out appropriate lines below to disable debugging tests at pre-proccessor stage
 //   Note: #ifdef preprocessor simply tests if the symbol's been defined; therefore don't use #ifdef 0
 //   Ref: https://stackoverflow.com/questions/16245633/ifdef-debug-versus-if-debug
@@ -100,21 +78,8 @@
 //#define DEBUG_PRESSTYPE  1  // uncomment to debug rotary encoder button press type function test
 //#define DEBUG_LED  1       // uncomment to debug LED test of rotary encoder  **CHECK THIS MISSING??**
 //#define DEBUG_FREEMEM 1  // uncomment to debug remaining free memory
+#define DEBUG_ADC 1  // uncomment to debug ADC1015 ADC readings
 
-// Pin set-up listed below are for nodeMCU ESP8266
-//? Note to self:  constexp better than const for variable values that should be known at compile
-//?    time -> more memory efficient.  Also better than simple #define
-// constexpr int I2C_SCL = D1;      // optional as hd44780 set to auto-configure
-// constexpr int I2C_SDA = D2;      // optional as hd44780 set to auto-configure
-constexpr int ENCODER_DT = D4;   // pinB newEncoder lib config
-constexpr int ENCODER_CLK = D5;  // pinA newEncoder lib config
-constexpr int BUTTON_PIN = D3;   // KY40 SW (switch) pin (connected to Uno pin 4)
-
-// Baudrate:  Recommend 74480 baud rate for ESP8266 devices to match ESP8266 fixed bootloader initialisation speed
-//  (otherwise you will get startup gibberish characters on serial monitor before serial speed syncs)
-//  https://forum.arduino.cc/t/serial-monitor-only-shows-strange-symbols-arduino-mega-with-esp8266/640490/5
-//  note: may have to manually reset board after flashing for code to work correctly
-#define SERIAL_MONITOR_SPEED 74880
 
 // temperature variables- global; all temps stored in degF and converted on the fly as necessary for alternative units (eg DegC)
 float meatDoneTemp = 203;    // default to usual brisket internal done temp 203degF
@@ -132,8 +97,6 @@ should increase from 40°F to 140°F within 4 hours. This is due to foodborne ba
 within this temperature range (known as the “danger zone”).  Ref https://www.totallysmokin.com/4-hour-rule-smoking/
 ***** */
 
-ADS1015 adc(0x48);  // instantiate ADS1015 ADC object at default address (ADDR conneced to GND)
-
 // timing variables - global
 // unsigned long currentMillis;
 
@@ -143,9 +106,6 @@ bool hasRunFlag = 0;
 // WrapEncoder globals - move to libary?
 int16_t prevEncoderValue;
 // int16_t currentEncoderValue;
-
-// for testing - then can remove
-// smokerState = splashScreen;
 
 // debug code for testing - then can remove
 //   int loopcounter = 0;
@@ -157,21 +117,36 @@ void setup() {
     encoder.initialise();
     delay(100);  //! *** TEST given blocking *** is delay necessary to clear serial buffer in encoder.initialise(); otherwise garbage characters
 
-    // initialise button press type set-up code (pin, pullup mode, callback function)
+    // initialise button press_type set-up code (pin, pullup mode, callback function)
     button.begin(BUTTON_PIN);
 
     smokerState = splashScreen;  // temporarily disable for testing
 
-    // initialise and configure ads1015 ADC module
-    adc.begin();
-    if (!adc.isConnected()) {
-        Serial.print(F(" **** ERROR*** ADS1x15 not connected! "));
-    }
-    adc.setGain(0);                   // PGA max voltage ±6.144V -> for 5V setup
-    adc.setMode(1);                   // SINGLE SHOT MODE
-    adc.setDataRate(4);               // 4 == default ADS1015 data rate of 1600 sps; available range 128-3300 sps
-    voltageFactor = adc.toVoltage();  // voltage factor is dependent on ADS1015 settings
-    adc.requestADC(A0);               // parameters not set in the device until an explicit read/request of the ADC (any read call will do)
+    // configure ADS1015 I2C ADC
+    constexpr uint8_t GAIN_SETTING = 0;  // 2/3x gain, max voltage: ±6.144V, 1 bit(LSB) = 3mV
+    constexpr uint8_t MODE_SETTING = 1;
+    constexpr uint8_t DATA_RATE_SETTING = 4;
+    ads1015.initialise(GAIN_SETTING, MODE_SETTING, DATA_RATE_SETTING);
+
+    // get 10 ADC readings from designated pin and return a median filtered value
+    float voltageVCC_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(0, 11);
+    float voltageGND_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(1, 11);
+    float voltagePit_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(2, 11);
+    float voltageMeat_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(3, 11);
+
+#ifdef DEBUG_ADC  // *****  debug - ADS1015 ADC *****
+    Serial.println();
+    Serial.print(F("Median Filtered VCC / GND / PIT / MEAT = \t"));
+    Serial.print(voltageVCC_medianFiltered_V, 4);
+    Serial.print(F("\t"));
+    Serial.print(voltageGND_medianFiltered_V, 4);
+    Serial.print(F("\t"));
+    Serial.print(voltagePit_medianFiltered_V, 4);
+    Serial.print(F("\t"));
+    Serial.println(voltageMeat_medianFiltered_V, 4);
+#endif  // end DEBUG
+
+
 
 // ***************************
 // ** Debug - function tests
@@ -197,16 +172,6 @@ void loop() {
 
     processState(lcd);  // temporarily disable for testing, as needed
     // encoder.getCount();  // need to enable this if line above is commented out for testing
-
-    // asynchronous (non-blocking ADC single shot read)
-    if (adc.isBusy() == false) {
-        int16_t val_0 = adc.getValue();
-        adc.requestADC(0);  // request a new one
-        Serial.print("\tAnalog0: ");
-        Serial.print(val_0);
-        Serial.print('\t');
-        Serial.println(val_0 * voltageFactor, 3);
-    }
 
     /*  // debug code - serial print out prevEncoderValue every n loops
 loopcounter = loopcounter + 1;
