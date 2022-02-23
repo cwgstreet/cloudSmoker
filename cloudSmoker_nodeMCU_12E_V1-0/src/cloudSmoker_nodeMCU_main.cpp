@@ -127,7 +127,7 @@ void setup() {
     constexpr uint8_t MODE_SETTING = 1;
     constexpr uint8_t DATA_RATE_SETTING = 4;
     ads1015.initialise(GAIN_SETTING, MODE_SETTING, DATA_RATE_SETTING);
-
+/* 
     // get 10 ADC readings from designated pin and return a median filtered value
     float voltageVCC_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(0, 11);
     float voltageGND_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(1, 11);
@@ -145,7 +145,7 @@ void setup() {
     Serial.print(F("\t"));
     Serial.println(voltageMeat_medianFiltered_V, 4);
 #endif  // end DEBUG
-
+ */
 
 
 // ***************************
@@ -168,10 +168,32 @@ void setup() {
 }  // end of setup
 
 void loop() {
+    yield();
     button.update();
 
     processState(lcd);  // temporarily disable for testing, as needed
     // encoder.getCount();  // need to enable this if line above is commented out for testing
+
+
+
+// get 10 ADC readings from designated pin and return a median filtered value
+    float voltageVCC_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(0, 11);
+    float voltageGND_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(1, 11);
+    float voltagePit_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(2, 11);
+    float voltageMeat_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(3, 11);
+
+#ifdef DEBUG_ADC  // *****  debug - ADS1015 ADC *****
+    Serial.println();
+    Serial.print(F("Median Filtered VCC / GND / PIT / MEAT = \t"));
+    Serial.print(voltageVCC_medianFiltered_V, 4);
+    Serial.print(F("\t"));
+    Serial.print(voltageGND_medianFiltered_V, 4);
+    Serial.print(F("\t"));
+    Serial.print(voltagePit_medianFiltered_V, 4);
+    Serial.print(F("\t"));
+    Serial.println(voltageMeat_medianFiltered_V, 4);
+#endif  // end DEBUG
+
 
     /*  // debug code - serial print out prevEncoderValue every n loops
 loopcounter = loopcounter + 1;

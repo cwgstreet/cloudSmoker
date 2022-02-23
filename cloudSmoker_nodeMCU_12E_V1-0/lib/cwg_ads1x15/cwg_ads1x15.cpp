@@ -12,7 +12,7 @@
  ** ************************************************************* */
 
 // set up debug scaffold; comment out following line if you want to "turn off" serial monitor debugging
-#define DEBUG 1
+//#define DEBUG 1
 
 // include 3rd party libraries
 #include <ADS1X15.h>          // ADS1x15 I2C ADC device functionality
