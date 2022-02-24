@@ -56,7 +56,7 @@
 // Pin set-up listed below are for nodeMCU ESP8266
 //? Note to self:  constexp better than const for variable values that should be known at compile
 //?    time -> more memory efficient.  Also better than simple #define
-//! not allowed extern constexp, must use const as with constexp " it must be immediately constructed or assigned a value"
+//! not allowed "extern constexp", must use const instead, as with constexp "...it must be immediately constructed or assigned a value"
 
 constexpr int I2C_SCL = D1;  // optional for LCD as hd44780 auto-configures but needed for ADS1015
 constexpr int I2C_SDA = D2;  // optional for LCD as hd44780 auto-configures but needed for ADS1015

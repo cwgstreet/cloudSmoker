@@ -51,7 +51,7 @@
 #include <inttypes.h>
 
 #define V_IN 5.0  // Input voltage
-#define K 9.5     // Dissipation factor (mW/°C)
+#define K 0.6     // Dissipation factor (mW/°C)
 
 class SteinhartHart {
    public:

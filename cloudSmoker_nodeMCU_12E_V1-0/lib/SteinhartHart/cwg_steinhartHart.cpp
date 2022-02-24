@@ -60,20 +60,19 @@
 #include "cwg_ads1x15.h"
 
 /**
- * Returns the temperature in kelvin for the given resistance value
+ * Returns the temperature in kelvin for the given thermistor resistance value
  * using the Steinhart-Hart polynomial relationship.
  */
-double SteinhartHart::steinhartHart(double r) {
-    double log_r = log(r);
+double SteinhartHart::steinhartHart(double thermistorResistance_ohms) {
+    double log_r = log(thermistorResistance_ohms);
     double log_r3 = log_r * log_r * log_r;
 
-    return 1.0 / (_a + _b * log_r + _c * log_r3);
+    return 1.0 / (_a + _b * log_r + _c * log_r3);  //Steinhart-Hart poloynomial relationship
 }
 
 double SteinhartHart::getTempKelvin() {
-    double adc_raw = analogRead(_ADCpin);  //? need to make glue code to get ADS1015 value here
-    double voltage = adc_raw / 2048 * V_IN;     //? new
-    //? old code:   double voltage = adc_raw / 1024 * V_IN;
+    double adc_raw = analogRead(_ADCpin);  
+    double voltage = adc_raw / 1024 * V_IN;
     double resistance = ((1024 * _biasResistance / adc_raw) - _biasResistance);
 
     // Account for dissipation factor K
