@@ -62,6 +62,7 @@
 /**
  * Returns the temperature in kelvin for the given thermistor resistance value
  * using the Steinhart-Hart polynomial relationship.
+ *   note: log in math.h is log base e or ln, not log(base 10) commonly written as log   
  */
 double SteinhartHart::steinhartHart(double thermistorResistance_ohms) {
     double log_r = log(thermistorResistance_ohms);

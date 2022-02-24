@@ -56,7 +56,7 @@
 class SteinhartHart {
    public:
     /**
-     * Constructor: SteinhratHart( ADCpin, biasResistorValue_ohm, a, b, b)
+     * Constructor: SteinhratHart( ADCpin, biasResistorValue_ohm, a, b, b, k)
      *
      * Only the ADC reading pin has to be specified in the constuctor.
      * If no other parameters are given default values will be used
