@@ -55,7 +55,16 @@ class CWG_ADS1015 : public ADS1015 {
 // ensure objects are visable everywhere (global)
 extern CWG_ADS1015 ads1015;
 
+
+//==============================================================================================
 // For reference:
+//  ADS1X15 ADCs do not take an external reference voltage but rely on an internal full scale 
+//   voltage (fsv) that is a function of the PGA gain setting - see table below
+//
+//  Also note that AD1015 is notionally 12 bit but only for full scale differential measurements
+//     with the one bit used for sign (neg / positive)
+//   When single shot, the ADS1015 ADC is effectively 11 bit (2^11 = 2048 measurements)  
+//  For example, using default 2/3x gain, 6.144V fsv / 2048 measurements = 0.003 or 3mV LSB 
 // -------------------------
 // PGA gain settings, max Voltage and LSB (least significant bit)
 //   taken from Adafruit ADS1x15 library, where bit = LSB
@@ -67,5 +76,6 @@ extern CWG_ADS1015 ads1015;
 // ads.setGain(GAIN_FOUR);       // 4x gain   +/- 1.024V  1 bit = 0.5mV    0.03125mV
 // ads.setGain(GAIN_EIGHT);      // 8x gain   +/- 0.512V  1 bit = 0.25mV   0.015625mV
 // ads.setGain(GAIN_SIXTEEN);    // 16x gain  +/- 0.256V  1 bit = 0.125mV  0.0078125mV
+//==============================================================================================
 
 #endif  // end header guard
