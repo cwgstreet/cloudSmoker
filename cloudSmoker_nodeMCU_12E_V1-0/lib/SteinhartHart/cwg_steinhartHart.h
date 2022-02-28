@@ -1,5 +1,5 @@
 /* ***************************************************************
- * cwg_steinhartHart.cpp - Library calculates temperature from NTC thermistor using SteinHart-Hart equation
+ * cwg_steinhartHart.h - Library calculates temperature from NTC thermistor using SteinHart-Hart equation
  *    Ver 1			24 Feb 2022    MIT Licence
  *
  * key changes:  modified open-source code to be more generic and permit interface to ADS1x14 external ADCs
@@ -56,24 +56,23 @@
 #include <pins_arduino.h>
 #endif  // end if-block
 
-
 #include <inttypes.h>  // stabdardised library of integer types
 
 class SteinhartHart {
    public:
     /**
-     * Constructor: SteinhratHart( ADCpin, biasResistorValue_ohm, a, b, b, k)
+     * Constructor: SteinhratHart(ADCpin, biasResistorValue_ohm, a, b, c)
      *
-     * Only the ADC reading pin has to be specified in the constuctor.
+     * Only the ADC reading pin and bias resistor values have to be specified in the constuctor.
      * If no other parameters are given default values will be used
      *   from a Mavrick-723 temperature probe and cloudSmoker project design
      */
     SteinhartHart(
         uint8_t ADCpin,
-        double biasResistorValue_ohm = 75.0e3,
-        double a = 0.62577364e-3,
-        double b = 1.84225469e-4,
-        double c = 0.69426546e-7) : _ADCpin(ADCpin),
+        double biasResistorValue_ohm,
+        double a = 0.625773640e-3,
+        double b = 1.842254690e-4,
+        double c = 6.94265460e-8) : _ADCpin(ADCpin),
                                     _Vin(V_IN_Volt),
                                     _biasResistance(biasResistorValue_ohm),
                                     _a(a),
@@ -81,8 +80,8 @@ class SteinhartHart {
                                     _c(c){};
 
     double getTempKelvin(double VmeasuredADC_V);
-    double getTempCelsius();
-    double getTempFahrenheit();
+    double getTempCelsius(double VmeasuredADC_V);
+    double getTempFahrenheit(double VmeasuredADC_V);
 
    private:
     double steinhartHart(double _Rth_ohm);
@@ -91,7 +90,8 @@ class SteinhartHart {
     double _Rth_ohm;         //  NTC thermistor resistance
     double _biasResistance;  //  bias resistor value
     uint8_t _ADCpin;         //  ADS1015 ADC Pin (0 to 3)
-    double _Vin;
+    double _Vin;             //  supply voltage to voltage divider
+    double _Vadc;            //  voltage measured by ADC (typically median filtered)
 
     // Manufacturing constants
     double _a;
@@ -99,4 +99,8 @@ class SteinhartHart {
     double _c;
 };
 
-#endif // end header guard
+// ensure objects are visable everywhere (global)
+extern SteinhartHart sh_meatProbe;  // meat thermometer
+extern SteinhartHart sh_pitProbe;   // meat thermometer
+
+#endif  // end header guard

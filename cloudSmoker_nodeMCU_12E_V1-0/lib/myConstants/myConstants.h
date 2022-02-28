@@ -48,7 +48,6 @@
  *   A3         MEAT      Meat probe thermistor jack (measured 9.96 kohm 1% bias resistor - vs 1% 9.09kohm design)
  */
 
-
 /******************************************************
 // constants
 *******************************************************/
@@ -58,13 +57,20 @@
 //? Note to self:  constexp better than const for variable values that should be known at compile
 //?    time -> more memory efficient.  Also better than simple #define
 //! cannog use "extern constexp", must use "const" instead, as with constexp "...it must be immediately constructed or assigned a value"
-
-constexpr int I2C_SCL = D1;  // optional for LCD as hd44780 auto-configures but needed for ADS1015
-constexpr int I2C_SDA = D2;  // optional for LCD as hd44780 auto-configures but needed for ADS1015
-
+// ---------------------------------------------------------
+constexpr int I2C_SCL = D1;      // optional for LCD as hd44780 auto-configures but needed for ADS1015
+constexpr int I2C_SDA = D2;      // optional for LCD as hd44780 auto-configures but needed for ADS1015
 constexpr int ENCODER_DT = D4;   // pinB newEncoder lib config
 constexpr int ENCODER_CLK = D5;  // pinA newEncoder lib config
 constexpr int BUTTON_PIN = D3;   // KY40 SW (switch) pin (connected to Uno pin 4)
+
+
+// ---------------------------------------------------------
+// ADS1015 ADC pin constants
+// ---------------------------------------------------------
+constexpr int ADC_pitPin = 2;      
+constexpr int ADC_meatPin = 3;      
+
 
 // ---------------------------------------------------------
 // Baudrate:  Recommend 74480 baud rate for ESP8266 devices to match ESP8266 fixed bootloader initialisation speed
@@ -87,8 +93,8 @@ constexpr int SERIAL_MONITOR_SPEED = 74880;
 //                       Vout
 // ---------------------------------------------------------
 //
-constexpr double MEAT_BIAS_RESISTOR_Ohm = 75.0e3;
+constexpr double MEAT_BIAS_RESISTOR_Ohm = 75.0e3;  // replace with DMM measured actual value for improved accuracy
 constexpr double PIT_BIAS_RESISTOR_Ohm = 9.1e3;
-constexpr double V_IN_Volt = 5.0;  //replace with measured Vsupply (%V less voltage drops) for better accuracy
+constexpr double V_IN_Volt = 5.0;  // replace with measured Vsupply (%V less voltage drops) for better accuracy
 
 #endif  // end header guard
