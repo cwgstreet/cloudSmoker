@@ -6,8 +6,8 @@
  *
  ** ************************************************************* */
 
-#ifndef HELPER_FUNCTIONS_H
-#define HELPER_FUNCTIONS_H
+#ifndef MY_CONSTANTS_H
+#define MY_CONSTANTS_H
 
 #if ARDUINO >= 100  // this if-else block manages depreciated versions of Arduino IDE
 #include <Arduino.h>

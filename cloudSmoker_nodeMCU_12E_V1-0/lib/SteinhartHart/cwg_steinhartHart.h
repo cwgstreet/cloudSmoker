@@ -45,19 +45,19 @@
 //
 // *******************************************************
 
-#if ARDUINO >= 100
-#include "Arduino.h"
-#else
-#include "WProgram.h"
-#endif
-
 #ifndef SteinhartHart_h
 #define SteinhartHart_h
 
-#include <inttypes.h>
+#if ARDUINO >= 100
+#include "Arduino.h"
+#else
+#include <WConstants.h>
+#include <WProgram.h>
+#include <pins_arduino.h>
+#endif  // end if-block
 
-#define V_IN 5.0  // Input voltage
-#define K 0.6     // Dissipation factor (mW/°C)
+
+#include <inttypes.h>  // stabdardised library of integer types
 
 class SteinhartHart {
    public:
@@ -99,4 +99,4 @@ class SteinhartHart {
     double _c;
 };
 
-#endif
+#endif // end header guard
