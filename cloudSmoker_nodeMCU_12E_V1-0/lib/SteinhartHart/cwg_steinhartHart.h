@@ -1,9 +1,14 @@
 /* ***************************************************************
  * cwg_steinhartHart.cpp - Library calculates temperature from NTC thermistor using SteinHart-Hart equation
- *    Ver 1			24 Feb 2022  	MIT Licence
+ *    Ver 1			24 Feb 2022    MIT Licence
  *
  * key changes:  modified open-source code to be more generic and permit interface to ADS1x14 external ADCs
  *                all defaults from cloudSmoker Project (https://github.com/cwgstreet/cloudSmoker)
+ *    Note that original library has error in temperature compensation for self-heating using k-factor
+ *     see https://github.com/fiendie/SteinhartHart/issues/3
+ *
+ *  Tool to get SHH coefficients: https://www.thinksrs.com/downloads/programs/therm%20calc/ntccalibrator/ntccalculator.html
+ *
  * -----------------------------------------------------------------------------
  * Modified from SteinhartHart.h - Library for interacting with NTC thermistors
  *   Author: Andreas Tacke (fiende)
@@ -28,14 +33,15 @@
 // *******************************************************
 //   Hardware setup
 // *******************************************************
-//         Bias Resistor   NTC Thermistor
-//               ____           ____
-//   +VCC o-----|____|----+----|____|----o GND
-//   (5 V)       Rbias    | Rthermistor
-//            (10E6 ohm)  |  (75E3 ohm)
-//    ADC PIN             |
-//      (A0) o------------+
-//                      Vout
+//
+//         Bias Resistor     NTC Thermistor
+//                ____           ____
+//   +V_IN o-----|____|----+----|____|----o GND
+//  (~5 V)        Rbias    | Rthermistor
+//             (10E6 ohm)  |  (75E3 ohm)
+//    ADC PIN              |
+//      (A0) o-------------+
+//                       Vout
 //
 // *******************************************************
 
@@ -68,22 +74,24 @@ class SteinhartHart {
         double a = 0.62577364e-3,
         double b = 1.84225469e-4,
         double c = 0.69426546e-7) : _ADCpin(ADCpin),
+                                    _Vin(V_IN_Volt),
                                     _biasResistance(biasResistorValue_ohm),
                                     _a(a),
                                     _b(b),
                                     _c(c){};
 
-    double getTempKelvin();
+    double getTempKelvin(double VmeasuredADC_V);
     double getTempCelsius();
     double getTempFahrenheit();
 
    private:
-    double steinhartHart(double);
+    double steinhartHart(double _Rth_ohm);
 
-    // Value of the bias resistor put in parallel
-    double _biasResistance;
-
-    uint8_t _ADCpin;
+    // Thermistor voltage divider
+    double _Rth_ohm;         //  NTC thermistor resistance
+    double _biasResistance;  //  bias resistor value
+    uint8_t _ADCpin;         //  ADS1015 ADC Pin (0 to 3)
+    double _Vin;
 
     // Manufacturing constants
     double _a;

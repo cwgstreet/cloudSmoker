@@ -4,6 +4,10 @@
  *
  * key changes:  modified open-source code to be more generic and permit interface to ADS1x14 external ADCs
  *                all defaults from cloudSmoker Project (https://github.com/cwgstreet/cloudSmoker)
+ *    Note that original library has error in temperature compensation for self-heating using k-factor
+ *     see https://github.com/fiendie/SteinhartHart/issues/3
+ *
+ *  Tool to get SHH coefficients: https://www.thinksrs.com/downloads/programs/therm%20calc/ntccalibrator/ntccalculator.html
  *
  * -----------------------------------------------------------------------------
  * Modified from SteinhartHart.h - Library for interacting with NTC thermistors
@@ -29,55 +33,59 @@
 // *******************************************************
 //   Hardware setup
 // *******************************************************
-//         Bias Resistor   NTC Thermistor
-//               ____           ____
-//   +VCC o-----|____|----+----|____|----o GND
-//   (5 V)       Rbias    | Rthermistor
-//            (10E6 ohm)  |  (75E3 ohm)
-//    ADC PIN             |
-//      (A0) o------------+
-//                      Vout
+//
+//         Bias Resistor     NTC Thermistor
+//                ____           ____
+//   +V_IN o-----|____|----+----|____|----o GND
+//  (~5 V)        Rbias    | Rthermistor
+//             (10E6 ohm)  |  (75E3 ohm)
+//    ADC PIN              |
+//      (A0) o-------------+
+//                       Vout
 //
 // *******************************************************
 
 //? *************************************************************************
 //? CWG additions / notes
 //? ----------------------
-//? Voltage divider
-//? Vo = Rt / (Rt + Rb) * Vcc
-//?   ->Vo=Voltage Output at resistor divider, Rt = thermistor resistance, Rb=bias resistor, Vcc = power supply voltage
-//?  rearrange for Thermistor Resitance
-//?   Rth = -(Vo - Rb)/(Vo - Vcc)
-//?    in this program's variables:  r = - (voltage - Rbias)/(voltage -V_IN)
+//? Voltage divider equation for thermistor configuration above
+//? Vo = Rt / (Rt + Rb) * V_IN
+//?   ->Vo = Voltage Output at resistor divider (measured by ADC), Rth = thermistor resistance,
+//?       Rb=bias resistor, V_IN = power supply voltage to resistor divider
 //?
-//? ADC value = Rt / (Rt + Rb) * Vcc * ADB-bits / Varef  ->where Rt = NTC thermistor resistance, Rb=bias resistor resistance
-//?  For ADS1015 with default PGA setting, max voltage = 6.144V, LSB = 3mV (6.144/2048)
+//?  rearrange to solve for Thermistor Resistance, Rth
+//?   Rth = -[(Vo * Rb) / (Vo - V_IN)]   -> don't miss the negative sign!
 //? *************************************************************************
 
 #include "cwg_steinhartHart.h"
 
 #include <math.h>
+#include <myConstants.h>  // all constants together in one file
+
 #include "cwg_ads1x15.h"
 
-/**
- * Returns the temperature in kelvin for the given thermistor resistance value
- * using the Steinhart-Hart polynomial relationship.
- *   note: log in math.h is log base e or ln, not log(base 10) commonly written as log   
- */
-double SteinhartHart::steinhartHart(double thermistorResistance_ohms) {
-    double log_r = log(thermistorResistance_ohms);
+// --------------------------
+//   steinhartHart() function purpose: Returns the temperature in degrees kelvin for the given thermistor resistance
+//      value using the Steinhart-Hart polynomial relationship
+// --------------------------
+double SteinhartHart::steinhartHart(double _Rth_ohm) {
+    double log_r = log(_Rth_ohm);  // log operation in math.h is log(base e) or ln, not log(base 10)
     double log_r3 = log_r * log_r * log_r;
 
-    return 1.0 / (_a + _b * log_r + _c * log_r3);  //Steinhart-Hart poloynomial relationship
+    return 1.0 / (_a + _b * log_r + _c * log_r3);  // Steinhart-Hart poloynomial relationship, returns temp in deg K
 }
 
-double SteinhartHart::getTempKelvin() {
-    double adc_raw = analogRead(_ADCpin);  
-    double voltage = adc_raw / 1024 * V_IN;
-    double resistance = ((1024 * _biasResistance / adc_raw) - _biasResistance);
+//?  rearrange to solve for Thermistor Resistance, Rth
+//?   Rth = -(Vo * Rb)/(Vo - Vcc)   -> don't miss the negative sign!
 
-    // Account for dissipation factor K
-    return steinhartHart(resistance) - voltage * voltage / (K * _biasResistance);
+
+// --------------------------
+//   getTempKelvin() function purpose: Returns the temperature in degrees kelvin for the given thermistor resistance
+//      value using the Steinhart-Hart polynomial relationship
+// --------------------------
+double SteinhartHart::getTempKelvin(double VmeasuredADC_V) {
+    _Rth_ohm = - ( (VmeasuredADC_V * _biasResistance) / (VmeasuredADC_V - _Vin) );
+    return steinhartHart(_Rth_ohm);
 }
 
 double SteinhartHart::getTempCelsius() {
