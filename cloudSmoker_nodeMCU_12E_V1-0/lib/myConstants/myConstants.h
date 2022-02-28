@@ -53,6 +53,7 @@
 // constants
 *******************************************************/
 
+// ---------------------------------------------------------
 // Pin set-up listed below are for nodeMCU ESP8266
 //? Note to self:  constexp better than const for variable values that should be known at compile
 //?    time -> more memory efficient.  Also better than simple #define
@@ -65,10 +66,29 @@ constexpr int ENCODER_DT = D4;   // pinB newEncoder lib config
 constexpr int ENCODER_CLK = D5;  // pinA newEncoder lib config
 constexpr int BUTTON_PIN = D3;   // KY40 SW (switch) pin (connected to Uno pin 4)
 
+// ---------------------------------------------------------
 // Baudrate:  Recommend 74480 baud rate for ESP8266 devices to match ESP8266 fixed bootloader initialisation speed
 //  (otherwise you will get startup gibberish characters on serial monitor before serial speed syncs)
 //  https://forum.arduino.cc/t/serial-monitor-only-shows-strange-symbols-arduino-mega-with-esp8266/640490/5
 //  note: may have to manually reset board after flashing for code to work correctly
-#define SERIAL_MONITOR_SPEED 74880
+//#define SERIAL_MONITOR_SPEED 74880  // change to constexpr
+constexpr int SERIAL_MONITOR_SPEED = 74880;
+
+// ---------------------------------------------------------
+// Thermistor voltage divider constants
+//
+//         Bias Resistor     NTC Thermistor
+//                ____           ____
+//   +V_IN o-----|____|----+----|____|----o GND
+//  (~5 V)        Rbias    | Rthermistor
+//             (10E6 ohm)  |  (75E3 ohm)
+//    ADC PIN              |
+//      (A0) o-------------+
+//                       Vout
+// ---------------------------------------------------------
+//
+constexpr double MEAT_BIAS_RESISTOR_Ohm = 75.0e3;
+constexpr double PIT_BIAS_RESISTOR_Ohm = 9.1e3;
+constexpr double V_IN_Volt = 5.0;  //replace with measured Vsupply (%V less voltage drops) for better accuracy
 
 #endif  // end header guard
