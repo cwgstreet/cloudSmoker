@@ -44,7 +44,7 @@
 
 /* ******************************************************
  *   Pin-out Summaries
- *     See myConstants.lib for pin-out table plus github cloudSmoker wiki 
+ *     See myConstants.lib for pin-out table plus github cloudSmoker wiki
  *       for schematic and breadboard hookup picture
  * *******************************************************/
 
@@ -58,15 +58,15 @@
 #include <hd44780.h>                        // LCD library
 #include <hd44780ioClass/hd44780_I2Cexp.h>  // i2c expander i/o class header -> required for my YwRobot 1602 LCD
 
-
 // internal (user) libraries:
-#include <cwg_ads1x15.h>   // ADS1x15 I2C ADC device functionality
-#include <lcd.h>           // lcd function tests, helper functions and custom characters
-#include <myConstants.h>   // all constants in one file
-#include <periphials.h>    // serial monitor function tests and usuage routines
-#include <press_type.h>    // wrapper library abstracting Yabl / Bounce2 routines
-#include <smokerStates.h>  // cloudSmoker state machine functionality
-#include <wrapEncoder.h>   //  encoder library including encoder object with min / max values that "wrap" around
+#include <cwg_ads1x15.h>        // ADS1x15 I2C ADC device functionality
+#include <cwg_steinhartHart.h>  // Thermistor steinhart hart temperature calcs
+#include <lcd.h>                // lcd function tests, helper functions and custom characters
+#include <myConstants.h>        // all constants in one file
+#include <periphials.h>         // serial monitor function tests and usuage routines
+#include <press_type.h>         // wrapper library abstracting Yabl / Bounce2 routines
+#include <smokerStates.h>       // cloudSmoker state machine functionality
+#include <wrapEncoder.h>        //  encoder library including encoder object with min / max values that "wrap" around
 
 // *****  Selective Debug Scaffolding *****
 // Set up selective debug scaffold; comment out appropriate lines below to disable debugging tests at pre-proccessor stage
@@ -79,7 +79,6 @@
 //#define DEBUG_LED  1       // uncomment to debug LED test of rotary encoder  **CHECK THIS MISSING??**
 //#define DEBUG_FREEMEM 1  // uncomment to debug remaining free memory
 #define DEBUG_ADC 1  // uncomment to debug ADC1015 ADC readings
-
 
 // temperature variables- global; all temps stored in degF and converted on the fly as necessary for alternative units (eg DegC)
 float meatDoneTemp = 203;    // default to usual brisket internal done temp 203degF
@@ -127,7 +126,7 @@ void setup() {
     constexpr uint8_t MODE_SETTING = 1;
     constexpr uint8_t DATA_RATE_SETTING = 4;
     ads1015.initialise(GAIN_SETTING, MODE_SETTING, DATA_RATE_SETTING);
-/* 
+/*
     // get 10 ADC readings from designated pin and return a median filtered value
     float voltageVCC_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(0, 11);
     float voltageGND_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(1, 11);
@@ -146,7 +145,6 @@ void setup() {
     Serial.println(voltageMeat_medianFiltered_V, 4);
 #endif  // end DEBUG
  */
-
 
 // ***************************
 // ** Debug - function tests
@@ -174,9 +172,7 @@ void loop() {
     processState(lcd);  // temporarily disable for testing, as needed
     // encoder.getCount();  // need to enable this if line above is commented out for testing
 
-
-
-// get 10 ADC readings from designated pin and return a median filtered value
+    // get 10 ADC readings from designated pin and return a median filtered value
     float voltageVCC_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(0, 11);
     float voltageGND_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(1, 11);
     float voltagePit_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(2, 11);
@@ -193,7 +189,6 @@ void loop() {
     Serial.print(F("\t"));
     Serial.println(voltageMeat_medianFiltered_V, 4);
 #endif  // end DEBUG
-
 
     /*  // debug code - serial print out prevEncoderValue every n loops
 loopcounter = loopcounter + 1;
