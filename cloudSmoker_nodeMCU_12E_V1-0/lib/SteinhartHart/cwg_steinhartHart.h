@@ -57,6 +57,7 @@
 #endif  // end if-block
 
 #include <inttypes.h>  // stabdardised library of integer types
+#include <myConstants.h>
 
 class SteinhartHart {
    public:
@@ -86,11 +87,12 @@ class SteinhartHart {
    private:
     double steinhartHart(double _Rth_ohm);
 
-    // Thermistor voltage divider
-    double _Rth_ohm;         //  NTC thermistor resistance
-    double _biasResistance;  //  bias resistor value
+    // Constructor prrivate members - Thermistor voltage divider
     uint8_t _ADCpin;         //  ADS1015 ADC Pin (0 to 3)
     double _Vin;             //  supply voltage to voltage divider
+    double _biasResistance;  //  bias resistor value
+    double _Rth_ohm;         //  NTC thermistor resistance
+
     double _Vadc;            //  voltage measured by ADC (typically median filtered)
 
     // Manufacturing constants

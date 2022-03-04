@@ -180,7 +180,7 @@ void loop() {
 
 #ifdef DEBUG_ADC  // *****  debug - ADS1015 ADC *****
     Serial.println();
-    Serial.print(F("Median Filtered VCC / GND / PIT / MEAT = \t"));
+    Serial.print(F("Med. Filtrd VCC |\t GND |\t PIT |\t MEAT |"));
     Serial.print(voltageVCC_medianFiltered_V, 4);
     Serial.print(F("\t"));
     Serial.print(voltageGND_medianFiltered_V, 4);
