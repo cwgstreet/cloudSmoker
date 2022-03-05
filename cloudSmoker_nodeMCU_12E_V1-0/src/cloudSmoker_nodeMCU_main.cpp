@@ -178,9 +178,14 @@ void loop() {
     float voltagePit_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(2, 11);
     float voltageMeat_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(3, 11);
 
+    //convert probe voltages to temperatures
+    yield();
+    currentMeatTemp = sh_meatProbe.getTempFahrenheit(voltageMeat_medianFiltered_V);
+    currentPitTemp = sh_pitProbe.getTempFahrenheit(voltagePit_medianFiltered_V);
+
 #ifdef DEBUG_ADC  // *****  debug - ADS1015 ADC *****
     Serial.println();
-    Serial.print(F("Med. Filtrd VCC |\t GND |\t PIT |\t MEAT |"));
+    Serial.print(F("VCC |\t GND |\t PIT |\t MEAT |\t PitTemp |\t MeatTemp |"));
     Serial.print(voltageVCC_medianFiltered_V, 4);
     Serial.print(F("\t"));
     Serial.print(voltageGND_medianFiltered_V, 4);
@@ -188,6 +193,10 @@ void loop() {
     Serial.print(voltagePit_medianFiltered_V, 4);
     Serial.print(F("\t"));
     Serial.println(voltageMeat_medianFiltered_V, 4);
+    Serial.print(F("\t"));
+    Serial.println(currentPitTemp, 1);
+    Serial.print(F("\t"));
+    Serial.println(currentMeatTemp, 1);
 #endif  // end DEBUG
 
     /*  // debug code - serial print out prevEncoderValue every n loops
