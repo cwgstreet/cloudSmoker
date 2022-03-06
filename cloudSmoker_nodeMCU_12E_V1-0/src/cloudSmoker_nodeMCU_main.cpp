@@ -52,6 +52,7 @@
 #include <ADS1X15.h>  //Arduino library for I2C ADC ADS1x15 devices https://github.com/RobTillaart/ADS1X15
 #include <Arduino.h>  //platformio IDE requires Arduino framework to be explicitly included
 #include <Bounce2.h>
+#include <ESP8266WiFi.h>
 #include <MemoryFree.h>  // https://github.com/maniacbug/MemoryFree & https://playground.arduino.cc/Code/AvailableMemory/
 #include <NewEncoder.h>
 #include <Wire.h>                           // must include before hd44780 libraries due to dependencies
@@ -163,6 +164,10 @@ void setup() {
     button.functionTest();
 #endif  // *****  end button press_type function tests *****
 
+    Serial.println();
+    Serial.print(F("VCC |\t\t GND |\t\t PIT A2 |\t\t MEAT A3 |\t\t PitTemp |\t\t MeatTemp |"));
+    Serial.println();
+
 }  // end of setup
 
 void loop() {
@@ -178,23 +183,28 @@ void loop() {
     float voltagePit_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(2, 11);
     float voltageMeat_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(3, 11);
 
-    //convert probe voltages to temperatures
+    // convert probe voltages to temperatures
     yield();
     currentMeatTemp = sh_meatProbe.getTempFahrenheit(voltageMeat_medianFiltered_V);
     currentPitTemp = sh_pitProbe.getTempFahrenheit(voltagePit_medianFiltered_V);
 
 #ifdef DEBUG_ADC  // *****  debug - ADS1015 ADC *****
-    Serial.println();
-    Serial.print(F("VCC |\t GND |\t PIT |\t MEAT |\t PitTemp |\t MeatTemp |"));
+    /* 
+    // not working - but once debugged, should show memory stats to determine if there is a leak, etc.
+    static uint32_t myfree;
+    static uint16_t mymax;
+    static uint8_t myfrag;
+    ESP.getHeapStats(&myfree, &mymax, &myfrag);
+ */
     Serial.print(voltageVCC_medianFiltered_V, 4);
     Serial.print(F("\t"));
     Serial.print(voltageGND_medianFiltered_V, 4);
     Serial.print(F("\t"));
     Serial.print(voltagePit_medianFiltered_V, 4);
     Serial.print(F("\t"));
-    Serial.println(voltageMeat_medianFiltered_V, 4);
+    Serial.print(voltageMeat_medianFiltered_V, 4);
     Serial.print(F("\t"));
-    Serial.println(currentPitTemp, 1);
+    Serial.print(currentPitTemp, 1);
     Serial.print(F("\t"));
     Serial.println(currentMeatTemp, 1);
 #endif  // end DEBUG
