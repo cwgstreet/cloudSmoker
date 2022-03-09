@@ -19,7 +19,7 @@ The Cloud Smoker Barbecue Monitor project is an IoT device / workflow to read tw
 The overall process flow is as follows:
 
 
-<img src="https://raw.githubusercontent.com/cwgstreet/Cloud-Smoker-BBQ-Monitor/master/Images/CloudSmoker%20Process%20Diagram.jpg"> 
+<img src="https://raw.githubusercontent.com/cwgstreet/cloudSmoker/main/Images/CloudSmoker%20Process%20Diagram.jpg"> 
 
 
 Hardware is based around the ESP8266 ESP-07 module (both for WiFi access and microcontroller), two Maverick ET-732 thermistor probes, and a 4066B switch to allow multiplexing due to limitation of having only the single ADC pin on the ESP-07.
@@ -29,7 +29,7 @@ Coding was done using the Arduino IDE with data uploaded to ThingSpeak for displ
 
 ### Project Overview  ###
 
-A thorough project overview and description can be found in the project [Wiki](https://github.com/cwgstreet/Cloud-Smoker-BBQ-Monitor/wiki) covering design goals, hardware, software, etc.
+A thorough project overview and description can be found in the project [Wiki](https://github.com/cwgstreet/cloudSmoker/wiki) covering design goals, hardware, software, etc.
 
 
 ### Hardware ###
