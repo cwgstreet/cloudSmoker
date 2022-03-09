@@ -1,0 +1,14 @@
+"filename", "language", "C++", "Ini", "comment", "blank", "total"
+"/home/carl/Documents/Electronics/PlatformIO/cloudSmoker/cloudSmoker/cloudSmoker_nodeMCU_12E_V1-0/lib/SteinhartHart/cwg_steinhartHart.cpp", "C++", 22, 0, 68, 16, 106
+"/home/carl/Documents/Electronics/PlatformIO/cloudSmoker/cloudSmoker/cloudSmoker_nodeMCU_12E_V1-0/lib/SteinhartHart/cwg_steinhartHart.h", "C++", 41, 0, 55, 12, 108
+"/home/carl/Documents/Electronics/PlatformIO/cloudSmoker/cloudSmoker/cloudSmoker_nodeMCU_12E_V1-0/lib/cwg_MedianFilterLib2/cwg_MedianFilterLib2.h", "C++", 130, 0, 11, 43, 184
+"/home/carl/Documents/Electronics/PlatformIO/cloudSmoker/cloudSmoker/cloudSmoker_nodeMCU_12E_V1-0/lib/cwg_ads1x15/cwg_ads1x15.cpp", "C++", 1, 0, 2, 2, 5
+"/home/carl/Documents/Electronics/PlatformIO/cloudSmoker/cloudSmoker/cloudSmoker_nodeMCU_12E_V1-0/lib/cwg_ads1x15/cwg_ads1x15.h", "C++", 0, 0, 9, 1, 10
+"/home/carl/Documents/Electronics/PlatformIO/cloudSmoker/cloudSmoker/cloudSmoker_nodeMCU_12E_V1-0/lib/cwg_ads1x15_debug copy/cwg_ads1x15_debug.cpp", "C++", 67, 0, 43, 18, 128
+"/home/carl/Documents/Electronics/PlatformIO/cloudSmoker/cloudSmoker/cloudSmoker_nodeMCU_12E_V1-0/lib/cwg_ads1x15_debug copy/cwg_ads1x15_debug.h", "C++", 25, 0, 45, 11, 81
+"/home/carl/Documents/Electronics/PlatformIO/cloudSmoker/cloudSmoker/cloudSmoker_nodeMCU_12E_V1-0/lib/myConstants/myConstants.h", "C++", 21, 0, 66, 13, 100
+"/home/carl/Documents/Electronics/PlatformIO/cloudSmoker/cloudSmoker/cloudSmoker_nodeMCU_12E_V1-0/lib/press_type/press_type.cpp", "C++", 1, 0, 0, 1, 2
+"/home/carl/Documents/Electronics/PlatformIO/cloudSmoker/cloudSmoker/cloudSmoker_nodeMCU_12E_V1-0/lib/wrapEncoder/wrapEncoder.cpp", "C++", 1, 0, 0, 1, 2
+"/home/carl/Documents/Electronics/PlatformIO/cloudSmoker/cloudSmoker/cloudSmoker_nodeMCU_12E_V1-0/platformio.ini", "Ini", 0, 2, 10, 2, 14
+"/home/carl/Documents/Electronics/PlatformIO/cloudSmoker/cloudSmoker/cloudSmoker_nodeMCU_12E_V1-0/src/cloudSmoker_nodeMCU_main.cpp", "C++", 6, 0, -45, -9, -48
+"Total", "-", 315, 2, 264, 111, 692

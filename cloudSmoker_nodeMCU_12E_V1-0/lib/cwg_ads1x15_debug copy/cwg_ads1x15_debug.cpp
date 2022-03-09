@@ -24,7 +24,6 @@
 #include <cwg_ads1x15.h>
 #include <myConstants.h>  // all constants together in one file
 #include <periphials.h>
-#include "cwg_MedianFilterLib2.h"
 
 // CWG_ADS1015 ads1015;  // instantiate ADS1015 ADC object at default address (ADDR conneced to GND)
 CWG_ADS1015 ads1015(0x48);  // instantiate ADS1015 ADC object at default address (ADDR conneced to GND)
@@ -72,10 +71,14 @@ float CWG_ADS1015::getSensorValue_MedianFiltered_V(uint8_t pin, int windowSize) 
         windowSize += 1;  // make window size odd to avoid having to average between samples
     }
 
-    MedianFilter2<float> medianFilter(windowSize);  //instantiate MedianFilter<T=float>
+    //! temp. code comment next line
+    // MedianFilter<float> medianFilter(windowSize);  //instantiate MedianFilter<T=float>
     int16_t ADCPinReading[windowSize];
     float valueADC_V[windowSize];
     float voltageFactor = getVoltageFactor_V();
+
+    // debug code follows - delete after testing
+    float sum = 0.0;
 
 #if DEBUG
     Serial.print(F("voltageFactor = "));
@@ -89,7 +92,7 @@ float CWG_ADS1015::getSensorValue_MedianFiltered_V(uint8_t pin, int windowSize) 
             ADCPinReading[i] = ads1015.getValue();  // get value from conversion
             ads1015.requestADC(pin);                // request a new conversion
             valueADC_V[i] = ADCPinReading[i] * voltageFactor;
-            medianFilter.AddValue(valueADC_V[i]);
+            //! medianFilter.AddValue(valueADC_V[i]);
 
 #if DEBUG
             Serial.print(F("\tIteration #"));
@@ -103,11 +106,17 @@ float CWG_ADS1015::getSensorValue_MedianFiltered_V(uint8_t pin, int windowSize) 
             Serial.println(valueADC_V[i], 7);
 #endif  // end DEBUG
 
+            //! debug code follows - delete after testing
+            sum += valueADC_V[i];
+            // end debug code
+
             i += 1;  //  only increment loop when ADC.isReady == true or you'll skip values in loops when ADC is busy
         }
     }
 
-    float valueADC_medianFiltered_V = medianFilter.GetFiltered();
+    //! temp. code comment next line and delete line after
+    // float valueADC_medianFiltered_V = medianFilter.GetFiltered();
+    float valueADC_medianFiltered_V = sum / windowSize;
 
 #if DEBUG
     // Serial.println();
