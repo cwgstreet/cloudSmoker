@@ -25,6 +25,7 @@
 .vscode/c_cpp_properties.json
 .vscode/launch.json
 .vscode/ipch
+..VSCodeCounter
 
 # Ignore extras directory - stuff I don't want on git
 extras/
