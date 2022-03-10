@@ -21,10 +21,10 @@
 #include <Wire.h>  // i2C device communication
 
 // incliude local libraries
-#include <cwg_ads1x15.h>
-#include <myConstants.h>  // all constants together in one file
-#include <periphials.h>
 #include "cwg_MedianFilterLib2.h"
+#include "cwg_ads1x15.h"
+#include "myConstants.h"  // all constants together in one file
+#include "periphials.h"
 
 // CWG_ADS1015 ads1015;  // instantiate ADS1015 ADC object at default address (ADDR conneced to GND)
 CWG_ADS1015 ads1015(0x48);  // instantiate ADS1015 ADC object at default address (ADDR conneced to GND)
@@ -72,7 +72,7 @@ float CWG_ADS1015::getSensorValue_MedianFiltered_V(uint8_t pin, int windowSize) 
         windowSize += 1;  // make window size odd to avoid having to average between samples
     }
 
-    MedianFilter2<float> medianFilter(windowSize);  //instantiate MedianFilter<T=float>
+    MedianFilter2<float> medianFilter(windowSize);  // instantiate MedianFilter<T=float>
     int16_t ADCPinReading[windowSize];
     float valueADC_V[windowSize];
     float voltageFactor = getVoltageFactor_V();

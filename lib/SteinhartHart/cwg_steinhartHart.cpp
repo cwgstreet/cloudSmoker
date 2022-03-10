@@ -60,12 +60,12 @@
 #include "cwg_steinhartHart.h"
 
 #include <math.h>
-#include <myConstants.h>  // all constants together in one file
 
 #include "cwg_ads1x15.h"
+#include "myConstants.h"  // all constants together in one file
 
 // instantiate objects
-//  Constructor: SteinhratHart(ADCpin, biasResistorValue_ohm, a, b, b)
+//  Constructor format: SteinhratHart(ADCpin, biasResistorValue_ohm, a, b, b)
 
 SteinhartHart sh_meatProbe(ADC_meatPin, MEAT_BIAS_RESISTOR_Ohm);  // meat thermometer
 SteinhartHart sh_pitProbe(ADC_pitPin, PIT_BIAS_RESISTOR_Ohm);     // pit thermometer

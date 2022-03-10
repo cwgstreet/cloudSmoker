@@ -64,13 +64,11 @@ constexpr int ENCODER_DT = D4;   // pinB newEncoder lib config
 constexpr int ENCODER_CLK = D5;  // pinA newEncoder lib config
 constexpr int BUTTON_PIN = D3;   // KY40 SW (switch) pin (connected to Uno pin 4)
 
-
 // ---------------------------------------------------------
 // ADS1015 ADC pin constants
 // ---------------------------------------------------------
-constexpr int ADC_pitPin = 2;      
-constexpr int ADC_meatPin = 3;      
-
+constexpr int ADC_pitPin = 2;
+constexpr int ADC_meatPin = 3;
 
 // ---------------------------------------------------------
 // Baudrate:  Recommend 74480 baud rate for ESP8266 devices to match ESP8266 fixed bootloader initialisation speed

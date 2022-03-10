@@ -1,13 +1,13 @@
 /* ***************************************************************
-* lcd.h - library containing functions to use lcd, including 
-*   custom character set
-* 
-*  C W Greenstreet, Ver1, 4Dec21
-*    MIT Licence - Released into the public domain
-*
-** ************************************************************* */
+ * lcd.h - library containing functions to use lcd, including
+ *   custom character set
+ *
+ *  C W Greenstreet, Ver1, 4Dec21
+ *    MIT Licence - Released into the public domain
+ *
+ ** ************************************************************* */
 
-//set up debug scaffold; comment out following line if you want to "turn off" serial monitor debugging
+// set up debug scaffold; comment out following line if you want to "turn off" serial monitor debugging
 #define DEBUG 1
 
 // include 3rd party libraries
@@ -17,12 +17,12 @@
 #include <hd44780.h>                        // LCD library
 #include <hd44780ioClass/hd44780_I2Cexp.h>  // i2c expander i/o class header -> required for my YwRobot 1602 LCD
 
-//incliude local libraries
-#include <helper_functions.h>  // do I need this here anymore?  use is in smokerStates now?
-#include <lcd.h>
-#include <press_type.h>
-#include <smokerStates.h>
-#include <wrapEncoder.h>
+// incliude local libraries
+#include "helper_functions.h"  // do I need this here anymore?  use is in smokerStates now?
+#include "lcd.h"
+#include "press_type.h"
+#include "smokerStates.h"
+#include "wrapEncoder.h"
 
 // define LCD geometry (YwRobot 1602 LCD)
 constexpr int LCD_COLS = 16;
@@ -33,13 +33,13 @@ byte menuPrintLine = 0;
 byte menuSelectLine = 0;
 char messageBuffer[17];  // empty buffer array; 16 char LCD screen + terminating null char
 
-//LCD constructor passing lcd rows and columns
+// LCD constructor passing lcd rows and columns
 CWG_LCD::CWG_LCD(const int LCD_COLS, const int LCD_ROWS) {
     _numCols = LCD_COLS;
     _numRows = LCD_ROWS;
 }
 
-CWG_LCD lcd(LCD_COLS, LCD_ROWS);  //instantiate lcd object: auto locate & auto config expander chip
+CWG_LCD lcd(LCD_COLS, LCD_ROWS);  // instantiate lcd object: auto locate & auto config expander chip
 
 // LCD initialisation.  Tests if LCD is working properly.  Place function call in setup (not loop)
 void CWG_LCD::initialiseLCD() {
@@ -56,7 +56,7 @@ void CWG_LCD::initialiseLCD() {
     delay(1000);
     lcd.clear();
     lcd.print(F("LCD test passed"));
-    lcd.setCursor(0, 1);               //set cursor to first column of second row (first position == 0)
+    lcd.setCursor(0, 1);               // set cursor to first column of second row (first position == 0)
     lcd.print(F("G'Day cloudSmkr!"));  // F-Macro to save dynamic memory
     delay(1000);
 }  //  end LCD initialisation
@@ -67,7 +67,7 @@ void CWG_LCD::initialiseLCD() {
 //
 ////////////////////////////////////////////////////////////////////////////////////////
 
-const uint8_t lcd_custChar_degree[8] PROGMEM = {  //need to refer to element 0 in array as "/010", binary 8
+const uint8_t lcd_custChar_degree[8] PROGMEM = {  // need to refer to element 0 in array as "/010", binary 8
     B01100,                                       //   **     note: alternative degree symbol is in character set "/337"
     B10010,                                       //  *  *
     B10010,                                       //  *  *
@@ -86,7 +86,7 @@ const uint8_t lcd_custChar_degreeC[8] PROGMEM = {
     B00100,   //    *
     B00100,   //    *
     B00011,   //     **
-    B00000};  //source: https://github.com/duinoWitchery/hd44780/blob/master/examples/ioClass/hd44780_I2Cexp/LCDCustomChars/LCDCustomChars.ino
+    B00000};  // source: https://github.com/duinoWitchery/hd44780/blob/master/examples/ioClass/hd44780_I2Cexp/LCDCustomChars/LCDCustomChars.ino
 
 // uint8_t degreeF[8]     = {0x18,0x18,0x07,0x04,0x07,0x04,0x04,0x00};
 const uint8_t lcd_custChar_degreeF[8] PROGMEM = {
@@ -97,7 +97,7 @@ const uint8_t lcd_custChar_degreeF[8] PROGMEM = {
     B00111,   //    ***
     B00100,   //    *
     B00100,   //    *
-    B00000};  //source: https://github.com/duinoWitchery/hd44780/blob/master/examples/ioClass/hd44780_I2Cexp/LCDCustomChars/LCDCustomChars.ino
+    B00000};  // source: https://github.com/duinoWitchery/hd44780/blob/master/examples/ioClass/hd44780_I2Cexp/LCDCustomChars/LCDCustomChars.ino
 
 const uint8_t lcd_custChar_thermometer[8] PROGMEM = {
     B00100,   //    *
@@ -130,7 +130,7 @@ const uint8_t lcd_custChar_arrup[8] PROGMEM = {
     B00000};  //         Source: Prusa
 
 // Surplus symbol - swapped out as not used and limited to 8 special characters
-/* 
+/*
 const uint8_t lcd_custChar_arrdown[8] PROGMEM = {
     B00000,   //
     B00000,   //
@@ -152,7 +152,7 @@ const uint8_t lcd_custChar_selectArrLeft[8] PROGMEM = {
     B00010,   //      *
     B00000};  //         custom made
 
-//const uint8_t lcd_custChar_selectArrRight[8] PROGMEM = {
+// const uint8_t lcd_custChar_selectArrRight[8] PROGMEM = {
 const uint8_t lcd_custChar_selectArrRight[8] PROGMEM = {
     B01000,   //   *
     B01100,   //   **
@@ -165,13 +165,13 @@ const uint8_t lcd_custChar_selectArrRight[8] PROGMEM = {
 
 // creates eight custom charcters to use in menu or status screens
 void CWG_LCD::initialiseCustomCharSet() {
-    lcd.createChar(0, lcd_custChar_degree);  //use \010 (binary for 8 as \000 is null termination and will cause problems
+    lcd.createChar(0, lcd_custChar_degree);  // use \010 (binary for 8 as \000 is null termination and will cause problems
     lcd.createChar(1, lcd_custChar_degreeC);
     lcd.createChar(2, lcd_custChar_degreeF);
     lcd.createChar(3, lcd_custChar_thermometer);
     lcd.createChar(4, lcd_custChar_uplevel);
     lcd.createChar(5, lcd_custChar_arrup);
-    //lcd.createChar(6, lcd_custChar_arrdown); // substituted out for symbol below
+    // lcd.createChar(6, lcd_custChar_arrdown); // substituted out for symbol below
     lcd.createChar(6, lcd_custChar_selectArrLeft);
     lcd.createChar(7, lcd_custChar_selectArrRight);
 }
@@ -179,7 +179,7 @@ void CWG_LCD::initialiseCustomCharSet() {
 // confirming functionality of lcd display of special characters
 void CWG_LCD::displayTest() {
     lcd.clear();
-    //lcd.print("\008" "\001" "\002" "\003" "\004" "\005" "\006" "\007");
+    // lcd.print("\008" "\001" "\002" "\003" "\004" "\005" "\006" "\007");
     lcd.setCursor(0, 0);
     lcd.print(
         "\010"
@@ -249,8 +249,8 @@ void CWG_LCD::printMenuLine_noArrow(const char *c) {
 // sprintf(line0, "Temp: %-7sC", float_str); // %6s right pads the string
 // *********************************************************************************************
 void CWG_LCD::showSplashScreen(bool degCFlag, float meatDoneTemp, float pitTempTarget) {
-    //lcd.printMenuLine("test works1");         //test code - REMOVE
-    // lcd.printMenuLine("test works234567");   //test code - REMOVE
+    // lcd.printMenuLine("test works1");         //test code - REMOVE
+    //  lcd.printMenuLine("test works234567");   //test code - REMOVE
     char msg[17];                // space for 16 charcaters + null termination
     char currentMeatTempStr[4];  // empty array to hold converted (to string) float meat temp + null
     char currentPitTempStr[4];
@@ -292,7 +292,7 @@ void CWG_LCD::showSettingsMenu(int16_t currentEncoderValue) {
                 Serial.println();
                 Serial.print(F("CWG_LCD::showSettingsMenu Case 1: -> prevEncoderValue:  "));
                 Serial.print(prevEncoderValue);
-                Serial.print(F(" / currentEncoderValue: "));  //debug
+                Serial.print(F(" / currentEncoderValue: "));  // debug
                 Serial.println(currentEncoderValue);
             }
 #endif
@@ -308,7 +308,7 @@ void CWG_LCD::showSettingsMenu(int16_t currentEncoderValue) {
                 Serial.println();
                 Serial.print(F("CWG_LCD::showSettingsMenu Case 2: -> prevEncoderValue:  "));
                 Serial.print(prevEncoderValue);
-                Serial.print(F(" / currentEncoderValue: "));  //debug
+                Serial.print(F(" / currentEncoderValue: "));  // debug
                 Serial.println(currentEncoderValue);
             }
 
@@ -324,7 +324,7 @@ void CWG_LCD::showSettingsMenu(int16_t currentEncoderValue) {
                 Serial.println();
                 Serial.print(F("CWG_LCD::showSettingsMenu Case 3: -> prevEncoderValue:  "));
                 Serial.print(prevEncoderValue);
-                Serial.print(F(" / currentEncoderValue: "));  //debug
+                Serial.print(F(" / currentEncoderValue: "));  // debug
                 Serial.println(currentEncoderValue);
             }
 #endif
@@ -342,7 +342,7 @@ void CWG_LCD::showSettingsMenu(int16_t currentEncoderValue) {
                 Serial.println();
                 Serial.print(F("CWG_LCD::showSettingsMenu Case 4: -> prevEncoderValue:  "));
                 Serial.print(prevEncoderValue);
-                Serial.print(F(" / currentEncoderValue: "));  //debug
+                Serial.print(F(" / currentEncoderValue: "));  // debug
                 Serial.println(currentEncoderValue);
             }
 #endif
@@ -363,7 +363,7 @@ void CWG_LCD::showSettingsMenu(int16_t currentEncoderValue) {
                 Serial.println();
                 Serial.print(F("CWG_LCD::showSettingsMenu Case 5: -> prevEncoderValue:  "));
                 Serial.print(prevEncoderValue);
-                Serial.print(F(" / currentEncoderValue: "));  //debug
+                Serial.print(F(" / currentEncoderValue: "));  // debug
                 Serial.println(currentEncoderValue);
             }
 #endif
@@ -390,7 +390,7 @@ void CWG_LCD::showSettingsMenu(int16_t currentEncoderValue) {
                 Serial.println();
                 Serial.print(F("CWG_LCD::showSettingsMenu Case 6: -> prevEncoderValue:  "));
                 Serial.print(prevEncoderValue);
-                Serial.print(F(" / currentEncoderValue: "));  //debug
+                Serial.print(F(" / currentEncoderValue: "));  // debug
                 Serial.println(currentEncoderValue);
             }
 #endif
@@ -414,7 +414,7 @@ void CWG_LCD::showSettingsMenu(int16_t currentEncoderValue) {
                 Serial.println();
                 Serial.print(F("CWG_LCD::showSettingsMenu Case 7: -> prevEncoderValue:  "));
                 Serial.print(prevEncoderValue);
-                Serial.print(F(" / currentEncoderValue: "));  //debug
+                Serial.print(F(" / currentEncoderValue: "));  // debug
                 Serial.println(currentEncoderValue);
             }
 #endif
@@ -429,7 +429,7 @@ void CWG_LCD::showSettingsMenu(int16_t currentEncoderValue) {
                 Serial.println();
                 Serial.print(F("CWG_LCD::showSettingsMenu Case 7: -> prevEncoderValue:  "));
                 Serial.print(prevEncoderValue);
-                Serial.print(F(" / currentEncoderValue: "));  //debug
+                Serial.print(F(" / currentEncoderValue: "));  // debug
                 Serial.println(currentEncoderValue);
             }
 #endif
@@ -439,7 +439,7 @@ void CWG_LCD::showSettingsMenu(int16_t currentEncoderValue) {
 
 // getTargetTemperatureMsg(messageBuffer, degCFlag, temporaryTemperatureTarget, meatTargetFlag, adjTempFlag);
 void CWG_LCD::getTargetTemperatureMsg(char (&messageBuffer)[17], bool degCFlag, float targetTemperature, bool meatTargetFlag, bool adjTempFlag) {
-    //Serial.println(F("entered getTargetTemperatureMsg"));
+    // Serial.println(F("entered getTargetTemperatureMsg"));
 
     char TemperatureStr[4];  // empty array to hold converted (to string) float meat temp + null
 
@@ -484,7 +484,7 @@ void CWG_LCD::showSetMeatDoneTempMenu(int16_t prevEncoderValue) {
         case 0: {
             menuSelectLine = 0;
             lcd.printMenuLine_noArrow(" Select&Tap\007 set");
-            //lcd.printMenuLine("Tap to set temp");
+            // lcd.printMenuLine("Tap to set temp");
             bool meatTargetFlag = 1;
             bool adjTempFlag = 0;
             getTargetTemperatureMsg(messageBuffer, degCFlag, meatDoneTemp, meatTargetFlag, adjTempFlag);
@@ -501,7 +501,7 @@ void CWG_LCD::showSetMeatDoneTempMenu(int16_t prevEncoderValue) {
         case 1: {
             menuSelectLine = 1;
             lcd.printMenuLine("Select&Tap\007 set");
-            //lcd.printMenuLine("Tap to set temp");
+            // lcd.printMenuLine("Tap to set temp");
             bool meatTargetFlag = 1;
             bool adjTempFlag = 0;
             getTargetTemperatureMsg(messageBuffer, degCFlag, meatDoneTemp, meatTargetFlag, adjTempFlag);
@@ -534,11 +534,11 @@ void CWG_LCD::showSetMeatDoneTempMenu(int16_t prevEncoderValue) {
 }
 
 void CWG_LCD::showSetPitTempTargetMenu(int16_t prevEncoderValue) {
-   switch (prevEncoderValue) {
+    switch (prevEncoderValue) {
         case 0: {
             menuSelectLine = 0;
             lcd.printMenuLine_noArrow(" Select&Tap\007 set");
-            //lcd.printMenuLine("Tap to set temp");
+            // lcd.printMenuLine("Tap to set temp");
             bool meatTargetFlag = 0;  // 0 for pitTempTarget
             bool adjTempFlag = 0;
             getTargetTemperatureMsg(messageBuffer, degCFlag, pitTempTarget, meatTargetFlag, adjTempFlag);
@@ -555,8 +555,8 @@ void CWG_LCD::showSetPitTempTargetMenu(int16_t prevEncoderValue) {
         case 1: {
             menuSelectLine = 1;
             lcd.printMenuLine("Select&Tap\007 set");
-            //lcd.printMenuLine("Tap to set temp");
-            bool meatTargetFlag = 0; // 0 for pitTempTarget
+            // lcd.printMenuLine("Tap to set temp");
+            bool meatTargetFlag = 0;  // 0 for pitTempTarget
             bool adjTempFlag = 0;
             getTargetTemperatureMsg(messageBuffer, degCFlag, pitTempTarget, meatTargetFlag, adjTempFlag);
             lcd.printMenuLine(messageBuffer);
@@ -571,7 +571,7 @@ void CWG_LCD::showSetPitTempTargetMenu(int16_t prevEncoderValue) {
 
         case 2: {
             menuSelectLine = 1;
-            bool meatTargetFlag = 0; // 0 for pitTempTarget
+            bool meatTargetFlag = 0;  // 0 for pitTempTarget
             bool adjTempFlag = 0;
             getTargetTemperatureMsg(messageBuffer, degCFlag, pitTempTarget, meatTargetFlag, adjTempFlag);
             lcd.printMenuLine(messageBuffer);
@@ -585,21 +585,19 @@ void CWG_LCD::showSetPitTempTargetMenu(int16_t prevEncoderValue) {
 #endif
         } break;
     }
-} 
-
-
+}
 
 void CWG_LCD::showSetTempUnitsMenu(int16_t currentEncoderValue) {
     switch (currentEncoderValue) {
         case 0:
-            //Serial.println("case 0 SetTempUnits");
+            // Serial.println("case 0 SetTempUnits");
             menuSelectLine = 0;
             if (degCFlag == 0) {
                 lcd.printMenuLine("Tap to set unit");
-                lcd.printMenuLine("Units [F] / C");  //degF are selected temperature units
+                lcd.printMenuLine("Units [F] / C");  // degF are selected temperature units
             } else {
                 lcd.printMenuLine("Tap to set unit");
-                lcd.printMenuLine("Units  F /[C]");  //degC are selected temperature units
+                lcd.printMenuLine("Units  F /[C]");  // degC are selected temperature units
             }
 
 #ifdef DEBUG
@@ -607,14 +605,14 @@ void CWG_LCD::showSetTempUnitsMenu(int16_t currentEncoderValue) {
                 Serial.println();
                 Serial.print(F("CWG_LCD::showSetTempUnitsMenu Case 0: -> prevEncoderValue:  "));
                 Serial.print(prevEncoderValue);
-                Serial.print(F(" / currentEncoderValue: "));  //debug
+                Serial.print(F(" / currentEncoderValue: "));  // debug
                 Serial.println(currentEncoderValue);
             }
 #endif
             break;
 
         case 1:
-            //Serial.println("case 1 SetTempUnits");
+            // Serial.println("case 1 SetTempUnits");
             menuSelectLine = 1;
             if (degCFlag == 0) {
                 lcd.printMenuLine("Tap to set unit");
@@ -629,14 +627,14 @@ void CWG_LCD::showSetTempUnitsMenu(int16_t currentEncoderValue) {
                 Serial.println();
                 Serial.print(F("CWG_LCD::showSetTempUnitsMenu Case 1: -> prevEncoderValue:  "));
                 Serial.print(prevEncoderValue);
-                Serial.print(F(" / currentEncoderValue: "));  //debug
+                Serial.print(F(" / currentEncoderValue: "));  // debug
                 Serial.println(currentEncoderValue);
             }
 #endif
             break;
 
         case 2:
-            //Serial.println("case 2 SetTempUnits");
+            // Serial.println("case 2 SetTempUnits");
             menuSelectLine = 1;
             if (degCFlag == 0) {
                 lcd.printMenuLine("Units [F] / C");
@@ -651,7 +649,7 @@ void CWG_LCD::showSetTempUnitsMenu(int16_t currentEncoderValue) {
                 Serial.println();
                 Serial.print(F("CWG_LCD::showSetTempUnitsMenu Case 2: -> prevEncoderValue:  "));
                 Serial.print(prevEncoderValue);
-                Serial.print(F(" / currentEncoderValue: "));  //debug
+                Serial.print(F(" / currentEncoderValue: "));  // debug
                 Serial.println(currentEncoderValue);
             }
 #endif
@@ -661,7 +659,7 @@ void CWG_LCD::showSetTempUnitsMenu(int16_t currentEncoderValue) {
 
 void CWG_LCD::showTemeratureTargetAdjustment(float temporaryTemperatureTarget, bool meatTargetFlag) {
     bool adjTempFlag = 1;
-    /* 
+    /*
     //debug
     if (encoder.moved()) {
         Serial.println();

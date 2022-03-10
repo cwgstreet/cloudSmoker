@@ -1,10 +1,10 @@
 /* ***************************************************************
-* helper_functions.h - library containing genral use helper functions 
-* 
-*  C W Greenstreet, Ver1, 27Sep21
-*    MIT Licence - Released into the public domain
-*
-** ************************************************************* */
+ * helper_functions.h - library containing genral use helper functions
+ *
+ *  C W Greenstreet, Ver1, 27Sep21
+ *    MIT Licence - Released into the public domain
+ *
+ ** ************************************************************* */
 
 #ifndef HELPER_FUNCTIONS_H
 #define HELPER_FUNCTIONS_H
@@ -17,8 +17,7 @@
 #include <pins_arduino.h>
 #endif  // end if-block
 
-
-extern long unsigned startCookTimeMS; 
+extern long unsigned startCookTimeMS;
 
 /******************************************************
 // helper function prototypes

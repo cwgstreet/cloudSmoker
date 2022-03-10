@@ -1,32 +1,33 @@
 /* *************************************************************
-* press_type.cpp - Wrapper Library to determine button press type 
-*   press_types:  short press, long press and double press
-* 
-*  C W Greenstreet, Ver1, 7Sep21
-*    MIT Licence - Released into the public domain
-*
-* Library encapsulates and integrates selected fetures from 
-*    1) Yabl (Yet another button library for Arduino)
-*           https://github.com/yergin/Yabl 
-*    2) Bounce2 (debouncng library)
-*           https://github.com/thomasfredericks/Bounce2 
-*
-* ************************************************************ */
+ * press_type.cpp - Wrapper Library to determine button press type
+ *   press_types:  short press, long press and double press
+ *
+ *  C W Greenstreet, Ver1, 7Sep21
+ *    MIT Licence - Released into the public domain
+ *
+ * Library encapsulates and integrates selected fetures from
+ *    1) Yabl (Yet another button library for Arduino)
+ *           https://github.com/yergin/Yabl
+ *    2) Bounce2 (debouncng library)
+ *           https://github.com/thomasfredericks/Bounce2
+ *
+ * ************************************************************ */
 
-//set up debug scaffold; comment out following line if you want to "turn off" serial monitor debugging
+// set up debug scaffold; comment out following line if you want to "turn off" serial monitor debugging
 #define DEBUG 1
+
+#include "press_type.h"
 
 #include <Arduino.h>
 #include <Yabl.h>
-#include <press_type.h>
-#include <myConstants.h>   // all constants in one file
 
+#include "myConstants.h"  // all constants in one file
 
 const long BAUD_RATE = 74880;  // match native ESP8266 bootup baud rate to view bootup info, otherwise gibberish
 
-Press_Type button(BUTTON_PIN);  //instantiate button object from press_type (YABL child) library
+Press_Type button(BUTTON_PIN);  // instantiate button object from press_type (YABL child) library
 
-//Press_Type constructor attaching button switch
+// Press_Type constructor attaching button switch
 Press_Type::Press_Type(const int switchPin) {
     _pin = switchPin;
 }
@@ -79,11 +80,11 @@ void Press_Type::begin(int _pin) {
     Serial.begin(BAUD_RATE);
 
 #if DEBUG
-    Serial.println("   ");  //blank line for visual space
+    Serial.println("   ");  // blank line for visual space
     Serial.println("     Yabl Test follows");
     Serial.println("==============================");
     Serial.println();
-#endif  //DEBUG
+#endif  // DEBUG
 }
 
 void Press_Type::functionTest() {
@@ -102,7 +103,7 @@ void Press_Type::functionTest() {
 }
 
 // uneccessary code - can go stright to inherited button.update()
-/* 
+/*
 void Press_Type::checkPress() {
     button.update();
 }

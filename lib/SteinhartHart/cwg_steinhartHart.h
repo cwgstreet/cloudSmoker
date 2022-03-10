@@ -57,7 +57,8 @@
 #endif  // end if-block
 
 #include <inttypes.h>  // stabdardised library of integer types
-#include <myConstants.h>
+
+#include "myConstants.h"
 
 class SteinhartHart {
    public:
@@ -93,7 +94,7 @@ class SteinhartHart {
     double _biasResistance;  //  bias resistor value
     double _Rth_ohm;         //  NTC thermistor resistance
 
-    double _Vadc;            //  voltage measured by ADC (typically median filtered)
+    double _Vadc;  //  voltage measured by ADC (typically median filtered)
 
     // Manufacturing constants
     double _a;

@@ -1,21 +1,21 @@
 /* ***************************************************************
-* wrapEncoder.h - library extending newEncoder Library fuctionality
-*   creates encoder object with min / max values that "wrap"
-*
-*   based on newEncoder example sketch
-*     https://github.com/gfvalvo/NewEncoder/blob/master/examples/CustomEncoder/CustomEncoder.ino
-* 
-*  C W Greenstreet, Ver1, 27Sep21
-*    MIT Licence - Released into the public domain
-*
-** ************************************************************ */
+ * wrapEncoder.h - library extending newEncoder Library fuctionality
+ *   creates encoder object with min / max values that "wrap"
+ *
+ *   based on newEncoder example sketch
+ *     https://github.com/gfvalvo/NewEncoder/blob/master/examples/CustomEncoder/CustomEncoder.ino
+ *
+ *  C W Greenstreet, Ver1, 27Sep21
+ *    MIT Licence - Released into the public domain
+ *
+ ** ************************************************************ */
 
 #include "wrapEncoder.h"
-#include <myConstants.h>   // all constants in one file
-
 
 #include <Arduino.h>
 #include <NewEncoder.h>
+
+#include "myConstants.h"  // all constants in one file
 
 WrapEncoder encoder(ENCODER_CLK, ENCODER_DT, 0, 1, 0, FULL_PULSE);  // default encoder is 0,1 wrapping (for two-line LCD).  Args: pinA, pinB, min, max, start, full or half pulse
 WrapEncoder::EncoderState currentEncoderState;                      // note EncoderState is a public struct datatype (currentEncoderState is global per extern declaration in wrapEncoder.h)
@@ -38,7 +38,7 @@ void ESP_ISR WrapEncoder::updateValue(uint8_t updatedState) {
 }
 
 void WrapEncoder::initialise() {
-    //delay(500);   //can remove if blocking - for asthetics
+    // delay(500);   //can remove if blocking - for asthetics
     Serial.println(F("Starting"));
     if (!encoder.begin()) {
         Serial.println(F("WrapEncoder::initialise -> Encoder Failed to Start. Check pin assignments and available interrupts. Aborting."));
@@ -77,11 +77,11 @@ bool WrapEncoder::moved() {
 
     if (encoder.getState(currentEncoderState)) {  // checks for state change (movement)
         currentEncoderValue = currentEncoderState.currentValue;
-        //debug statements:
+        // debug statements:
         Serial.println();
-        Serial.print(F("WrapEncoder::moved() -> prevEncoderValue: "));  //debug
+        Serial.print(F("WrapEncoder::moved() -> prevEncoderValue: "));  // debug
         Serial.print(prevEncoderValue);
-        Serial.print(F(" / currentEncoderValue = currentEncoderState.currentValue: "));  //debug
+        Serial.print(F(" / currentEncoderValue = currentEncoderState.currentValue: "));  // debug
         Serial.println(currentEncoderValue);
         // end debug statements:
     }
@@ -89,12 +89,12 @@ bool WrapEncoder::moved() {
 
     if (currentEncoderValue != prevEncoderValue) {
         prevEncoderValue = currentEncoderValue;
-        //debug statements:
+        // debug statements:
         Serial.println();
-        Serial.println(F("   **WrapEncoder::moved() => Encoder Moved!  if (currentEncoderValue != prevEncoderValue)"));  //debug
-        Serial.print(F("exiting WrapEncoder::moved() -> prevEncoderValue: "));                                           //debug
+        Serial.println(F("   **WrapEncoder::moved() => Encoder Moved!  if (currentEncoderValue != prevEncoderValue)"));  // debug
+        Serial.print(F("exiting WrapEncoder::moved() -> prevEncoderValue: "));                                           // debug
         Serial.print(prevEncoderValue);
-        Serial.print(F(" / currentEncoderValue: "));  //debug
+        Serial.print(F(" / currentEncoderValue: "));  // debug
         Serial.println(currentEncoderValue);
         // end debug statements:
         return 1;  // true if encoder value changes

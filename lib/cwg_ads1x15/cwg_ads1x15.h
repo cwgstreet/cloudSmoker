@@ -46,7 +46,7 @@ class CWG_ADS1015 : public ADS1015 {
     void initialise(uint8_t gainSetting, uint8_t modeSetting, uint8_t dataRateSetting);
     float getVoltageFactor_V();
     float getSensorValue_MedianFiltered_V(uint8_t pin, int windowSize);
-    //float getMedFiltered();
+    // float getMedFiltered();
 
    protected:
     //
@@ -55,16 +55,15 @@ class CWG_ADS1015 : public ADS1015 {
 // ensure objects are visable everywhere (global)
 extern CWG_ADS1015 ads1015;
 
-
 //==============================================================================================
 // For reference:
-//  ADS1X15 ADCs do not take an external reference voltage but rely on an internal full scale 
+//  ADS1X15 ADCs do not take an external reference voltage but rely on an internal full scale
 //   voltage (fsv) that is a function of the PGA gain setting - see table below
 //
 //  Also note that AD1015 is notionally 12 bit but only for full scale differential measurements
 //     with the one bit used for sign (neg / positive)
-//   When single shot, the ADS1015 ADC is effectively 11 bit (2^11 = 2048 measurements)  
-//  For example, using default 2/3x gain, 6.144V fsv / 2048 measurements = 0.003 or 3mV LSB 
+//   When single shot, the ADS1015 ADC is effectively 11 bit (2^11 = 2048 measurements)
+//  For example, using default 2/3x gain, 6.144V fsv / 2048 measurements = 0.003 or 3mV LSB
 // -------------------------
 // PGA gain settings, max Voltage and LSB (least significant bit)
 //   taken from Adafruit ADS1x15 library, where bit = LSB
