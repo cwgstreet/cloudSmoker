@@ -63,38 +63,39 @@
 class SteinhartHart {
    public:
     /**
-     * Constructor: SteinhratHart(ADCpin, biasResistorValue_ohm, a, b, c)
+     * Constructor: SteinhratHart(biasResistorValue_ohm, voltageProbe_volt, a, b, c)
      *
      * Only the ADC reading pin and bias resistor values have to be specified in the constuctor.
      * If no other parameters are given default values will be used
      *   from a Mavrick-723 temperature probe and cloudSmoker project design
      */
     SteinhartHart(
-        uint8_t ADCpin,
+
+        // double V_IN_Volt,
         double biasResistorValue_ohm,
+        double voltageProbe_volt,
         double a = 0.625773640e-3,
         double b = 1.842254690e-4,
-        double c = 6.94265460e-8) : _ADCpin(ADCpin),
-                                    _Vin(V_IN_Volt),
-                                    _biasResistance(biasResistorValue_ohm),
-                                    _a(a),
-                                    _b(b),
-                                    _c(c){};
+        double c = 6.94265460e-8) :
+                                    _biasResistance{biasResistorValue_ohm},
+                                    _Vadc{voltageProbe_volt},
+                                    _Vin{V_IN_Volt},
+                                    _a{a},
+                                    _b{b},
+                                    _c{c} {};
 
-    double getTempKelvin(double VmeasuredADC_V);
-    double getTempCelsius(double VmeasuredADC_V);
-    double getTempFahrenheit(double VmeasuredADC_V);
+    double getTempKelvin();
+    double getTempCelsius();
+    double getTempFahrenheit();
 
    private:
     double steinhartHart(double _Rth_ohm);
 
-    // Constructor prrivate members - Thermistor voltage divider
-    uint8_t _ADCpin;         //  ADS1015 ADC Pin (0 to 3)
+    // Constructor private members - Thermistor voltage divider
     double _Vin;             //  supply voltage to voltage divider
     double _biasResistance;  //  bias resistor value
+    double _Vadc;            //  probe voltage measured by ADC (typically median filtered)
     double _Rth_ohm;         //  NTC thermistor resistance
-
-    double _Vadc;  //  voltage measured by ADC (typically median filtered)
 
     // Manufacturing constants
     double _a;
@@ -105,5 +106,9 @@ class SteinhartHart {
 // ensure objects are visable everywhere (global)
 extern SteinhartHart sh_meatProbe;  // meat thermometer
 extern SteinhartHart sh_pitProbe;   // meat thermometer
+
+// make external voltage readings variables visible in library
+extern double voltageMeat_medianFiltered_V;
+extern double voltagePit_medianFiltered_V;
 
 #endif  // end header guard

@@ -93,6 +93,6 @@ constexpr int SERIAL_MONITOR_SPEED = 74880;
 //
 constexpr double MEAT_BIAS_RESISTOR_Ohm = 75.0e3;  // replace with DMM measured actual value for improved accuracy
 constexpr double PIT_BIAS_RESISTOR_Ohm = 9.1e3;
-constexpr double V_IN_Volt = 5.0;  // replace with measured Vsupply (%V less voltage drops) for better accuracy
+const double V_IN_Volt = 5.0;  // nominally 5V; replaced with actual measured Vsupply (%V less voltage drops) for better accuracy
 
 #endif  // end header guard

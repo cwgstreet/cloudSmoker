@@ -89,6 +89,8 @@ float currentPitTemp = 225;  // current pit temp; default to long and slow brisk
 bool degCFlag = 0;           // temperature unit flag: 1 for Centigrade or 0 for Fahrenheit (default)
 float batteryVoltage = 999;  // 999 as null proxy
 float voltageFactor = 0;     // dependent on ADS1015 settings used
+double voltagePit_medianFiltered_V;
+double voltageMeat_medianFiltered_V;
 
 /* *****
 TODO:  add 4-hour rule check and exception notification
@@ -128,11 +130,11 @@ void setup() {
     constexpr uint8_t DATA_RATE_SETTING = 4;
     ads1015.initialise(GAIN_SETTING, MODE_SETTING, DATA_RATE_SETTING);
 /*
-    // get 10 ADC readings from designated pin and return a median filtered value
+    // get 11 ADC readings from designated pin and return a median filtered value
     float voltageVCC_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(0, 11);
     float voltageGND_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(1, 11);
-    float voltagePit_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(2, 11);
-    float voltageMeat_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(3, 11);
+    double voltagePit_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(2, 11);
+    double voltageMeat_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(3, 11);
 
 #ifdef DEBUG_ADC  // *****  debug - ADS1015 ADC *****
     Serial.println();
@@ -180,16 +182,16 @@ void loop() {
     // get 10 ADC readings from designated pin and return a median filtered value
     float voltageVCC_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(0, 11);
     float voltageGND_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(1, 11);
-    float voltagePit_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(2, 11);
-    float voltageMeat_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(3, 11);
+    voltagePit_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(2, 11);
+    voltageMeat_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(3, 11);
 
     // convert probe voltages to temperatures
     yield();
-    currentMeatTemp = sh_meatProbe.getTempFahrenheit(voltageMeat_medianFiltered_V);
-    currentPitTemp = sh_pitProbe.getTempFahrenheit(voltagePit_medianFiltered_V);
+    currentMeatTemp = sh_meatProbe.getTempFahrenheit();
+    currentPitTemp = sh_pitProbe.getTempFahrenheit();
 
 #ifdef DEBUG_ADC  // *****  debug - ADS1015 ADC *****
-    /* 
+    /*
     // not working - but once debugged, should show memory stats to determine if there is a leak, etc.
     static uint32_t myfree;
     static uint16_t mymax;

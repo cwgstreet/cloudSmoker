@@ -65,17 +65,31 @@
 #include "myConstants.h"  // all constants together in one file
 
 // instantiate objects
-//  Constructor format: SteinhratHart(ADCpin, biasResistorValue_ohm, a, b, b)
+//  Constructor format: SteinhratHart(biasResistorValue_ohm, voltageProbe_volt, a, b, c)
 
-SteinhartHart sh_meatProbe(ADC_meatPin, MEAT_BIAS_RESISTOR_Ohm);  // meat thermometer
-SteinhartHart sh_pitProbe(ADC_pitPin, PIT_BIAS_RESISTOR_Ohm);     // pit thermometer
+SteinhartHart sh_meatProbe(MEAT_BIAS_RESISTOR_Ohm, voltageMeat_medianFiltered_V);  // meat thermometer
+SteinhartHart sh_pitProbe(PIT_BIAS_RESISTOR_Ohm, voltagePit_medianFiltered_V);     // pit thermometer
 
 // --------------------------
 //  steinhartHart() function purpose: Returns the temperature in degrees kelvin for a given thermistor
 //      and bias resistor values using the Steinhart-Hart polynomial relationship
 // --------------------------
 double SteinhartHart::steinhartHart(double _Rth_ohm) {
-    _Rth_ohm = -((_Vadc * _biasResistance) / (_Vadc - _Vin));
+    
+    // debug code
+    {
+        Serial.println();
+        Serial.println(F("-------steinhartHart()------------------------"));
+        Serial.println(F(" _Rth_ohm \t _Vadc \t _biasResistance \t _Vin"));
+        Serial.print(_Rth_ohm);
+        Serial.print(F("\t"));
+        Serial.print(_Vadc);
+        Serial.print(F("\t"));
+        Serial.print(_biasResistance);
+        Serial.print(F("\t"));
+        Serial.println(_Vin);
+    }
+    // end debug
 
     double log_r = log(_Rth_ohm);  // log operation in math.h is log(base e) or ln, not log(base 10)
     double log_r3 = log_r * log_r * log_r;
@@ -83,23 +97,39 @@ double SteinhartHart::steinhartHart(double _Rth_ohm) {
     return 1.0 / (_a + _b * log_r + _c * log_r3);  // Steinhart-Hart poloynomial relationship, returns temp in deg K
 }
 
-//?  rearrange to solve for Thermistor Resistance, Rth
-//?   Rth = -(Vo * Rb)/(Vo - Vcc)   -> don't miss the negative sign!
-
 // --------------------------
 //   getTempKelvin() function purpose: Returns the temperature in degrees kelvin for the given thermistor resistance
 //      value using the Steinhart-Hart polynomial relationship
 // --------------------------
-double SteinhartHart::getTempKelvin(double VmeasuredADC_V) {
-    double _Vadc = VmeasuredADC_V;
+double SteinhartHart::getTempKelvin() {
+    //?  rearrange to solve for Thermistor Resistance, Rth
+    //?   Rth = -(Vo * Rb)/(Vo - Vcc)   -> don't miss the negative sign!
 
-    return steinhartHart(_Vadc);
+    _Rth_ohm = -1 * ((_Vadc * _biasResistance) / (_Vadc - _Vin));
+
+    // debug
+    {
+        Serial.println();
+        Serial.println(F("-------getTempKelvin()------------------------"));
+        Serial.println(F(" _Rth_ohm \t _Vadc \t _biasResistance \t _Vin"));
+        Serial.print(_Rth_ohm);
+        Serial.print(F("\t"));
+        Serial.print(_Vadc);
+        Serial.print(F("\t"));
+        Serial.print(_biasResistance);
+        Serial.print(F("\t"));
+        Serial.println(_Vin);
+        Serial.println();
+    }
+    // end debug
+
+    return steinhartHart(_Rth_ohm);
 }
 
-double SteinhartHart::getTempCelsius(double VmeasuredADC_V) {
-    return getTempKelvin(VmeasuredADC_V) - 273.15;
+double SteinhartHart::getTempCelsius() {
+    return getTempKelvin() - 273.15;
 }
 
-double SteinhartHart::getTempFahrenheit(double VmeasuredADC_V) {
-    return getTempCelsius(VmeasuredADC_V) * 9 / 5 + 32;
+double SteinhartHart::getTempFahrenheit() {
+    return getTempCelsius() * 9 / 5 + 32;
 }
