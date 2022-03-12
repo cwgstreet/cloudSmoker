@@ -67,6 +67,9 @@
 // instantiate objects
 //  Constructor format: SteinhratHart(biasResistorValue_ohm, voltageProbe_volt, a, b, c)
 
+//SteinhartHart(double biasResistorValue_ohm, double voltageProbe_volt, double a = (0.0006257736399999999774), double b = (0.0001842254689999999883), double c = (6.942654599999999779e-08));
+
+
 SteinhartHart sh_meatProbe(MEAT_BIAS_RESISTOR_Ohm, voltageMeat_medianFiltered_V);  // meat thermometer
 SteinhartHart sh_pitProbe(PIT_BIAS_RESISTOR_Ohm, voltagePit_medianFiltered_V);     // pit thermometer
 
@@ -75,8 +78,7 @@ SteinhartHart sh_pitProbe(PIT_BIAS_RESISTOR_Ohm, voltagePit_medianFiltered_V);  
 //      and bias resistor values using the Steinhart-Hart polynomial relationship
 // --------------------------
 double SteinhartHart::steinhartHart(double _Rth_ohm) {
-    
-    // debug code
+    /* // debug code
     {
         Serial.println();
         Serial.println(F("-------steinhartHart()------------------------"));
@@ -89,7 +91,7 @@ double SteinhartHart::steinhartHart(double _Rth_ohm) {
         Serial.print(F("\t"));
         Serial.println(_Vin);
     }
-    // end debug
+    // end debug */
 
     double log_r = log(_Rth_ohm);  // log operation in math.h is log(base e) or ln, not log(base 10)
     double log_r3 = log_r * log_r * log_r;
@@ -107,7 +109,7 @@ double SteinhartHart::getTempKelvin() {
 
     _Rth_ohm = -1 * ((_Vadc * _biasResistance) / (_Vadc - _Vin));
 
-    // debug
+    /* // debug
     {
         Serial.println();
         Serial.println(F("-------getTempKelvin()------------------------"));
@@ -121,7 +123,7 @@ double SteinhartHart::getTempKelvin() {
         Serial.println(_Vin);
         Serial.println();
     }
-    // end debug
+    // end debug */
 
     return steinhartHart(_Rth_ohm);
 }

@@ -69,20 +69,33 @@ class SteinhartHart {
      * If no other parameters are given default values will be used
      *   from a Mavrick-723 temperature probe and cloudSmoker project design
      */
-    SteinhartHart(
 
-        // double V_IN_Volt,
+    SteinhartHart() = delete; // forbid the default constructor   
+
+    SteinhartHart(
         double biasResistorValue_ohm,
         double voltageProbe_volt,
+        // double V_IN_Volt,
         double a = 0.625773640e-3,
         double b = 1.842254690e-4,
-        double c = 6.94265460e-8) :
-                                    _biasResistance{biasResistorValue_ohm},
+        double c = 6.94265460e-8) : _biasResistance{biasResistorValue_ohm},
                                     _Vadc{voltageProbe_volt},
-                                    _Vin{V_IN_Volt},
+                                    //_Vin{V_IN_Volt},
                                     _a{a},
                                     _b{b},
-                                    _c{c} {};
+                                    _c{c} {
+        // debug code
+        Serial.println();
+        Serial.println(F("=========SteinhartHart constructor applied ============="));
+        /* Serial.println(F(" _Rth_ohm \t _Vadc \t _biasResistance \t _Vin"));
+        Serial.print(_Rth_ohm);
+        Serial.print(F("\t"));
+        Serial.print(_Vadc);
+        Serial.print(F("\t"));
+        Serial.print(_biasResistance);
+        Serial.print(F("\t"));
+        Serial.println(_Vin); */
+    };
 
     double getTempKelvin();
     double getTempCelsius();
@@ -91,10 +104,10 @@ class SteinhartHart {
    private:
     double steinhartHart(double _Rth_ohm);
 
-    // Constructor private members - Thermistor voltage divider
-    double _Vin;             //  supply voltage to voltage divider
+    //  Thermistor voltage divider
     double _biasResistance;  //  bias resistor value
     double _Vadc;            //  probe voltage measured by ADC (typically median filtered)
+    double _Vin{V_IN_Volt};             //  supply voltage to voltage divider
     double _Rth_ohm;         //  NTC thermistor resistance
 
     // Manufacturing constants
