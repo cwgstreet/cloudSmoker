@@ -44,8 +44,8 @@
  *   ALRT       float     not used (float per datasheet)
  *   A0         5V        monitor battery voltage
  *   A1         GND
- *   A2         PIT       Pit probe thermistor jack  (measured 81.2 kohm 5% bias resistor - vs 1% 75kohm design)
- *   A3         MEAT      Meat probe thermistor jack (measured 9.96 kohm 1% bias resistor - vs 1% 9.09kohm design)
+ *   A2         PIT       Pit probe thermistor jack  (measured 75.0 kohm 1% bias resistor - vs 1% 75kohm design)
+ *   A3         MEAT      Meat probe thermistor jack (measured 9.09 kohm 1% bias resistor - vs 1% 9.09kohm design)
  */
 
 /******************************************************
@@ -78,21 +78,25 @@ constexpr int ADC_meatPin = 3;
 //#define SERIAL_MONITOR_SPEED 74880  // change to constexpr
 constexpr int SERIAL_MONITOR_SPEED = 74880;
 
-// ---------------------------------------------------------
-// Thermistor voltage divider constants
+// *******************************************************
+//   Thermistor Hardware setup
+// *******************************************************
 //
 //         Bias Resistor     NTC Thermistor
-//                ____           ____
-//   +V_IN o-----|____|----+----|____|----o GND
-//  (~5 V)        Rbias    | Rthermistor
-//             (10E6 ohm)  |  (75E3 ohm)
-//    ADC PIN              |
-//      (A0) o-------------+
+//                ____           ___/_
+//   +V_IN o-----|____|----+----|__/__|----o GND
+//  (~5 V)                 |      /
+//                Rbias    | Rthermistor
+//      (75E3 / 9.1E3 ohm) |  (10E6 ohm R25)
+//                         |
+//        ADC PIN          |
+//         (A0) o----------+
 //                       Vout
-// ---------------------------------------------------------
 //
+// *******************************************************
+
 constexpr double MEAT_BIAS_RESISTOR_Ohm = 75.0e3;  // replace with DMM measured actual value for improved accuracy
 constexpr double PIT_BIAS_RESISTOR_Ohm = 9.1e3;
-const double V_IN_Volt = 5.0;  // nominally 5V; replaced with actual measured Vsupply (%V less voltage drops) for better accuracy
+const double V_IN_Volt = 4.63;  // nominally 5V; replaced with actual measured Vsupply (%V less voltage drops) for better accuracy
 
 #endif  // end header guard
