@@ -89,6 +89,7 @@ float currentPitTemp = 225;  // current pit temp; default to long and slow brisk
 bool degCFlag = 0;           // temperature unit flag: 1 for Centigrade or 0 for Fahrenheit (default)
 float batteryVoltage = 999;  // 999 as null proxy
 float voltageFactor = 0;     // dependent on ADS1015 settings used
+double voltageVCC_medianFiltered_V;
 double voltagePit_medianFiltered_V;
 double voltageMeat_medianFiltered_V;
 
@@ -167,7 +168,7 @@ void setup() {
 #endif  // *****  end button press_type function tests *****
 
     Serial.println();
-    Serial.print(F("VCC |\t\t GND |\t\t PIT A2 |\t\t MEAT A3 |\t\t PitTemp |\t\t MeatTemp |"));
+    Serial.print(F("VCC A0\t|\tGND A1\t|\tPIT A2\t|\tPitdegF\t|\tMEAT A3\t|\tMeatdegF"));
     Serial.println();
 
 }  // end of setup
@@ -180,15 +181,15 @@ void loop() {
     // encoder.getCount();  // need to enable this if line above is commented out for testing
 
     // get 10 ADC readings from designated pin and return a median filtered value
-    float voltageVCC_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(0, 11);
+    voltageVCC_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(0, 11);
     float voltageGND_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(1, 11);
     voltagePit_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(2, 11);
     voltageMeat_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(3, 11);
 
     // convert probe voltages to temperatures
     yield();
-    currentMeatTemp = sh_meatProbe.getTempFahrenheit();
-    currentPitTemp = sh_pitProbe.getTempFahrenheit();
+    currentMeatTemp = sh_meatProbe.getTempFahrenheit(voltageVCC_medianFiltered_V, voltageMeat_medianFiltered_V);
+    currentPitTemp = sh_pitProbe.getTempFahrenheit(voltageVCC_medianFiltered_V, voltagePit_medianFiltered_V);
 
 #ifdef DEBUG_ADC  // *****  debug - ADS1015 ADC *****
     /*
@@ -198,16 +199,16 @@ void loop() {
     static uint8_t myfrag;
     ESP.getHeapStats(&myfree, &mymax, &myfrag);
  */
-    Serial.print(voltageVCC_medianFiltered_V, 4);
-    Serial.print(F("\t"));
-    Serial.print(voltageGND_medianFiltered_V, 4);
-    Serial.print(F("\t"));
-    Serial.print(voltagePit_medianFiltered_V, 4);
-    Serial.print(F("\t"));
-    Serial.print(voltageMeat_medianFiltered_V, 4);
-    Serial.print(F("\t"));
+    Serial.print(voltageVCC_medianFiltered_V, 3);
+    Serial.print(F("\t|\t"));
+    Serial.print(voltageGND_medianFiltered_V, 3);
+    Serial.print(F("\t|\t"));
+    Serial.print(voltagePit_medianFiltered_V, 3);
+    Serial.print(F("\t|\t"));
     Serial.print(currentPitTemp, 1);
-    Serial.print(F("\t"));
+    Serial.print(F("\t|\t"));
+    Serial.print(voltageMeat_medianFiltered_V, 3);
+    Serial.print(F("\t|\t"));
     Serial.println(currentMeatTemp, 1);
 #endif  // end DEBUG
 

@@ -31,20 +31,21 @@
  */
 
 // *******************************************************
-//   Hardware setup
+//   Thermistor Hardware setup
 // *******************************************************
 //
 //         Bias Resistor     NTC Thermistor
-//                ____           ____
-//   +V_IN o-----|____|----+----|____|----o GND
-//  (~5 V)        Rbias    | Rthermistor
-//             (10E6 ohm)  |  (75E3 ohm)
-//    ADC PIN              |
-//      (A0) o-------------+
+//                ____           ___/_
+//   +V_IN o-----|____|----+----|__/__|----o GND
+//  (~5 V)                 |      /
+//             Rbias       |   Rthermistor
+//      (75E3 / 9.1E3 ohm) |  (10E6 ohm R25)
+//                         |
+//        ADC PIN          |
+//         (A0) o----------+
 //                       Vout
 //
 // *******************************************************
-
 #ifndef SteinhartHart_h
 #define SteinhartHart_h
 
@@ -63,43 +64,26 @@
 class SteinhartHart {
    public:
     /**
-     * Constructor: SteinhratHart(biasResistorValue_ohm, voltageProbe_volt, a, b, c)
+     * Constructor: SteinhratHart(biasResistorValue_ohm, a, b, c)
      *
-     * Only the ADC reading pin and bias resistor values have to be specified in the constuctor.
-     * If no other parameters are given default values will be used
-     *   from a Mavrick-723 temperature probe and cloudSmoker project design
+     * Only the bias resistor value has to be specified in the constuctor.
+     * If no other parameters are given default values will be used based
+     *   on a Mavrick-723 temperature probe and cloudSmoker project design
      */
-
-    SteinhartHart() = delete; // forbid the default constructor   
 
     SteinhartHart(
         double biasResistorValue_ohm,
-        double voltageProbe_volt,
-        // double V_IN_Volt,
         double a = 0.625773640e-3,
         double b = 1.842254690e-4,
         double c = 6.94265460e-8) : _biasResistance{biasResistorValue_ohm},
-                                    _Vadc{voltageProbe_volt},
-                                    //_Vin{V_IN_Volt},
                                     _a{a},
                                     _b{b},
-                                    _c{c} {
-        // debug code
-        Serial.println();
-        Serial.println(F("=========SteinhartHart constructor applied ============="));
-        /* Serial.println(F(" _Rth_ohm \t _Vadc \t _biasResistance \t _Vin"));
-        Serial.print(_Rth_ohm);
-        Serial.print(F("\t"));
-        Serial.print(_Vadc);
-        Serial.print(F("\t"));
-        Serial.print(_biasResistance);
-        Serial.print(F("\t"));
-        Serial.println(_Vin); */
-    };
+                                    _c{c} {};
 
-    double getTempKelvin();
-    double getTempCelsius();
-    double getTempFahrenheit();
+    //  public member functions:
+    double getTempKelvin(double voltageVCC, double voltageProbe);
+    double getTempCelsius(double voltageVCC, double voltageProbe);
+    double getTempFahrenheit(double voltageVCC, double voltageProbe);
 
    private:
     double steinhartHart(double _Rth_ohm);
@@ -107,7 +91,7 @@ class SteinhartHart {
     //  Thermistor voltage divider
     double _biasResistance;  //  bias resistor value
     double _Vadc;            //  probe voltage measured by ADC (typically median filtered)
-    double _Vin{V_IN_Volt};             //  supply voltage to voltage divider
+    double _Vsupply;  //  supply voltage to voltage divider
     double _Rth_ohm;         //  NTC thermistor resistance
 
     // Manufacturing constants
@@ -120,8 +104,9 @@ class SteinhartHart {
 extern SteinhartHart sh_meatProbe;  // meat thermometer
 extern SteinhartHart sh_pitProbe;   // meat thermometer
 
-// make external voltage readings variables visible in library
+// make external voltage reading variables declared elsewhere visible in this library
 extern double voltageMeat_medianFiltered_V;
 extern double voltagePit_medianFiltered_V;
+extern double voltageVCC_medianFiltered_V; 
 
 #endif  // end header guard
