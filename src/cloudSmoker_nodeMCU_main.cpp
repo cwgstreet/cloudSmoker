@@ -123,19 +123,21 @@ void setup() {
     // initialise button press_type set-up code (pin, pullup mode, callback function)
     button.begin(BUTTON_PIN);
 
-    smokerState = splashScreen;  // temporarily disable for testing
+    smokerState = splashScreen;  // temporarily disable during testing
 
+/* 
     // configure ADS1015 I2C ADC
-    constexpr uint8_t GAIN_SETTING = 0;  // 2/3x gain, max voltage: ±6.144V, 1 bit(LSB) = 3mV
-    constexpr uint8_t MODE_SETTING = 1;
-    constexpr uint8_t DATA_RATE_SETTING = 4;
+    constexpr uint8_t GAIN_SETTING = 0;       // 2/3x gain, max (ful scale) voltage: ±6.144V, 1 bit(LSB) = 3mV
+    constexpr uint8_t MODE_SETTING = 1;       // single shot
+    constexpr uint8_t DATA_RATE_SETTING = 4;  // default 1660 samples/sec
     ads1015.initialise(GAIN_SETTING, MODE_SETTING, DATA_RATE_SETTING);
-/*
+
     // get 11 ADC readings from designated pin and return a median filtered value
     float voltageVCC_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(0, 11);
     float voltageGND_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(1, 11);
     double voltagePit_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(2, 11);
     double voltageMeat_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(3, 11);
+ 
 
 #ifdef DEBUG_ADC  // *****  debug - ADS1015 ADC *****
     Serial.println();
@@ -148,7 +150,7 @@ void setup() {
     Serial.print(F("\t"));
     Serial.println(voltageMeat_medianFiltered_V, 4);
 #endif  // end DEBUG
- */
+*/
 
 // ***************************
 // ** Debug - function tests
@@ -180,37 +182,44 @@ void loop() {
     processState(lcd);  // temporarily disable for testing, as needed
     // encoder.getCount();  // need to enable this if line above is commented out for testing
 
-    // get 10 ADC readings from designated pin and return a median filtered value
-    voltageVCC_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(0, 11);
-    float voltageGND_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(1, 11);
-    voltagePit_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(2, 11);
-    voltageMeat_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(3, 11);
+    
+        // obtain user defined number of ADC readings from specified ADC pin and return a single median filtered value
+        const int numberADCsamples = 11;
+        voltageVCC_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(ADC_VCCsupplyPin, numberADCsamples);
+        voltagePit_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(ADC_pitPin, numberADCsamples);
+        voltageMeat_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(ADC_meatPin, numberADCsamples);
 
-    // convert probe voltages to temperatures
-    yield();
-    currentMeatTemp = sh_meatProbe.getTempFahrenheit(voltageVCC_medianFiltered_V, voltageMeat_medianFiltered_V);
-    currentPitTemp = sh_pitProbe.getTempFahrenheit(voltageVCC_medianFiltered_V, voltagePit_medianFiltered_V);
+        // convert probe voltages to temperatures
+        yield();
+        currentMeatTemp = sh_meatProbe.getTempFahrenheit(voltageVCC_medianFiltered_V, voltageMeat_medianFiltered_V);
+        currentPitTemp = sh_pitProbe.getTempFahrenheit(voltageVCC_medianFiltered_V, voltagePit_medianFiltered_V);
 
-#ifdef DEBUG_ADC  // *****  debug - ADS1015 ADC *****
-    /*
+    // debug
+    Serial.print(voltageVCC_medianFiltered_V, 3);
+        Serial.print(F("\t|\t"));
+        Serial.print(voltagePit_medianFiltered_V, 3);
+        Serial.print(F("\t|\t"));
+        Serial.print(currentPitTemp, 1);
+        Serial.print(F("\t|\t"));
+        Serial.print(voltageMeat_medianFiltered_V, 3);
+        Serial.print(F("\t|\t"));
+        Serial.println(currentMeatTemp, 1);
+        // end debug
+
+
+     
+
+/* #ifdef DEBUG_ADC  // *****  debug - ADS1015 ADC *****
+    
     // not working - but once debugged, should show memory stats to determine if there is a leak, etc.
     static uint32_t myfree;
     static uint16_t mymax;
     static uint8_t myfrag;
     ESP.getHeapStats(&myfree, &mymax, &myfrag);
- */
-    Serial.print(voltageVCC_medianFiltered_V, 3);
-    Serial.print(F("\t|\t"));
-    Serial.print(voltageGND_medianFiltered_V, 3);
-    Serial.print(F("\t|\t"));
-    Serial.print(voltagePit_medianFiltered_V, 3);
-    Serial.print(F("\t|\t"));
-    Serial.print(currentPitTemp, 1);
-    Serial.print(F("\t|\t"));
-    Serial.print(voltageMeat_medianFiltered_V, 3);
-    Serial.print(F("\t|\t"));
-    Serial.println(currentMeatTemp, 1);
+
+
 #endif  // end DEBUG
+ */
 
     /*  // debug code - serial print out prevEncoderValue every n loops
 loopcounter = loopcounter + 1;

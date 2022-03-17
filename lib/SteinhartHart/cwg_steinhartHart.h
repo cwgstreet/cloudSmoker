@@ -73,17 +73,17 @@ class SteinhartHart {
 
     SteinhartHart(
         double biasResistorValue_ohm,
-        double a = 0.625773640e-3,
-        double b = 1.842254690e-4,
-        double c = 6.94265460e-8) : _biasResistance{biasResistorValue_ohm},
+        double a = 0.6043939869e-3,
+        double b = 1.823320274e-4,
+        double c = 8.745443441e-8) : _biasResistance{biasResistorValue_ohm},
                                     _a{a},
                                     _b{b},
                                     _c{c} {};
 
     //  public member functions:
-    double getTempKelvin(double voltageVCC, double voltageProbe);
-    double getTempCelsius(double voltageVCC, double voltageProbe);
-    double getTempFahrenheit(double voltageVCC, double voltageProbe);
+    double getTempKelvin(double ADCmeasuredVCC_volts, double ADCmeasuredThermistor_volts);
+    double getTempCelsius(double ADCmeasuredVCC_volts, double ADCmeasuredThermistor_volts);
+    double getTempFahrenheit(double ADCmeasuredVCC_volts, double ADCmeasuredThermistor_volts);
 
    private:
     double steinhartHart(double _Rth_ohm);

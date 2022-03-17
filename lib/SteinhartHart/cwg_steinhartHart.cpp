@@ -86,9 +86,9 @@ double SteinhartHart::steinhartHart(double _Rth_ohm) {
 //   getTempKelvin() function purpose: Returns the temperature in degrees kelvin for the given thermistor resistance
 //      value using the Steinhart-Hart polynomial relationship
 // --------------------------
-double SteinhartHart::getTempKelvin(double voltageVCC, double voltageProbe) {
-    _Vadc = voltageProbe;
-    _Vsupply = voltageVCC_medianFiltered_V; 
+double SteinhartHart::getTempKelvin(double ADCmeasuredVCC_volts, double ADCmeasuredThermistor_volts) {
+    _Vadc = ADCmeasuredThermistor_volts;
+    _Vsupply = voltageVCC_medianFiltered_V;
 
     // calc thermistor resistance from voltage divider parameters:
     //? Voltage divider eqn (for low side thermistor):  Vo = Vcc * ( Rth /(Rth + Rb) )
@@ -97,14 +97,17 @@ double SteinhartHart::getTempKelvin(double voltageVCC, double voltageProbe) {
     // test to prevent division by zero
     if ((_Vadc - _Vsupply) != 0.0) {
         _Rth_ohm = -1 * ((_Vadc * _biasResistance) / (_Vadc - _Vsupply));
-    };
+    } else {
+        Serial.println(F("** _Rth_ohn calculation Divide by zero Error! Problem: _vadc - _Vsupply = zero!"));
+    }
+
     return steinhartHart(_Rth_ohm);
 }
 
-double SteinhartHart::getTempCelsius(double voltageVCC, double voltageProbe) {
-    return getTempKelvin(voltageVCC, voltageProbe) - 273.15;
+double SteinhartHart::getTempCelsius(double ADCmeasuredVCC_volts, double ADCmeasuredThermistor_volts) {
+    return getTempKelvin(ADCmeasuredVCC_volts, ADCmeasuredThermistor_volts) - 273.15;
 }
 
-double SteinhartHart::getTempFahrenheit(double voltageVCC, double voltageProbe) {
-    return getTempCelsius(voltageVCC, voltageProbe) * 9 / 5 + 32;
+double SteinhartHart::getTempFahrenheit(double ADCmeasuredVCC_volts, double ADCmeasuredThermistor_volts) {
+    return getTempCelsius(ADCmeasuredVCC_volts, ADCmeasuredThermistor_volts) * 9 / 5 + 32;
 }
