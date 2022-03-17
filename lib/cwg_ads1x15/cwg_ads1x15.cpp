@@ -17,20 +17,19 @@
 // include 3rd party libraries
 #include <ADS1X15.h>  // ADS1x15 I2C ADC device functionality
 #include <Arduino.h>  // Arduino framework; not explicitly included in PlatformIO
-//#include <MedianFilterLib.h>  // fast, efficient median filter
 #include <Wire.h>  // i2C device communication
 
 // incliude local libraries
-#include "cwg_MedianFilterLib2.h"
+#include "cwg_MedianFilterLib2.h"  // fast, efficient median filter (fork that fixes memory leak)
 #include "cwg_ads1x15.h"
 #include "myConstants.h"  // all constants together in one file
 #include "periphials.h"
 
 // CWG_ADS1015 ads1015;  // instantiate ADS1015 ADC object at default address (ADDR conneced to GND)
-CWG_ADS1015 ads1015(0x48);  // instantiate ADS1015 ADC object at default address (ADDR conneced to GND)
+CWG_ADS1015 ads1015(0x48);  // instantiate ADS1015 ADC object at default address (0x48 when ADDR conneced to GND)
 
 /******************************************************
-//
+//  Class methods (member functions)
 *******************************************************/
 
 /* ----------------------------------------
@@ -52,7 +51,7 @@ void CWG_ADS1015::initialise(uint8_t gainSetting, uint8_t modeSetting, uint8_t d
 }
 
 /* ----------------------------------------
- *  getVoltageFactor_V() method: retuns voltage factor in volts; voltage factor dependent on ADS1015 PGA settings
+ *  getVoltageFactor_V() method: retuns voltage factor in volts; voltage factor dependent on the specified ADS1015 PGA settings
  ** --------------------------------------*/
 float CWG_ADS1015::getVoltageFactor_V() {
     float voltageFactor_V = 0;
@@ -73,15 +72,17 @@ float CWG_ADS1015::getSensorValue_MedianFiltered_V(uint8_t pin, int windowSize) 
     }
 
     MedianFilter2<float> medianFilter(windowSize);  // instantiate MedianFilter<T=float>
+    
     int16_t ADCPinReading[windowSize];
     float valueADC_V[windowSize];
     float voltageFactor = getVoltageFactor_V();
 
 #if DEBUG
+    Serial.println();
     Serial.print(F("voltageFactor = "));
     Serial.println(voltageFactor, 10);
 #endif
-
+ 
     uint8_t i;
     for (i = 0; i < windowSize;) {
         yield();
@@ -100,10 +101,10 @@ float CWG_ADS1015::getSensorValue_MedianFiltered_V(uint8_t pin, int windowSize) 
             Serial.print(F(": "));
             Serial.print(ADCPinReading[i]);
             Serial.print(F("\t"));
-            Serial.println(valueADC_V[i], 7);
+            Serial.println(valueADC_V[i], 12);
 #endif  // end DEBUG
 
-            i += 1;  //  only increment loop when ADC.isReady == true or you'll skip values in loops when ADC is busy
+            i += 1;  //  only increment loop when (ADC.isReady == true) or values skipped in loop iteration when ADC is busy
         }
     }
 

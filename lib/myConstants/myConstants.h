@@ -43,7 +43,7 @@
  *   ADDR       GND       sets address at hex 0x48; configurable to other addresses
  *   ALRT       float     not used (float per datasheet)
  *   A0         5V        monitor battery voltage
- *   A1         GND
+ *   A1         n/a       no measurement
  *   A2         PIT       Pit probe thermistor jack  (measured 75.0 kohm 1% bias resistor - vs 1% 75kohm design)
  *   A3         MEAT      Meat probe thermistor jack (measured 9.09 kohm 1% bias resistor - vs 1% 9.09kohm design)
  */
@@ -67,6 +67,8 @@ constexpr int BUTTON_PIN = D3;   // KY40 SW (switch) pin (connected to Uno pin 4
 // ---------------------------------------------------------
 // ADS1015 ADC pin constants
 // ---------------------------------------------------------
+constexpr int ADC_VCCsupplyPin = 0;
+//constexpr int ADC_gndSupplyPin = 1;
 constexpr int ADC_pitPin = 2;
 constexpr int ADC_meatPin = 3;
 
@@ -97,6 +99,8 @@ constexpr int SERIAL_MONITOR_SPEED = 74880;
 
 constexpr double MEAT_BIAS_RESISTOR_Ohm = 75.0e3;  // replace with DMM measured actual value for improved accuracy
 constexpr double PIT_BIAS_RESISTOR_Ohm = 9.1e3;
-const double V_IN_Volt = 4.63;  // nominally 5V; replaced with actual measured Vsupply (%V less voltage drops) for better accuracy
+
+// no longer declaring supply voltage variable but measuring it directly with ADC channel A0
+//const double V_IN_Volt = 4.63;  // nominally 5V; replaced with actual measured Vsupply (%V less voltage drops) for better accuracy
 
 #endif  // end header guard
