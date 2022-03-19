@@ -30,5 +30,8 @@
 # Ignore extras directory - stuff I don't want on git
 extras/
 
+# Ignore confidential information lib - usernames, passwords, API keys
+lib/myConstants/secrets.h
+
 
 
