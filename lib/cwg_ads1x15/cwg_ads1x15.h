@@ -34,9 +34,7 @@
 
 class CWG_ADS1015 : public ADS1015 {
    public:
-    // constructors of derrived class
-    CWG_ADS1015() : ADS1015() {
-    }
+    // constructors of derrived class; mandatory device address, and optional the Wire interface as parameter.
     CWG_ADS1015(uint8_t Address = ADS1015_ADDRESS, TwoWire *wire = &Wire) : ADS1015(Address = ADS1015_ADDRESS) {
     }
     virtual ~CWG_ADS1015() {

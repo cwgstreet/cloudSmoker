@@ -1,11 +1,12 @@
 /* ***************************************************************
  * cwg_ads1x15.h - library to extend ads1x15 library functionality
- *   includes
+ *   builds upon:
  *    1) RobTillaart/ADS1X15 library, licenced under MIT Licence
  *         reference:  https://github.com/RobTillaart/ADS1X15
  *    2) Luis Llamas/Arduino-MedianFilter, licenced under Apache Licence 2.0
  *         reference: https://github-com.translate.goog/luisllamasbinaburo/Arduino-MedianFilter?_x_tr_sl=auto&_x_tr_tl=en&_x_tr_hl=en
- *
+ *          Note: my code on based on warhog fork, MedianFilterLib2 https://github.com/warhog/Arduino-MedianFilter 
+ *      
  *  C W Greenstreet, Ver1, 17Feb2022
  *    MIT Licence - Released into the public domain
  *
@@ -36,7 +37,7 @@ CWG_ADS1015 ads1015(0x48);  // instantiate ADS1015 ADC object at default address
  *  initialise() method: set up ADC hardware and configure programmable settings
  *    gainSetting: (gainSetting/±Max Volage) 0/6.144V default, 1/4.096V, 2/2.048V, 4/1.024V, 8/0.512V, 16/0.256V,
  *    modeSetting: 0 = Continuous, 1 = Single Shot (default)
- *    dataRateSetting: (rateSetting/samples per second) 0/128, 1/250, 2/490, 3/920, 4/1660 default, 5/2400, 6/3300, 7/3300
+ *    dataRateSetting: (rateSetting/samples per second) 0/128, 1/250, 2/490, 3/920, 4/1660 (default), 5/2400, 6/3300, 7/3300
  ** --------------------------------------*/
 void CWG_ADS1015::initialise(uint8_t gainSetting, uint8_t modeSetting, uint8_t dataRateSetting) {
     Wire.begin(I2C_SDA, I2C_SCL);
@@ -44,8 +45,8 @@ void CWG_ADS1015::initialise(uint8_t gainSetting, uint8_t modeSetting, uint8_t d
     if (!ads1015.isConnected()) {
         Serial.print(F(" **ERROR** ADS1x15 not connected! "));
     }
-    ads1015.setGain(gainSetting);          // PGA max voltage ±6.144V -> for 5V setup
-    ads1015.setMode(modeSetting);          // SINGLE SHOT MODE
+    ads1015.setGain(gainSetting);          // 0 == default PGA max voltage ±6.144V -> use for 5V setup
+    ads1015.setMode(modeSetting);          // 1 == default SINGLE SHOT MODE
     ads1015.setDataRate(dataRateSetting);  // 4 == default ADS1015 data rate of 1600 sps; available range 128-3300 sps
     ads1015.requestADC(A0);                // parameters not set in the device until an explicit read/request of the ADC (any read call will do)
 }
