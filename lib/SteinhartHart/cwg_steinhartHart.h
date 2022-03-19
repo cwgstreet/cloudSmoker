@@ -68,14 +68,14 @@ class SteinhartHart {
      *
      * Only the bias resistor value has to be specified in the constuctor.
      * If no other parameters are given default values will be used based
-     *   on a Mavrick-723 temperature probe and cloudSmoker project design
+     *   on a Mavrick-723 temperature probe and cloudSmoker project design parmeters
      */
 
     SteinhartHart(
         double biasResistorValue_ohm,
-        double a = 0.6043939869e-3,
-        double b = 1.823320274e-4,
-        double c = 8.745443441e-8) : _biasResistance{biasResistorValue_ohm},
+        double a = 6.320628646e-4,
+        double b = 1.834385431e-4,
+        double c = 7.116437823e-8) : _biasResistance{biasResistorValue_ohm},
                                     _a{a},
                                     _b{b},
                                     _c{c} {};
