@@ -73,9 +73,9 @@ class SteinhartHart {
 
     SteinhartHart(
         double biasResistorValue_ohm,
-        double a = 6.320628646e-4,
-        double b = 1.834385431e-4,
-        double c = 7.116437823e-8) : _biasResistance{biasResistorValue_ohm},
+        double a = 6.308217444e-4,
+        double b = 1.836278370e-4,
+        double c = 7052387818e-8) : _biasResistance{biasResistorValue_ohm},
                                     _a{a},
                                     _b{b},
                                     _c{c} {};
