@@ -60,14 +60,15 @@
 #include <hd44780ioClass/hd44780_I2Cexp.h>  // i2c expander i/o class header -> required for my YwRobot 1602 LCD
 
 // internal (user) libraries:
-#include <cwg_ads1x15.h>        // ADS1x15 I2C ADC device functionality
-#include <cwg_steinhartHart.h>  // Thermistor steinhart hart temperature calcs
-#include <lcd.h>                // lcd function tests, helper functions and custom characters
-#include <myConstants.h>        // all constants in one file
-#include <periphials.h>         // serial monitor function tests and usuage routines
-#include <press_type.h>         // wrapper library abstracting Yabl / Bounce2 routines
-#include <smokerStates.h>       // cloudSmoker state machine functionality
-#include <wrapEncoder.h>        //  encoder library including encoder object with min / max values that "wrap" around
+#include "cwg_ads1x15.h"        // ADS1x15 I2C ADC device functionality
+#include "cwg_steinhartHart.h"  // Thermistor steinhart hart temperature calcs
+#include "lcd.h"                // lcd function tests, helper functions and custom characters
+#include "myConstants.h"        // all constants in one file
+#include "periphials.h"         // serial monitor function tests and usuage routines
+#include "press_type.h"         // wrapper library abstracting Yabl / Bounce2 routines
+#include "secrets.h"            //  confidential informtion - usernames, passwords, API keys etc
+#include "smokerStates.h"       // cloudSmoker state machine functionality
+#include "wrapEncoder.h"        //  encoder library including encoder object with min / max values that "wrap" around
 
 // *****  Selective Debug Scaffolding *****
 // Set up selective debug scaffold; comment out appropriate lines below to disable debugging tests at pre-proccessor stage
@@ -203,7 +204,7 @@ void loop() {
     Serial.println(currentMeatTemp, 1);
     // end debug
 
-/* 
+/*
 #ifdef DEBUG_ADC  // *****  debug - ADS1015 ADC *****
 
         // not working - but once debugged, should show memory stats to determine if there is a leak, etc.
@@ -216,7 +217,7 @@ void loop() {
 #endif  // end DEBUG
 */
 
-/*  
+/*
 // debug code - serial print out prevEncoderValue every n loops
 loopcounter = loopcounter + 1;
  if ((loopcounter % 10) == 0) {
@@ -224,7 +225,7 @@ loopcounter = loopcounter + 1;
      Serial.print(F("    >>>> Loop: -> prevEncoderValue = "));
      Serial.println(prevEncoderValue);
      Serial.println();
- } 
+ }
  */
 
 // *****  debug - free memory check  *****

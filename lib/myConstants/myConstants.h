@@ -17,8 +17,6 @@
 #include <pins_arduino.h>
 #endif  // end if-block
 
-// include confidential informtion - usernames, passwords, API keys etc
-#include "secrets.h"
 
 /* ******************************************************
  *   Pin-out Summaries
