@@ -101,7 +101,13 @@ constexpr int SERIAL_MONITOR_SPEED = 74880;
 constexpr double MEAT_BIAS_RESISTOR_Ohm = 75.0e3;  // replace with DMM measured actual value for improved accuracy
 constexpr double PIT_BIAS_RESISTOR_Ohm = 9.1e3;
 
-// no longer declaring supply voltage variable but measuring it directly with ADC channel A0
-//const double V_IN_Volt = 4.63;  // nominally 5V; replaced with actual measured Vsupply (%V less voltage drops) for better accuracy
+// *******************************************************
+//   Other constants
+// *******************************************************
+
+// empirically determined temperature correction factors - applied in cwg_steinhartHart lib
+constexpr double PIT_TEMP_OFFSET_DEGF = 8.0;
+constexpr double MEAT_TEMP_OFFSET_DEGF = 2.2;
+
 
 #endif  // end header guard
