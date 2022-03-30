@@ -70,7 +70,7 @@
 #include "smokerStates.h"       // cloudSmoker state machine functionality
 #include "wrapEncoder.h"        //  encoder library including encoder object with min / max values that "wrap" around
 
-// *****  Selective Debug Scaffolding *****
+// **************  Selective Debug Scaffolding *********************
 // Set up selective debug scaffold; comment out appropriate lines below to disable debugging tests at pre-proccessor stage
 //   Note: #ifdef preprocessor simply tests if the symbol's been defined; therefore don't use #ifdef 0
 //   Ref: https://stackoverflow.com/questions/16245633/ifdef-debug-versus-if-debug
@@ -80,7 +80,7 @@
 //#define DEBUG_PRESSTYPE  1  // uncomment to debug rotary encoder button press type function test
 //#define DEBUG_LED  1       // uncomment to debug LED test of rotary encoder  **CHECK THIS MISSING??**
 //#define DEBUG_FREEMEM 1  // uncomment to debug remaining free memory
-//#define DEBUG_ADC 1  // uncomment to debug ADC1015 ADC readings
+#define DEBUG_ADC 1  // uncomment to debug ADC1015 ADC readings
 
 // temperature variables- global; all temps stored in degF and converted on the fly as necessary for alternative units (eg DegC)
 float meatDoneTemp = 203;    // default to usual brisket internal done temp 203degF
@@ -156,20 +156,26 @@ void setup() {
 
 #ifdef DEBUG_ADC  // *****  debug - ADS1015 ADC *****
     // get 11 ADC readings from designated pin and return a median filtered value
-    float voltageVCC_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(0, 11);
-    float voltageGND_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(1, 11);
-    double voltagePit_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(2, 11);
-    double voltageMeat_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(3, 11);
+    double voltageVCC_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(ADC_VCCsupplyPin, 11);
+    double voltagePit_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(ADC_pitPin, 11);
+    double voltageMeat_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(ADC_meatPin, 11);
+
+    yield();
+    currentMeatTemp = sh_meatProbe.getTempFahrenheit(voltageVCC_medianFiltered_V, voltageMeat_medianFiltered_V);
+    currentPitTemp = sh_pitProbe.getTempFahrenheit(voltageVCC_medianFiltered_V, voltagePit_medianFiltered_V);
 
     Serial.println();
-    Serial.print(F("Median Filtered VCC / GND / PIT / MEAT = \t"));
+    Serial.println(F("MF_VCC\t|\tMF_PIT\t|\tPITdegF\t|\tMF_MEAT\t|\tMEATdegF"));
+    Serial.println(F("-------\t|\t-------\t|\t-------\t|\t-------\t|\t-------"));
     Serial.print(voltageVCC_medianFiltered_V, 4);
-    Serial.print(F("\t"));
-    Serial.print(voltageGND_medianFiltered_V, 4);
-    Serial.print(F("\t"));
+    Serial.print(F("\t|\t"));
     Serial.print(voltagePit_medianFiltered_V, 4);
-    Serial.print(F("\t"));
-    Serial.println(voltageMeat_medianFiltered_V, 4);
+    Serial.print(F("\t|\t"));
+    Serial.print(currentPitTemp);
+    Serial.print(F("\t|\t"));
+    Serial.print(voltageMeat_medianFiltered_V, 4);
+    Serial.print(F("\t|\t"));
+    Serial.println(currentMeatTemp);
 #endif  // end DEBUG
 
 }  // end of setup
@@ -181,31 +187,31 @@ void loop() {
     processState(lcd);  // temporarily disable for testing, as needed
                         // encoder.getCount();  // need to enable this if line above is commented out for testing
 
-    // obtain user defined number of ADC readings from specified ADC pin and return a single median filtered value
-    const int NUMBER_ADC_SAMPLES = 11;
-    voltageVCC_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(ADC_VCCsupplyPin, NUMBER_ADC_SAMPLES);
-    voltagePit_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(ADC_pitPin, NUMBER_ADC_SAMPLES);
-    voltageMeat_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(ADC_meatPin, NUMBER_ADC_SAMPLES);
+//     // obtain user defined number of ADC readings from specified ADC pin and return a single median filtered value
+//     const int NUMBER_ADC_SAMPLES = 11;
+//     voltageVCC_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(ADC_VCCsupplyPin, NUMBER_ADC_SAMPLES);
+//     voltagePit_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(ADC_pitPin, NUMBER_ADC_SAMPLES);
+//     voltageMeat_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(ADC_meatPin, NUMBER_ADC_SAMPLES);
 
-    // convert probe voltages to temperatures
-    yield();
-    currentMeatTemp = sh_meatProbe.getTempFahrenheit(voltageVCC_medianFiltered_V, voltageMeat_medianFiltered_V);
-    currentPitTemp = sh_pitProbe.getTempFahrenheit(voltageVCC_medianFiltered_V, voltagePit_medianFiltered_V);
+//     // convert probe voltages to temperatures
+//     yield();
+//     currentMeatTemp = sh_meatProbe.getTempFahrenheit(voltageVCC_medianFiltered_V, voltageMeat_medianFiltered_V);
+//     currentPitTemp = sh_pitProbe.getTempFahrenheit(voltageVCC_medianFiltered_V, voltagePit_medianFiltered_V);
 
-    // debug
-    Serial.print(voltageVCC_medianFiltered_V, 3);
-    Serial.print(F("\t|\t"));
-    Serial.print(voltagePit_medianFiltered_V, 3);
-    Serial.print(F("\t|\t"));
-    Serial.print(currentPitTemp, 1);
-    Serial.print(F("\t|\t"));
-    Serial.print(voltageMeat_medianFiltered_V, 3);
-    Serial.print(F("\t|\t"));
-    Serial.println(currentMeatTemp, 1);
-    // end debug
+//    // debug
+//     Serial.print(voltageVCC_medianFiltered_V, 3);
+//     Serial.print(F("\t|\t"));
+//     Serial.print(voltagePit_medianFiltered_V, 3);
+//     Serial.print(F("\t|\t"));
+//     Serial.print(currentPitTemp, 1);
+//     Serial.print(F("\t|\t"));
+//     Serial.print(voltageMeat_medianFiltered_V, 3);
+//     Serial.print(F("\t|\t"));
+//     Serial.println(currentMeatTemp, 1);
+//     // end debug
 
 /*
-#ifdef DEBUG_ADC  // *****  debug - ADS1015 ADC *****
+#ifdef DEBUG_ADC  // *****  debug - memory *****
 
         // not working - but once debugged, should show memory stats to determine if there is a leak, etc.
         static uint32_t myfree;

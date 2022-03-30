@@ -57,6 +57,9 @@
 //?   Rth = -[(Vo * Rb) / (Vo - V_IN)]   -> don't miss the negative sign!
 //? *************************************************************************
 
+// set up debug scaffold; comment out following line if you want to "turn off" serial monitor debugging
+#define DEBUG 1
+
 #include "cwg_steinhartHart.h"
 
 #include <math.h>
@@ -79,6 +82,25 @@ double SteinhartHart::steinhartHart(double _Rth_ohm) {
     double log_r = log(_Rth_ohm);  // note: math.h log operation is log(base e) or ln, not log(base 10)
     double log_r3 = log_r * log_r * log_r;
 
+#if DEBUG
+    Serial.println();
+    Serial.println(F("\t ------- steinhartHart() -----------"));
+    Serial.print(_a, 20);
+    Serial.print("\t");
+    Serial.print(_b, 20);
+    Serial.print("\t");
+    Serial.print(_c, 20);
+    Serial.print("\t");
+    Serial.print(F("\t _biasResistance = "));
+    Serial.print(_biasResistance);
+    Serial.print(F("\t _Rth_ohm = "));
+    Serial.print(_Rth_ohm, 8);
+    Serial.print(F("\t Log_r = "));
+    Serial.print(log_r, 8);
+    Serial.print(F("\t log_r3 ="));
+    Serial.println(log_r3, 8);
+#endif  // end DEBUG
+
     return 1.0 / (_a + _b * log_r + _c * log_r3);  // Steinhart-Hart poloynomial relationship, returns temp in deg K
 }
 
@@ -88,7 +110,7 @@ double SteinhartHart::steinhartHart(double _Rth_ohm) {
 // --------------------------
 double SteinhartHart::getTempKelvin(double ADCmeasuredVCC_volts, double ADCmeasuredThermistor_volts) {
     _Vadc = ADCmeasuredThermistor_volts;
-    _Vsupply = voltageVCC_medianFiltered_V;
+    _Vsupply = ADCmeasuredVCC_volts;
 
     // calc thermistor resistance from voltage divider parameters:
     //? Voltage divider eqn (for low side thermistor):  Vo = Vcc * ( Rth /(Rth + Rb) )
@@ -97,6 +119,21 @@ double SteinhartHart::getTempKelvin(double ADCmeasuredVCC_volts, double ADCmeasu
     // test to prevent division by zero
     if ((_Vadc - _Vsupply) != 0.0) {
         _Rth_ohm = -1 * ((_Vadc * _biasResistance) / (_Vadc - _Vsupply));
+#if DEBUG
+        Serial.println();
+        Serial.println(F("\t ------- getTempKelvin() -----------"));
+        Serial.print(F("\t _Vadc = "));
+        Serial.print(_Vadc, 8);
+        Serial.print(F("\t"));
+        Serial.print(F("\t _Vsupply = "));
+        Serial.print(_Vsupply, 8);
+        // Serial.print(F("\t ADCmeasuredVCC_v = "));
+        // Serial.print(ADCmeasuredVCC_volts);
+        Serial.print(F("\t _biasResistance = "));
+        Serial.print(_biasResistance);
+        Serial.print(F("\t _Rth_ohm ="));
+        Serial.println(_Rth_ohm);
+#endif  // end DEBUG
     } else {
         Serial.println(F("** _Rth_ohn calculation Divide by zero Error! Problem: _vadc - _Vsupply = zero!"));
     }

@@ -73,12 +73,12 @@ class SteinhartHart {
 
     SteinhartHart(
         double biasResistorValue_ohm,
-        double a = 6.308217444e-4,
-        double b = 1.836278370e-4,
-        double c = 7052387818e-8) : _biasResistance{biasResistorValue_ohm},
-                                    _a{a},
-                                    _b{b},
-                                    _c{c} {};
+        double a = 0.0006308217444,
+        double b = 0.000183627837,
+        double c = 0.00000007052387818) : _biasResistance(biasResistorValue_ohm),
+                                    _a(a),
+                                    _b(b),
+                                    _c(c){};
 
     //  public member functions:
     double getTempKelvin(double ADCmeasuredVCC_volts, double ADCmeasuredThermistor_volts);
@@ -86,12 +86,13 @@ class SteinhartHart {
     double getTempFahrenheit(double ADCmeasuredVCC_volts, double ADCmeasuredThermistor_volts);
 
    private:
+    // private member function
     double steinhartHart(double _Rth_ohm);
 
-    //  Thermistor voltage divider
+    //  Thermistor voltage divider variables
     double _biasResistance;  //  bias resistor value
     double _Vadc;            //  probe voltage measured by ADC (typically median filtered)
-    double _Vsupply;  //  supply voltage to voltage divider
+    double _Vsupply;         //  supply voltage to voltage divider
     double _Rth_ohm;         //  NTC thermistor resistance
 
     // Manufacturing constants
@@ -107,6 +108,6 @@ extern SteinhartHart sh_pitProbe;   // meat thermometer
 // make external voltage reading variables declared elsewhere visible in this library
 extern double voltageMeat_medianFiltered_V;
 extern double voltagePit_medianFiltered_V;
-extern double voltageVCC_medianFiltered_V; 
+extern double voltageVCC_medianFiltered_V;
 
 #endif  // end header guard

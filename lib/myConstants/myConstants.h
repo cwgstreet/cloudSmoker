@@ -37,17 +37,18 @@
 /* ADS1015 ADS pinout setup
  *   Pin        Function  Comment
  *   -------    --------  -----------------------------------------------
- *   VDD        5V        red //TODO Investigate benefits of driving off 3.3V
+ *   VDD        ~5V       red //TODO Investigate benefits of driving off 3.3V
  *   GND        GND       black
  *   SCL        D1        green (via 4.7k ohm pullup resistor)
  *   SCA        D2        white (via 4.7k ohm pullup resistor)
  *   ADDR       GND       sets address at hex 0x48; configurable to other addresses
  *   ALRT       float     not used (float per datasheet)
- *   A0         5V        monitor battery voltage
- *   A1         n/a       no measurement
- *   A2         PIT       Pit probe thermistor jack  (measured 75.0 kohm 1% bias resistor - vs 1% 75kohm design)
- *   A3         MEAT      Meat probe thermistor jack (measured 9.09 kohm 1% bias resistor - vs 1% 9.09kohm design)
- */
+ *   A0         VDD       monitor battery voltage and use for VDD in Steinhart-Hart calcs
+ *   A1         n/a       no measurement - floating (per datasheet)
+ *   A2         MEAT      Meat probe thermistor jack (measured 9.09k ohm 1% bias resistor - vs 1% 9.09k ohm design)
+ *   A3         PIT       Pit probe thermistor jack  (measured 75.0k ohm 1% bias resistor - vs 1% 75k ohm design)
+ *  */
+
 
 /******************************************************
 // constants
@@ -69,9 +70,10 @@ constexpr int BUTTON_PIN = D3;   // KY40 SW (switch) pin (connected to Uno pin 4
 // ADS1015 ADC pin constants
 // ---------------------------------------------------------
 constexpr int ADC_VCCsupplyPin = 0;
-//constexpr int ADC_gndSupplyPin = 1;
-constexpr int ADC_pitPin = 2;
-constexpr int ADC_meatPin = 3;
+//pin1 left floating (per datasheet) - no measurement
+constexpr int ADC_meatPin = 2;
+constexpr int ADC_pitPin = 3;
+
 
 // ---------------------------------------------------------
 // Baudrate:  Recommend 74480 baud rate for ESP8266 devices to match ESP8266 fixed bootloader initialisation speed
