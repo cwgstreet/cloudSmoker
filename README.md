@@ -1,4 +1,5 @@
 # Cloud Smoker BBQ Monitor Project
+[![GitHub license](https://img.shields.io/github/license/Naereen/StrapDown.js.svg)](https://github.com/Naereen/StrapDown.js/blob/master/LICENSE)
 
 **Note**:  *This project exists as a hands-on opportunity to learn more about electronics, IoT, Arduino / ESP8266 programming, GitHub markdown, etc*
 
@@ -6,7 +7,7 @@
 
 <br>
 
-<b>Work in Progress</b><br>
+⚠️<b>Work in Progress</b><br>
 <br>
  </p>
  
