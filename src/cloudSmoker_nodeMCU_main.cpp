@@ -59,6 +59,8 @@
 #include <hd44780.h>                        // LCD library
 #include <hd44780ioClass/hd44780_I2Cexp.h>  // i2c expander i/o class header -> required for my YwRobot 1602 LCD
 
+#include "ThingSpeak.h"  // always include thingspeak header file after other header files and custom macros
+
 // internal (user) libraries:
 #include "cwg_ads1x15.h"        // ADS1x15 I2C ADC device functionality
 #include "cwg_steinhartHart.h"  // Thermistor steinhart hart temperature calcs
