@@ -55,6 +55,7 @@
 #include <ESP8266WiFi.h>
 #include <MemoryFree.h>  // https://github.com/maniacbug/MemoryFree & https://playground.arduino.cc/Code/AvailableMemory/
 #include <NewEncoder.h>
+#include <WiFiManager.h>                    // https://github.com/tzapu/WiFiManager
 #include <Wire.h>                           // must include before hd44780 libraries due to dependencies
 #include <hd44780.h>                        // LCD library
 #include <hd44780ioClass/hd44780_I2Cexp.h>  // i2c expander i/o class header -> required for my YwRobot 1602 LCD
@@ -64,13 +65,14 @@
 // internal (user) libraries:
 #include "cwg_ads1x15.h"        // ADS1x15 I2C ADC device functionality
 #include "cwg_steinhartHart.h"  // Thermistor steinhart hart temperature calcs
-#include "lcd.h"                // lcd function tests, helper functions and custom characters
-#include "myConstants.h"        // all constants in one file
-#include "periphials.h"         // serial monitor function tests and usuage routines
-#include "press_type.h"         // wrapper library abstracting Yabl / Bounce2 routines
-#include "secrets.h"            //  confidential informtion - usernames, passwords, API keys etc
-#include "smokerStates.h"       // cloudSmoker state machine functionality
-#include "wrapEncoder.h"        //  encoder library including encoder object with min / max values that "wrap" around
+#include "cwg_wifi.hpp"
+#include "lcd.h"           // lcd function tests, helper functions and custom characters
+#include "myConstants.h"   // all constants in one file
+#include "periphials.h"    // serial monitor function tests and usuage routines
+#include "press_type.h"    // wrapper library abstracting Yabl / Bounce2 routines
+#include "secrets.h"       //  confidential informtion - usernames, passwords, API keys etc
+#include "smokerStates.h"  // cloudSmoker state machine functionality
+#include "wrapEncoder.h"   //  encoder library including encoder object with min / max values that "wrap" around
 
 // **************  Selective Debug Scaffolding *********************
 // Set up selective debug scaffold; comment out appropriate lines below to disable debugging tests at pre-proccessor stage
@@ -121,7 +123,8 @@ void setup() {
     lcd.initialiseLCD();
     lcd.initialiseCustomCharSet();  // creates eight custom lcd charaters
     encoder.initialise();
-    delay(100);  //! *** TEST given blocking *** is delay necessary to clear serial buffer in encoder.initialise(); otherwise garbage characters
+    //delay(100);  //! *** TEST given blocking *** is delay necessary to clear serial buffer in encoder.initialise(); otherwise garbage characters
+    WifiManager_initialise();
 
     // initialise button press_type set-up code (pin, pullup mode, callback function)
     button.begin(BUTTON_PIN);
