@@ -23,20 +23,21 @@
 // #include <pins_arduino.h>
 // #endif  // end if-block
 
-// /* ******************************************************
-//  *   WiFi Connection Parameters
-//  * *******************************************************/
+// ******************************************************
+//?    WiFi Connection Parameters
+//!     Not used!  Went with more secure Wifi Manager instead where this info is entered on start-up
+// *******************************************************
 // const char* SSID = "YOUR_SSID";                    // The SSID (name) of the Wi-Fi network you want to connect to
 // const char* WIFI_PASSWORD = "YOUR_WIFI_PASSWORD";  // The password of the Wi-Fi network
 
-// /* ******************************************************
-//  *   ThingSpeak Connection Parameters
-//  * *******************************************************/
+// ******************************************************
+//?  ThingSpeak Connection Parameters
+// *******************************************************/
 // const unsigned long SECRET_THNGSPK_CHANNEL_ID = CHANNEL_ID_NUMBER;   // Replace with Thingspeak Channel ID
 // const char* SECRET_THNGSPK_WRITE_API_KEY = "APIKEY";    // Replace with Thingspeak Write API Key
 
-// // includ Read API Key for potential future use:
-// //const char* SECRET_THNGSPK_READ_API_KEY = "APIKEY";  // Replace with Thingspeak Read API Key
+// includ Read API Key for potential future use:
+// const char* SECRET_THNGSPK_READ_API_KEY = "APIKEY";  // Replace with Thingspeak Read API Key
 
 // #endif  // end header guard
  
