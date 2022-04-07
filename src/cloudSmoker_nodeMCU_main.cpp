@@ -74,17 +74,23 @@
 #include "smokerStates.h"  // cloudSmoker state machine functionality
 #include "wrapEncoder.h"   //  encoder library including encoder object with min / max values that "wrap" around
 
-// **************  Selective Debug Scaffolding *********************
+//? **************  Selective Debug Scaffolding *********************
 // Set up selective debug scaffold; comment out appropriate lines below to disable debugging tests at pre-proccessor stage
 //   Note: #ifdef preprocessor simply tests if the symbol's been defined; therefore don't use #ifdef 0
 //   Ref: https://stackoverflow.com/questions/16245633/ifdef-debug-versus-if-debug
-// *****************************************************************
-//#define DEBUG_SERIAL 1  // uncomment to debug - Serial monitor function test
-//#define DEBUG_LCD 1  // uncomment to debug - LCD function test
-//#define DEBUG_PRESSTYPE  1  // uncomment to debug rotary encoder button press type function test
-//#define DEBUG_LED  1       // uncomment to debug LED test of rotary encoder  **CHECK THIS MISSING??**
-//#define DEBUG_FREEMEM 1  // uncomment to debug remaining free memory
-#define DEBUG_ADC 1  // uncomment to debug ADC1015 ADC readings
+//? *****************************************************************
+//#define DEBUG_SERIAL 1        // uncomment to debug - Serial monitor function test
+//#define DEBUG_LCD 1           // uncomment to debug - LCD function test
+//#define DEBUG_PRESSTYPE  1    // uncomment to debug rotary encoder button press type function test
+//#define DEBUG_LED  1          // uncomment to debug LED test of rotary encoder  **CHECK THIS MISSING??**
+//#define DEBUG_FREEMEM 1       // uncomment to debug remaining free memory
+#define DEBUG_ADC 1             // uncomment to debug ADC1015 ADC readings
+//?  end Selective Debug Scaffolding *********************************
+
+
+// *******************************************************************
+//?   Global variables
+// *******************************************************************
 
 // temperature variables- global; all temps stored in degF and converted on the fly as necessary for alternative units (eg DegC)
 float meatDoneTemp = 203;    // default to usual brisket internal done temp 203degF
@@ -92,8 +98,10 @@ float pitTempTarget = 225;   // reasonable range around 225F long and slow targe
 float currentMeatTemp = 40;  // current meat temp; default to refridgerator temp degF
 float currentPitTemp = 225;  // current pit temp; default to long and slow brisket cooking (pit) temp=225degF
 bool degCFlag = 0;           // temperature unit flag: 1 for Centigrade or 0 for Fahrenheit (default)
-float batteryVoltage = 999;  // 999 as null proxy
-float voltageFactor = 0;     // dependent on ADS1015 settings used
+
+// other Globals
+// float batteryVoltage = 999;  // 999 as null proxy
+float voltageFactor = 0;  // dependent on ADS1015 settings used
 double voltageVCC_medianFiltered_V;
 double voltagePit_medianFiltered_V;
 double voltageMeat_medianFiltered_V;
@@ -108,7 +116,7 @@ within this temperature range (known as the “danger zone”).  Ref https://www
 // timing variables - global
 // unsigned long currentMillis;
 
-// run once flag to use in functions called in loop - global
+// run-once flag to use in functions called in loop - global
 bool hasRunFlag = 0;
 
 // WrapEncoder globals - move to libary?
@@ -123,7 +131,7 @@ void setup() {
     lcd.initialiseLCD();
     lcd.initialiseCustomCharSet();  // creates eight custom lcd charaters
     encoder.initialise();
-    //delay(100);  //! *** TEST given blocking *** is delay necessary to clear serial buffer in encoder.initialise(); otherwise garbage characters
+    // delay(100);  //! *** TEST given blocking *** is delay necessary to clear serial buffer in encoder.initialise(); otherwise garbage characters
     WifiManager_initialise();
 
     // initialise button press_type set-up code (pin, pullup mode, callback function)
@@ -190,7 +198,7 @@ void loop() {
     button.update();
 
     processState(lcd);  // temporarily disable for testing, as needed
-                        // encoder.getCount();  // need to enable this if line above is commented out for testing
+    // encoder.getCount();  // need to enable this if line above is commented out for testing
 
 //     // obtain user defined number of ADC readings from specified ADC pin and return a single median filtered value
 //     const int NUMBER_ADC_SAMPLES = 11;

@@ -338,6 +338,13 @@ void processState(CWG_LCD &lcd) {
 
             case getTemp: {
                 lcd.printMenuLine("get Temp");  // temporary to confirm navigation branch
+                
+                
+                
+                
+                
+                
+                
                 // code here
             } break;
 
