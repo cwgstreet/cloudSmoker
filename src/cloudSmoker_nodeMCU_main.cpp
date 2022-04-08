@@ -114,7 +114,8 @@ within this temperature range (known as the “danger zone”).  Ref https://www
 ***** */
 
 // timing variables - global
-// unsigned long currentMillis;
+//unsigned long nowMillisMS;
+long unsigned startCookTimeMS;
 
 // run-once flag to use in functions called in loop - global
 bool hasRunFlag = 0;

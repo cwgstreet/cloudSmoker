@@ -37,8 +37,9 @@ extern entryStates_t smokerState;
 /******************************************************
 // Helper function prototype:
 *******************************************************/
+
+// process_state() prototype
 void processState(CWG_LCD &lcd);
 
-// void gotoRowCol(int thisRow, int thatCol);  //move into class?
 
 #endif  // end header guard
