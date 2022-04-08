@@ -17,13 +17,13 @@
 #include <pins_arduino.h>
 #endif  // end if-block
 
-extern long unsigned startCookTimeMS;
+extern long unsigned startCookTime_ms;
 
 /******************************************************
 // helper function prototypes
 *******************************************************/
 float convertDegFtoDegC(float tempDegF);
-float getElapsedCookTime(long unsigned startCookTimeMS);
+long unsigned getElapsedCookTime_ms();
 float getCountMS(float tempMS);
 
 #endif  // end header guard

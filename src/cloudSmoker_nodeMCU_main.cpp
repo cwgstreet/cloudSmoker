@@ -88,9 +88,9 @@
 //?  end Selective Debug Scaffolding *********************************
 
 
-// *******************************************************************
+//? *******************************************************************
 //?   Global variables
-// *******************************************************************
+//? *******************************************************************
 
 // temperature variables- global; all temps stored in degF and converted on the fly as necessary for alternative units (eg DegC)
 float meatDoneTemp = 203;    // default to usual brisket internal done temp 203degF
@@ -114,8 +114,8 @@ within this temperature range (known as the “danger zone”).  Ref https://www
 ***** */
 
 // timing variables - global
-//unsigned long nowMillisMS;
-long unsigned startCookTimeMS;
+//unsigned long nowMillis_ms;
+long unsigned startCookTime_ms;
 
 // run-once flag to use in functions called in loop - global
 bool hasRunFlag = 0;

@@ -58,7 +58,9 @@ void processState(CWG_LCD &lcd) {
             if (button.triggered(SINGLE_TAP)) {
                 yield();                                   // Do (almost) nothing -- yield allows ESP8266 background functions
                 smokerState = getTemp;                     // start bbq cook
-                long unsigned startCookTimeMS = millis();  // capture cook start time; var defined as global (extern in helper_functions.h)
+                //long unsigned startCookTime_ms = millis();  // capture cook start time; var defined as global (extern in helper_functions.h)
+                 startCookTime_ms = millis();  // capture cook start time; var defined as global (extern in helper_functions.h)
+
             }
         } break;
 

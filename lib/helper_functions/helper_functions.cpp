@@ -16,13 +16,19 @@
 
 // incliude local libraries
 #include "periphials.h"
+#include "helper_functions.h"
 
 /******************************************************
 // helper functions
 *******************************************************/
 
-// Deg F to Deg C conversion (all temps stored as Deg F)
+// Degree F to Degree C conversion (all cloudSmoker temps stored as Deg F)
 float convertDegFtoDegC(float tempDegF) {
-    float tempDegC = (tempDegF - 32) * 5 / 9;
-    return tempDegC;
+    return (tempDegF - 32) * 5 / 9;
+}
+
+
+// get elapsed time from start of Cook in milliseconds
+long unsigned getElapsedCookTime_ms() {
+    return startCookTime_ms - millis();
 }

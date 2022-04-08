@@ -34,6 +34,9 @@ enum entryStates_t { splashScreen = 1,  // set enum 1 to 10 rather than default 
 // smokerState type defined in implementation smokerState.cpp, hence extern keyword
 extern entryStates_t smokerState;
 
+
+extern long unsigned startCookTime_ms;
+
 /******************************************************
 // Helper function prototype:
 *******************************************************/
