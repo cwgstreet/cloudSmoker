@@ -56,11 +56,10 @@ void processState(CWG_LCD &lcd) {
                 smokerState = changeSettings;  // enter config menu
             }
             if (button.triggered(SINGLE_TAP)) {
-                yield();                                   // Do (almost) nothing -- yield allows ESP8266 background functions
-                smokerState = getTemp;                     // start bbq cook
-                //long unsigned startCookTime_ms = millis();  // capture cook start time; var defined as global (extern in helper_functions.h)
-                 startCookTime_ms = millis();  // capture cook start time; var defined as global (extern in helper_functions.h)
-
+                yield();                      // Do (almost) nothing -- yield allows ESP8266 background functions
+                smokerState = getTemp;        // start bbq cook
+                                              // long unsigned startCookTime_ms = millis();  // capture cook start time; var defined as global (extern in helper_functions.h)
+                startCookTime_ms = millis();  // capture cook start time; var defined as global (extern in helper_functions.h)
             }
         } break;
 
@@ -340,13 +339,7 @@ void processState(CWG_LCD &lcd) {
 
             case getTemp: {
                 lcd.printMenuLine("get Temp");  // temporary to confirm navigation branch
-                
-                
-                
-                
-                
-                
-                
+
                 // code here
             } break;
 
@@ -356,13 +349,28 @@ void processState(CWG_LCD &lcd) {
             } break;
 
             case modemSleep: {
-                lcd.printMenuLine("modemSleep");  // temporary to confirm navigation branch
-                // code here
+                // TODO: explore putting ESP8266 to sleep (modem / light / deep sleep) for power savings
+                //! add command to blank lcd screen
+                if (encoder.moved()) {
+                    smokerState = bbqStatus;
+                }
+
             } break;
 
             case bbqStatus: {
-                lcd.printMenuLine("bbqStatus");  // temporary to confirm navigation branch
-                // code here
+                lcd.showBBQStatusScreen(degCFlag, currentMeatTemp, currentPitTemp);
+
+                // non-blocking delay for BBQ Display before clearing screen / sleep
+                unsigned long displayInterval = 5000;  // the time we need to wait (5 seconds)
+                unsigned long previousMillis = 0;      // millis() returns an unsigned long
+
+                unsigned long currentMillis = millis();  // grab current time
+
+                // check if "displayInterval" time has passed (5000 milliseconds) and, if true, then go back to sleep (blank screen)
+                if ((unsigned long)(currentMillis - previousMillis) >= displayInterval) {
+                    smokerState = modemSleep;
+                }
+
             } break;
 
             default: {
