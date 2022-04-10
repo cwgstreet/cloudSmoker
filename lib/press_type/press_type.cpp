@@ -13,7 +13,7 @@
  *
  * ************************************************************ */
 
-// set up debug scaffold; comment out following line if you want to "turn off" serial monitor debugging
+// set up debug scaffold; comment out following line if you want to "turn off" debugging to serial monitor 
 #define DEBUG 1
 
 #include "press_type.h"
