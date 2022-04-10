@@ -350,11 +350,12 @@ void processState(CWG_LCD &lcd) {
 
             case modemSleep: {
                 // TODO: explore putting ESP8266 to sleep (modem / light / deep sleep) for power savings
-                //! add command to blank lcd screen
+                lcd.sleepScreen();  // disable/hide pixels on display
+
                 if (encoder.moved()) {
+                    lcd.wakeScreen();  // enable pixels on display
                     smokerState = bbqStatus;
                 }
-
             } break;
 
             case bbqStatus: {
@@ -366,11 +367,10 @@ void processState(CWG_LCD &lcd) {
 
                 unsigned long currentMillis = millis();  // grab current time
 
-                // check if "displayInterval" time has passed (5000 milliseconds) and, if true, then go back to sleep (blank screen)
+                // check if "displayInterval" time has passed (5000 milliseconds) and, 
                 if ((unsigned long)(currentMillis - previousMillis) >= displayInterval) {
-                    smokerState = modemSleep;
+                    smokerState = modemSleep;  // when true, then go back to modemSleep case (blank screen)
                 }
-
             } break;
 
             default: {

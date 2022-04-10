@@ -198,6 +198,16 @@ void CWG_LCD::displayTest() {
     delay(2000);
 }
 
+
+void CWG_LCD::sleepScreen(){
+    noDisplay();  // from hd74480 library
+}
+
+void CWG_LCD::wakeScreen(){
+    display();  // from hd74480 library
+}
+
+
 // *********************************************************************************************
 //   printMenuLine function adapted from Open Vapors project, MIT Licence.
 //     Ref: https://github.com/baldengineer/Open-Vapors

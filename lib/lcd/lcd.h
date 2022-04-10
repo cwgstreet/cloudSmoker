@@ -59,6 +59,8 @@ class CWG_LCD : public hd44780_I2Cexp {
     void showLaunchPad();
     void showSettingsMenu(int16_t currentEncoderValue);
     void showBBQStatusScreen(bool degCFlag, float currentMeatTemp, float currentPitTemp);
+    void sleepScreen();
+    void wakeScreen();
 
     // degCFlag == 1 for Deg C, meatTargetFlag == 1 for meatTemp else pitTemp, adjTempFlag == 1 for setting temperatures
     void getTargetTemperatureMsg(char (&messageBuffer)[17], bool degCFlag, float targetTemperature, bool meatTargetFlag, bool adjTempFlag);
