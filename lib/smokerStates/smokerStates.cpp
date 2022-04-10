@@ -371,6 +371,7 @@ void processState(CWG_LCD &lcd) {
                 Serial.println(currentMeatTemp);
 #endif  // end DEBUG
 
+                    smokerState = txTemp;
             } break;
 
             case txTemp: {
@@ -378,9 +379,9 @@ void processState(CWG_LCD &lcd) {
                 // code here
             } break;
 
-            case modemSleep: {
-                // TODO: explore putting ESP8266 to sleep (modem / light / deep sleep) for power savings
-                lcd.sleepScreen();  // disable/hide pixels on display
+            case Sleep: {
+                // TODO: explore putting ESP8266 to sleep (modem / light / deep sleep) between readings for power savings
+                lcd.sleepScreen();  // disable (hide) pixels on display
 
                 if (encoder.moved()) {
                     lcd.wakeScreen();  // enable pixels on display
@@ -399,7 +400,7 @@ void processState(CWG_LCD &lcd) {
 
                 // check if "displayInterval" time has passed (5000 milliseconds) and,
                 if ((unsigned long)(currentMillis - previousMillis) >= displayInterval) {
-                    smokerState = modemSleep;  // when true, then go back to modemSleep case (blank screen)
+                    smokerState = Sleep;  // when true, then go back to Sleep case (blank screen)
                 }
             } break;
 

@@ -28,7 +28,7 @@ enum entryStates_t { splashScreen = 1,  // set enum 1 to 10 rather than default 
                      setTempUnits,
                      getTemp,
                      txTemp,
-                     modemSleep,
+                     Sleep,
                      bbqStatus };  // 10
 
 // smokerState type defined in implementation smokerState.cpp, hence extern keyword
