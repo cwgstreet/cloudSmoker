@@ -226,6 +226,31 @@ void CWG_LCD::printMenuLine(const char *c) {
     if (menuPrintLine > 1) menuPrintLine = 0;
 }
 
+//! ************************************************************************************
+/* ----------------------------------------------------------------------------------
+// printElapsedTime() - convert millis based count to human readable time HH:MM:SS and prints it
+//adapted from "jurs" at https://forum.arduino.cc/t/converting-milliseconds-to-time/423887/5
+//  ----------------------------------------------------------------------------------
+void printElapsedTime(unsigned long millisTime_ms) {
+
+unsigned long allSeconds = millisTime_ms / 1000;
+int elapsedHours = allSeconds / 3600;
+int secondsRemaining = allSeconds % 3600;
+int elapsedMinutes = secondsRemaining / 60;
+int elapsedSeconds = secondsRemaining %60;
+
+char elapsedTimebuffer[21];
+sprintf(elapsedTimebuffer,"Runtime%02d:%02d:%02d", elapsedHours, elapsedMinutes, elapsedSeconds);
+Serial.println(elapsedTimebuffer);
+//delay(1000);
+
+}
+*/
+//! ************************************************************************************
+
+
+
+
 void CWG_LCD::printMenuLine_noArrow(const char *c) {
     unsigned int lineWidth = LCD_COLS;
     lcd.setCursor(0, menuPrintLine);
@@ -261,7 +286,7 @@ void CWG_LCD::showSplashScreen(bool degCFlag, float meatDoneTemp, float pitTempT
         float pitTempTargetC = convertDegFtoDegC(pitTempTarget);
         dtostrf(meatDoneTempC, 3, 0, currentMeatTempStr);  // (float var to convert, width==3, 0==no digits after decimal, char arra for output)
         dtostrf(pitTempTargetC, 3, 0, currentPitTempStr);
-        sprintf(msg, "Meat%s\001 Pit%s\001", currentMeatTempStr, currentPitTempStr);
+        snprintf(msg, sizeof(msg), "Meat%s\001 Pit%s\001", currentMeatTempStr, currentPitTempStr);
 
         lcd.printMenuLine_noArrow("BBQ set points:");
         lcd.printMenuLine_noArrow(msg);
@@ -269,7 +294,7 @@ void CWG_LCD::showSplashScreen(bool degCFlag, float meatDoneTemp, float pitTempT
     } else {
         dtostrf(meatDoneTemp, 3, 0, currentMeatTempStr);  // width==3, no digits after decimal
         dtostrf(pitTempTarget, 3, 0, currentPitTempStr);  // width==3, no digits after decimal sprintf(msg, "Meat%s\002 Pit%s\002", currentMeatTempStr, currentPitTempStr);
-        sprintf(msg, "Meat%s\002 Pit%s\002", currentMeatTempStr, currentPitTempStr);
+        snprintf(msg, sizeof(msg), "Meat%s\002 Pit%s\002", currentMeatTempStr, currentPitTempStr);
 
         lcd.printMenuLine_noArrow("BBQ set points:");
         lcd.printMenuLine_noArrow(msg);
@@ -449,14 +474,14 @@ void CWG_LCD::getTargetTemperatureMsg(char (&messageBuffer)[17], bool degCFlag, 
         dtostrf(targetTemperatureC, 3, 0, TemperatureStr);  // (float var to convert, width==3, 0==no digits after decimal, char arra for output)
         // sprintf:  15 characters + null; Octal escape chars: \x5B = [  \x5D = ], /001 = degC custom char,  /007 /008 (/x7 or /x8) are custom character arrows
         if (meatTargetFlag) {  // focus: meatDoneTemp
-            sprintf(messageBuffer, "Meat done\x5B%s\x5D\001", TemperatureStr);
+            snprintf(messageBuffer, sizeof(messageBuffer), "Meat done\x5B%s\x5D\001", TemperatureStr);
             if (adjTempFlag) {
-                sprintf(messageBuffer, "Meat done\x7%s\x6\001", TemperatureStr);
+                snprintf(messageBuffer, sizeof(messageBuffer), "Meat done\x7%s\x6\001", TemperatureStr);
             }
         } else {  // else focus: pitTemp
-            sprintf(messageBuffer, "Pit temp\x5B%s\x5D\001", TemperatureStr);
+            snprintf(messageBuffer, sizeof(messageBuffer), "Pit temp\x5B%s\x5D\001", TemperatureStr);
             if (adjTempFlag) {
-                sprintf(messageBuffer, "Pit temp\x7%s\x6\001", TemperatureStr);
+                snprintf(messageBuffer, sizeof(messageBuffer), "Pit temp\x7%s\x6\001", TemperatureStr);
             }
         }
     } else {
@@ -465,15 +490,15 @@ void CWG_LCD::getTargetTemperatureMsg(char (&messageBuffer)[17], bool degCFlag, 
         // sprintf:  15 characters + null; Octal escape chars: \x5B = [  \x5D = ], /001 = degC custom char
         if (meatTargetFlag) {
             // focus: meatDoneTemp branch
-            sprintf(messageBuffer, "Meat done\x5B%s\x5D\002", TemperatureStr);
+            snprintf(messageBuffer, sizeof(messageBuffer), "Meat done\x5B%s\x5D\002", TemperatureStr);
             if (adjTempFlag) {
-                sprintf(messageBuffer, "Meat done\x6%s\x7\002", TemperatureStr);  // PROBLEM: \x6 not working -> displaying as \x7
+                snprintf(messageBuffer, sizeof(messageBuffer), "Meat done\x6%s\x7\002", TemperatureStr);  // PROBLEM: \x6 not working -> displaying as \x7
             }
         } else {
             // else focus: pitTemp
-            sprintf(messageBuffer, "Pit temp\x5B%s\x5D\002", TemperatureStr);
+            snprintf(messageBuffer, sizeof(messageBuffer), "Pit temp\x5B%s\x5D\002", TemperatureStr);
             if (adjTempFlag) {
-                sprintf(messageBuffer, "Pit temp\x6%s\x7\002", TemperatureStr);
+                snprintf(messageBuffer, sizeof(messageBuffer), "Pit temp\x6%s\x7\002", TemperatureStr);
             }
         }
     }

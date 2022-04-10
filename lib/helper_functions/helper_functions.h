@@ -26,4 +26,5 @@ float convertDegFtoDegC(float tempDegF);
 long unsigned getElapsedCookTime_ms();
 float getCountMS(float tempMS);
 
+
 #endif  // end header guard
