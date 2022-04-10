@@ -240,7 +240,7 @@ int elapsedMinutes = secondsRemaining / 60;
 int elapsedSeconds = secondsRemaining %60;
 
 char elapsedTimebuffer[21];
-sprintf(elapsedTimebuffer,"Runtime%02d:%02d:%02d", elapsedHours, elapsedMinutes, elapsedSeconds);
+snprintf(elapsedTimebuffer,sizeof(elapsedTimebuffer0, "Runtime%02d:%02d:%02d", elapsedHours, elapsedMinutes, elapsedSeconds);
 Serial.println(elapsedTimebuffer);
 //delay(1000);
 
