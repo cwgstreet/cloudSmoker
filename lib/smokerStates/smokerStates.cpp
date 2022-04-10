@@ -8,6 +8,10 @@
  *
  ** ************************************************************* */
 
+// set up debug scaffold; comment out following line if you want to "turn off" debugging to serial monitor 
+#define DEBUG_ADC_TEMPERATURE 1   // uncomment to debug ADC1015 ADC readings
+ 
+
 // include 3rd party libraries
 #include <Arduino.h>
 #include <NewEncoder.h>
@@ -16,6 +20,8 @@
 #include <hd44780ioClass/hd44780_I2Cexp.h>  // i2c expander i/o class header -> required for my YwRobot 1602 LCD
 
 // incliude local libraries
+#include "cwg_ads1x15.h"        // ADS1x15 I2C ADC device functionality
+#include "cwg_steinhartHart.h"  // Thermistor steinhart hart temperature calcs
 #include "helper_functions.h"
 #include "lcd.h"
 #include "press_type.h"
@@ -338,9 +344,33 @@ void processState(CWG_LCD &lcd) {
             break;
 
             case getTemp: {
-                lcd.printMenuLine("get Temp");  // temporary to confirm navigation branch
 
-                // code here
+                // obtain 11 ADC readings from designated pin and return a median filtered value (variables are globals)
+                double voltageVCC_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(ADC_VCCsupplyPin, 11);
+                double voltagePit_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(ADC_pitPin, 11);
+                double voltageMeat_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(ADC_meatPin, 11);
+
+                yield();  // allow ESP8266 background functions to "play through" - avoid blocking
+
+                // convert thermistor ADC voltage readings to temperature (degF; other units are just converted on fly for display)
+                currentMeatTemp = sh_meatProbe.getTempFahrenheit(voltageVCC_medianFiltered_V, voltageMeat_medianFiltered_V);
+                currentPitTemp = sh_pitProbe.getTempFahrenheit(voltageVCC_medianFiltered_V, voltagePit_medianFiltered_V);
+
+#ifdef DEBUG_ADC_Temps  // *****  debug - ADS1015 ADC *****
+                Serial.println();
+                Serial.println(F("MF_VCC\t|\tMF_PIT\t|\tPITdegF\t|\tMF_MEAT\t|\tMEATdegF"));
+                Serial.println(F("-------\t|\t-------\t|\t-------\t|\t-------\t|\t-------"));
+                Serial.print(voltageVCC_medianFiltered_V, 4);
+                Serial.print(F("\t|\t"));
+                Serial.print(voltagePit_medianFiltered_V, 4);
+                Serial.print(F("\t|\t"));
+                Serial.print(currentPitTemp);
+                Serial.print(F("\t|\t"));
+                Serial.print(voltageMeat_medianFiltered_V, 4);
+                Serial.print(F("\t|\t"));
+                Serial.println(currentMeatTemp);
+#endif  // end DEBUG
+
             } break;
 
             case txTemp: {
@@ -367,7 +397,7 @@ void processState(CWG_LCD &lcd) {
 
                 unsigned long currentMillis = millis();  // grab current time
 
-                // check if "displayInterval" time has passed (5000 milliseconds) and, 
+                // check if "displayInterval" time has passed (5000 milliseconds) and,
                 if ((unsigned long)(currentMillis - previousMillis) >= displayInterval) {
                     smokerState = modemSleep;  // when true, then go back to modemSleep case (blank screen)
                 }
