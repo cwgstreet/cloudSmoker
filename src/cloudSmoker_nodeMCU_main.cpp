@@ -96,7 +96,7 @@
 float meatDoneTemp = 203;    // default to usual brisket internal done temp 203degF
 float pitTempTarget = 225;   // reasonable range around 225F long and slow target, pit temps can run 200 to 350 deg F
 float currentMeatTemp = 40;  // current meat temp; default to refridgerator temp degF
-float currentPitTemp = 225;  // current pit temp; default to long and slow brisket cooking (pit) temp=225degF
+float currentPitTemp = 60;  // current pit temp; default to cold pit
 bool degCFlag = 0;           // temperature unit flag: 1 for Centigrade or 0 for Fahrenheit (default)
 
 // other Globals
