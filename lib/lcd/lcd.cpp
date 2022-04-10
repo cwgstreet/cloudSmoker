@@ -226,31 +226,6 @@ void CWG_LCD::printMenuLine(const char *c) {
     if (menuPrintLine > 1) menuPrintLine = 0;
 }
 
-//! ************************************************************************************
-/* ----------------------------------------------------------------------------------
-// printElapsedTime() - convert millis based count to human readable time HH:MM:SS and prints it
-//adapted from "jurs" at https://forum.arduino.cc/t/converting-milliseconds-to-time/423887/5
-//  ----------------------------------------------------------------------------------
-void printElapsedTime(unsigned long millisTime_ms) {
-
-unsigned long allSeconds = millisTime_ms / 1000;
-int elapsedHours = allSeconds / 3600;
-int secondsRemaining = allSeconds % 3600;
-int elapsedMinutes = secondsRemaining / 60;
-int elapsedSeconds = secondsRemaining %60;
-
-char elapsedTimebuffer[21];
-snprintf(elapsedTimebuffer,sizeof(elapsedTimebuffer0, "Runtime%02d:%02d:%02d", elapsedHours, elapsedMinutes, elapsedSeconds);
-Serial.println(elapsedTimebuffer);
-//delay(1000);
-
-}
-*/
-//! ************************************************************************************
-
-
-
-
 void CWG_LCD::printMenuLine_noArrow(const char *c) {
     unsigned int lineWidth = LCD_COLS;
     lcd.setCursor(0, menuPrintLine);
@@ -701,4 +676,46 @@ void CWG_LCD::showTemeratureTargetAdjustment(float temporaryTemperatureTarget, b
     lcd.printMenuLine("Set: Rotate/tap");
     getTargetTemperatureMsg(messageBuffer, degCFlag, temporaryTemperatureTarget, meatTargetFlag, adjTempFlag);
     lcd.printMenuLine(messageBuffer);
+}
+
+void CWG_LCD::showBBQStatusScreen(bool degCFlag, float currentMeatTemp, float currentPitTemp) {
+    char msg[17];                // space for 16 charcaters + null termination
+    char currentMeatTempStr[4];  // empty array to hold converted (to string) float meat temp + null
+    char currentPitTempStr[4];
+    lcd.setCursor(0, 0);
+
+    menuSelectLine = 0;
+
+    if (degCFlag == 1) {
+        float currentMeatTempC = convertDegFtoDegC(currentMeatTemp);
+        float currentPitTempC = convertDegFtoDegC(currentPitTemp);
+        dtostrf(currentMeatTempC, 3, 0, currentMeatTempStr);  // (float var to convert, width==3, 0==no digits after decimal, char arra for output)
+        dtostrf(currentPitTempC, 3, 0, currentPitTempStr);
+        snprintf(msg, sizeof(msg), "Meat%s\001 Pit%s\001", currentMeatTempStr, currentPitTempStr);
+
+        lcd.printMenuLine_noArrow("BBQ set points:");
+        lcd.printMenuLine_noArrow(msg);
+
+    } else {
+        dtostrf(currentMeatTemp, 3, 0, currentMeatTempStr);  // width==3, no digits after decimal
+        dtostrf(currentPitTemp, 3, 0, currentPitTempStr);    // width==3, no digits after decimal sprintf(msg, "Meat%s\002 Pit%s\002", currentMeatTempStr, currentPitTempStr);
+        snprintf(msg, sizeof(msg), "Meat%s\002 Pit%s\002", currentMeatTempStr, currentPitTempStr);
+
+        lcd.printMenuLine_noArrow(msg);
+    }
+
+    // get elapsed time (millisecs and convert to hours, minutes and seconds
+    unsigned long elapsedCookTime_ms = millis() - startCookTime_ms;
+    unsigned long allSeconds = elapsedCookTime_ms / 1000;
+    int elapsedHours = allSeconds / 3600;
+    int secondsRemaining = allSeconds % 3600;
+    int elapsedMinutes = secondsRemaining / 60;
+    // int elapsedSeconds = secondsRemaining % 60;  //! Chose not to display seconds (immaterial info)
+
+    // reformat converted time into string, hh:mm:ss, and display on second (line 1) line of LCD
+    char msg1[17];
+    snprintf(msg1, sizeof(msg1), "CookTime %02d:%02d", elapsedHours, elapsedMinutes);
+
+    menuSelectLine = 1;  // select second line
+    lcd.printMenuLine_noArrow(msg1);
 }
