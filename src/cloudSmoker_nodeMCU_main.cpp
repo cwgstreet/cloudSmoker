@@ -60,8 +60,6 @@
 #include <hd44780.h>                        // LCD library
 #include <hd44780ioClass/hd44780_I2Cexp.h>  // i2c expander i/o class header -> required for my YwRobot 1602 LCD
 
-#include "ThingSpeak.h"  // always include thingspeak header file after other header files and custom macros
-
 // internal (user) libraries:
 #include "cwg_ads1x15.h"        // ADS1x15 I2C ADC device functionality
 #include "cwg_steinhartHart.h"  // Thermistor steinhart hart temperature calcs
@@ -70,9 +68,11 @@
 #include "myConstants.h"   // all constants in one file
 #include "periphials.h"    // serial monitor function tests and usuage routines
 #include "press_type.h"    // wrapper library abstracting Yabl / Bounce2 routines
-#include "secrets.h"       //  confidential informtion - usernames, passwords, API keys etc
 #include "smokerStates.h"  // cloudSmoker state machine functionality
 #include "wrapEncoder.h"   //  encoder library including encoder object with min / max values that "wrap" around
+
+// always include thingspeak header file after other header files and custom macros
+#include <ThingSpeak.h>
 
 //? **************  Selective Debug Scaffolding *********************
 // Set up selective debug scaffold; comment out appropriate lines below to disable debugging tests at pre-proccessor stage
@@ -86,7 +86,6 @@
 //#define DEBUG_FREEMEM 1       // uncomment to debug remaining free memory
 //?  end Selective Debug Scaffolding *********************************
 
-
 //? *******************************************************************
 //?   Global variables
 //? *******************************************************************
@@ -95,13 +94,14 @@
 float meatDoneTemp = 203;    // default to usual brisket internal done temp 203degF
 float pitTempTarget = 225;   // reasonable range around 225F long and slow target, pit temps can run 200 to 350 deg F
 float currentMeatTemp = 40;  // current meat temp; default to refridgerator temp degF
-float currentPitTemp = 60;  // current pit temp; default to cold pit
+float currentPitTemp = 60;   // current pit temp; default to cold pit
 bool degCFlag = 0;           // temperature unit flag: 1 for Centigrade or 0 for Fahrenheit (default)
 
 // other Globals
 // float batteryVoltage = 999;  // 999 as null proxy
 float voltageFactor = 0;  // dependent on ADS1015 settings used
-double voltageVCC_medianFiltered_V;
+//double voltageVCC_medianFiltered_V;
+float batteryVoltage_v;
 double voltagePit_medianFiltered_V;
 double voltageMeat_medianFiltered_V;
 
@@ -113,7 +113,7 @@ within this temperature range (known as the “danger zone”).  Ref https://www
 ***** */
 
 // timing variables - global
-//unsigned long nowMillis_ms;
+// unsigned long nowMillis_ms;
 long unsigned startCookTime_ms;
 
 // run-once flag to use in functions called in loop - global
@@ -145,9 +145,9 @@ void setup() {
     const uint8_t DATA_RATE_SETTING = 4;  // default 1660 samples/sec
     ads1015.initialise(GAIN_SETTING, MODE_SETTING, DATA_RATE_SETTING);
 
-    Serial.println();
-    Serial.print(F("VCC A0\t|\tPIT A2\t|\tPitdegF\t|\tMEAT A3\t|\tMeatdegF"));
-    Serial.println();
+    // initialise ThingSpeak
+    WiFiClient cloudSmoker;
+    ThingSpeak.begin(cloudSmoker);
 
 // ***************************
 // ** Debug - function tests
@@ -165,7 +165,6 @@ void setup() {
 #ifdef DEBUG_PRESSTYPE  // *****  debug - button press_type function tests *****
     button.functionTest();
 #endif  // *****  end button press_type function tests *****
-
 
 }  // end of setup
 

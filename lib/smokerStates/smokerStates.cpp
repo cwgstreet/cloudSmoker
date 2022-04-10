@@ -8,9 +8,8 @@
  *
  ** ************************************************************* */
 
-// set up debug scaffold; comment out following line if you want to "turn off" debugging to serial monitor 
-#define DEBUG_ADC_TEMPERATURE 1   // uncomment to debug ADC1015 ADC readings
- 
+// set up debug scaffold; comment out following line if you want to "turn off" debugging to serial monitor
+#define DEBUG_ADC_TEMPERATURE 1  // uncomment to debug ADC1015 ADC readings
 
 // include 3rd party libraries
 #include <Arduino.h>
@@ -25,11 +24,17 @@
 #include "helper_functions.h"
 #include "lcd.h"
 #include "press_type.h"
+#include "secrets.h"
 #include "smokerStates.h"
 #include "wrapEncoder.h"
 
+// always include thingspeak header file after other header files and custom macros
+#include <ThingSpeak.h>
+
 // entryStates is an enum variable type defined in menu.h header file (as extern); smokerState is global
 entryStates_t smokerState;
+
+extern float batteryVoltage_v;
 
 void processState(CWG_LCD &lcd) {
     switch (smokerState) {
@@ -344,9 +349,9 @@ void processState(CWG_LCD &lcd) {
             break;
 
             case getTemp: {
-
                 // obtain 11 ADC readings from designated pin and return a median filtered value (variables are globals)
                 double voltageVCC_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(ADC_VCCsupplyPin, 11);
+                batteryVoltage_v = voltageVCC_medianFiltered_V * 1;
                 double voltagePit_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(ADC_pitPin, 11);
                 double voltageMeat_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(ADC_meatPin, 11);
 
@@ -371,34 +376,55 @@ void processState(CWG_LCD &lcd) {
                 Serial.println(currentMeatTemp);
 #endif  // end DEBUG
 
-                    smokerState = txTemp;
+                smokerState = txTemp;
             } break;
 
             case txTemp: {
-                lcd.printMenuLine("txTemp");  // temporary to confirm navigation branch
-                // code here
+                // implicit typecast from double to float as ThingSpeak.setField requires float (otherwise no match in method overlaod signature)
+                float currentMeatTemp_float = currentMeatTemp;
+                float currentpitTemp_float = currentPitTemp;
+
+                ThingSpeak.setField(1, currentMeatTemp_float);
+                ThingSpeak.setField(2, currentpitTemp_float);
+                ThingSpeak.setField(3, batteryVoltage_v);
+
+                ThingSpeak.writeFields(THNGSPK_CHANNEL_ID, THNGSPK_WRITE_API_KEY);
+
+                smokerState = Sleep;  // go back to sleep
             } break;
 
             case Sleep: {
                 // TODO: explore putting ESP8266 to sleep (modem / light / deep sleep) between readings for power savings
                 lcd.sleepScreen();  // disable (hide) pixels on display
 
+                unsigned long currentMillis = millis();  // grab current time
+                unsigned long previousMillis = 0;        // millis() returns an unsigned long
+
+                unsigned long transmitInterval = 30000;  // wait time (30 seconds)
+                //! change to 60 seconds?
+
+                // check if "displayInterval" time has passed  and,
+                if ((unsigned long)(currentMillis - previousMillis) >= transmitInterval) {
+                    smokerState = txTemp;  // when true, update ThingSpeak channel with new temperature readings
+                }
+
                 if (encoder.moved()) {
                     lcd.wakeScreen();  // enable pixels on display
                     smokerState = bbqStatus;
                 }
+
             } break;
 
             case bbqStatus: {
                 lcd.showBBQStatusScreen(degCFlag, currentMeatTemp, currentPitTemp);
 
                 // non-blocking delay for BBQ Display before clearing screen / sleep
-                unsigned long displayInterval = 5000;  // the time we need to wait (5 seconds)
-                unsigned long previousMillis = 0;      // millis() returns an unsigned long
+                unsigned long displayInterval = 7000;  // the time we need to wait (7 seconds)
+                unsigned long previousMillis = 0;       // millis() returns an unsigned long
 
                 unsigned long currentMillis = millis();  // grab current time
 
-                // check if "displayInterval" time has passed (5000 milliseconds) and,
+                // check if "displayInterval" time has passed  and,
                 if ((unsigned long)(currentMillis - previousMillis) >= displayInterval) {
                     smokerState = Sleep;  // when true, then go back to Sleep case (blank screen)
                 }
