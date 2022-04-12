@@ -385,8 +385,10 @@ void processState(CWG_LCD &lcd) {
                 float currentpitTemp_float = currentPitTemp;
 
                 ThingSpeak.setField(1, currentMeatTemp_float);
-                ThingSpeak.setField(2, currentpitTemp_float);
-                ThingSpeak.setField(3, batteryVoltage_v);
+                ThingSpeak.setField(2, meatDoneTemp);
+                ThingSpeak.setField(3, currentpitTemp_float);
+                ThingSpeak.setField(4, pitTempTarget);
+                ThingSpeak.setField(5, batteryVoltage_v);
 
                 ThingSpeak.writeFields(THNGSPK_CHANNEL_ID, THNGSPK_WRITE_API_KEY);
 
@@ -420,7 +422,7 @@ void processState(CWG_LCD &lcd) {
 
                 // non-blocking delay for BBQ Display before clearing screen / sleep
                 unsigned long displayInterval = 7000;  // the time we need to wait (7 seconds)
-                unsigned long previousMillis = 0;       // millis() returns an unsigned long
+                unsigned long previousMillis = 0;      // millis() returns an unsigned long
 
                 unsigned long currentMillis = millis();  // grab current time
 
