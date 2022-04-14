@@ -9,7 +9,7 @@
  ** ************************************************************* */
 
 // set up debug scaffold; comment out following line if you want to "turn off" debugging to serial monitor
-#define DEBUG_ADC_TEMPERATURE 1  // uncomment to debug ADC1015 ADC readings
+#define DEBUG_ADC_Temps 1  // uncomment to debug ADC1015 ADC readings
 
 // include 3rd party libraries
 #include <Arduino.h>
@@ -67,10 +67,14 @@ void processState(CWG_LCD &lcd) {
                 smokerState = changeSettings;  // enter config menu
             }
             if (button.triggered(SINGLE_TAP)) {
-                yield();                      // Do (almost) nothing -- yield allows ESP8266 background functions
-                smokerState = getTemp;        // start bbq cook
-                                              // long unsigned startCookTime_ms = millis();  // capture cook start time; var defined as global (extern in helper_functions.h)
-                startCookTime_ms = millis();  // capture cook start time; var defined as global (extern in helper_functions.h)
+                yield();                                                               // Do (almost) nothing -- yield allows ESP8266 background functions
+                Serial.println("-------------------Start Cook Now-----------------");  // debug
+                smokerState = getTemp;                                                 // start bbq cook
+                                                                                       // long unsigned startCookTime_ms = millis();  // capture cook start time; var defined as global (extern in helper_functions.h)
+                startCookTime_ms = millis();                                           // capture cook start time; var defined as global (extern in helper_functions.h)
+
+                Serial.print("startCookTime_ms = ");  // debug
+                Serial.println(startCookTime_ms);     // debug
             }
         } break;
 
@@ -345,10 +349,14 @@ void processState(CWG_LCD &lcd) {
                 smokerState = splashScreen;  // return to splashScreen
                 hasRunFlag = 0;              // allow another reset of encoder scale range
             }
-
             break;
 
             case getTemp: {
+                Serial.print("getTemp Case -> startCookTime_ms =");  // debug
+                Serial.println(startCookTime_ms);                    // debug
+
+                // hasRunFlag = 0;  // reset run-once flag
+
                 // obtain 11 ADC readings from designated pin and return a median filtered value (variables are globals)
                 double voltageVCC_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(ADC_VCCsupplyPin, 11);
                 batteryVoltage_v = voltageVCC_medianFiltered_V * 1;
@@ -374,6 +382,8 @@ void processState(CWG_LCD &lcd) {
                 Serial.print(voltageMeat_medianFiltered_V, 4);
                 Serial.print(F("\t|\t"));
                 Serial.println(currentMeatTemp);
+                Serial.println("leaving getTemps state now for txTemps");
+                Serial.println();
 #endif  // end DEBUG
 
                 smokerState = txTemp;
@@ -390,51 +400,74 @@ void processState(CWG_LCD &lcd) {
                 ThingSpeak.setField(4, pitTempTarget);
                 ThingSpeak.setField(5, batteryVoltage_v);
 
-                ThingSpeak.writeFields(THNGSPK_CHANNEL_ID, THNGSPK_WRITE_API_KEY);
+                // ThingSpeak.writeFields(THNGSPK_CHANNEL_ID, THNGSPK_WRITE_API_KEY);
 
                 smokerState = Sleep;  // go back to sleep
+                hasRunFlag = 0;       // reset run-once flag
+            // smokerState = launchPad;  // debug code.  Remove line once stack dump error found
+
             } break;
 
             case Sleep: {
                 // TODO: explore putting ESP8266 to sleep (modem / light / deep sleep) between readings for power savings
-                lcd.sleepScreen();  // disable (hide) pixels on display
+                    Serial.println("Sleep case - if hasRunFlag==0");
 
-                unsigned long currentMillis = millis();  // grab current time
-                unsigned long previousMillis = 0;        // millis() returns an unsigned long
-
-                unsigned long transmitInterval = 30000;  // wait time (30 seconds)
-                //! change to 60 seconds?
-
-                // check if "displayInterval" time has passed  and,
-                if ((unsigned long)(currentMillis - previousMillis) >= transmitInterval) {
-                    smokerState = txTemp;  // when true, update ThingSpeak channel with new temperature readings
-                }
-
-                if (encoder.moved()) {
-                    lcd.wakeScreen();  // enable pixels on display
+                if (hasRunFlag == 0) {
+                    // lcd.sleepScreen();  // disable (hide) pixels on display
+                    Serial.print("*");
+                    if (encoder.moved()) {
+                    lcd.wakeScreen();                                      // enable pixels on display
+                    lcd.printMenuLine_noArrow("Sleep state - waking up");  // debug
+                    Serial.println("Sleep state - waking up");             // debug code
                     smokerState = bbqStatus;
+                    hasRunFlag = 1;
                 }
 
-            } break;
+                    unsigned long currentMillis = millis();  // grab current time
+                    unsigned long previousMillis = 0;        // millis() returns an unsigned long
 
-            case bbqStatus: {
-                lcd.showBBQStatusScreen(degCFlag, currentMeatTemp, currentPitTemp);
+                    unsigned long transmitInterval = 30000;  // wait time (30 seconds)
+                    //! change to 60 seconds?
 
-                // non-blocking delay for BBQ Display before clearing screen / sleep
-                unsigned long displayInterval = 7000;  // the time we need to wait (7 seconds)
-                unsigned long previousMillis = 0;      // millis() returns an unsigned long
-
-                unsigned long currentMillis = millis();  // grab current time
-
-                // check if "displayInterval" time has passed  and,
-                if ((unsigned long)(currentMillis - previousMillis) >= displayInterval) {
-                    smokerState = Sleep;  // when true, then go back to Sleep case (blank screen)
+                    // check if "displayInterval" time has passed  and,
+                    if ((unsigned long)(currentMillis - previousMillis) >= transmitInterval) {
+                        smokerState = txTemp;                                                                     // when true, update ThingSpeak channel with new temperature readings
+                        hasRunFlag = 1;                                                                           // set run-once flag
+                        Serial.println("sleep transmit interval reached. smokerState = txTemp, hasRunFlag =1 ");  // debug
+                    }
                 }
-            } break;
 
-            default: {
-                smokerState = bbqStatus;
-            } break;
-        }
+                
+                // smokerState = launchPad;  // debug code.  Remove line once stack dump error found
+            }
+
+        } break;
+
+        case bbqStatus: {
+            lcd.display();  // make sure screen is not blanked
+            lcd.showBBQStatusScreen(degCFlag, currentMeatTemp, currentPitTemp);
+
+            Serial.println("entered bbqStatus state");
+
+            // non-blocking delay for BBQ Display before clearing screen / sleep
+            unsigned long displayInterval = 7000;  // the time we need to wait (7 seconds)
+            unsigned long previousMillis = 0;      // millis() returns an unsigned long
+
+            unsigned long currentMillis = millis();  // grab current time
+
+            // check if "displayInterval" time has passed  and,
+            if ((unsigned long)(currentMillis - previousMillis) >= displayInterval) {
+                smokerState = Sleep;  // when true, then go back to Sleep case (blank screen)
+                hasRunFlag = 0;       // reset run-once flag
+            }
+
+            // smokerState = launchPad;  // debug code.  Remove line once stack dump error found
+
+        } break;
+
+        default: {
+            smokerState = bbqStatus;
+        } break;
     }
 }
+//}
