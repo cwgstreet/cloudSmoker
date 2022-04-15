@@ -412,27 +412,23 @@ void processState(CWG_LCD &lcd) {
             } break;
 
             case Sleep: {
-                // TODO: explore putting ESP8266 to sleep (modem / light / deep sleep) between readings for power savings
+                // TODO: explore putting ESP8266 to power savings sleep (modem / light / deep sleep) between readings for power savings
 
                 if (encoder.moved()) {
-                    lcd.display();                                              // turn on display pixels
-                    lcd.wakeScreen();                                           // enable pixels on display
-                    lcd.printMenuLine_noArrow("Sleep ends");                    // debug
+                    lcd.display();  // turn on display pixels
+                    // lcd.printMenuLine_noArrow("Sleep ends");                    // debug  //!delete line
                     Serial.println("Sleep state, encoder moved -> waking up");  // debug code
                     smokerState = bbqStatus;
                     hasRunFlag = 1;
                     Serial.println("leaving for bbqStatus state");
-
                 }
 
                 if (hasRunFlag == 0) {
-                    lcd.sleepScreen();  // disable (hide) pixels on display
-                    lcd.noDisplay();
+                    lcd.noDisplay();  // disable (hide) pixels on display
 
-                    //Serial.println("Sleep Case -> checking duration ");
                     unsigned long currentMillis = millis();  // grab current time
 
-                    // check if "displayInterval" time has passed  and,
+                    // check if "...Interval" time has passed  and,
                     if ((unsigned long)(currentMillis - previousMillis) >= transmitInterval) {
                         previousMillis = millis();
                         smokerState = getTemp;                                                                                   // when true, update ThingSpeak channel with new temperature readings
@@ -441,34 +437,27 @@ void processState(CWG_LCD &lcd) {
                     }
                 }
 
-                // smokerState = launchPad;  // debug code.  Remove line once stack dump error found
-            }
+            } break;
 
-        } break;
+            case bbqStatus: {
+                lcd.display();  // make sure screen is not blanked
+                lcd.showBBQStatusScreen(degCFlag, currentMeatTemp, currentPitTemp);
 
-        case bbqStatus: {
-            lcd.display();  // make sure screen is not blanked
-            lcd.showBBQStatusScreen(degCFlag, currentMeatTemp, currentPitTemp);
+                // non-blocking delay for BBQ Display before clearing screen / sleep
 
+                unsigned long currentMillis = millis();  // grab current time
 
-            // non-blocking delay for BBQ Display before clearing screen / sleep
+                // check if "displayInterval" time has passed  and,
+                if ((unsigned long)(currentMillis - previousDisplayMillis) >= displayInterval) {
+                    previousDisplayMillis = millis();
+                    smokerState = Sleep;  // when true, then go back to Sleep case (blank screen)
+                    hasRunFlag = 0;       // reset run-once flag
+                }
+            } break;
 
-            unsigned long currentMillis = millis();  // grab current time
-
-            // check if "displayInterval" time has passed  and,
-            if ((unsigned long)(currentMillis - previousDisplayMillis) >= displayInterval) {
-                previousDisplayMillis = millis();
-                smokerState = Sleep;  // when true, then go back to Sleep case (blank screen)
-                hasRunFlag = 0;       // reset run-once flag
-            }
-
-            // smokerState = launchPad;  // debug code.  Remove line once stack dump error found
-
-        } break;
-
-        default: {
-            smokerState = bbqStatus;
-        } break;
+            default: {
+                smokerState = bbqStatus;
+            } break;
+        }
     }
 }
-//}

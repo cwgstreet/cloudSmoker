@@ -199,17 +199,6 @@ void CWG_LCD::displayTest() {
 }
 
 
-void CWG_LCD::sleepScreen(){
-    lcd.printMenuLine_noArrow("going to sleep!");
-    noDisplay();  // from hd74480 library
-}
-
-void CWG_LCD::wakeScreen(){
-    display();  // from hd74480 library
-    lcd.printMenuLine_noArrow("awake!");  //debug
-    Serial.println("wakeScreen()");
-}
-
 
 // *********************************************************************************************
 //   printMenuLine function adapted from Open Vapors project, MIT Licence.

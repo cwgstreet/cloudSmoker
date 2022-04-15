@@ -116,9 +116,9 @@ within this temperature range (known as the “danger zone”).  Ref https://www
 // unsigned long nowMillis_ms;  //! delete line?
 long unsigned startCookTime_ms;
 unsigned long previousMillis = 0;         // millis() returns an unsigned long
-unsigned long transmitInterval = 15000;   // wait time (30 seconds)  //!fix interval; change to 60 seconds?
-unsigned long displayInterval = 15000;     // the time we need to show BBQStatus (7 seconds)
+unsigned long transmitInterval = 15000;   // cloud transmit wait time (30 seconds)  //!fix interval; change to 60 seconds?
 unsigned long previousDisplayMillis = 0;  // millis() returns an unsigned long
+unsigned long displayInterval = 15000;     // the time we need to show BBQStatus (15 seconds)
 
 // run-once flag to use in functions called in loop - global
 bool hasRunFlag = 0;
