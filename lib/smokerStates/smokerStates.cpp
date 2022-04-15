@@ -410,18 +410,23 @@ void processState(CWG_LCD &lcd) {
 
             case Sleep: {
                 // TODO: explore putting ESP8266 to sleep (modem / light / deep sleep) between readings for power savings
-                    Serial.println("Sleep case - if hasRunFlag==0");
+                Serial.println("entering Sleep case");
+                lcd.sleepScreen();  // disable (hide) pixels on display
+                lcd.noDisplay();
 
-                if (hasRunFlag == 0) {
-                    // lcd.sleepScreen();  // disable (hide) pixels on display
-                    Serial.print("*");
-                    if (encoder.moved()) {
+                if (encoder.moved()) {
+                    lcd.display();
                     lcd.wakeScreen();                                      // enable pixels on display
-                    lcd.printMenuLine_noArrow("Sleep state - waking up");  // debug
-                    Serial.println("Sleep state - waking up");             // debug code
+                    lcd.printMenuLine_noArrow("Sleep ends");  // debug
+                    Serial.println("Sleep state, encoder moved -> waking up");             // debug code
                     smokerState = bbqStatus;
                     hasRunFlag = 1;
                 }
+
+                if (hasRunFlag == 0) {
+                    
+                    Serial.println("Sleep Case -> checking duration ");
+                    
 
                     unsigned long currentMillis = millis();  // grab current time
                     unsigned long previousMillis = 0;        // millis() returns an unsigned long
@@ -431,9 +436,9 @@ void processState(CWG_LCD &lcd) {
 
                     // check if "displayInterval" time has passed  and,
                     if ((unsigned long)(currentMillis - previousMillis) >= transmitInterval) {
-                        smokerState = txTemp;                                                                     // when true, update ThingSpeak channel with new temperature readings
+                        smokerState = getTemp;                                                                     // when true, update ThingSpeak channel with new temperature readings
                         hasRunFlag = 1;                                                                           // set run-once flag
-                        Serial.println("sleep transmit interval reached. smokerState = txTemp, hasRunFlag =1 ");  // debug
+                        Serial.println("sleep transmit duration interval reached. smokerState = txTemp, reset hasRunFlag =1 ");  // debug
                     }
                 }
 
