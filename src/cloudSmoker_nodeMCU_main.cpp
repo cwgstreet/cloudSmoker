@@ -68,6 +68,7 @@
 #include "myConstants.h"   // all constants in one file
 #include "periphials.h"    // serial monitor function tests and usuage routines
 #include "press_type.h"    // wrapper library abstracting Yabl / Bounce2 routines
+//#include "secrets.h"       //! testing
 #include "smokerStates.h"  // cloudSmoker state machine functionality
 #include "wrapEncoder.h"   //  encoder library including encoder object with min / max values that "wrap" around
 
@@ -118,7 +119,7 @@ long unsigned startCookTime_ms;
 unsigned long previousMillis = 0;         // millis() returns an unsigned long
 unsigned long transmitInterval = 15000;   // cloud transmit wait time (30 seconds)  //!fix interval; change to 60 seconds?
 unsigned long previousDisplayMillis = 0;  // millis() returns an unsigned long
-unsigned long displayInterval = 15000;     // the time we need to show BBQStatus (15 seconds)
+unsigned long displayInterval = 15000;    // the time we need to show BBQStatus (15 seconds)
 
 // run-once flag to use in functions called in loop - global
 bool hasRunFlag = 0;
@@ -150,9 +151,19 @@ void setup() {
     ads1015.initialise(GAIN_SETTING, MODE_SETTING, DATA_RATE_SETTING);
 
     // initialise ThingSpeak
-    WiFiClient cloudSmoker;
-    ThingSpeak.begin(cloudSmoker);
-
+    //WiFiClient client;
+    //ThingSpeak.begin(client);
+/* 
+    //! test thingSpeak library
+    // implicit typecast from double to float as ThingSpeak.setField requires float (otherwise no match in method overlaod signature)
+    float currentMeatTemp_float = currentMeatTemp;
+    float currentpitTemp_float = currentPitTemp;
+    ThingSpeak.setField(1, currentMeatTemp_float);
+    ThingSpeak.setField(2, meatDoneTemp);
+    ThingSpeak.setField(3, currentpitTemp_float);
+    ThingSpeak.setField(4, pitTempTarget);
+    ThingSpeak.writeFields(THNGSPK_CHANNEL_ID, THNGSPK_WRITE_API_KEY);
+ */
 // ***************************
 // ** Debug - function tests
 // ***************************

@@ -19,6 +19,9 @@
 #include <pins_arduino.h>
 #endif  // end if-block
 
+#include  <ESP8266WiFi.h>
+
+
 // Prepare case names for cloudSmoker State Machine switch-case stucture
 enum entryStates_t { splashScreen = 1,  // set enum 1 to 10 rather than default 0 for first element
                      launchPad,
@@ -33,6 +36,8 @@ enum entryStates_t { splashScreen = 1,  // set enum 1 to 10 rather than default 
 
 // smokerState type defined in implementation smokerState.cpp, hence extern keyword
 extern entryStates_t smokerState;
+
+//extern WiFiClient client;  // ensure cloudSmoker object is visable everywhere
 
 // globals, defined in main
 extern long unsigned startCookTime_ms;

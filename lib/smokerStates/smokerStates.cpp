@@ -24,7 +24,7 @@
 #include "helper_functions.h"
 #include "lcd.h"
 #include "press_type.h"
-#include "secrets.h"
+#include "secrets.h"  //! commented out for testing
 #include "smokerStates.h"
 #include "wrapEncoder.h"
 
@@ -35,6 +35,10 @@
 entryStates_t smokerState;
 
 extern float batteryVoltage_v;
+
+// initialise ThingSpeak
+//    WiFiClient cloudSmoker;
+//    ThingSpeak.begin(cloudSmoker);
 
 void processState(CWG_LCD &lcd) {
     switch (smokerState) {
@@ -391,24 +395,42 @@ void processState(CWG_LCD &lcd) {
 
             case txTemp: {
                 Serial.println("entering txTemp case -> transmitting data");  // debug
+                WiFiClient client;
+                ThingSpeak.begin(client);
 
                 // implicit typecast from double to float as ThingSpeak.setField requires float (otherwise no match in method overlaod signature)
-                float currentMeatTemp_float = currentMeatTemp;
-                float currentpitTemp_float = currentPitTemp;
+                float currentMeatTemp_float = currentMeatTemp;  //! commented out for testing
+                float currentpitTemp_float = currentPitTemp;    //! commented out for testing
 
+                //! Error (bug?) in ThingSpeak library with NodeMCU
+                //!   as writeFields() method causes stack dump, excpetion 9, alignment error
+                //!   will use post command instead
+                // ------------------------------------------
                 ThingSpeak.setField(1, currentMeatTemp_float);
                 ThingSpeak.setField(2, meatDoneTemp);
                 ThingSpeak.setField(3, currentpitTemp_float);
                 ThingSpeak.setField(4, pitTempTarget);
                 ThingSpeak.setField(5, batteryVoltage_v);
 
-                // ThingSpeak.writeFields(THNGSPK_CHANNEL_ID, THNGSPK_WRITE_API_KEY);
+                ThingSpeak.writeFields(THNGSPK_CHANNEL_ID, THNGSPK_WRITE_API_KEY);
+                /*
+                //! this also crashes the microcontroller
+                int thingSpeakReturnCode = ThingSpeak.writeField(THNGSPK_CHANNEL_ID, 1, currentMeatTemp_float, THNGSPK_WRITE_API_KEY);
+                if (thingSpeakReturnCode == 200) {
+                    Serial.println("Channel update successful.");
+                } else {
+                    Serial.print("Problem updating channel. HTTP error code =");
+                    Serial.println(thingSpeakReturnCode);
+                }
+                -------------------------------------------*/
+
+                //? Prepare and send data to thingSpeak
+                //? format: GET https://api.thingspeak.com/update?api_key=THNGSPK_WRITE_API_KEY&field1=0
+                //? --------------------------------------------------------
 
                 hasRunFlag = 0;       // reset run-once flag
                 smokerState = Sleep;  // go back to sleep
-                // smokerState = launchPad;  // debug code.  Remove line once stack dump error found
                 Serial.println("leaving for Sleep case");
-
             } break;
 
             case Sleep: {
