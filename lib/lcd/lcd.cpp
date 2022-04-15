@@ -198,8 +198,6 @@ void CWG_LCD::displayTest() {
     delay(2000);
 }
 
-
-
 // *********************************************************************************************
 //   printMenuLine function adapted from Open Vapors project, MIT Licence.
 //     Ref: https://github.com/baldengineer/Open-Vapors
@@ -686,38 +684,52 @@ void CWG_LCD::showBBQStatusScreen(bool degCFlag, float currentMeatTemp, float cu
     char currentPitTempStr[4];
     lcd.setCursor(0, 0);
 
-    menuSelectLine = 0;
-
-    if (degCFlag == 1) {
-        float currentMeatTempC = convertDegFtoDegC(currentMeatTemp);
-        float currentPitTempC = convertDegFtoDegC(currentPitTemp);
-        dtostrf(currentMeatTempC, 3, 0, currentMeatTempStr);  // (float var to convert, width==3, 0==no digits after decimal, char arra for output)
-        dtostrf(currentPitTempC, 3, 0, currentPitTempStr);
-        snprintf(msg, sizeof(msg), "Meat%s\001 Pit%s\001", currentMeatTempStr, currentPitTempStr);
-
-        lcd.printMenuLine_noArrow("BBQ set points:");
-        lcd.printMenuLine_noArrow(msg);
+    // check tht probes are inserted; otherwise calculates ridiculous temperatures that are too large to display
+    if ((currentMeatTemp >= 400) || (currentPitTemp > 500)) {
+        menuSelectLine = 0;
+        lcd.printMenuLine_noArrow("-----Error!-----");
+        lcd.printMenuLine_noArrow(" Insert Probes");
 
     } else {
-        dtostrf(currentMeatTemp, 3, 0, currentMeatTempStr);  // width==3, no digits after decimal
-        dtostrf(currentPitTemp, 3, 0, currentPitTempStr);    // width==3, no digits after decimal sprintf(msg, "Meat%s\002 Pit%s\002", currentMeatTempStr, currentPitTempStr);
-        snprintf(msg, sizeof(msg), "Meat%s\002 Pit%s\002", currentMeatTempStr, currentPitTempStr);
+        if (degCFlag == 1) {
+            float currentMeatTempC = convertDegFtoDegC(currentMeatTemp);
+            float currentPitTempC = convertDegFtoDegC(currentPitTemp);
+            dtostrf(currentMeatTempC, 3, 0, currentMeatTempStr);  // (float var to convert, width==3, 0==no digits after decimal, char arra for output)
+            dtostrf(currentPitTempC, 3, 0, currentPitTempStr);
+            snprintf(msg, sizeof(msg), "Meat%s\001 Pit%s\001", currentMeatTempStr, currentPitTempStr);
 
-        lcd.printMenuLine_noArrow(msg);
+            // lcd.printMenuLine_noArrow("BBQ set points:");
+            menuSelectLine = 0;
+            lcd.printMenuLine_noArrow(msg);
+
+        } else {
+            dtostrf(currentMeatTemp, 3, 0, currentMeatTempStr);  // width==3, no digits after decimal
+            dtostrf(currentPitTemp, 3, 0, currentPitTempStr);    // width==3, no digits after decimal sprintf(msg, "Meat%s\002 Pit%s\002", currentMeatTempStr, currentPitTempStr);
+            snprintf(msg, sizeof(msg), "Meat%s\002 Pit%s\002", currentMeatTempStr, currentPitTempStr);
+
+            // debug:
+            Serial.print("Current Meat Temp =");
+            Serial.print(currentMeatTemp);
+            Serial.print(",  Current Pit Temp =");
+            Serial.println(currentPitTemp);
+
+            menuSelectLine = 0;
+            lcd.printMenuLine_noArrow(msg);
+        }
+
+        // get elapsed time (millisecs and convert to hours, minutes and seconds
+        unsigned long elapsedCookTime_ms = millis() - startCookTime_ms;
+        unsigned long allSeconds = elapsedCookTime_ms / 1000;
+        int elapsedHours = allSeconds / 3600;
+        int secondsRemaining = allSeconds % 3600;
+        int elapsedMinutes = secondsRemaining / 60;
+        // int elapsedSeconds = secondsRemaining % 60;  //! Chose not to display seconds (immaterial info)
+
+        // reformat converted time into string, hh:mm:ss, and display on second (line 1) line of LCD
+        char msg1[17];
+        snprintf(msg1, sizeof(msg1), "CookTime %02d:%02d", elapsedHours, elapsedMinutes);
+
+        menuSelectLine = 1;  // select second line
+        lcd.printMenuLine_noArrow(msg1);
     }
-
-    // get elapsed time (millisecs and convert to hours, minutes and seconds
-    unsigned long elapsedCookTime_ms = millis() - startCookTime_ms;
-    unsigned long allSeconds = elapsedCookTime_ms / 1000;
-    int elapsedHours = allSeconds / 3600;
-    int secondsRemaining = allSeconds % 3600;
-    int elapsedMinutes = secondsRemaining / 60;
-    // int elapsedSeconds = secondsRemaining % 60;  //! Chose not to display seconds (immaterial info)
-
-    // reformat converted time into string, hh:mm:ss, and display on second (line 1) line of LCD
-    char msg1[17];
-    snprintf(msg1, sizeof(msg1), "CookTime %02d:%02d", elapsedHours, elapsedMinutes);
-
-    menuSelectLine = 1;  // select second line
-    lcd.printMenuLine_noArrow(msg1);
 }

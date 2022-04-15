@@ -444,7 +444,6 @@ void processState(CWG_LCD &lcd) {
                 lcd.showBBQStatusScreen(degCFlag, currentMeatTemp, currentPitTemp);
 
                 // non-blocking delay for BBQ Display before clearing screen / sleep
-
                 unsigned long currentMillis = millis();  // grab current time
 
                 // check if "displayInterval" time has passed  and,
