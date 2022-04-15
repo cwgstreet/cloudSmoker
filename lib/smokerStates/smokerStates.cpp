@@ -9,7 +9,7 @@
  ** ************************************************************* */
 
 // set up debug scaffold; comment out following line if you want to "turn off" debugging to serial monitor
-#define DEBUG_ADC_Temps 1  // uncomment to debug ADC1015 ADC readings
+//#define DEBUG_ADC_Temps 1  // uncomment to debug ADC1015 ADC readings
 
 // include 3rd party libraries
 #include <Arduino.h>
@@ -355,7 +355,7 @@ void processState(CWG_LCD &lcd) {
                 Serial.print("getTemp Case -> startCookTime_ms =");  // debug
                 Serial.println(startCookTime_ms);                    // debug
 
-                // hasRunFlag = 0;  // reset run-once flag
+                // hasRunFlag = 0;  // reset run-once flag  //! Not needed here?  DELETE LINE
 
                 // obtain 11 ADC readings from designated pin and return a median filtered value (variables are globals)
                 double voltageVCC_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(ADC_VCCsupplyPin, 11);
@@ -363,7 +363,7 @@ void processState(CWG_LCD &lcd) {
                 double voltagePit_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(ADC_pitPin, 11);
                 double voltageMeat_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(ADC_meatPin, 11);
 
-                yield();  // allow ESP8266 background functions to "play through" - avoid blocking
+                yield();  // allow ESP8266 background functions to "play through" - avoid blocking watchdog timer, etc.
 
                 // convert thermistor ADC voltage readings to temperature (degF; other units are just converted on fly for display)
                 currentMeatTemp = sh_meatProbe.getTempFahrenheit(voltageVCC_medianFiltered_V, voltageMeat_medianFiltered_V);
@@ -390,6 +390,8 @@ void processState(CWG_LCD &lcd) {
             } break;
 
             case txTemp: {
+                Serial.println("entering txTemp case -> transmitting data");  // debug
+
                 // implicit typecast from double to float as ThingSpeak.setField requires float (otherwise no match in method overlaod signature)
                 float currentMeatTemp_float = currentMeatTemp;
                 float currentpitTemp_float = currentPitTemp;
@@ -402,47 +404,43 @@ void processState(CWG_LCD &lcd) {
 
                 // ThingSpeak.writeFields(THNGSPK_CHANNEL_ID, THNGSPK_WRITE_API_KEY);
 
-                smokerState = Sleep;  // go back to sleep
                 hasRunFlag = 0;       // reset run-once flag
-            // smokerState = launchPad;  // debug code.  Remove line once stack dump error found
+                smokerState = Sleep;  // go back to sleep
+                // smokerState = launchPad;  // debug code.  Remove line once stack dump error found
+                Serial.println("leaving for Sleep case");
 
             } break;
 
             case Sleep: {
                 // TODO: explore putting ESP8266 to sleep (modem / light / deep sleep) between readings for power savings
-                Serial.println("entering Sleep case");
-                lcd.sleepScreen();  // disable (hide) pixels on display
-                lcd.noDisplay();
 
                 if (encoder.moved()) {
-                    lcd.display();
-                    lcd.wakeScreen();                                      // enable pixels on display
-                    lcd.printMenuLine_noArrow("Sleep ends");  // debug
-                    Serial.println("Sleep state, encoder moved -> waking up");             // debug code
+                    lcd.display();                                              // turn on display pixels
+                    lcd.wakeScreen();                                           // enable pixels on display
+                    lcd.printMenuLine_noArrow("Sleep ends");                    // debug
+                    Serial.println("Sleep state, encoder moved -> waking up");  // debug code
                     smokerState = bbqStatus;
                     hasRunFlag = 1;
+                    Serial.println("leaving for bbqStatus state");
+
                 }
 
                 if (hasRunFlag == 0) {
-                    
-                    Serial.println("Sleep Case -> checking duration ");
-                    
+                    lcd.sleepScreen();  // disable (hide) pixels on display
+                    lcd.noDisplay();
 
+                    //Serial.println("Sleep Case -> checking duration ");
                     unsigned long currentMillis = millis();  // grab current time
-                    unsigned long previousMillis = 0;        // millis() returns an unsigned long
-
-                    unsigned long transmitInterval = 30000;  // wait time (30 seconds)
-                    //! change to 60 seconds?
 
                     // check if "displayInterval" time has passed  and,
                     if ((unsigned long)(currentMillis - previousMillis) >= transmitInterval) {
-                        smokerState = getTemp;                                                                     // when true, update ThingSpeak channel with new temperature readings
-                        hasRunFlag = 1;                                                                           // set run-once flag
+                        previousMillis = millis();
+                        smokerState = getTemp;                                                                                   // when true, update ThingSpeak channel with new temperature readings
+                        hasRunFlag = 1;                                                                                          // set run-once flag
                         Serial.println("sleep transmit duration interval reached. smokerState = txTemp, reset hasRunFlag =1 ");  // debug
                     }
                 }
 
-                
                 // smokerState = launchPad;  // debug code.  Remove line once stack dump error found
             }
 
@@ -452,16 +450,14 @@ void processState(CWG_LCD &lcd) {
             lcd.display();  // make sure screen is not blanked
             lcd.showBBQStatusScreen(degCFlag, currentMeatTemp, currentPitTemp);
 
-            Serial.println("entered bbqStatus state");
 
             // non-blocking delay for BBQ Display before clearing screen / sleep
-            unsigned long displayInterval = 7000;  // the time we need to wait (7 seconds)
-            unsigned long previousMillis = 0;      // millis() returns an unsigned long
 
             unsigned long currentMillis = millis();  // grab current time
 
             // check if "displayInterval" time has passed  and,
-            if ((unsigned long)(currentMillis - previousMillis) >= displayInterval) {
+            if ((unsigned long)(currentMillis - previousDisplayMillis) >= displayInterval) {
+                previousDisplayMillis = millis();
                 smokerState = Sleep;  // when true, then go back to Sleep case (blank screen)
                 hasRunFlag = 0;       // reset run-once flag
             }

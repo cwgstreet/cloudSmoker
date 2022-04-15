@@ -100,7 +100,7 @@ bool degCFlag = 0;           // temperature unit flag: 1 for Centigrade or 0 for
 // other Globals
 // float batteryVoltage = 999;  // 999 as null proxy
 float voltageFactor = 0;  // dependent on ADS1015 settings used
-//double voltageVCC_medianFiltered_V;
+// double voltageVCC_medianFiltered_V;
 float batteryVoltage_v;
 double voltagePit_medianFiltered_V;
 double voltageMeat_medianFiltered_V;
@@ -113,8 +113,12 @@ within this temperature range (known as the “danger zone”).  Ref https://www
 ***** */
 
 // timing variables - global
-// unsigned long nowMillis_ms;
+// unsigned long nowMillis_ms;  //! delete line?
 long unsigned startCookTime_ms;
+unsigned long previousMillis = 0;         // millis() returns an unsigned long
+unsigned long transmitInterval = 15000;   // wait time (30 seconds)  //!fix interval; change to 60 seconds?
+unsigned long displayInterval = 15000;     // the time we need to show BBQStatus (7 seconds)
+unsigned long previousDisplayMillis = 0;  // millis() returns an unsigned long
 
 // run-once flag to use in functions called in loop - global
 bool hasRunFlag = 0;
