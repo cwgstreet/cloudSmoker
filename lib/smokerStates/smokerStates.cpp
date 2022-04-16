@@ -24,7 +24,7 @@
 #include "helper_functions.h"
 #include "lcd.h"
 #include "press_type.h"
-#include "secrets.h"  //! commented out for testing
+#include "secrets.h"  
 #include "smokerStates.h"
 #include "wrapEncoder.h"
 
@@ -359,8 +359,6 @@ void processState(CWG_LCD &lcd) {
                 Serial.print("getTemp Case -> startCookTime_ms =");  // debug
                 Serial.println(startCookTime_ms);                    // debug
 
-                // hasRunFlag = 0;  // reset run-once flag  //! Not needed here?  DELETE LINE
-
                 // obtain 11 ADC readings from designated pin and return a median filtered value (variables are globals)
                 double voltageVCC_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(ADC_VCCsupplyPin, 11);
                 batteryVoltage_v = voltageVCC_medianFiltered_V * 1;
@@ -399,12 +397,9 @@ void processState(CWG_LCD &lcd) {
                 ThingSpeak.begin(client);
 
                 // implicit typecast from double to float as ThingSpeak.setField requires float (otherwise no match in method overlaod signature)
-                float currentMeatTemp_float = currentMeatTemp;  //! commented out for testing
-                float currentpitTemp_float = currentPitTemp;    //! commented out for testing
-
-                //! Error (bug?) in ThingSpeak library with NodeMCU
-                //!   as writeFields() method causes stack dump, excpetion 9, alignment error
-                //!   will use post command instead
+                float currentMeatTemp_float = currentMeatTemp;  
+                float currentpitTemp_float = currentPitTemp;    
+                
                 // ------------------------------------------
                 ThingSpeak.setField(1, currentMeatTemp_float);
                 ThingSpeak.setField(2, meatDoneTemp);
@@ -413,21 +408,7 @@ void processState(CWG_LCD &lcd) {
                 ThingSpeak.setField(5, batteryVoltage_v);
 
                 ThingSpeak.writeFields(THNGSPK_CHANNEL_ID, THNGSPK_WRITE_API_KEY);
-                /*
-                //! this also crashes the microcontroller
-                int thingSpeakReturnCode = ThingSpeak.writeField(THNGSPK_CHANNEL_ID, 1, currentMeatTemp_float, THNGSPK_WRITE_API_KEY);
-                if (thingSpeakReturnCode == 200) {
-                    Serial.println("Channel update successful.");
-                } else {
-                    Serial.print("Problem updating channel. HTTP error code =");
-                    Serial.println(thingSpeakReturnCode);
-                }
-                -------------------------------------------*/
-
-                //? Prepare and send data to thingSpeak
-                //? format: GET https://api.thingspeak.com/update?api_key=THNGSPK_WRITE_API_KEY&field1=0
-                //? --------------------------------------------------------
-
+                
                 hasRunFlag = 0;       // reset run-once flag
                 smokerState = Sleep;  // go back to sleep
                 Serial.println("leaving for Sleep case");
@@ -438,7 +419,6 @@ void processState(CWG_LCD &lcd) {
 
                 if (encoder.moved()) {
                     lcd.display();  // turn on display pixels
-                    // lcd.printMenuLine_noArrow("Sleep ends");                    // debug  //!delete line
                     Serial.println("Sleep state, encoder moved -> waking up");  // debug code
                     smokerState = bbqStatus;
                     hasRunFlag = 1;

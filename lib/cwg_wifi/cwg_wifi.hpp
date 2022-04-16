@@ -38,6 +38,8 @@
 // then goes into a blocking loop awaiting configuration and will return success result
 //-----------------------------------------------
 void WifiManager_initialise() {
+    //! add lcd msg about server config
+
     // explicitly set mode, ESP defaults to STA+AP
     WiFi.mode(WIFI_STA);  // good practice to ensure code sets wifi mode how you want it
 

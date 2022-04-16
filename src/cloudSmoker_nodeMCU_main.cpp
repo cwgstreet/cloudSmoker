@@ -117,7 +117,7 @@ within this temperature range (known as the “danger zone”).  Ref https://www
 // unsigned long nowMillis_ms;  //! delete line?
 long unsigned startCookTime_ms;
 unsigned long previousMillis = 0;         // millis() returns an unsigned long
-unsigned long transmitInterval = 15000;   // cloud transmit wait time (30 seconds)  //!fix interval; change to 60 seconds?
+unsigned long transmitInterval = 60000;   // cloud transmit wait time (30 seconds)  //!fix interval; change to 60 seconds?
 unsigned long previousDisplayMillis = 0;  // millis() returns an unsigned long
 unsigned long displayInterval = 15000;    // the time we need to show BBQStatus (15 seconds)
 
@@ -136,7 +136,6 @@ void setup() {
     lcd.initialiseLCD();
     lcd.initialiseCustomCharSet();  // creates eight custom lcd charaters
     encoder.initialise();
-    // delay(100);  //! *** TEST given blocking *** is delay necessary to clear serial buffer in encoder.initialise(); otherwise garbage characters
     WifiManager_initialise();
 
     // initialise button press_type set-up code (pin, pullup mode, callback function)
@@ -150,20 +149,7 @@ void setup() {
     const uint8_t DATA_RATE_SETTING = 4;  // default 1660 samples/sec
     ads1015.initialise(GAIN_SETTING, MODE_SETTING, DATA_RATE_SETTING);
 
-    // initialise ThingSpeak
-    //WiFiClient client;
-    //ThingSpeak.begin(client);
-/* 
-    //! test thingSpeak library
-    // implicit typecast from double to float as ThingSpeak.setField requires float (otherwise no match in method overlaod signature)
-    float currentMeatTemp_float = currentMeatTemp;
-    float currentpitTemp_float = currentPitTemp;
-    ThingSpeak.setField(1, currentMeatTemp_float);
-    ThingSpeak.setField(2, meatDoneTemp);
-    ThingSpeak.setField(3, currentpitTemp_float);
-    ThingSpeak.setField(4, pitTempTarget);
-    ThingSpeak.writeFields(THNGSPK_CHANNEL_ID, THNGSPK_WRITE_API_KEY);
- */
+ 
 // ***************************
 // ** Debug - function tests
 // ***************************
