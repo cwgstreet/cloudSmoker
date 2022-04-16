@@ -33,11 +33,11 @@
 // ******************************************************
 //?  ThingSpeak Connection Parameters
 // *******************************************************/
-// const unsigned long SECRET_THNGSPK_CHANNEL_ID = CHANNEL_ID_NUMBER;   // Replace with Thingspeak Channel ID
-// const char* SECRET_THNGSPK_WRITE_API_KEY = "APIKEY";    // Replace with Thingspeak Write API Key
+// const unsigned long THNGSPK_CHANNEL_ID = CHANNEL_ID_NUMBER;   // Replace with Thingspeak Channel ID
+// const char* THNGSPK_WRITE_API_KEY = "APIKEY";    // Replace with Thingspeak Write API Key
 
 // includ Read API Key for potential future use:
-// const char* SECRET_THNGSPK_READ_API_KEY = "APIKEY";  // Replace with Thingspeak Read API Key
+// const char* THNGSPK_READ_API_KEY = "APIKEY";  // Replace with Thingspeak Read API Key
 
 // #endif  // end header guard
  
