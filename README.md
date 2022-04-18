@@ -1,4 +1,6 @@
-<img style="float: right;" src="https://github.com/cwgstreet/cloudSmoker/blob/8ebc0d06341cf46aa576d8159f0cbd5d78bda683/Images/CloudSmoker-Icon-multicolour-txt-no-bg-resized.png" width="150"/> 
+<img style="float: right;" src="https://github.com/cwgstreet/cloudSmoker/blob/8ebc0d06341cf46aa576d8159f0cbd5d78bda683/Images/CloudSmoker-Icon-multicolour-txt-no-bg-resized.png" width="300"/> 
+
+
 
 
 # Cloud Smoker BBQ Monitor Project
