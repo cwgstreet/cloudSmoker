@@ -1,11 +1,15 @@
-<img style="float: right;" src="https://github.com/cwgstreet/cloudSmoker/blob/8ebc0d06341cf46aa576d8159f0cbd5d78bda683/Images/CloudSmoker-Icon-multicolour-txt-no-bg-resized.png" width="600"/> 
+
+<img align="right" src="https://github.com/cwgstreet/cloudSmoker/blob/8ebc0d06341cf46aa576d8159f0cbd5d78bda683/Images/CloudSmoker-Icon-multicolour-txt-no-bg-resized.png" width="600"/> 
+ 
+<br>
+
+<br>
 
 
+# cloudSmoker #
+**WiFi BBQ Temperature Monitor Project**
 
-
-# Cloud Smoker BBQ Monitor Project
-
-*This project exists as a hands-on opportunity to learn more about electronics, IoT, Arduino / ESP8266 programming, GitHub markdown, etc*
+[comment]: <> (This project exists as a hands-on opportunity to learn more about electronics, IoT, Arduino / ESP8266 programming, GitHub markdown, etc)
 
 [![GitHub license](https://img.shields.io/github/license/Naereen/StrapDown.js.svg)](https://github.com/Naereen/StrapDown.js/blob/master/LICENSE)
 <br>
@@ -16,35 +20,36 @@
 
 ## Project Summary
 
-The Cloud Smoker Barbecue Monitor project is an IoT device / workflow to read two temperatures (pit and internal meat temperatures) within my Weber BBQ smoker and upload these to a cloud based dashboard allowing me to remotely monitor cook progress, view temp vs time graphs, gaugest etc within a dashboard, define cooking notification setpoints and to received push notifications to my smartphone if pit temperatures go outside acceptable ranges and when the meat is done and ready to be removed.
+The Cloud Smoker Barbecue Monitor project is a WiFi-enable temperature monitor.  cloudSmoker is designed to read two temperatures (pit and internal meat temperatures) within my Weber BBQ smoker and upload these to a cloud based IOT dashboard, allowing remote monitoring of the cook progress through a cloud dashboard showing temperature vs time graphs, gauges, etc, user-definable cooking notification setpoints and exception push notifications to my smartphone, say if the pit temperatures go outside of acceptable ranges and when the meat is done and ready to be removed.
 
-The overall process flow is as follows:
-
+The overall process flow is conceptualised as follows:
 
 <img src="https://raw.githubusercontent.com/cwgstreet/cloudSmoker/main/Images/CloudSmoker%20Process%20Diagram.jpg"> 
 
+Hardware is based around the NodeMCU (V1.0) ESP8266-12E microcontroller module (for both for WiFi access and microcontroller), two Maverick ET-732/733 thermistor probes, an external ADS1015 "12-bit" ADC, plus a 1602 LCD and rotary encoder for user set-up configuration and display.  Minor thermistor and power filtering was also used for stability.  
 
-Hardware is based around the ESP8266 ESP-07 module (both for WiFi access and microcontroller), two Maverick ET-732 thermistor probes, and a 4066B switch to allow multiplexing due to limitation of having only the single ADC pin on the ESP-07.
-
-Coding was done using the Arduino IDE with data uploaded to ThingSpeak for display and further processing.  IFTT used for text notifications and Google Sheets for creating barbeque logs.
+Coding was done using VS Code / PlatformIO IDE with data uploaded to ThingSpeak for display and further processing.  Exception push notifications are through Twitter using Thingspeak's React ThingTweet functionality.  (Todo:  export cook logs to Google Sheets).
 
 
 ### Project Overview  ###
 
-A thorough project overview and description can be found in the project [Wiki](https://github.com/cwgstreet/cloudSmoker/wiki) covering design goals, hardware, software, etc.
+An extensive project overview and design process description can be found in the project [Wiki](https://github.com/cwgstreet/cloudSmoker/wiki) covering design goals, hardware, software, etc.  
 
 
 ### Hardware ###
 
-The Hardware folder contains 1) KiCad schematics and PCB board layouts and 2) selected datasheets.
+The Hardware folder contains KiCad schematics, PCB board layouts and selected datasheets (including the datasheet for the Semitec 105GT-2 Thermistor, which Maverick kindly provided when I asked :clap: :thumbsup: Note that I have not found this datasheet available anywhere on the web and most similar project incorrectly characterised the Maverick ET-732 thermistor as a 10k ohm resitor (it's actually 1M ohm), leading to poor results and an incorrect reputation as a "flakey" thermistor choice.   
 
-### cloudSmoker_uno ###
+### cloudSmoker ###
 
-This folder contains the full CloudSmoker software (sketch and libraries); developed under VSCode / Platformio IDE rather than Arduino IDE so folders reflect Platformio structure
+This folder contains the full CloudSmoker software (sketch and libraries); developed under VSCode / Platformio IDE rather than Arduino IDE so folder structure reflect Platformio structure.  Node that the code is over 1600 lines total and makes extensive use of user and public libraries.
 
 ### Images ###
 
 Self-explanatory
+
+### Project Dashboard ###
+A public ThingSpeak [cloudSmoker dashboard](https://thingspeak.com/channels/1679986) is available
 
 
 ### Licence ###
