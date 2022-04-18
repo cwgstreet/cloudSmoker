@@ -1,9 +1,12 @@
+<img style="float: right;" src="https://raw.githubusercontent.com/cwgstreet/cloudSmoker/main/Images/CloudSmoker%20Icon%20colour.jpg" width="150"/> 
+
+
 # Cloud Smoker BBQ Monitor Project
 [![GitHub license](https://img.shields.io/github/license/Naereen/StrapDown.js.svg)](https://github.com/Naereen/StrapDown.js/blob/master/LICENSE)
 
 **Note**:  *This project exists as a hands-on opportunity to learn more about electronics, IoT, Arduino / ESP8266 programming, GitHub markdown, etc*
 
-<img style="float: right;" src="https://raw.githubusercontent.com/cwgstreet/cloudSmoker/main/Images/CloudSmoker%20Icon%20colour.jpg" width="150"/> <img src="https://upload.wikimedia.org/wikipedia/commons/c/c7/UnderConstruction.svg" width="100">
+
 
 <br>
 
