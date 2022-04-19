@@ -42,7 +42,7 @@ An extensive project overview and design process description can be found in the
 
 ### Hardware ###
 
-<img align="right"  src="Images/Cook Images/cloudSmoker_unbuttoned.JPG">
+<img align="right" width="300" height="400"  src="Images/Cook Images/cloudSmoker_unbuttoned.JPG">
 
 The Hardware folder contains KiCad schematics, PCB board layouts and selected datasheets (including the datasheet for the Semitec 105GT-2 Thermistor, that Maverick kindly provided me when I asked their customer support.  :clap: :thumbsup: 
 
