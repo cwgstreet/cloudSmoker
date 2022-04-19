@@ -69,3 +69,8 @@ A public ThingSpeak [cloudSmoker dashboard](https://thingspeak.com/channels/1679
 MIT Licence
 
 --- END ---
+
+
+<p align="center">
+  <img  src="Images/Cook Images/brisket-final.JPG">
+</p>
