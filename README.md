@@ -1,6 +1,6 @@
 
 <img align="right" src="Images/CloudSmoker-Icon-multicolour-txt-no-bg-resized.png#gh-light-mode-only" width="600"/> 
-<img align="right" src="Images/CloudSmoker-Icon-multicolour-txt-with-bg-resized.png#gh-dark-mode-only" width="600"/>  
+<img align="right" src="Images/CloudSmoker-Icon-multicolour-txt-with-bg-resized.jpg#gh-dark-mode-only" width="600"/>  
 <br>
 <br>
 <br>
