@@ -24,15 +24,15 @@
 
 ## Project Summary
 
-The Cloud Smoker Barbecue Monitor project is a WiFi-enable temperature monitor.  cloudSmoker is designed to read two temperatures (pit and internal meat temperatures) within my Weber BBQ smoker and upload these to a cloud based IOT dashboard, allowing remote monitoring of the cook progress through a cloud dashboard showing temperature vs time graphs, gauges, etc, user-definable cooking notification setpoints and exception push notifications to my smartphone, say if the pit temperatures go outside of acceptable ranges and when the meat is done and ready to be removed.
+The Cloud Smoker Barbecue Monitor project is a WiFi-enable temperature monitor.  cloudSmoker is designed to read two temperatures (pit and internal meat temperatures) within my Weber BBQ smoker and upload these to an IOT dashboard, allowing remote cloud monitoring of the cook progress showing temperature vs time graphs, gauges, etc, user-definable cooking notification setpoints and exception push notifications to my smartphone, say if the pit temperatures go outside of acceptable ranges and when the meat is done and ready to be removed.
 
 The overall process flow is conceptualised as follows:
 
 <img src="https://raw.githubusercontent.com/cwgstreet/cloudSmoker/main/Images/CloudSmoker%20Process%20Diagram.jpg"> 
 
-Hardware is based around the NodeMCU (V1.0) ESP8266-12E microcontroller module (for both for WiFi access and microcontroller), two Maverick ET-732/733 thermistor probes, an external ADS1015 "12-bit" ADC, plus a 1602 LCD and rotary encoder for user set-up configuration and display.  Minor thermistor and power filtering was also used for stability.  
+Hardware is based around the NodeMCU (V1.0) ESP8266-12E microcontroller module (for both for WiFi access and microcontroller), two Maverick ET-732/733 thermistor probes, an external ADS1015 "12-bit" ADC, plus a 1602 LCD and rotary encoder for user set-up configuration and display.  Minor thermistor and power filtering was also employed for stability.  
 
-Coding was done using VS Code / PlatformIO IDE with data uploaded to ThingSpeak for display and further processing.  Exception push notifications are through Twitter using Thingspeak's React ThingTweet functionality.  (Todo:  export cook logs to Google Sheets).
+Coding was done using VS Code / PlatformIO IDE with data uploaded to ThingSpeak for display and further processing.   Push exception notifications are done through Twitter using Thingspeak's React / ThingTweet functionality.  (Todo:  export cook logs to Google Sheets).
 
 
 ### Project Overview  ###
@@ -44,9 +44,9 @@ An extensive project overview and design process description can be found in the
 
 <img align="right" width="300" height="400"  src="Images/Cook Images/cloudSmoker_unbuttoned.JPG">
 
-The Hardware folder contains KiCad schematics, PCB board layouts and selected datasheets (including the datasheet for the Semitec 105GT-2 Thermistor, that Maverick kindly provided me when I asked their customer support.  :clap: :thumbsup: 
+The Hardware folder contains KiCad schematics, PCB board layouts and selected datasheets (including the datasheet for the Semitec 105GT-2 Thermistor, that Maverick customer support kindly provided me.  :clap: :thumbsup: 
 
-Note that I have not found this datasheet available anywhere on the web and most similar project have incorrectly characterised the Maverick ET-732/733 thermistors as a 10k ohm thermistor (when it's actually 1M ohm!), leading to poor results and these Maverick thermistors gaining an incorrect reputation as an [acceptable, but not recommended thermistor choice](https://github.com/CapnBry/HeaterMeter/wiki/HeaterMeter-Probes).   
+Note that I have not found this datasheet available anywhere on the web and many other projects incorrectly characterised the Maverick ET-732/733 probes as being based on a 10k ohm thermistor (when it's actually 1M ohm!).  This incorrect assumption frequebtly led to poor bias resistor selection, resulting in poor measurement acuracy.  As a result, these Maverick thermistors were often not highly regrded.  For example, one project concluded they were [acceptable, but not recommended thermistor choice](https://github.com/CapnBry/HeaterMeter/wiki/HeaterMeter-Probes).   
 
 ### cloudSmoker ###
 
