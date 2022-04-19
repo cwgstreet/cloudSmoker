@@ -42,6 +42,8 @@ An extensive project overview and design process description can be found in the
 
 ### Hardware ###
 
+<img align="right"  src="Images/Cook Images/cloudSmoker_unbuttoned.JPG">
+
 The Hardware folder contains KiCad schematics, PCB board layouts and selected datasheets (including the datasheet for the Semitec 105GT-2 Thermistor, that Maverick kindly provided me when I asked their customer support.  :clap: :thumbsup: 
 
 Note that I have not found this datasheet available anywhere on the web and most similar project have incorrectly characterised the Maverick ET-732/733 thermistors as a 10k ohm thermistor (when it's actually 1M ohm!), leading to poor results and these Maverick thermistors gaining an incorrect reputation as an [acceptable, but not recommended thermistor choice](https://github.com/CapnBry/HeaterMeter/wiki/HeaterMeter-Probes).   
@@ -57,6 +59,10 @@ Self-explanatory
 ### Project Dashboard ###
 A public ThingSpeak [cloudSmoker dashboard](https://thingspeak.com/channels/1679986) is available
 
+
+<p align="center">
+  <img  src="Images/Cook Images/cloudSmoker-dashboard.JPG">
+</p>
 
 ### Licence ###
 
