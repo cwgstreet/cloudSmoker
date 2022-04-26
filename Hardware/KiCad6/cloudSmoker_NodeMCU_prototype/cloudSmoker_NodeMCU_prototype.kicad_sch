@@ -2541,7 +2541,7 @@
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid 8264b28d-73bf-45e8-aca4-1c3ccc4e16ca)
   )
-  (text "Bias Resistors" (at 167.64 103.505 0)
+  (text "  Bias \nResistors" (at 171.45 119.38 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid 8f7280b2-4ef8-4816-bafa-dcf823a784e2)
   )
