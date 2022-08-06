@@ -24,7 +24,7 @@
 
 ## Project Summary
 
-The Cloud Smoker Barbecue Monitor project is a WiFi-enable temperature monitor.  cloudSmoker is designed to read two temperatures (pit and internal meat temperatures) within my Weber BBQ smoker and upload these to an IOT dashboard, allowing remote cloud monitoring of the cook progress showing temperature vs time graphs, gauges, etc, user-definable cooking notification setpoints and exception push notifications to my smartphone, say if the pit temperatures go outside of acceptable ranges and when the meat is done and ready to be removed.
+The cloudSmoker Barbecue Monitor project is a WiFi-enable temperature monitor.  cloudSmoker is designed to read two temperatures (pit and internal meat temperatures) within my Weber BBQ smoker and upload these to an IOT dashboard, allowing remote cloud monitoring of the cook progress showing temperature vs time graphs, gauges, etc, user-definable cooking notification setpoints and exception push notifications to my smartphone, say if the pit temperatures go outside of acceptable ranges and when the meat is done and ready to be removed.
 
 The overall process flow is conceptualised as follows:
 
