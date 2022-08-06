@@ -32,7 +32,7 @@ The overall process flow is conceptualised as follows:
 
 Hardware is based around the NodeMCU (V1.0) ESP8266-12E microcontroller module (for both for WiFi access and microcontroller), two Maverick ET-732/733 thermistor probes, an external ADS1015 "12-bit" ADC, plus a 1602 LCD and rotary encoder for user set-up configuration and display.  Minor thermistor and power filtering was also employed for stability.  
 
-Coding was done using VS Code / PlatformIO IDE with data uploaded to ThingSpeak for display and further processing.   Push exception notifications are done through Twitter using Thingspeak's React / ThingTweet functionality.  (Todo:  export cook logs to Google Sheets).
+Coding was done using VS Code / PlatformIO IDE platform with data uploaded to ThingSpeak for display and further processing.   Push exception notifications are done through Twitter using Thingspeak's React / ThingTweet functionality.  (:warning: Todo:  export cook logs to Google Sheets).
 
 
 ### Project Overview  ###
@@ -44,13 +44,13 @@ An extensive project overview and design process description can be found in the
 
 <img align="right" width="300" height="400"  src="Images/Cook Images/cloudSmoker_unbuttoned.JPG">
 
-The Hardware folder contains KiCad schematics, PCB board layouts and selected datasheets (including the datasheet for the Semitec 105GT-2 Thermistor, that Maverick customer support kindly provided me.  :clap: :thumbsup: 
+The Hardware folder contains KiCad schematic, PCB board layouts (:warning: TODO) and selected datasheets (including the datasheet for the Semitec 105GT-2 Thermistor, that Maverick customer support kindly provided me.  :clap: :thumbsup: 
 
 Note that I have not found this datasheet available anywhere on the web and many other projects incorrectly characterised the Maverick ET-732/733 probes as being based on a 10k ohm thermistor (when it's actually 1M ohm!).  This incorrect assumption frequebtly led to poor bias resistor selection, resulting in poor measurement acuracy.  As a result, these Maverick thermistors were often not highly regrded.  For example, one project concluded they were [acceptable, but not recommended thermistor choice](https://github.com/CapnBry/HeaterMeter/wiki/HeaterMeter-Probes).   
 
 ### cloudSmoker ###
 
-This folder contains the full CloudSmoker software (sketch and libraries); developed under VSCode / Platformio IDE rather than Arduino IDE so folder structure reflect Platformio structure.  Node that the code is over 1600 lines total and makes extensive use of user and public libraries.
+This folder contains the full CloudSmoker software (sketch and libraries); developed under VSCode / Platformio IDE rather than Arduino IDE so folder structure reflect Platformio structure.  Node that the project code base is over 1600 lines total and makes extensive use of user and public libraries.
 
 ### Images ###
 
