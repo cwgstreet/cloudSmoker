@@ -50,7 +50,7 @@ Note that I have not found this datasheet available anywhere on the web and many
 
 ### cloudSmoker ###
 
-This folder contains the full cloudSmoker software (sketch and libraries); developed under VSCode / Platformio IDE rather than Arduino IDE so folder structure reflect Platformio structure.  Node that the project code base is over 1600 lines total and makes extensive use of user and public libraries.
+This folder contains the full cloudSmoker software (sketch and libraries); developed under VSCode / Platformio IDE rather than Arduino IDE so folder structure reflect Platformio structure.  Note that the project code base is over 1600 lines total and makes extensive use of user and public libraries.
 
 ### Images ###
 
