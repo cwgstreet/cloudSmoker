@@ -684,9 +684,12 @@ void CWG_LCD::showBBQStatusScreen(bool degCFlag, float currentMeatTemp, float cu
     char currentPitTempStr[4];
     lcd.setCursor(0, 0);
 
-    // check tht probes are inserted; otherwise calculates ridiculous temperatures that are too large to display
-    if ((currentMeatTemp >= 400) || (currentPitTemp > 500)) {
-        menuSelectLine = 0;
+    // check that meat probe is inserted; otherwise calculates ridiculous temperatures that are too large to display
+    // note that pitProbe detection has been disabled so that pitprobe can be removed without throwing an error
+    //     for example, continuing to monitor resting meat temp in faux cambo once meat is removed from bbq and pit probe disconnected
+    // old:  if ((currentMeatTemp >= 400) || (currentPitTemp > 500)) {
+     if ((currentMeatTemp >= 400) ) {
+       menuSelectLine = 0;
         lcd.printMenuLine_noArrow("-----Error!-----");
         lcd.printMenuLine_noArrow(" Insert Probes");
 

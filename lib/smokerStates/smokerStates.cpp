@@ -24,7 +24,7 @@
 #include "helper_functions.h"
 #include "lcd.h"
 #include "press_type.h"
-#include "secrets.h"  
+#include "secrets.h"
 #include "smokerStates.h"
 #include "wrapEncoder.h"
 
@@ -365,7 +365,7 @@ void processState(CWG_LCD &lcd) {
                 double voltagePit_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(ADC_pitPin, 11);
                 double voltageMeat_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(ADC_meatPin, 11);
 
-                yield();  // allow ESP8266 background functions to "play through" - avoid blocking watchdog timer, etc.
+                yield();  // mitigate potential blocking function, by allowing ESP8266 background functions to "play through" - avoid blocking watchdog timer, etc.
 
                 // convert thermistor ADC voltage readings to temperature (degF; other units are just converted on fly for display)
                 currentMeatTemp = sh_meatProbe.getTempFahrenheit(voltageVCC_medianFiltered_V, voltageMeat_medianFiltered_V);
@@ -397,18 +397,27 @@ void processState(CWG_LCD &lcd) {
                 ThingSpeak.begin(client);
 
                 // implicit typecast from double to float as ThingSpeak.setField requires float (otherwise no match in method overlaod signature)
-                float currentMeatTemp_float = currentMeatTemp;  
-                float currentpitTemp_float = currentPitTemp;    
-                
-                // ------------------------------------------
+                float currentMeatTemp_float = currentMeatTemp;
+                float currentpitTemp_float = currentPitTemp;
+
+                // -----upate fields to write ---------------
                 ThingSpeak.setField(1, currentMeatTemp_float);
                 ThingSpeak.setField(2, meatDoneTemp);
-                ThingSpeak.setField(3, currentpitTemp_float);
+
+                // only send values if pitProbe is plugged in;
+                //   if pitProbe is not plugged in, very high temperatures are calculated as an artefact
+                if (currentpitTemp_float > 500) {
+                    ThingSpeak.setField(3, currentpitTemp_float);
+                }
+
                 ThingSpeak.setField(4, pitTempTarget);
                 ThingSpeak.setField(5, batteryVoltage_v);
+                // ------------------------------------------
 
                 ThingSpeak.writeFields(THNGSPK_CHANNEL_ID, THNGSPK_WRITE_API_KEY);
-                
+
+                // TODO:  send return codes (200 if successful) to serial monitor; action push notification tweet if failure return code received
+
                 hasRunFlag = 0;       // reset run-once flag
                 smokerState = Sleep;  // go back to sleep
                 Serial.println("leaving for Sleep case");
@@ -418,7 +427,7 @@ void processState(CWG_LCD &lcd) {
                 // TODO: explore putting ESP8266 to power savings sleep (modem / light / deep sleep) between readings for power savings
 
                 if (encoder.moved()) {
-                    lcd.display();  // turn on display pixels
+                    lcd.display();                                              // turn on display pixels
                     Serial.println("Sleep state, encoder moved -> waking up");  // debug code
                     smokerState = bbqStatus;
                     hasRunFlag = 1;
