@@ -8,6 +8,22 @@
 *.xlsx
 /Hardware/*.xlsx
 
+# Ignore LibreOffice binary files
+*.ODT
+*.odt
+*.FODT
+*.ODS
+*.ods
+*.FODS
+*.ODP
+*.odp
+*.FODP
+*.ODG
+*.odg
+*.FODG
+*.ODF
+*.odf
+
 # Ignore Kicad backup files files
 *.bak
 
