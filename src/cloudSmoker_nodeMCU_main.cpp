@@ -66,7 +66,7 @@
 #include "cwg_wifi.hpp"
 #include "lcd.h"           // lcd function tests, helper functions and custom characters
 #include "myConstants.h"   // all constants in one file
-#include "periphials.h"    // serial monitor function tests and usuage routines
+#include "peripherals.h"    // serial monitor function tests and usuage routines
 #include "press_type.h"    // wrapper library abstracting Yabl / Bounce2 routines
 //#include "secrets.h"       //! testing
 #include "smokerStates.h"  // cloudSmoker state machine functionality
@@ -153,10 +153,10 @@ void setup() {
 // ***************************
 // ** Debug - function tests
 // ***************************
-// *****  debug - Serial monitor periphial function tests *****
+// *****  debug - Serial monitor peripheral function tests *****
 #ifdef DEBUG_SERIAL
     SerialTerminal.functionTest();
-#endif  // *****  end debug periphial function tests *****
+#endif  // *****  end debug peripheral function tests *****
 
 #ifdef DEBUG_LCD  // *****  debug - LCD function tests *****
     // LCD special character function test
