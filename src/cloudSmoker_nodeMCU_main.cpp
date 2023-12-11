@@ -15,9 +15,9 @@
  *           after letting the magic smoke out!)
  *         NodeMCU V1.0 (ESP12) development board (will port over to bare bones ESP8266
  *          once up, running and debugged)
- *      YwRobot 1602 LCD with i2c i/o exapander backpack (PCF8574 or MCP23008)
+ *      YwRobot 1602 LCD with i2c i/o expander backpack (PCF8574 or MCP23008)
  *      KY40 Rotary Encoder
- *      ADS1015 - 12 bit ADC; I2C addressible
+ *      ADS1015 - 12 bit ADC; I2C addressable
  *      Maverick brand ET-723/733 (NPN  thermistor) temperature probes
  *
  *    3rd Party Libraries / Credits:
@@ -31,7 +31,7 @@
  *          types (long, short and double press) plus trigger callback functions
  *      hd44780 Libary https://github.com/duinoWitchery/hd44780 - extensible
  *         Arduino LCD library for hd44780 based LCD displays
- *      state machine aduino demo -
+ *      state machine arduino demo -
  *         https://bitbucket.org/pierrerossel/state-machine-arduino-demo/src/master/
  *         public domain C++ State Machine demo code by Pierre Rossel
  *
@@ -76,7 +76,7 @@
 #include <ThingSpeak.h>
 
 //? **************  Selective Debug Scaffolding *********************
-// Set up selective debug scaffold; comment out appropriate lines below to disable debugging tests at pre-proccessor stage
+// Set up selective debug scaffold; comment out appropriate lines below to disable debugging tests at pre-processor stage
 //   Note: #ifdef preprocessor simply tests if the symbol's been defined; therefore don't use #ifdef 0
 //   Ref: https://stackoverflow.com/questions/16245633/ifdef-debug-versus-if-debug
 //? *****************************************************************
@@ -94,7 +94,7 @@
 // temperature variables- global; all temps stored in degF and converted on the fly as necessary for alternative units (eg DegC)
 float meatDoneTemp = 203;    // default to usual brisket internal done temp 203degF
 float pitTempTarget = 225;   // reasonable range around 225F long and slow target, pit temps can run 200 to 350 deg F
-float currentMeatTemp = 40;  // current meat temp; default to refridgerator temp degF
+float currentMeatTemp = 40;  // current meat temp; default to refrigerator temp degF
 float currentPitTemp = 60;   // current pit temp; default to cold pit
 bool degCFlag = 0;           // temperature unit flag: 1 for Centigrade or 0 for Fahrenheit (default)
 
@@ -109,7 +109,7 @@ double voltageMeat_medianFiltered_V;
 /* *****
 TODO:  add 4-hour rule check and exception notification
 The 4-hour rule is a general food safety guideline that suggests that the internal temperature of meat
-should increase from 40°F to 140°F within 4 hours. This is due to foodborne bacteria growing much faster
+should increase from 40°F to 140°F within 4 hours. This is due to food-borne bacteria growing much faster
 within this temperature range (known as the “danger zone”).  Ref https://www.totallysmokin.com/4-hour-rule-smoking/
 ***** */
 
@@ -134,7 +134,7 @@ int16_t prevEncoderValue;
 void setup() {
     Serial.begin(SERIAL_MONITOR_SPEED);
     lcd.initialiseLCD();
-    lcd.initialiseCustomCharSet();  // creates eight custom lcd charaters
+    lcd.initialiseCustomCharSet();  // creates eight custom lcd characters
     encoder.initialise();
     WifiManager_initialise();
 
