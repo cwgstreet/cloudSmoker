@@ -657,7 +657,7 @@ void CWG_LCD::showSetTempUnitsMenu(int16_t currentEncoderValue) {
     }
 }
 
-void CWG_LCD::showTemeratureTargetAdjustment(float temporaryTemperatureTarget, bool meatTargetFlag) {
+void CWG_LCD::showTemperatureTargetAdjustment(float temporaryTemperatureTarget, bool meatTargetFlag) {
     bool adjTempFlag = 1;
     /*
     //debug

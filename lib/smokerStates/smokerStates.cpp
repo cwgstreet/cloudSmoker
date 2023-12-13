@@ -18,7 +18,7 @@
 #include <hd44780.h>                        // LCD library
 #include <hd44780ioClass/hd44780_I2Cexp.h>  // i2c expander i/o class header -> required for my YwRobot 1602 LCD
 
-// incliude local libraries
+// include local libraries
 #include "cwg_ads1x15.h"        // ADS1x15 I2C ADC device functionality
 #include "cwg_steinhartHart.h"  // Thermistor steinhart hart temperature calcs
 #include "helper_functions.h"
@@ -52,7 +52,7 @@ void processState(CWG_LCD &lcd) {
         } break;
 
         case launchPad: {
-            // if neccessary, reset encoder scale to match number of menu list items
+            // if necessary, reset encoder scale to match number of menu list items
             if (hasRunFlag == 0) {
                 Serial.println(F("Run Once! (launchPad::hasRunFlag == 0); Changing Encoder Settings - setTempUnits 0,1,0"));
                 encoder.newSettings(0, 1, 1, currentEncoderState);
@@ -189,7 +189,7 @@ void processState(CWG_LCD &lcd) {
                         temporaryTemperatureTarget = prevEncoderValue;  // implicit conversion of int16_t prevEncoderValue to float temporaryTemperatureTarget
 
                         yield();  // Do (almost) nothing -- yield allows ESP8266 background functions
-                        lcd.showTemeratureTargetAdjustment(temporaryTemperatureTarget, meatTargetFlag);
+                        lcd.showTemperatureTargetAdjustment(temporaryTemperatureTarget, meatTargetFlag);
 
                         // exit temperature adjustment loop upon next button press
                         if (button.update()) {
@@ -235,7 +235,7 @@ void processState(CWG_LCD &lcd) {
         } break;
 
         case setPitTempTarget: {
-            // lcd.printMenuLine("sm setpitTemp");  // temporary to confirm navigation branch
+            // lcd.printMenuLine("sm set_pitTemp");  // temporary to confirm navigation branch
             lcd.showSetPitTempTargetMenu(prevEncoderValue);
             currentEncoderValue = encoder.getCount();
 
@@ -276,7 +276,7 @@ void processState(CWG_LCD &lcd) {
                         temporaryTemperatureTarget = prevEncoderValue;  // implicit conversion of int16_t prevEncoderValue to float temporaryTemperatureTarget
 
                         yield();  // Do (almost) nothing -- yield allows ESP8266 background functions
-                        lcd.showTemeratureTargetAdjustment(temporaryTemperatureTarget, meatTargetFlag);
+                        lcd.showTemperatureTargetAdjustment(temporaryTemperatureTarget, meatTargetFlag);
 
                         // exit temperature adjustment loop upon next button press
                         if (button.update()) {
@@ -338,7 +338,7 @@ void processState(CWG_LCD &lcd) {
             lcd.showSetTempUnitsMenu(prevEncoderValue);
 
             if (button.triggered(SINGLE_TAP)) {
-                if (prevEncoderValue == 1) {  // ensure termperature unit change line is selected
+                if (prevEncoderValue == 1) {  // ensure temperature unit change line is selected
                     if (degCFlag == 0) {
                         degCFlag = 1;
                         Serial.println(F("degC Flag set - Temperature units now in degC!"));  // debug
@@ -396,11 +396,11 @@ void processState(CWG_LCD &lcd) {
                 WiFiClient client;
                 ThingSpeak.begin(client);
 
-                // implicit typecast from double to float as ThingSpeak.setField requires float (otherwise no match in method overlaod signature)
+                // implicit typecast from double to float as ThingSpeak.setField requires float (otherwise no match in method overload signature)
                 float currentMeatTemp_float = currentMeatTemp;
                 float currentpitTemp_float = currentPitTemp;
 
-                // -----upate fields to write ---------------
+                // -----update fields to write ---------------
                 ThingSpeak.setField(1, currentMeatTemp_float);
                 ThingSpeak.setField(2, meatDoneTemp);
 
