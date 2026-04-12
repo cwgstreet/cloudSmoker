@@ -8,8 +8,20 @@
 <br>
 <br>
 <br>
+<br>
 
-# cloudSmoker #
+
+---
+
+⚠️ **Version 2 Notice:** 
+<br>
+
+**This is the active development 
+branch for cloudSmoker V2. The original design is now deprecated but remains available on the v1-legacy branch.**
+
+---
+
+# cloudSmoker (v1-legacy) #
 **WiFi BBQ Temperature Monitor Project**
 
 [comment]: <> (This project exists as a hands-on opportunity to learn more about electronics, IoT, Arduino / ESP8266 programming, GitHub markdown, etc)
