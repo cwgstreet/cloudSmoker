@@ -11,6 +11,9 @@
 <br>
 
 
+
+
+
 ---
 
 ⚠️ **Version 2 Notice:** 
@@ -20,6 +23,20 @@
 branch for cloudSmoker V2. The original design is now deprecated but remains available on the v1-legacy branch.**
 
 ---
+
+## 📜 Legacy Support (Version 1.0)
+The original version of this project was built on **Veroboard**. While it is no longer the main focus of development, you can still access all the original files:
+
+*   **[Version 1.0 Release Page](https://github.com/cwgstreet/cloudSmoker/releases/tag/v1.0)**
+    *   `Hardware_v1.0.zip`: Includes Fritzing layouts, PDF schematics, and build photos.
+    *   `Firmware_v1.0.zip`: The stable code and compiled `.bin` for the original build.
+
+<!-- >**Note:** If you are building this project for the first time, we recommend using the **Version 2** PCB files found in this main branch. -->
+
+
+---
+
+
 
 # cloudSmoker (v1-legacy) #
 **WiFi BBQ Temperature Monitor Project**
