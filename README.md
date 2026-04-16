@@ -109,3 +109,16 @@ MIT Licence
 <p align="center">
   <img  src="Images/Cook Images/brisket-final.JPG">
 </p>
+
+<p align="center">
+  <a href="https://hackaday.com/2022/08/09/smoking-meat-finds-natural-home-in-the-cloud/">
+    <img src="https://img.shields.io/badge/FEATURED%20ON-HACKADAY-yellow?style=for-the-badge&logo=hackaday&logoColor=black" 
+         alt="Hackaday Badge" 
+         height="35">
+  </a>
+</p>
+
+
+
+<br>
+<br>
