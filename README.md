@@ -25,7 +25,7 @@ branch for cloudSmoker V2. The original design is now deprecated but remains ava
 ---
 
 ## 📜 Legacy Support (Version 1.0)
-The original version of this project was built on **Veroboard**. While it is no longer the main focus of development, you can still access all the original files:
+The original version of this project was based on an **ESP8266** and was built on **Veroboard**. While it is no longer the main focus of development, you can still access all the original files:
 
 *   **[Version 1.0 Release Page](https://github.com/cwgstreet/cloudSmoker/releases/tag/v1.0)**
     *   `Hardware_v1.0.zip`: Includes Fritzing layouts, PDF schematics, and build photos.
