@@ -52,6 +52,15 @@ The original version of this project was built on **Veroboard**. While it is no 
 
 <br>
 
+<p align="center">
+  <a href="https://hackaday.com/2022/08/09/smoking-meat-finds-natural-home-in-the-cloud/">
+    <img src="https://img.shields.io/badge/FEATURED%20ON-HACKADAY-yellow?style=for-the-badge&logo=hackaday&logoColor=black" 
+         alt="Hackaday Badge" 
+         height="35">
+  </a>
+</p>
+
+
 ### Updates 🆕
 1. **Removed pitTemp probe plug-in checks** - no longer displays LCD error or transmits pitTemp values to ThingSpeak if pit temperature probe is unplugged; necessary to allow pitTemp probe to be unplugged after meat is taken off grill so that resting meat temps can continue to be monitored (common to rest briskett in faux cambo for ~1 hour after removing meat from grill).
 <br>
@@ -110,13 +119,6 @@ MIT Licence
   <img  src="Images/Cook Images/brisket-final.JPG">
 </p>
 
-<p align="center">
-  <a href="https://hackaday.com/2022/08/09/smoking-meat-finds-natural-home-in-the-cloud/">
-    <img src="https://img.shields.io/badge/FEATURED%20ON-HACKADAY-yellow?style=for-the-badge&logo=hackaday&logoColor=black" 
-         alt="Hackaday Badge" 
-         height="35">
-  </a>
-</p>
 
 
 
