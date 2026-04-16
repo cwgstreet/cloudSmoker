@@ -88,7 +88,7 @@ An extensive project overview and design process description can be found in the
 
 <img align="right" width="300" height="400"  src="Images/Cook Images/cloudSmoker_unbuttoned.JPG">
 
-The Hardware folder contains KiCad schematic, PCB board layouts (:warning: TODO) and selected datasheets (including the datasheet for the Semitec 105GT-2 Thermistor, that Maverick customer support kindly provided me.  :clap: :thumbsup: 
+The Hardware folder contains KiCad schematic, PCB board layouts (:warning: TODO) and selected datasheets (including the datasheet for the Semitec 105GT-2 Thermistor, that Maverick customer support kindly provided me.   👏 👍
 
 Note that I have not found this datasheet available anywhere on the web and many other projects incorrectly characterised the Maverick ET-732/733 probes as being based on a 10k ohm thermistor (when it's actually 1M ohm!).  This incorrect assumption frequebtly led to poor bias resistor selection, resulting in poor measurement acuracy.  As a result, these Maverick thermistors were often not highly regrded.  For example, one project concluded they were [acceptable, but not recommended thermistor choice](https://github.com/CapnBry/HeaterMeter/wiki/HeaterMeter-Probes).   
 
