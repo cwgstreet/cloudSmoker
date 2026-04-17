@@ -25,7 +25,7 @@ branch for cloudSmoker V2. The original design is now deprecated but remains ava
 ---
 
 ## 📜 Legacy Support (Version 1.0)
-The original version of this project was built on **Veroboard**. While it is no longer the main focus of development, you can still access all the original files:
+The original version of this project was based on an **ESP8266** and was built on **Veroboard**. While it is no longer the main focus of development, you can still access all the original files:
 
 *   **[Version 1.0 Release Page](https://github.com/cwgstreet/cloudSmoker/releases/tag/v1.0)**
     *   `Hardware_v1.0.zip`: Includes Fritzing layouts, PDF schematics, and build photos.
@@ -51,6 +51,15 @@ The original version of this project was built on **Veroboard**. While it is no 
 <img src="https://img.shields.io/badge/C%2B%2B-00599C?style=for-the-badge&logo=c%2B%2B&logoColor=white"> 
 
 <br>
+
+<p align="center">
+  <a href="https://hackaday.com/2022/08/09/smoking-meat-finds-natural-home-in-the-cloud/">
+    <img src="https://img.shields.io/badge/FEATURED%20ON-HACKADAY-yellow?style=for-the-badge&logo=hackaday&logoColor=black" 
+         alt="Hackaday Badge" 
+         height="35">
+  </a>
+</p>
+
 
 ### Updates 🆕
 1. **Removed pitTemp probe plug-in checks** - no longer displays LCD error or transmits pitTemp values to ThingSpeak if pit temperature probe is unplugged; necessary to allow pitTemp probe to be unplugged after meat is taken off grill so that resting meat temps can continue to be monitored (common to rest briskett in faux cambo for ~1 hour after removing meat from grill).
@@ -79,7 +88,7 @@ An extensive project overview and design process description can be found in the
 
 <img align="right" width="300" height="400"  src="Images/Cook Images/cloudSmoker_unbuttoned.JPG">
 
-The Hardware folder contains KiCad schematic, PCB board layouts (:warning: TODO) and selected datasheets (including the datasheet for the Semitec 105GT-2 Thermistor, that Maverick customer support kindly provided me.  :clap: :thumbsup: 
+The Hardware folder contains KiCad schematic, PCB board layouts (:warning: TODO) and selected datasheets (including the datasheet for the Semitec 105GT-2 Thermistor, that Maverick customer support kindly provided me.   👏 👍
 
 Note that I have not found this datasheet available anywhere on the web and many other projects incorrectly characterised the Maverick ET-732/733 probes as being based on a 10k ohm thermistor (when it's actually 1M ohm!).  This incorrect assumption frequebtly led to poor bias resistor selection, resulting in poor measurement acuracy.  As a result, these Maverick thermistors were often not highly regrded.  For example, one project concluded they were [acceptable, but not recommended thermistor choice](https://github.com/CapnBry/HeaterMeter/wiki/HeaterMeter-Probes).   
 
@@ -109,3 +118,9 @@ MIT Licence
 <p align="center">
   <img  src="Images/Cook Images/brisket-final.JPG">
 </p>
+
+
+
+
+<br>
+<br>
