@@ -8,6 +8,10 @@
 *.xlsx
 /Hardware/*.xlsx
 
+# Ignore "depreciated" files (often old working versions_
+*/depreciated/*
+
+
 # Ignore LibreOffice binary files
 *.ODT
 *.odt
