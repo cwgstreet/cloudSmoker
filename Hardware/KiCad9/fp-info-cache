@@ -1,4 +1,4 @@
-27377777872409456
+27391995037140821
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -70350,6 +70350,13 @@ JLCImport
 2
 2
 JLCImport
+0603WAF1002T5E
+-55℃~+155℃ 100mW 10kΩ 75V Thick Film Resistor ±1% ±100ppm/℃ 0603 Chip Resistor - Surface Mount ROHS
+0603WAF1002T5E C25804 R0603 UNI-ROYAL(Uniroyal Elec)
+0
+2
+2
+JLCImport
 0603WAF1203T5E
 -55℃~+155℃ 100mW 120kΩ 75V Thick Film Resistor ±1% ±100ppm/℃ 0603 Chip Resistor - Surface Mount ROHS
 0603WAF1203T5E C25808 R0603 UNI-ROYAL(Uniroyal Elec)
@@ -70420,6 +70427,13 @@ C2290 Hubei KENTO Elec KT-0603W LED0603-R-RD_WHITE
 2
 2
 JLCImport
+ADS1115IRUGR
+-40℃~+125℃ 16 1LSB 1MHz 2 2V~5.5V 2uA 6.144V 860Hz 8Hz、16Hz、32Hz、64Hz、128Hz、250Hz、475Hz、860Hz Built-in Built-in I2C Sigma-Delta Support Yes X2-QFN-10(1.5x2) Analog to Digital Converters (ADC) ROHS
+ADS1115IRUGR C2651328 Texas Instruments X2QFN-10_L2.0-W1.5-P0.50-BL
+0
+10
+10
+JLCImport
 AMS1117-3_3
 -40℃~+125℃ 0.003%Vout 1 1.1V@(800mA) 15V 1A 3.3V 5mA 72dB@(120Hz) Fixed Over Current Protection、Thermal Shutdown Positive SOT-223 Voltage Regulators - Linear, Low Drop Out (LDO) Regulators ROHS
 AMS1117-3.3 Advanced Monolithic Systems C6186 SOT-223-3_L6.5-W3.4-P2.30-LS7.0-BR
@@ -70427,9 +70441,30 @@ AMS1117-3.3 Advanced Monolithic Systems C6186 SOT-223-3_L6.5-W3.4-P2.30-LS7.0-BR
 4
 4
 JLCImport
+BSS138_C7420339
+-55℃~+150℃ 1 N-channel 1.1Ω@10V、1.2Ω@4.5V 1.2V 1.7nC@10V 17.5pF 340mA 350mW 50V 6.5pF N-Channel SOT-23 MOSFETs ROHS
+BSS138 C7420339 SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR hongjiacheng
+0
+3
+3
+JLCImport
 CC0603KRX7R9BB104
 100nF 50V X7R ±10% 0603 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS
 C0603 C14663 CC0603KRX7R9BB104 YAGEO
+0
+2
+2
+JLCImport
+CL10A105KB8NNNC
+1uF 50V X5R ±10% 0603 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS
+C0603 C15849 CL10A105KB8NNNC Samsung Electro-Mechanics
+0
+2
+2
+JLCImport
+CL10A106MA8NRNC
+10uF 25V X5R ±20% 0603 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS
+C0603 C96446 CL10A106MA8NRNC Samsung Electro-Mechanics
 0
 2
 2
@@ -70455,6 +70490,13 @@ C2286 Hubei KENTO Elec KT-0603R LED0603-RD
 2
 2
 JLCImport
+PTFR0603B120KP9
+-55℃~+125℃ 100V 100mW 120kΩ Thin Film Resistor ±0.1% ±25ppm/℃ 0603 Chip Resistor - Surface Mount ROHS
+C351687 PTFR0603B120KP9 R0603 RESI
+0
+2
+2
+JLCImport
 SRV05-4-P-T7
 12V 1A@8/20us 3.5pF 500W@8/20us 5V 5uA 6V ESD Four channels IEC 61000-4-2、IEC 61000-4-5、IEC 61000-4-4 SOT-23-6 ESD and Surge Protection (TVS/ESD) ROHS
 C85364 ProTek Devices SOT-23-6_L2.9-W1.6-P0.95-LS2.8-BR SRV05-4-P-T7
@@ -70475,6 +70517,20 @@ TAJA106K016RNJ
 0
 2
 2
+JLCImport
+TS-1088-AR02016
+-30℃~+80℃ 1.6N 100,000 cycles 12V 2mm 3mm 4mm 50mA Black Round Button SMD(SMT) Tab SPST Surface Mount,Vertical Without Bracket SMD,4x3mm Tactile Switches ROHS
+C720477 SW-SMD_L3.9-W3.0-P4.45 TS-1088-AR02016 XUNPU
+0
+2
+2
+JLCImport
+TS-1187A-B-A-B
+-30℃~+85℃ 1.5mm 1.6N 100,000 cycles 12V 5.1mm 5.1mm 50mA Gold No Round Button SPST Surface Mount,Vertical Without Bracket SMD-4P,5.1x5.1mm Tactile Switches ROHS
+C318884 SW-SMD_4P-L5.1-W5.1-P3.70-LS6.5-TL_H1.5 TS-1187A-B-A-B XKB Connection
+0
+4
+4
 Jumper
 Jumper_Harwin_S1621_P10.9mm
 Harwin SMD jumper link, 12.3x2.3mm, 1.8mm height, 10.9mm pad pitch, https://cdn.harwin.com/pdfs/S1621R.pdf
