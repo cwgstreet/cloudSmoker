@@ -4850,6 +4850,16 @@
 	)
 	(wire
 		(pts
+			(xy 190.5 80.01) (xy 199.39 80.01)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "3668ab44-d3a4-4c79-85ed-26a278a6529e")
+	)
+	(wire
+		(pts
 			(xy 297.18 196.85) (xy 300.99 196.85)
 		)
 		(stroke
@@ -5297,6 +5307,16 @@
 			(type default)
 		)
 		(uuid "84048eea-c5c7-43a8-a1d2-fad2d4504825")
+	)
+	(wire
+		(pts
+			(xy 190.5 85.09) (xy 199.39 85.09)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "846bfd4f-55fb-4507-91af-e7b66e319a44")
 	)
 	(polyline
 		(pts
@@ -5940,6 +5960,16 @@
 	)
 	(wire
 		(pts
+			(xy 190.5 77.47) (xy 199.39 77.47)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e712f97f-7e1b-4d69-80c8-30ff3f145b1f")
+	)
+	(wire
+		(pts
 			(xy 185.42 127) (xy 185.42 125.73)
 		)
 		(stroke
@@ -6037,6 +6067,16 @@
 			(type default)
 		)
 		(uuid "f6cf5639-e92f-48d3-a72b-03106ce15de7")
+	)
+	(wire
+		(pts
+			(xy 190.5 82.55) (xy 199.39 82.55)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f6e3fda3-4168-4d8d-b476-0d8d97d2d347")
 	)
 	(wire
 		(pts
@@ -6163,6 +6203,28 @@
 		)
 		(uuid "45953d78-e973-44dd-b0cd-591f10410ce6")
 	)
+	(label "SPI_SCK"
+		(at 199.39 82.55 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+				(italic yes)
+			)
+			(justify right bottom)
+		)
+		(uuid "57993e00-52e4-47ce-98d8-93d82ab7a951")
+	)
+	(label "SPI_CS"
+		(at 199.39 77.47 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+				(italic yes)
+			)
+			(justify right bottom)
+		)
+		(uuid "5b1baf5a-e1da-491a-8d7f-c99c4dc6b8e7")
+	)
 	(label "DEBUG_TX"
 		(at 241.3 74.93 180)
 		(effects
@@ -6185,6 +6247,17 @@
 		)
 		(uuid "a4f3ab93-452b-4042-9bac-9a19797aaff4")
 	)
+	(label "SPI_MOSI"
+		(at 199.39 85.09 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+				(italic yes)
+			)
+			(justify right bottom)
+		)
+		(uuid "cd36c122-441a-45d4-bcdf-88554ed779ca")
+	)
 	(label "~{RST}"
 		(at 194.31 72.39 0)
 		(effects
@@ -6195,6 +6268,17 @@
 			(justify left bottom)
 		)
 		(uuid "ec97560f-bc8b-4690-8ed7-f634bd215dbd")
+	)
+	(label "SPI_MISO"
+		(at 199.39 80.01 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+				(italic yes)
+			)
+			(justify right bottom)
+		)
+		(uuid "fbc09277-72fa-4782-a0dc-50d545455ba2")
 	)
 	(global_label "JACK_TIP_MEAT1"
 		(shape input)
