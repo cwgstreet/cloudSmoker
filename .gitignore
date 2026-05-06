@@ -9,7 +9,7 @@
 /Hardware/*.xlsx
 
 # Ignore "depreciated" files (usually old working versions)
-depreciated/*
+**/depreciated/*
 
 
 # Ignore LibreOffice binary files
