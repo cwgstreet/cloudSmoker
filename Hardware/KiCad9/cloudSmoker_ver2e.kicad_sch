@@ -6,8 +6,8 @@
 	(paper "A3")
 	(title_block
 		(title "cloudSmoker_ver2")
-		(date "2026-05-10")
-		(rev "2d")
+		(date "2026-05-19")
+		(rev "2e")
 		(comment 1 "Provided \"as is\" without warranty of any kind, express or implied.")
 		(comment 2 "Released under the MIT License. ")
 		(comment 3 "Copyright (c) 2026 C. Greenstreet. ")
@@ -6589,6 +6589,18 @@
 		)
 		(uuid "05e6b25a-0c65-4f9e-8d57-19251bfa38ed")
 	)
+	(text "check TP8 is this correct?\n"
+		(exclude_from_sim no)
+		(at 213.36 131.064 0)
+		(effects
+			(font
+				(size 1 1)
+				(italic yes)
+				(color 255 0 0 1)
+			)
+		)
+		(uuid "07dc271c-58c2-4a19-98cb-43af3a96e009")
+	)
 	(text "JST XH 4-pin Male\n(DNP -add post-fabrication)"
 		(exclude_from_sim yes)
 		(at 107.696 172.466 0)
@@ -6612,7 +6624,7 @@
 	)
 	(text "Current Monitor I2C\n(Powerbank State of Charge)"
 		(exclude_from_sim no)
-		(at 126.492 58.674 0)
+		(at 139.192 21.844 0)
 		(effects
 			(font
 				(size 3 3)
@@ -6622,9 +6634,9 @@
 		)
 		(uuid "1ef04516-0cff-48f4-a99f-26da5c26e210")
 	)
-	(text "Place damping resistors next to pins"
+	(text "Place pull-ups and damping resistors near pins\norder: pin -> pull-up (if present) -> damping -> signal"
 		(exclude_from_sim no)
-		(at 187.198 139.954 0)
+		(at 196.088 138.684 0)
 		(effects
 			(font
 				(size 1 1)
@@ -6646,7 +6658,7 @@
 	)
 	(text "Slave Addrsss: \n0b1000000 / 0x40"
 		(exclude_from_sim no)
-		(at 161.798 89.662 0)
+		(at 174.498 49.022 0)
 		(effects
 			(font
 				(size 1 1)
@@ -6723,7 +6735,7 @@
 	)
 	(text "Kelvin connections required\nrefer to INA226 datasheet"
 		(exclude_from_sim no)
-		(at 103.378 123.19 0)
+		(at 108.458 91.44 0)
 		(effects
 			(font
 				(size 1 1)
@@ -6745,7 +6757,7 @@
 	)
 	(text "UART Header \n(debug)\n"
 		(exclude_from_sim no)
-		(at 237.49 19.812 0)
+		(at 476.25 26.162 0)
 		(effects
 			(font
 				(size 3 3)
@@ -6765,6 +6777,16 @@
 			)
 		)
 		(uuid "93695f1c-3e30-407c-9d94-ffc71bb3cb88")
+	)
+	(text "Pi filter\nMainly placeholder but trying to get into \ngood habits (per Phil's Lab)"
+		(exclude_from_sim no)
+		(at 62.738 34.29 0)
+		(effects
+			(font
+				(size 1 1)
+			)
+		)
+		(uuid "962014bc-616c-484b-8fb7-4c9542499851")
 	)
 	(text "Display module has integrated \ntransistor for Backlight control\n\n3V3 logic signal safe\n"
 		(exclude_from_sim no)
@@ -6790,19 +6812,9 @@
 		)
 		(uuid "9afdab3e-68a4-4929-94f1-6652ebfd1ec6")
 	)
-	(text "CC lines not usually surge protected\nbut I have 2 free channels in SRV05"
-		(exclude_from_sim no)
-		(at 72.644 139.192 0)
-		(effects
-			(font
-				(size 1 1)
-			)
-		)
-		(uuid "9cb7e755-eb88-4887-8d7d-c44bd6749f70")
-	)
 	(text "Microcontroller"
 		(exclude_from_sim no)
-		(at 223.774 57.15 0)
+		(at 208.534 61.722 0)
 		(effects
 			(font
 				(size 3 3)
@@ -6814,7 +6826,7 @@
 	)
 	(text "USB-C USB2.0\nFlash / Power"
 		(exclude_from_sim no)
-		(at 30.988 59.182 0)
+		(at 30.988 22.352 0)
 		(effects
 			(font
 				(size 3 3)
@@ -6859,9 +6871,9 @@
 		)
 		(uuid "b165d2c7-0d0e-4744-8116-1a57efe2a768")
 	)
-	(text "Ground clip - place on board edge for voltage probing"
+	(text "Ground clip \nplace on board edge for voltage probing"
 		(exclude_from_sim no)
-		(at 169.418 49.276 0)
+		(at 261.366 54.356 0)
 		(effects
 			(font
 				(size 1 1)
@@ -6872,7 +6884,7 @@
 	)
 	(text "VSS=3V3 in order to keep I2C pin \nvoltages ESP32 compliant \n(otherwise must level shift)"
 		(exclude_from_sim no)
-		(at 107.188 77.216 0)
+		(at 119.888 36.576 0)
 		(effects
 			(font
 				(size 1 1)
@@ -6990,7 +7002,7 @@
 	)
 	(text "Power Regulation"
 		(exclude_from_sim no)
-		(at 82.296 16.256 0)
+		(at 207.518 19.558 0)
 		(effects
 			(font
 				(size 3 3)
@@ -7002,7 +7014,7 @@
 	)
 	(text "Encoder Header\nJST XH 4-pin Male\n(DNP -add post-fabrication)"
 		(exclude_from_sim yes)
-		(at 247.142 30.48 0)
+		(at 485.902 36.83 0)
 		(effects
 			(font
 				(face "KiCad Font")
@@ -7024,7 +7036,7 @@
 	)
 	(text "Test Points on bottom layer\nexcept TP_SPI_SCK which should be L1 close \nto pin with nearby ground"
 		(exclude_from_sim no)
-		(at 258.826 137.414 0)
+		(at 254 136.652 0)
 		(effects
 			(font
 				(size 1 1)
@@ -7032,9 +7044,20 @@
 		)
 		(uuid "efac3aa7-a896-45ae-be8e-6f3481749d85")
 	)
+	(text "Solder bridge\ncut to reduce LED power draw\n"
+		(exclude_from_sim no)
+		(at 212.09 52.07 0)
+		(effects
+			(font
+				(size 1 1)
+				(italic yes)
+			)
+		)
+		(uuid "f90912f7-d5b7-4aa5-ac7f-7ab14b09732f")
+	)
 	(text "\"Blink\" Test LED"
 		(exclude_from_sim no)
-		(at 266.446 98.044 0)
+		(at 266.446 99.314 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -7065,7 +7088,7 @@
 	)
 	(text "Display Headers\n2x JST XH 4-pin Male\n(DNP -add post-fabrication)"
 		(exclude_from_sim yes)
-		(at 308.864 43.942 0)
+		(at 308.864 46.99 0)
 		(effects
 			(font
 				(face "KiCad Font")
@@ -7075,16 +7098,28 @@
 		(uuid "fefcce64-ff78-45b5-a66f-c2bbf8883571")
 	)
 	(junction
+		(at 171.45 113.03)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "0099b5a4-5d2c-4a80-88a1-3fbd1fe8079f")
+	)
+	(junction
 		(at 232.41 69.85)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "04e54049-2285-4de1-b8d1-291c04306585")
 	)
 	(junction
-		(at 74.93 95.25)
+		(at 133.35 199.39)
 		(diameter 0)
 		(color 0 0 0 0)
-		(uuid "068baeb9-9387-467a-bb64-516bd102b640")
+		(uuid "09e722af-3416-4cc1-bd75-2926e6e4496d")
+	)
+	(junction
+		(at 167.64 240.03)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "0d5c6afb-99ea-4e93-ac6e-473c2747f4e0")
 	)
 	(junction
 		(at 193.04 240.03)
@@ -7117,22 +7152,34 @@
 		(uuid "14f295c0-9c99-4adb-b71f-643745b220a2")
 	)
 	(junction
+		(at 111.76 81.28)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "1d2ccc87-13f0-4053-967f-c94d35f43309")
+	)
+	(junction
 		(at 358.14 168.91)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "2007a469-2b96-49a8-ac77-aa2154253e43")
 	)
 	(junction
-		(at 123.19 43.18)
+		(at 250.19 45.72)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "22191951-bbdf-420f-b7ce-61651d19dd1f")
 	)
 	(junction
-		(at 142.24 179.07)
+		(at 204.47 179.07)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "223f9569-7e61-4ae3-95cc-d7b44091af92")
+	)
+	(junction
+		(at 111.76 73.66)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "22f12d93-6d70-4d30-845e-e0356570a376")
 	)
 	(junction
 		(at 388.62 187.96)
@@ -7147,31 +7194,43 @@
 		(uuid "2a60f011-2f16-4bcf-b588-92bd3beaafe2")
 	)
 	(junction
-		(at 137.16 26.67)
+		(at 160.02 219.71)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "2f09805e-dd17-486d-8060-b8180b15cf8b")
+	)
+	(junction
+		(at 264.16 29.21)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "31d5de09-f1e0-4e96-9965-b1be77e1f2d9")
 	)
 	(junction
-		(at 107.95 43.18)
+		(at 234.95 45.72)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "357c4724-7956-4fa6-b216-627ac6a89d25")
 	)
 	(junction
-		(at 162.56 199.39)
+		(at 205.74 199.39)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "35ca3d5e-cbaa-4102-8769-2d0c439e3f68")
 	)
 	(junction
-		(at 147.32 88.9)
+		(at 160.02 48.26)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "35df5042-4a84-42e7-a47c-8b3fbcf2db94")
 	)
 	(junction
-		(at 99.06 114.3)
+		(at 104.14 73.66)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "36033e01-f5b1-4bb1-b3ad-2b79911577ac")
+	)
+	(junction
+		(at 104.14 81.28)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "36b754df-3d56-407a-993c-473a2826a30b")
@@ -7183,31 +7242,19 @@
 		(uuid "387dc861-5282-4448-ba34-041b9756a8bb")
 	)
 	(junction
-		(at 46.99 90.17)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "393e0297-d78a-4864-99e3-1626ac3170e2")
-	)
-	(junction
-		(at 106.68 106.68)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "3ae0ea75-9149-41ce-99b7-4579c40c2dcf")
-	)
-	(junction
-		(at 41.91 95.25)
+		(at 41.91 78.74)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "3ae8473d-b564-4695-b6ea-0a45f3496821")
 	)
 	(junction
-		(at 184.15 113.03)
+		(at 55.88 44.45)
 		(diameter 0)
 		(color 0 0 0 0)
-		(uuid "421addb8-fb2d-4d34-b921-307be096d869")
+		(uuid "3b231a52-d284-4ed7-9f7a-fe6960e8d94a")
 	)
 	(junction
-		(at 22.86 115.57)
+		(at 22.86 99.06)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "43d766b4-8109-4aba-90f9-72c6c05475fb")
@@ -7217,6 +7264,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "4431514c-2359-4546-a37f-cadab63eb059")
+	)
+	(junction
+		(at 203.2 87.63)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "484ba20e-c2b0-4739-9dab-31907fdc1e76")
 	)
 	(junction
 		(at 261.62 234.95)
@@ -7231,6 +7284,12 @@
 		(uuid "4c4208f7-0bf4-4384-9060-b9704ca87951")
 	)
 	(junction
+		(at 87.63 44.45)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "5055fc98-abe4-4c86-9e8f-886696339828")
+	)
+	(junction
 		(at 171.45 219.71)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -7243,7 +7302,7 @@
 		(uuid "576566e1-ea84-4ac5-a7b2-ea991837a3a2")
 	)
 	(junction
-		(at 132.08 110.49)
+		(at 144.78 69.85)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "578e8ba2-bd13-4b8c-9ee7-2ec73d8d16e4")
@@ -7255,13 +7314,7 @@
 		(uuid "5e5aef8f-359a-4720-89c0-d15f663906d5")
 	)
 	(junction
-		(at 44.45 82.55)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "60dfb5dc-54a7-46b5-9796-12bc06be1997")
-	)
-	(junction
-		(at 184.15 219.71)
+		(at 205.74 219.71)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "61116c9e-316d-49c1-8eda-c5c50c828f11")
@@ -7277,6 +7330,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "6873e83c-9c1c-4b7e-8e1f-d0f6bf50da58")
+	)
+	(junction
+		(at 210.82 29.21)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "6e2c672f-a3de-4a70-bd87-569805c10bd7")
 	)
 	(junction
 		(at 280.67 251.46)
@@ -7303,22 +7362,34 @@
 		(uuid "75dcd265-813b-480e-aca6-d4a557a06693")
 	)
 	(junction
-		(at 143.51 88.9)
+		(at 156.21 48.26)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "78beedd9-f8b7-4ee3-87fa-e961bbbaa979")
 	)
 	(junction
-		(at 72.39 80.01)
+		(at 167.64 81.28)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "7986c7bf-4217-4ab3-8fae-90cde25c8543")
+	)
+	(junction
+		(at 72.39 63.5)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "7b0e577b-a04c-4528-971b-c93824973350")
 	)
 	(junction
-		(at 133.35 199.39)
+		(at 130.81 179.07)
 		(diameter 0)
 		(color 0 0 0 0)
-		(uuid "89001f82-aa9f-4aa0-9117-0d85f8394dc9")
+		(uuid "7b6b7331-2312-4366-85eb-9176ff43fcb2")
+	)
+	(junction
+		(at 22.86 101.6)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "831d7aae-f4ec-4342-b9ba-e2405def3822")
 	)
 	(junction
 		(at 379.73 218.44)
@@ -7327,22 +7398,10 @@
 		(uuid "89d81a62-6dfc-4c7d-a7a5-6bc9b5bd7ff1")
 	)
 	(junction
-		(at 81.28 26.67)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "8c1a201f-7a03-4a13-b4f1-151b0ad22a71")
-	)
-	(junction
 		(at 304.8 167.64)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "8d05b267-52f8-4b48-9fa3-67f2e2a67af3")
-	)
-	(junction
-		(at 130.81 179.07)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "8f9d3305-cfb7-43c1-8aa3-857e280f7429")
 	)
 	(junction
 		(at 265.43 180.34)
@@ -7357,22 +7416,22 @@
 		(uuid "90e991c0-2bf6-416f-8a94-d60686fb9342")
 	)
 	(junction
-		(at 154.94 26.67)
+		(at 281.94 29.21)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "9287991c-fe03-43be-ae26-fb420f5a0736")
-	)
-	(junction
-		(at 167.64 240.03)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "979f81d2-cf12-4a57-b0ea-0ad8c3e31585")
 	)
 	(junction
 		(at 241.3 77.47)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "993eeeed-c49b-4944-a738-cb38a24ed884")
+	)
+	(junction
+		(at 46.99 73.66)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "9ac8e9bb-ab79-4869-a4ef-49605a02a754")
 	)
 	(junction
 		(at 250.19 90.17)
@@ -7405,7 +7464,7 @@
 		(uuid "a70921c2-19b7-4643-b16b-d492b3aa8310")
 	)
 	(junction
-		(at 114.3 88.9)
+		(at 127 48.26)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "a70e5dea-d9f3-48f8-8502-ada19fe36952")
@@ -7417,7 +7476,7 @@
 		(uuid "a71a881b-fa7f-414c-bf00-47765c16c1eb")
 	)
 	(junction
-		(at 93.98 26.67)
+		(at 220.98 29.21)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "aac5ae8a-1a7d-4f55-9252-6f07e8184c25")
@@ -7429,28 +7488,16 @@
 		(uuid "afb03cba-fa75-4d48-9f8b-bdb41f629b95")
 	)
 	(junction
-		(at 59.69 85.09)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "b411d227-9625-46b1-8f3a-9beba57ed095")
-	)
-	(junction
-		(at 41.91 90.17)
+		(at 41.91 73.66)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "b5d0e959-cce6-42b0-9b71-6e33ddcda363")
 	)
 	(junction
-		(at 93.98 43.18)
+		(at 220.98 45.72)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "b9c45277-d069-45c6-b7f0-bca581a3dc00")
-	)
-	(junction
-		(at 99.06 106.68)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "b9c62acf-d99b-4e92-83cd-3843408ac5ad")
 	)
 	(junction
 		(at 241.3 80.01)
@@ -7459,16 +7506,22 @@
 		(uuid "bb19d0d0-3a56-44b9-8ef2-a6e514538ddb")
 	)
 	(junction
-		(at 144.78 26.67)
+		(at 271.78 29.21)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "bc5a2dcf-4485-4eed-84a9-d13ca480c6e3")
 	)
 	(junction
-		(at 105.41 26.67)
+		(at 232.41 29.21)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "be2c7c71-b3f1-4849-9a9a-c11c053a07b0")
+	)
+	(junction
+		(at 68.58 44.45)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "be365854-7ea4-4acf-a101-3ee8ebd1444a")
 	)
 	(junction
 		(at 171.45 158.75)
@@ -7477,22 +7530,16 @@
 		(uuid "bec19523-21c2-4775-a51a-3e86d3d1e141")
 	)
 	(junction
-		(at 144.78 43.18)
+		(at 271.78 45.72)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "bfa4d5de-f263-47fc-ac2a-bd0392631bff")
 	)
 	(junction
-		(at 123.19 46.99)
+		(at 250.19 49.53)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "c20cda50-5404-4e66-8487-52460adeb140")
-	)
-	(junction
-		(at 106.68 114.3)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "c36000d7-d785-4662-9263-5fa5fe4ec1df")
 	)
 	(junction
 		(at 358.14 187.96)
@@ -7507,16 +7554,16 @@
 		(uuid "cba03ca2-87c0-45a6-b23a-956f519d5df7")
 	)
 	(junction
-		(at 135.89 43.18)
+		(at 184.15 113.03)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "d04f8184-1b81-431d-9a69-07b2cbcf7eb4")
+	)
+	(junction
+		(at 262.89 45.72)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "d1091c2a-c20d-45ba-af0d-cb7d3209b520")
-	)
-	(junction
-		(at 213.36 87.63)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "d8d40286-0d37-4cf4-a364-4da9f119ffb0")
 	)
 	(junction
 		(at 389.89 168.91)
@@ -7525,7 +7572,7 @@
 		(uuid "d9861524-9771-456b-b6b8-71c3e5bb24b9")
 	)
 	(junction
-		(at 132.08 82.55)
+		(at 144.78 41.91)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "e349942b-9a1b-49e4-9aa9-b76bee99d171")
@@ -7535,12 +7582,6 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "e7eb51b1-0e33-4700-b552-88d8979897f8")
-	)
-	(junction
-		(at 160.02 219.71)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "e9622bff-570a-431f-a827-6f08ba67f883")
 	)
 	(junction
 		(at 265.43 237.49)
@@ -7555,10 +7596,22 @@
 		(uuid "f3e181f9-2303-40dc-8cea-e5317a120446")
 	)
 	(junction
+		(at 74.93 78.74)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "f8ddb128-a54a-4a12-8c2e-710d47d6282f")
+	)
+	(junction
 		(at 120.65 217.17)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "fa9d4561-24ab-46a6-af17-a3595dbf6469")
+	)
+	(junction
+		(at 179.07 113.03)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "fe2d87da-10e8-49ca-b4cf-af53467c5c76")
 	)
 	(no_connect
 		(at 337.82 102.87)
@@ -7605,12 +7658,20 @@
 		(uuid "360ebdce-970e-4a16-a0d0-0104ce011449")
 	)
 	(no_connect
+		(at 72.39 109.22)
+		(uuid "3b115169-fc5b-4581-992f-48161cc70205")
+	)
+	(no_connect
 		(at 45.72 219.71)
 		(uuid "437652ae-1840-4b0a-8ffb-aaa43ba91a1f")
 	)
 	(no_connect
 		(at 39.37 179.07)
 		(uuid "457317c3-6a38-4f79-91db-635be5c712c3")
+	)
+	(no_connect
+		(at 46.99 114.3)
+		(uuid "4b82151d-5a88-4e2e-b62a-66d3f2fded5d")
 	)
 	(no_connect
 		(at 41.91 217.17)
@@ -7657,7 +7718,7 @@
 		(uuid "7ec40721-bbb9-40b4-9d0b-ae9007d27535")
 	)
 	(no_connect
-		(at 142.24 104.14)
+		(at 154.94 63.5)
 		(uuid "81486e75-b9b6-4abf-a258-c6d74b56d89f")
 	)
 	(no_connect
@@ -7673,7 +7734,7 @@
 		(uuid "a7d0af60-eaf4-4ede-ade7-d2ba1af4416f")
 	)
 	(no_connect
-		(at 41.91 105.41)
+		(at 41.91 88.9)
 		(uuid "d08546c3-99a9-4d88-8035-58a6bca34fce")
 	)
 	(no_connect
@@ -7685,7 +7746,7 @@
 		(uuid "e1a8f694-85cc-47e1-ac13-08ae4c857b82")
 	)
 	(no_connect
-		(at 41.91 107.95)
+		(at 41.91 91.44)
 		(uuid "e2a2bd30-76d9-4794-adf9-0ce7c66a785a")
 	)
 	(no_connect
@@ -7695,6 +7756,16 @@
 	(no_connect
 		(at 39.37 242.57)
 		(uuid "fff0f4fe-b71a-461f-9c02-18cffa2d5ccd")
+	)
+	(wire
+		(pts
+			(xy 184.15 113.03) (xy 214.63 113.03)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "02660191-60ee-42bf-b4be-703c45bbbb84")
 	)
 	(wire
 		(pts
@@ -7718,23 +7789,13 @@
 	)
 	(wire
 		(pts
-			(xy 22.86 115.57) (xy 26.67 115.57)
+			(xy 22.86 99.06) (xy 26.67 99.06)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
 		(uuid "04574dac-e0bd-4d65-8799-a19cb039a4d6")
-	)
-	(wire
-		(pts
-			(xy 46.99 90.17) (xy 76.2 90.17)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "045cf0c1-dd53-47c3-8ff2-5bed884124cd")
 	)
 	(wire
 		(pts
@@ -7748,7 +7809,7 @@
 	)
 	(wire
 		(pts
-			(xy 142.24 96.52) (xy 144.78 96.52)
+			(xy 154.94 55.88) (xy 157.48 55.88)
 		)
 		(stroke
 			(width 0)
@@ -7758,13 +7819,23 @@
 	)
 	(wire
 		(pts
-			(xy 160.02 199.39) (xy 162.56 199.39)
+			(xy 203.2 199.39) (xy 205.74 199.39)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
 		(uuid "058b6a95-75cc-45d3-9e40-7b7f5d44a1ee")
+	)
+	(wire
+		(pts
+			(xy 68.58 53.34) (xy 68.58 54.61)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0598af31-f9cd-4cb3-ac4d-ca3348a85be9")
 	)
 	(wire
 		(pts
@@ -7778,16 +7849,6 @@
 	)
 	(wire
 		(pts
-			(xy 106.68 219.71) (xy 160.02 219.71)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "05f4e935-cc92-4496-9d5a-3c7bf5197631")
-	)
-	(wire
-		(pts
 			(xy 198.12 95.25) (xy 214.63 95.25)
 		)
 		(stroke
@@ -7798,7 +7859,7 @@
 	)
 	(wire
 		(pts
-			(xy 123.19 43.18) (xy 135.89 43.18)
+			(xy 250.19 45.72) (xy 262.89 45.72)
 		)
 		(stroke
 			(width 0)
@@ -7815,6 +7876,16 @@
 			(type default)
 		)
 		(uuid "07838723-cc65-42dc-8456-a7b34e0ba52b")
+	)
+	(wire
+		(pts
+			(xy 133.35 264.16) (xy 133.35 199.39)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "08346a5a-e28d-46bb-9f31-5cc7cd487ead")
 	)
 	(wire
 		(pts
@@ -7838,17 +7909,7 @@
 	)
 	(wire
 		(pts
-			(xy 109.22 113.03) (xy 109.22 114.3)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "09ace559-22e4-4cf1-a6f7-a1c7495b9593")
-	)
-	(wire
-		(pts
-			(xy 62.23 80.01) (xy 64.77 80.01)
+			(xy 57.15 63.5) (xy 64.77 63.5)
 		)
 		(stroke
 			(width 0)
@@ -7868,17 +7929,7 @@
 	)
 	(wire
 		(pts
-			(xy 210.82 113.03) (xy 214.63 113.03)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "0bd0eb65-a801-45ef-bdd9-e666a153ed96")
-	)
-	(wire
-		(pts
-			(xy 133.35 34.29) (xy 135.89 34.29)
+			(xy 260.35 36.83) (xy 262.89 36.83)
 		)
 		(stroke
 			(width 0)
@@ -7888,23 +7939,13 @@
 	)
 	(wire
 		(pts
-			(xy 154.94 26.67) (xy 160.02 26.67)
+			(xy 281.94 29.21) (xy 287.02 29.21)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
 		(uuid "0c2a7037-d0a7-44f0-83fb-e9a104fb00bc")
-	)
-	(wire
-		(pts
-			(xy 104.14 199.39) (xy 133.35 199.39)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "0d5410e7-befc-49d8-83a9-666165220e0b")
 	)
 	(wire
 		(pts
@@ -7938,7 +7979,7 @@
 	)
 	(wire
 		(pts
-			(xy 133.35 26.67) (xy 137.16 26.67)
+			(xy 260.35 29.21) (xy 264.16 29.21)
 		)
 		(stroke
 			(width 0)
@@ -7958,7 +7999,7 @@
 	)
 	(wire
 		(pts
-			(xy 93.98 36.83) (xy 93.98 43.18)
+			(xy 220.98 39.37) (xy 220.98 45.72)
 		)
 		(stroke
 			(width 0)
@@ -7976,16 +8017,6 @@
 		)
 		(uuid "11981778-55ea-47b8-ac10-83818a20bdae")
 	)
-	(wire
-		(pts
-			(xy 160.02 259.08) (xy 160.02 219.71)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "12eaffc6-9eed-42f3-8641-0e4e7ccdbc8e")
-	)
 	(polyline
 		(pts
 			(xy 11.684 141.732) (xy 407.924 141.732)
@@ -7999,7 +8030,7 @@
 	)
 	(wire
 		(pts
-			(xy 106.68 101.6) (xy 106.68 106.68)
+			(xy 111.76 60.96) (xy 111.76 73.66)
 		)
 		(stroke
 			(width 0)
@@ -8029,13 +8060,23 @@
 	)
 	(wire
 		(pts
-			(xy 182.88 113.03) (xy 184.15 113.03)
+			(xy 165.1 113.03) (xy 171.45 113.03)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
 		(uuid "158ac68c-fc1d-4036-89e0-3416e7549201")
+	)
+	(wire
+		(pts
+			(xy 106.68 219.71) (xy 160.02 219.71)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "158accbc-836a-47a7-bf15-290cd45d0d48")
 	)
 	(wire
 		(pts
@@ -8069,7 +8110,17 @@
 	)
 	(wire
 		(pts
-			(xy 114.3 99.06) (xy 121.92 99.06)
+			(xy 87.63 44.45) (xy 93.98 44.45)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "19084bb4-768a-43c7-9f57-ca1583cae611")
+	)
+	(wire
+		(pts
+			(xy 127 58.42) (xy 134.62 58.42)
 		)
 		(stroke
 			(width 0)
@@ -8099,23 +8150,13 @@
 	)
 	(wire
 		(pts
-			(xy 137.16 29.21) (xy 137.16 26.67)
+			(xy 264.16 31.75) (xy 264.16 29.21)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
 		(uuid "1cd2c8e4-95e4-4b66-bcf9-b76c79736df9")
-	)
-	(wire
-		(pts
-			(xy 34.29 29.21) (xy 34.29 33.02)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "1d6e1e8f-cb67-47ce-a552-6812e1d48a6e")
 	)
 	(wire
 		(pts
@@ -8139,6 +8180,16 @@
 	)
 	(wire
 		(pts
+			(xy 160.02 259.08) (xy 160.02 219.71)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "1f0e45f5-be54-4589-87ca-3b2d70fcc1d7")
+	)
+	(wire
+		(pts
 			(xy 39.37 217.17) (xy 41.91 217.17)
 		)
 		(stroke
@@ -8149,7 +8200,7 @@
 	)
 	(wire
 		(pts
-			(xy 184.15 219.71) (xy 195.58 219.71)
+			(xy 205.74 219.71) (xy 214.63 219.71)
 		)
 		(stroke
 			(width 0)
@@ -8187,16 +8238,15 @@
 		)
 		(uuid "221f1288-c5c5-4baf-b5fc-6b7d08e6b27e")
 	)
-	(polyline
+	(wire
 		(pts
-			(xy 88.392 50.8) (xy 88.392 141.224)
+			(xy 171.45 113.03) (xy 179.07 113.03)
 		)
 		(stroke
-			(width 1)
-			(type solid)
-			(color 0 0 0 1)
+			(width 0)
+			(type default)
 		)
-		(uuid "2275ecf1-343a-40ba-9726-f4207ceafccd")
+		(uuid "22a24c93-5714-426a-bfec-d463b8bf741c")
 	)
 	(wire
 		(pts
@@ -8210,13 +8260,33 @@
 	)
 	(wire
 		(pts
-			(xy 142.24 91.44) (xy 143.51 91.44)
+			(xy 154.94 50.8) (xy 156.21 50.8)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
 		(uuid "24f7b7ad-11ac-4c26-9b15-b42e68182e89")
+	)
+	(wire
+		(pts
+			(xy 167.64 264.16) (xy 167.64 240.03)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "259ce01b-bf3c-48a9-96ed-3c6e817c768a")
+	)
+	(wire
+		(pts
+			(xy 160.02 219.71) (xy 171.45 219.71)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "2614d0d3-dcbc-43c9-bfcb-35ea68287937")
 	)
 	(wire
 		(pts
@@ -8230,7 +8300,7 @@
 	)
 	(wire
 		(pts
-			(xy 76.2 43.18) (xy 76.2 39.37)
+			(xy 203.2 45.72) (xy 203.2 41.91)
 		)
 		(stroke
 			(width 0)
@@ -8270,13 +8340,13 @@
 	)
 	(wire
 		(pts
-			(xy 41.91 90.17) (xy 46.99 90.17)
+			(xy 210.82 29.21) (xy 220.98 29.21)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "29e211a1-2cb0-4257-ae32-ffa471742022")
+		(uuid "28f5a945-23a7-440f-bb90-067e506bfcf2")
 	)
 	(wire
 		(pts
@@ -8290,7 +8360,7 @@
 	)
 	(wire
 		(pts
-			(xy 181.61 219.71) (xy 184.15 219.71)
+			(xy 203.2 219.71) (xy 205.74 219.71)
 		)
 		(stroke
 			(width 0)
@@ -8307,16 +8377,6 @@
 			(type default)
 		)
 		(uuid "2ba6ef36-09c2-4586-a871-8d07ddce7546")
-	)
-	(wire
-		(pts
-			(xy 72.39 111.76) (xy 72.39 87.63)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "2d6477f3-cdc0-44fd-ad28-f5f07e67f955")
 	)
 	(wire
 		(pts
@@ -8340,7 +8400,7 @@
 	)
 	(wire
 		(pts
-			(xy 236.22 45.72) (xy 242.57 45.72)
+			(xy 474.98 52.07) (xy 481.33 52.07)
 		)
 		(stroke
 			(width 0)
@@ -8400,6 +8460,16 @@
 	)
 	(wire
 		(pts
+			(xy 250.19 105.41) (xy 250.19 107.95)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "36a2d992-52ce-411b-8ef9-4f01e113be6d")
+	)
+	(wire
+		(pts
 			(xy 290.83 237.49) (xy 294.64 237.49)
 		)
 		(stroke
@@ -8410,7 +8480,7 @@
 	)
 	(wire
 		(pts
-			(xy 132.08 113.03) (xy 132.08 110.49)
+			(xy 144.78 72.39) (xy 144.78 69.85)
 		)
 		(stroke
 			(width 0)
@@ -8420,7 +8490,7 @@
 	)
 	(wire
 		(pts
-			(xy 205.74 240.03) (xy 213.36 240.03)
+			(xy 205.74 240.03) (xy 214.63 240.03)
 		)
 		(stroke
 			(width 0)
@@ -8430,7 +8500,7 @@
 	)
 	(wire
 		(pts
-			(xy 160.02 43.18) (xy 160.02 39.37)
+			(xy 287.02 45.72) (xy 287.02 41.91)
 		)
 		(stroke
 			(width 0)
@@ -8450,7 +8520,7 @@
 	)
 	(wire
 		(pts
-			(xy 132.08 81.28) (xy 132.08 82.55)
+			(xy 144.78 40.64) (xy 144.78 41.91)
 		)
 		(stroke
 			(width 0)
@@ -8471,6 +8541,16 @@
 	)
 	(wire
 		(pts
+			(xy 111.76 81.28) (xy 167.64 81.28)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "3e983887-93e8-447f-9192-90b12b3824d8")
+	)
+	(wire
+		(pts
 			(xy 360.68 59.69) (xy 356.87 59.69)
 		)
 		(stroke
@@ -8481,7 +8561,7 @@
 	)
 	(wire
 		(pts
-			(xy 236.22 43.18) (xy 242.57 43.18)
+			(xy 474.98 49.53) (xy 481.33 49.53)
 		)
 		(stroke
 			(width 0)
@@ -8538,16 +8618,6 @@
 			(type default)
 		)
 		(uuid "409685fb-0071-405a-bcd8-cac468d201e0")
-	)
-	(wire
-		(pts
-			(xy 133.35 264.16) (xy 133.35 199.39)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "412eb0fd-0162-47dd-80c8-3fe3f883fa22")
 	)
 	(wire
 		(pts
@@ -8641,7 +8711,7 @@
 	)
 	(wire
 		(pts
-			(xy 93.98 29.21) (xy 93.98 26.67)
+			(xy 220.98 31.75) (xy 220.98 29.21)
 		)
 		(stroke
 			(width 0)
@@ -8671,7 +8741,7 @@
 	)
 	(wire
 		(pts
-			(xy 114.3 88.9) (xy 121.92 88.9)
+			(xy 127 48.26) (xy 134.62 48.26)
 		)
 		(stroke
 			(width 0)
@@ -8681,17 +8751,7 @@
 	)
 	(wire
 		(pts
-			(xy 213.36 85.09) (xy 213.36 87.63)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "484f2d90-1762-4ce2-82af-8411851464d1")
-	)
-	(wire
-		(pts
-			(xy 142.24 99.06) (xy 144.78 99.06)
+			(xy 154.94 58.42) (xy 157.48 58.42)
 		)
 		(stroke
 			(width 0)
@@ -8701,7 +8761,7 @@
 	)
 	(wire
 		(pts
-			(xy 99.06 106.68) (xy 99.06 114.3)
+			(xy 104.14 73.66) (xy 104.14 81.28)
 		)
 		(stroke
 			(width 0)
@@ -8711,17 +8771,17 @@
 	)
 	(wire
 		(pts
-			(xy 160.02 264.16) (xy 167.64 264.16)
+			(xy 48.26 60.96) (xy 48.26 44.45)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "4c4ac1da-8121-4514-9fca-7ce64e11a41b")
+		(uuid "4b9cedd4-adf5-4f01-8b04-d7408d554ca8")
 	)
 	(wire
 		(pts
-			(xy 44.45 82.55) (xy 41.91 82.55)
+			(xy 41.91 66.04) (xy 57.15 66.04)
 		)
 		(stroke
 			(width 0)
@@ -8771,24 +8831,13 @@
 	)
 	(wire
 		(pts
-			(xy 147.32 88.9) (xy 147.32 90.17)
+			(xy 160.02 48.26) (xy 160.02 49.53)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
 		(uuid "50d84010-f0e6-416b-abb5-d6d819ffb206")
-	)
-	(polyline
-		(pts
-			(xy 12.192 50.8) (xy 277.368 50.8)
-		)
-		(stroke
-			(width 1)
-			(type solid)
-			(color 0 0 0 1)
-		)
-		(uuid "51363dba-76d4-45ef-8f89-60751c35386f")
 	)
 	(wire
 		(pts
@@ -8802,6 +8851,16 @@
 	)
 	(wire
 		(pts
+			(xy 203.2 87.63) (xy 214.63 87.63)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "543b1395-da47-47a1-a916-23e5118d75c7")
+	)
+	(wire
+		(pts
 			(xy 280.67 251.46) (xy 280.67 247.65)
 		)
 		(stroke
@@ -8812,13 +8871,13 @@
 	)
 	(wire
 		(pts
-			(xy 109.22 114.3) (xy 106.68 114.3)
+			(xy 22.86 101.6) (xy 25.4 101.6)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "593f8d56-563e-4933-81b9-4164c6f81584")
+		(uuid "57e82d43-9a23-4d4e-8091-4df31b4efabe")
 	)
 	(wire
 		(pts
@@ -8832,13 +8891,13 @@
 	)
 	(wire
 		(pts
-			(xy 167.64 240.03) (xy 193.04 240.03)
+			(xy 41.91 73.66) (xy 46.99 73.66)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "5acdbe99-59d3-4fbd-8aa2-3a7a2d517079")
+		(uuid "595ef58d-d0fd-4eba-b20d-a1d88f46809a")
 	)
 	(wire
 		(pts
@@ -8862,16 +8921,6 @@
 	)
 	(wire
 		(pts
-			(xy 41.91 85.09) (xy 59.69 85.09)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "5c6962c9-4c9c-497b-ba1e-fb64ad195ec1")
-	)
-	(wire
-		(pts
 			(xy 198.12 105.41) (xy 214.63 105.41)
 		)
 		(stroke
@@ -8879,6 +8928,16 @@
 			(type default)
 		)
 		(uuid "5c8f360f-3c00-4463-83ff-b47723e99264")
+	)
+	(wire
+		(pts
+			(xy 210.82 26.67) (xy 210.82 29.21)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "5c940799-168b-49c8-b905-2a50bddeb994")
 	)
 	(wire
 		(pts
@@ -8892,7 +8951,7 @@
 	)
 	(wire
 		(pts
-			(xy 82.55 81.28) (xy 82.55 80.01)
+			(xy 82.55 64.77) (xy 82.55 63.5)
 		)
 		(stroke
 			(width 0)
@@ -8902,7 +8961,7 @@
 	)
 	(wire
 		(pts
-			(xy 135.89 43.18) (xy 144.78 43.18)
+			(xy 262.89 45.72) (xy 271.78 45.72)
 		)
 		(stroke
 			(width 0)
@@ -8922,7 +8981,7 @@
 	)
 	(wire
 		(pts
-			(xy 62.23 80.01) (xy 62.23 82.55)
+			(xy 57.15 63.5) (xy 57.15 66.04)
 		)
 		(stroke
 			(width 0)
@@ -8939,6 +8998,16 @@
 			(type default)
 		)
 		(uuid "60d13927-aa93-47f1-be0d-fee1d5107122")
+	)
+	(wire
+		(pts
+			(xy 200.66 87.63) (xy 203.2 87.63)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "6116bc33-654e-468f-adbb-ca72cd5dd99a")
 	)
 	(wire
 		(pts
@@ -9024,16 +9093,6 @@
 	)
 	(wire
 		(pts
-			(xy 59.69 129.54) (xy 60.96 129.54)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "66dd69c1-1b1c-4613-98bc-783392eb7598")
-	)
-	(wire
-		(pts
 			(xy 378.46 187.96) (xy 388.62 187.96)
 		)
 		(stroke
@@ -9084,13 +9143,13 @@
 	)
 	(wire
 		(pts
-			(xy 59.69 87.63) (xy 59.69 85.09)
+			(xy 74.93 78.74) (xy 76.2 78.74)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "6c0db031-242a-4983-893c-382ae1fe7502")
+		(uuid "6c53e08b-bf31-4ff1-a95e-cc72faa201d9")
 	)
 	(wire
 		(pts
@@ -9114,7 +9173,7 @@
 	)
 	(wire
 		(pts
-			(xy 107.95 43.18) (xy 123.19 43.18)
+			(xy 234.95 45.72) (xy 250.19 45.72)
 		)
 		(stroke
 			(width 0)
@@ -9124,7 +9183,7 @@
 	)
 	(wire
 		(pts
-			(xy 250.19 90.17) (xy 250.19 91.44)
+			(xy 250.19 90.17) (xy 250.19 92.71)
 		)
 		(stroke
 			(width 0)
@@ -9164,16 +9223,6 @@
 	)
 	(wire
 		(pts
-			(xy 41.91 95.25) (xy 74.93 95.25)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "71ceb754-89a3-4410-8238-daf9005fbcf4")
-	)
-	(wire
-		(pts
 			(xy 134.62 264.16) (xy 133.35 264.16)
 		)
 		(stroke
@@ -9204,7 +9253,7 @@
 	)
 	(wire
 		(pts
-			(xy 110.49 88.9) (xy 114.3 88.9)
+			(xy 123.19 48.26) (xy 127 48.26)
 		)
 		(stroke
 			(width 0)
@@ -9221,6 +9270,16 @@
 			(type default)
 		)
 		(uuid "75fd1f2e-2c5a-4d65-bdda-b18e064e952b")
+	)
+	(wire
+		(pts
+			(xy 68.58 44.45) (xy 87.63 44.45)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "760021cd-0008-4f9e-a6be-0cf51f8b66d6")
 	)
 	(wire
 		(pts
@@ -9244,7 +9303,7 @@
 	)
 	(wire
 		(pts
-			(xy 59.69 85.09) (xy 63.5 85.09)
+			(xy 41.91 68.58) (xy 58.42 68.58)
 		)
 		(stroke
 			(width 0)
@@ -9264,16 +9323,6 @@
 	)
 	(wire
 		(pts
-			(xy 213.36 87.63) (xy 214.63 87.63)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "7ac1d7e0-5a35-4982-b0ad-3fa011910b12")
-	)
-	(wire
-		(pts
 			(xy 389.89 167.64) (xy 389.89 168.91)
 		)
 		(stroke
@@ -9281,16 +9330,6 @@
 			(type default)
 		)
 		(uuid "7b036758-2032-4a8b-bf0a-0b55402bf172")
-	)
-	(wire
-		(pts
-			(xy 22.86 29.21) (xy 22.86 33.02)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "7b04a553-2ba3-4885-8507-99c0e544d86f")
 	)
 	(wire
 		(pts
@@ -9314,33 +9353,13 @@
 	)
 	(wire
 		(pts
-			(xy 132.08 82.55) (xy 132.08 83.82)
+			(xy 144.78 41.91) (xy 144.78 43.18)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
 		(uuid "7c9dabb7-26ab-47a5-aab0-88c5df7ff4e4")
-	)
-	(wire
-		(pts
-			(xy 59.69 127) (xy 59.69 129.54)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "7d84ac59-d342-4236-90dd-8857d818e8d7")
-	)
-	(wire
-		(pts
-			(xy 44.45 116.84) (xy 46.99 116.84)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "7e51ab58-fc7d-4490-9232-1aa24ac13562")
 	)
 	(wire
 		(pts
@@ -9394,7 +9413,7 @@
 	)
 	(wire
 		(pts
-			(xy 96.52 114.3) (xy 99.06 114.3)
+			(xy 93.98 81.28) (xy 104.14 81.28)
 		)
 		(stroke
 			(width 0)
@@ -9411,16 +9430,6 @@
 			(type default)
 		)
 		(uuid "81fd8cf9-605e-4e60-82dd-52a59e82b049")
-	)
-	(wire
-		(pts
-			(xy 81.28 26.67) (xy 93.98 26.67)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "832f82bc-9d0c-4b98-aaa7-701196087427")
 	)
 	(wire
 		(pts
@@ -9454,13 +9463,23 @@
 	)
 	(wire
 		(pts
-			(xy 144.78 26.67) (xy 154.94 26.67)
+			(xy 271.78 29.21) (xy 281.94 29.21)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
 		(uuid "84774049-78a1-4543-8aa0-fff6d9b5e201")
+	)
+	(wire
+		(pts
+			(xy 66.04 44.45) (xy 68.58 44.45)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "84a74fcc-e4e8-429b-861c-e074f6346fe4")
 	)
 	(polyline
 		(pts
@@ -9494,27 +9513,7 @@
 	)
 	(wire
 		(pts
-			(xy 45.72 29.21) (xy 45.72 33.02)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "86d69271-2636-46ea-9812-3bba0d7b6133")
-	)
-	(wire
-		(pts
-			(xy 46.99 111.76) (xy 46.99 90.17)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "882a503f-3bc6-484d-bb68-c8ea7d0d07d1")
-	)
-	(wire
-		(pts
-			(xy 41.91 95.25) (xy 41.91 97.79)
+			(xy 41.91 78.74) (xy 41.91 81.28)
 		)
 		(stroke
 			(width 0)
@@ -9554,7 +9553,7 @@
 	)
 	(wire
 		(pts
-			(xy 72.39 80.01) (xy 72.39 82.55)
+			(xy 72.39 63.5) (xy 72.39 66.04)
 		)
 		(stroke
 			(width 0)
@@ -9564,7 +9563,7 @@
 	)
 	(wire
 		(pts
-			(xy 144.78 29.21) (xy 144.78 26.67)
+			(xy 271.78 31.75) (xy 271.78 29.21)
 		)
 		(stroke
 			(width 0)
@@ -9584,7 +9583,7 @@
 	)
 	(wire
 		(pts
-			(xy 140.97 179.07) (xy 142.24 179.07)
+			(xy 203.2 179.07) (xy 204.47 179.07)
 		)
 		(stroke
 			(width 0)
@@ -9601,6 +9600,16 @@
 			(type default)
 		)
 		(uuid "8c9c8f72-08da-4281-a1fe-b66769e3a737")
+	)
+	(wire
+		(pts
+			(xy 104.14 58.42) (xy 119.38 58.42)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8fa91927-fa56-4b1c-a6c3-8fe8387c8c99")
 	)
 	(wire
 		(pts
@@ -9624,7 +9633,7 @@
 	)
 	(wire
 		(pts
-			(xy 171.45 219.71) (xy 173.99 219.71)
+			(xy 171.45 219.71) (xy 195.58 219.71)
 		)
 		(stroke
 			(width 0)
@@ -9694,17 +9703,7 @@
 	)
 	(wire
 		(pts
-			(xy 106.68 106.68) (xy 106.68 114.3)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "961f35a7-d2bc-493b-b1d3-4784e0ebd5e2")
-	)
-	(wire
-		(pts
-			(xy 105.41 26.67) (xy 113.03 26.67)
+			(xy 232.41 29.21) (xy 240.03 29.21)
 		)
 		(stroke
 			(width 0)
@@ -9714,7 +9713,7 @@
 	)
 	(wire
 		(pts
-			(xy 135.89 34.29) (xy 135.89 43.18)
+			(xy 262.89 36.83) (xy 262.89 45.72)
 		)
 		(stroke
 			(width 0)
@@ -9724,7 +9723,7 @@
 	)
 	(wire
 		(pts
-			(xy 72.39 80.01) (xy 82.55 80.01)
+			(xy 72.39 63.5) (xy 82.55 63.5)
 		)
 		(stroke
 			(width 0)
@@ -9754,17 +9753,7 @@
 	)
 	(wire
 		(pts
-			(xy 72.39 116.84) (xy 74.93 116.84)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "999850c7-780b-4062-9317-4770cc38139a")
-	)
-	(wire
-		(pts
-			(xy 236.22 38.1) (xy 242.57 38.1)
+			(xy 474.98 44.45) (xy 481.33 44.45)
 		)
 		(stroke
 			(width 0)
@@ -9784,6 +9773,16 @@
 	)
 	(wire
 		(pts
+			(xy 151.13 199.39) (xy 195.58 199.39)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "9ba320eb-1b98-4acd-b1f5-67ab63c48de8")
+	)
+	(wire
+		(pts
 			(xy 360.68 64.77) (xy 354.33 64.77)
 		)
 		(stroke
@@ -9794,13 +9793,13 @@
 	)
 	(wire
 		(pts
-			(xy 104.14 240.03) (xy 167.64 240.03)
+			(xy 186.69 81.28) (xy 186.69 26.67)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "9c740fb0-bbef-404e-be05-29445ea8e3df")
+		(uuid "9cc06535-5e0e-467e-a774-f0ee9fe9b953")
 	)
 	(wire
 		(pts
@@ -9811,6 +9810,26 @@
 			(type default)
 		)
 		(uuid "9d91ac9d-f0e8-4ff1-ae21-95992607d6a2")
+	)
+	(wire
+		(pts
+			(xy 104.14 240.03) (xy 167.64 240.03)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "9e3cfdb7-ef48-40e7-85ea-1da446a2efcc")
+	)
+	(wire
+		(pts
+			(xy 186.69 26.67) (xy 210.82 26.67)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "9eb052b4-b587-46c2-942e-63d078beeaf4")
 	)
 	(polyline
 		(pts
@@ -9834,16 +9853,6 @@
 	)
 	(wire
 		(pts
-			(xy 160.02 219.71) (xy 171.45 219.71)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "9fdd41b9-0fe0-45ef-8877-bc220f901c24")
-	)
-	(wire
-		(pts
 			(xy 39.37 237.49) (xy 41.91 237.49)
 		)
 		(stroke
@@ -9854,13 +9863,13 @@
 	)
 	(wire
 		(pts
-			(xy 130.81 179.07) (xy 133.35 179.07)
+			(xy 130.81 179.07) (xy 195.58 179.07)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "a084a11a-a2cb-4b15-8dcc-48247b0c767f")
+		(uuid "9fefb75c-04fa-4a8c-8e6b-fba7540c2a9d")
 	)
 	(wire
 		(pts
@@ -9874,7 +9883,7 @@
 	)
 	(wire
 		(pts
-			(xy 88.9 43.18) (xy 93.98 43.18)
+			(xy 215.9 45.72) (xy 220.98 45.72)
 		)
 		(stroke
 			(width 0)
@@ -9894,35 +9903,13 @@
 	)
 	(wire
 		(pts
-			(xy 44.45 82.55) (xy 62.23 82.55)
+			(xy 59.69 96.52) (xy 59.69 99.06)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "a22929e4-f2c1-44a0-bb9b-db02b9f53c59")
-	)
-	(polyline
-		(pts
-			(xy 277.876 141.986) (xy 277.876 12.446)
-		)
-		(stroke
-			(width 1)
-			(type solid)
-			(color 0 0 0 1)
-		)
-		(uuid "a3bd539b-61f1-4216-92fe-0aa5cc705549")
-	)
-	(polyline
-		(pts
-			(xy 170.688 51.054) (xy 170.688 141.224)
-		)
-		(stroke
-			(width 1)
-			(type solid)
-			(color 0 0 0 1)
-		)
-		(uuid "a4c99922-7572-4c5b-9172-866b400dd21f")
+		(uuid "a2961a7e-59e7-4f8b-bd7b-542bab0d744a")
 	)
 	(wire
 		(pts
@@ -9936,7 +9923,7 @@
 	)
 	(wire
 		(pts
-			(xy 93.98 43.18) (xy 107.95 43.18)
+			(xy 220.98 45.72) (xy 234.95 45.72)
 		)
 		(stroke
 			(width 0)
@@ -9946,7 +9933,17 @@
 	)
 	(wire
 		(pts
-			(xy 93.98 26.67) (xy 105.41 26.67)
+			(xy 133.35 199.39) (xy 151.13 199.39)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a6eaaf85-b1aa-4473-89ce-c5548f762f8a")
+	)
+	(wire
+		(pts
+			(xy 220.98 29.21) (xy 232.41 29.21)
 		)
 		(stroke
 			(width 0)
@@ -9996,13 +9993,33 @@
 	)
 	(wire
 		(pts
-			(xy 144.78 43.18) (xy 148.59 43.18)
+			(xy 203.2 85.09) (xy 203.2 87.63)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a9a86cda-8b4f-489e-b568-2c2e0175acce")
+	)
+	(wire
+		(pts
+			(xy 271.78 45.72) (xy 275.59 45.72)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
 		(uuid "aa42e353-b7f5-4cde-a86e-21d78f34a41b")
+	)
+	(wire
+		(pts
+			(xy 55.88 44.45) (xy 55.88 45.72)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "aa63aae5-99a1-4488-b535-8c66b7e34ab6")
 	)
 	(wire
 		(pts
@@ -10023,17 +10040,6 @@
 			(type default)
 		)
 		(uuid "ab48d91b-0fe5-4a23-8403-09df00bec696")
-	)
-	(polyline
-		(pts
-			(xy 194.818 12.446) (xy 194.7193 50.6313)
-		)
-		(stroke
-			(width 1)
-			(type solid)
-			(color 0 0 0 1)
-		)
-		(uuid "ab82e384-0596-4344-bb39-c47e0ee62d6a")
 	)
 	(wire
 		(pts
@@ -10057,7 +10063,7 @@
 	)
 	(wire
 		(pts
-			(xy 76.2 26.67) (xy 81.28 26.67)
+			(xy 203.2 29.21) (xy 210.82 29.21)
 		)
 		(stroke
 			(width 0)
@@ -10067,7 +10073,7 @@
 	)
 	(wire
 		(pts
-			(xy 123.19 43.18) (xy 123.19 46.99)
+			(xy 250.19 45.72) (xy 250.19 49.53)
 		)
 		(stroke
 			(width 0)
@@ -10085,20 +10091,9 @@
 		)
 		(uuid "aee7a9eb-51e0-4394-901a-e7da078d1e6c")
 	)
-	(polyline
-		(pts
-			(xy 60.198 11.938) (xy 60.198 50.8)
-		)
-		(stroke
-			(width 1)
-			(type solid)
-			(color 0 0 0 1)
-		)
-		(uuid "aeebe129-ba1d-4cb0-9109-2ff5be1ce332")
-	)
 	(wire
 		(pts
-			(xy 22.86 115.57) (xy 22.86 118.11)
+			(xy 22.86 99.06) (xy 22.86 101.6)
 		)
 		(stroke
 			(width 0)
@@ -10108,7 +10103,7 @@
 	)
 	(wire
 		(pts
-			(xy 137.16 26.67) (xy 144.78 26.67)
+			(xy 264.16 29.21) (xy 271.78 29.21)
 		)
 		(stroke
 			(width 0)
@@ -10118,13 +10113,33 @@
 	)
 	(wire
 		(pts
-			(xy 133.35 29.21) (xy 137.16 29.21)
+			(xy 255.27 87.63) (xy 245.11 87.63)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b0b9c5f4-de08-4409-9c7e-1337865c520d")
+	)
+	(wire
+		(pts
+			(xy 260.35 31.75) (xy 264.16 31.75)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
 		(uuid "b0bcbf5f-82ee-497d-aa8c-7ae673eca93a")
+	)
+	(wire
+		(pts
+			(xy 167.64 264.16) (xy 160.02 264.16)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b0d7ff64-156c-4345-92f3-191810448fc8")
 	)
 	(wire
 		(pts
@@ -10138,7 +10153,7 @@
 	)
 	(wire
 		(pts
-			(xy 41.91 77.47) (xy 45.72 77.47)
+			(xy 41.91 60.96) (xy 48.26 60.96)
 		)
 		(stroke
 			(width 0)
@@ -10158,7 +10173,17 @@
 	)
 	(wire
 		(pts
-			(xy 41.91 90.17) (xy 41.91 92.71)
+			(xy 93.98 81.28) (xy 93.98 44.45)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b5e72a16-08f7-4b35-8d46-b7abccb25f72")
+	)
+	(wire
+		(pts
+			(xy 41.91 73.66) (xy 41.91 76.2)
 		)
 		(stroke
 			(width 0)
@@ -10178,7 +10203,7 @@
 	)
 	(wire
 		(pts
-			(xy 143.51 88.9) (xy 147.32 88.9)
+			(xy 156.21 48.26) (xy 160.02 48.26)
 		)
 		(stroke
 			(width 0)
@@ -10238,7 +10263,17 @@
 	)
 	(wire
 		(pts
-			(xy 147.32 82.55) (xy 147.32 88.9)
+			(xy 68.58 44.45) (xy 68.58 45.72)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "bb3bc43e-0d09-434f-a73a-0d6da9312b8a")
+	)
+	(wire
+		(pts
+			(xy 160.02 41.91) (xy 160.02 48.26)
 		)
 		(stroke
 			(width 0)
@@ -10258,7 +10293,7 @@
 	)
 	(wire
 		(pts
-			(xy 133.35 199.39) (xy 151.13 199.39)
+			(xy 104.14 199.39) (xy 133.35 199.39)
 		)
 		(stroke
 			(width 0)
@@ -10308,7 +10343,17 @@
 	)
 	(wire
 		(pts
-			(xy 147.32 82.55) (xy 144.78 82.55)
+			(xy 46.99 109.22) (xy 46.99 73.66)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c280504b-7c18-4b85-87b7-4db45fb2a31a")
+	)
+	(wire
+		(pts
+			(xy 160.02 41.91) (xy 157.48 41.91)
 		)
 		(stroke
 			(width 0)
@@ -10328,7 +10373,7 @@
 	)
 	(wire
 		(pts
-			(xy 63.5 82.55) (xy 63.5 85.09)
+			(xy 58.42 66.04) (xy 58.42 68.58)
 		)
 		(stroke
 			(width 0)
@@ -10368,6 +10413,16 @@
 	)
 	(wire
 		(pts
+			(xy 74.93 78.74) (xy 74.93 114.3)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c8ff1a79-263e-4f6e-9d53-f2a2963902f8")
+	)
+	(wire
+		(pts
 			(xy 234.95 69.85) (xy 241.3 69.85)
 		)
 		(stroke
@@ -10388,7 +10443,7 @@
 	)
 	(wire
 		(pts
-			(xy 144.78 36.83) (xy 144.78 43.18)
+			(xy 271.78 39.37) (xy 271.78 45.72)
 		)
 		(stroke
 			(width 0)
@@ -10418,7 +10473,7 @@
 	)
 	(wire
 		(pts
-			(xy 105.41 34.29) (xy 105.41 26.67)
+			(xy 232.41 36.83) (xy 232.41 29.21)
 		)
 		(stroke
 			(width 0)
@@ -10438,6 +10493,26 @@
 	)
 	(wire
 		(pts
+			(xy 167.64 240.03) (xy 193.04 240.03)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "cd21d6c3-aa01-4fab-abd5-5e77b238ab8b")
+	)
+	(wire
+		(pts
+			(xy 46.99 73.66) (xy 76.2 73.66)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ce942529-dacb-4cdc-8ea0-f558efcbe4e2")
+	)
+	(wire
+		(pts
 			(xy 198.12 102.87) (xy 203.2 102.87)
 		)
 		(stroke
@@ -10448,7 +10523,7 @@
 	)
 	(wire
 		(pts
-			(xy 132.08 110.49) (xy 132.08 109.22)
+			(xy 144.78 69.85) (xy 144.78 68.58)
 		)
 		(stroke
 			(width 0)
@@ -10488,7 +10563,7 @@
 	)
 	(wire
 		(pts
-			(xy 99.06 99.06) (xy 99.06 106.68)
+			(xy 104.14 58.42) (xy 104.14 73.66)
 		)
 		(stroke
 			(width 0)
@@ -10508,13 +10583,23 @@
 	)
 	(wire
 		(pts
-			(xy 19.05 115.57) (xy 22.86 115.57)
+			(xy 19.05 99.06) (xy 22.86 99.06)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
 		(uuid "d2dab9ed-6e30-430f-b8d5-ff35e17e14d4")
+	)
+	(wire
+		(pts
+			(xy 111.76 73.66) (xy 111.76 81.28)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d2e247ea-1aca-428b-a71c-4bddc3f53899")
 	)
 	(wire
 		(pts
@@ -10548,13 +10633,23 @@
 	)
 	(wire
 		(pts
-			(xy 156.21 43.18) (xy 160.02 43.18)
+			(xy 283.21 45.72) (xy 287.02 45.72)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
 		(uuid "d41f73f3-d456-40cc-b43f-a6c42910dcdf")
+	)
+	(wire
+		(pts
+			(xy 179.07 113.03) (xy 184.15 113.03)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d4511dc0-9b31-4928-ba3a-a85a0676a174")
 	)
 	(wire
 		(pts
@@ -10648,7 +10743,7 @@
 	)
 	(wire
 		(pts
-			(xy 113.03 34.29) (xy 105.41 34.29)
+			(xy 240.03 36.83) (xy 232.41 36.83)
 		)
 		(stroke
 			(width 0)
@@ -10658,7 +10753,17 @@
 	)
 	(wire
 		(pts
-			(xy 74.93 95.25) (xy 76.2 95.25)
+			(xy 48.26 44.45) (xy 55.88 44.45)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "da07ddbb-ac06-4843-a6f8-3c77645a587a")
+	)
+	(wire
+		(pts
+			(xy 41.91 78.74) (xy 74.93 78.74)
 		)
 		(stroke
 			(width 0)
@@ -10738,17 +10843,7 @@
 	)
 	(wire
 		(pts
-			(xy 99.06 99.06) (xy 106.68 99.06)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "e0539d1e-ffe2-4d18-857d-19cd15576cf2")
-	)
-	(wire
-		(pts
-			(xy 162.56 199.39) (xy 172.72 199.39)
+			(xy 205.74 199.39) (xy 214.63 199.39)
 		)
 		(stroke
 			(width 0)
@@ -10788,7 +10883,7 @@
 	)
 	(wire
 		(pts
-			(xy 113.03 31.75) (xy 107.95 31.75)
+			(xy 240.03 34.29) (xy 234.95 34.29)
 		)
 		(stroke
 			(width 0)
@@ -10798,23 +10893,13 @@
 	)
 	(wire
 		(pts
-			(xy 114.3 101.6) (xy 121.92 101.6)
+			(xy 127 60.96) (xy 134.62 60.96)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
 		(uuid "e0f177df-16fa-46bf-ba37-1fc2f4b86d38")
-	)
-	(wire
-		(pts
-			(xy 184.15 113.03) (xy 203.2 113.03)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "e1bd6bce-9e3c-4d05-8478-82e016c662c6")
 	)
 	(wire
 		(pts
@@ -10828,7 +10913,17 @@
 	)
 	(wire
 		(pts
-			(xy 143.51 91.44) (xy 143.51 88.9)
+			(xy 55.88 53.34) (xy 55.88 54.61)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e1ef9e58-2035-4318-9e5d-71924747cf64")
+	)
+	(wire
+		(pts
+			(xy 156.21 50.8) (xy 156.21 48.26)
 		)
 		(stroke
 			(width 0)
@@ -10865,26 +10960,6 @@
 			(type dash_dot)
 		)
 		(uuid "e5089da7-59e2-4d69-a28d-2dff2db8e931")
-	)
-	(wire
-		(pts
-			(xy 44.45 82.55) (xy 44.45 116.84)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "e625f655-4897-4647-acc6-9160ab1f373e")
-	)
-	(wire
-		(pts
-			(xy 72.39 87.63) (xy 59.69 87.63)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "e730c820-d58d-4282-8cc9-84e83d82d58a")
 	)
 	(wire
 		(pts
@@ -10928,17 +11003,17 @@
 	)
 	(wire
 		(pts
-			(xy 59.69 101.6) (xy 59.69 104.14)
+			(xy 55.88 44.45) (xy 58.42 44.45)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "e847769e-9033-4b45-b5dd-5d68e2f70720")
+		(uuid "e914420e-b343-4923-8e67-0424f113d237")
 	)
 	(wire
 		(pts
-			(xy 137.16 82.55) (xy 132.08 82.55)
+			(xy 149.86 41.91) (xy 144.78 41.91)
 		)
 		(stroke
 			(width 0)
@@ -10948,7 +11023,17 @@
 	)
 	(wire
 		(pts
-			(xy 76.2 43.18) (xy 81.28 43.18)
+			(xy 111.76 60.96) (xy 119.38 60.96)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "eaebd091-7ecc-4b29-b030-a74f97ad6892")
+	)
+	(wire
+		(pts
+			(xy 203.2 45.72) (xy 208.28 45.72)
 		)
 		(stroke
 			(width 0)
@@ -10958,7 +11043,7 @@
 	)
 	(wire
 		(pts
-			(xy 63.5 82.55) (xy 64.77 82.55)
+			(xy 58.42 66.04) (xy 64.77 66.04)
 		)
 		(stroke
 			(width 0)
@@ -10968,7 +11053,7 @@
 	)
 	(wire
 		(pts
-			(xy 123.19 21.59) (xy 129.54 21.59)
+			(xy 250.19 24.13) (xy 256.54 24.13)
 		)
 		(stroke
 			(width 0)
@@ -11028,26 +11113,6 @@
 	)
 	(wire
 		(pts
-			(xy 212.09 87.63) (xy 213.36 87.63)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "f0ebd0a7-98d7-40cf-b42d-5d43c717dc44")
-	)
-	(wire
-		(pts
-			(xy 167.64 264.16) (xy 167.64 240.03)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "f130225d-3a95-4bf8-9d8f-2880b2e64fa6")
-	)
-	(wire
-		(pts
 			(xy 307.34 53.34) (xy 309.88 53.34)
 		)
 		(stroke
@@ -11088,6 +11153,16 @@
 	)
 	(wire
 		(pts
+			(xy 167.64 81.28) (xy 186.69 81.28)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f423b088-afe9-465f-afeb-c958fa652cb1")
+	)
+	(wire
+		(pts
 			(xy 320.04 180.34) (xy 317.5 180.34)
 		)
 		(stroke
@@ -11098,7 +11173,7 @@
 	)
 	(wire
 		(pts
-			(xy 142.24 179.07) (xy 154.94 179.07)
+			(xy 204.47 179.07) (xy 217.17 179.07)
 		)
 		(stroke
 			(width 0)
@@ -11128,17 +11203,17 @@
 	)
 	(wire
 		(pts
-			(xy 151.13 199.39) (xy 152.4 199.39)
+			(xy 74.93 114.3) (xy 72.39 114.3)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "fa159aca-c955-47e2-b9f6-ccca0bd8e1f4")
+		(uuid "fa53b1f4-52b0-48f3-ae33-8af99b448c9f")
 	)
 	(wire
 		(pts
-			(xy 142.24 88.9) (xy 143.51 88.9)
+			(xy 154.94 48.26) (xy 156.21 48.26)
 		)
 		(stroke
 			(width 0)
@@ -11148,7 +11223,17 @@
 	)
 	(wire
 		(pts
-			(xy 237.49 40.64) (xy 242.57 40.64)
+			(xy 59.69 124.46) (xy 59.69 127)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "fa7265c5-c9dd-4753-9cb5-17637ba66262")
+	)
+	(wire
+		(pts
+			(xy 476.25 46.99) (xy 481.33 46.99)
 		)
 		(stroke
 			(width 0)
@@ -11168,16 +11253,6 @@
 	)
 	(wire
 		(pts
-			(xy 74.93 116.84) (xy 74.93 95.25)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "fc87538f-ea93-41ca-9a2a-62dfa278840e")
-	)
-	(wire
-		(pts
 			(xy 39.37 199.39) (xy 45.72 199.39)
 		)
 		(stroke
@@ -11188,7 +11263,7 @@
 	)
 	(wire
 		(pts
-			(xy 107.95 31.75) (xy 107.95 43.18)
+			(xy 234.95 34.29) (xy 234.95 45.72)
 		)
 		(stroke
 			(width 0)
@@ -11570,7 +11645,7 @@
 		(uuid "0ac2609e-1d12-4b1f-8ccd-119801aaf3be")
 	)
 	(label "Supply"
-		(at 120.65 99.06 180)
+		(at 133.35 58.42 180)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -11579,8 +11654,18 @@
 		)
 		(uuid "215cfb4b-bd01-4eef-92bf-92a2fa6afb76")
 	)
+	(label "VBUS"
+		(at 48.26 54.61 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "2ed80b6a-d24a-4e17-81e4-d90c72667483")
+	)
 	(label "PIT_IN"
-		(at 121.92 179.07 0)
+		(at 137.16 179.07 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -11589,8 +11674,18 @@
 		)
 		(uuid "2ff78452-e6c5-4e9f-97ac-10124a594465")
 	)
+	(label "VBUS"
+		(at 80.01 44.45 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "a89a53c6-d61e-4834-9b39-e82bf9aeed6b")
+	)
 	(label "Load"
-		(at 114.3 101.6 0)
+		(at 127 60.96 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -11609,6 +11704,16 @@
 		)
 		(uuid "d7af3e4d-910f-4e95-8643-735e8cd90317")
 	)
+	(label "+5V"
+		(at 140.97 81.28 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "dca6099a-cd8d-4e29-83c1-f0fba0a02a54")
+	)
 	(label "MEAT1_IN"
 		(at 137.16 199.39 0)
 		(effects
@@ -11621,7 +11726,7 @@
 	)
 	(global_label "USB_D-"
 		(shape bidirectional)
-		(at 76.2 90.17 0)
+		(at 76.2 73.66 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -11631,7 +11736,7 @@
 		)
 		(uuid "0172b4a4-bb92-46ea-bb46-ab3a6a80632d")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 87.9165 90.17 0)
+			(at 87.9165 73.66 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11665,7 +11770,7 @@
 	)
 	(global_label "I2C_SCL_3V3"
 		(shape bidirectional)
-		(at 144.78 99.06 0)
+		(at 157.48 58.42 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -11676,7 +11781,7 @@
 		)
 		(uuid "08af077b-28ed-4301-97d5-1f78fd33cb70")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 156.8593 99.06 0)
+			(at 169.5593 58.42 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11688,7 +11793,7 @@
 	)
 	(global_label "DEBUG_RX"
 		(shape output)
-		(at 236.22 43.18 180)
+		(at 474.98 49.53 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -11698,7 +11803,7 @@
 		)
 		(uuid "0e95711b-6445-4a7f-97e0-9f2d0dc69fdb")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 223.4982 43.18 0)
+			(at 462.2582 49.53 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11844,7 +11949,7 @@
 	)
 	(global_label "MEAT1"
 		(shape output)
-		(at 172.72 199.39 0)
+		(at 214.63 199.39 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -11854,7 +11959,7 @@
 		)
 		(uuid "2b4cfba6-6001-4807-9d8b-b558af973f35")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 190.9451 199.39 0)
+			(at 232.8551 199.39 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11933,7 +12038,7 @@
 	)
 	(global_label "PIT"
 		(shape output)
-		(at 154.94 179.07 0)
+		(at 217.17 179.07 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -11943,7 +12048,7 @@
 		)
 		(uuid "41727b1c-9714-4822-8187-9469c12871de")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 170.1414 179.07 0)
+			(at 232.3714 179.07 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12022,7 +12127,7 @@
 	)
 	(global_label "USB_D+"
 		(shape bidirectional)
-		(at 76.2 95.25 0)
+		(at 76.2 78.74 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -12032,7 +12137,7 @@
 		)
 		(uuid "5dce243e-d4ef-46a4-98a4-cd47a93e15f7")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 87.9165 95.25 0)
+			(at 87.9165 78.74 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12066,7 +12171,7 @@
 	)
 	(global_label "DEBUG_TX{slash}LED"
 		(shape input)
-		(at 237.49 40.64 180)
+		(at 476.25 46.99 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -12076,7 +12181,7 @@
 		)
 		(uuid "6bc1ef48-e1c4-41a0-96b9-5f5f08edd90a")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 220.293 40.64 0)
+			(at 459.053 46.99 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12088,7 +12193,7 @@
 	)
 	(global_label "MEAT2"
 		(shape output)
-		(at 195.58 219.71 0)
+		(at 214.63 219.71 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -12098,7 +12203,7 @@
 		)
 		(uuid "6f3259bb-2dc7-4452-bfe8-694e96049a0f")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 213.8051 219.71 0)
+			(at 232.8551 219.71 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12110,7 +12215,7 @@
 	)
 	(global_label "DEBUG_RX"
 		(shape input)
-		(at 245.11 87.63 0)
+		(at 255.27 87.63 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -12120,7 +12225,7 @@
 		)
 		(uuid "7350321e-a05b-42e1-ab7b-64bf0a9cb447")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 257.8318 87.63 0)
+			(at 267.9918 87.63 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12132,7 +12237,7 @@
 	)
 	(global_label "MEAT3"
 		(shape output)
-		(at 213.36 240.03 0)
+		(at 214.63 240.03 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -12142,7 +12247,7 @@
 		)
 		(uuid "73507010-d4d1-49f0-a0a5-881f34a08b28")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 231.5851 240.03 0)
+			(at 232.8551 240.03 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12242,7 +12347,7 @@
 	)
 	(global_label "I2C_SDA_3V3"
 		(shape bidirectional)
-		(at 144.78 96.52 0)
+		(at 157.48 55.88 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -12253,7 +12358,7 @@
 		)
 		(uuid "8ad0617a-e1aa-48e6-9464-fe0b291d0753")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 156.9198 96.52 0)
+			(at 169.6198 55.88 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12287,7 +12392,7 @@
 	)
 	(global_label "DISP_CS"
 		(shape input)
-		(at 182.88 113.03 180)
+		(at 165.1 113.03 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -12297,7 +12402,7 @@
 		)
 		(uuid "90e7afc9-9a32-40c2-9217-9e846748b299")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 172.0934 113.03 0)
+			(at 154.3134 113.03 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12643,7 +12748,7 @@
 	)
 	(global_label "~{RESET}"
 		(shape input)
-		(at 212.09 87.63 180)
+		(at 200.66 87.63 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -12653,7 +12758,7 @@
 		)
 		(uuid "fc66f541-0faa-4a9d-96b3-a7962412acbf")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 203.3597 87.63 0)
+			(at 191.9297 87.63 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12673,7 +12778,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "0259341d-8a16-4025-ab92-f06fdf01bbce")
-		(property "Reference" "#PWR045"
+		(property "Reference" "#PWR040"
 			(at 205.74 254 0)
 			(effects
 				(font
@@ -12721,41 +12826,44 @@
 			(uuid "17a5c5e7-6839-4fee-b5fb-557c2b079116")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "#PWR045")
+					(reference "#PWR040")
 					(unit 1)
 				)
 			)
 		)
 	)
 	(symbol
-		(lib_id "Device:R")
-		(at 207.01 113.03 90)
+		(lib_id "Device:C")
+		(at 68.58 49.53 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "076d1833-95ea-4e0e-b30a-38de2d83dbf6")
-		(property "Reference" "R12"
-			(at 201.93 112.014 90)
+		(fields_autoplaced yes)
+		(uuid "04b5c200-1291-4d7b-88dd-d58c25381782")
+		(property "Reference" "C5"
+			(at 72.39 48.2599 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify left)
 			)
 		)
-		(property "Value" "22"
-			(at 201.93 114.046 90)
+		(property "Value" "470nF"
+			(at 72.39 50.7999 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify left)
 			)
 		)
-		(property "Footprint" "JLCImport:PTFR0603B120KP9"
-			(at 207.01 114.808 90)
+		(property "Footprint" "JLCImport:CC0603KRX7R9BB104"
+			(at 69.5452 53.34 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12764,7 +12872,101 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 207.01 113.03 0)
+			(at 68.58 49.53 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Unpolarized capacitor"
+			(at 68.58 49.53 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C1623"
+			(at 68.58 49.53 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 68.58 49.53 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer Part" "CL10B474KA8NNNC"
+			(at 68.58 49.53 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "c8eacd15-c5f8-49b8-9782-a00f2ef2cfa2")
+		)
+		(pin "2"
+			(uuid "2c2710b9-3800-40d7-9c5b-f1f81a89d396")
+		)
+		(instances
+			(project "cloudSmoker_ver2e"
+				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
+					(reference "C5")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 175.26 113.03 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "076d1833-95ea-4e0e-b30a-38de2d83dbf6")
+		(property "Reference" "R14"
+			(at 169.418 112.014 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "22"
+			(at 169.418 114.046 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "JLCImport:PTFR0603B120KP9"
+			(at 175.26 114.808 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 175.26 113.03 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12773,7 +12975,7 @@
 			)
 		)
 		(property "Description" "Resistor"
-			(at 207.01 113.03 0)
+			(at 175.26 113.03 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12782,7 +12984,7 @@
 			)
 		)
 		(property "LCSC" "C23345"
-			(at 207.01 113.03 0)
+			(at 175.26 113.03 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12791,7 +12993,7 @@
 			)
 		)
 		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
-			(at 207.01 113.03 0)
+			(at 175.26 113.03 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12800,7 +13002,7 @@
 			)
 		)
 		(property "Manufacturer Part" "0603WAF220JT5E"
-			(at 207.01 113.03 0)
+			(at 175.26 113.03 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12815,9 +13017,9 @@
 			(uuid "11e2ecb6-cc8f-4813-aac5-f5bdf8ebb5e2")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "R12")
+					(reference "R14")
 					(unit 1)
 				)
 			)
@@ -12832,7 +13034,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "09338669-042e-457e-97dc-eb564d5b4f7c")
-		(property "Reference" "#PWR042"
+		(property "Reference" "#PWR037"
 			(at 280.67 226.06 0)
 			(effects
 				(font
@@ -12880,9 +13082,9 @@
 			(uuid "99486ae4-0267-4dc1-9371-26f746e9814a")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "#PWR042")
+					(reference "#PWR037")
 					(unit 1)
 				)
 			)
@@ -12897,7 +13099,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "0da24a2d-0927-4405-9d56-c565644a62b8")
-		(property "Reference" "R17"
+		(property "Reference" "R18"
 			(at 246.38 171.704 0)
 			(effects
 				(font
@@ -12976,9 +13178,9 @@
 			(uuid "e3df84ad-bbc9-4525-b52a-3f4e4f17bfa3")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "R17")
+					(reference "R18")
 					(unit 1)
 				)
 			)
@@ -12986,7 +13188,7 @@
 	)
 	(symbol
 		(lib_id "Connector:USB_C_Receptacle_USB2.0_16P")
-		(at 26.67 92.71 0)
+		(at 26.67 76.2 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -12994,8 +13196,8 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "0e22d37e-850b-4a43-b068-387c8ff46aad")
-		(property "Reference" "U2"
-			(at 26.67 69.85 0)
+		(property "Reference" "U3"
+			(at 26.67 53.34 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13003,7 +13205,7 @@
 			)
 		)
 		(property "Value" "GT-USB-7010ASV"
-			(at 26.67 72.39 0)
+			(at 26.67 55.88 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13011,7 +13213,7 @@
 			)
 		)
 		(property "Footprint" "Connector_USB:USB_C_Receptacle_G-Switch_GT-USB-7010ASV"
-			(at 30.48 92.71 0)
+			(at 30.48 76.2 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13020,7 +13222,7 @@
 			)
 		)
 		(property "Datasheet" "https://www.lcsc.com/datasheet/C2988369.pdf"
-			(at 30.48 92.71 0)
+			(at 30.48 76.2 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13029,7 +13231,7 @@
 			)
 		)
 		(property "Description" "USB 2.0-only 16P Type-C Receptacle connector"
-			(at 26.67 92.71 0)
+			(at 26.67 76.2 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13038,7 +13240,7 @@
 			)
 		)
 		(property "LCSC" "C2988369"
-			(at 26.67 92.71 0)
+			(at 26.67 76.2 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13047,7 +13249,7 @@
 			)
 		)
 		(property "Manufacturer" "G-Switch"
-			(at 26.67 92.71 0)
+			(at 26.67 76.2 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13056,7 +13258,7 @@
 			)
 		)
 		(property "Manufacturer Part" "GT-USB-7010ASV"
-			(at 26.67 92.71 0)
+			(at 26.67 76.2 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13116,76 +13318,9 @@
 			(uuid "75ac7d23-5e8d-49b9-a570-52c1dcf4e40a")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "U2")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:VBUS")
-		(at 45.72 29.21 0)
-		(mirror y)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "0e4a3672-ec59-46a4-8b2f-81f5a9acbde4")
-		(property "Reference" "#PWR05"
-			(at 45.72 33.02 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+5V"
-			(at 45.72 24.13 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 45.72 29.21 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 45.72 29.21 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"VBUS\""
-			(at 45.72 29.21 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "ae770921-313b-416b-b0a9-026ddb1fda65")
-		)
-		(instances
-			(project "cloudSmoker_ver2d"
-				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "#PWR05")
+					(reference "U3")
 					(unit 1)
 				)
 			)
@@ -13193,15 +13328,15 @@
 	)
 	(symbol
 		(lib_id "Device:C")
-		(at 142.24 182.88 180)
+		(at 204.47 182.88 180)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid "108ea09e-6ec8-4a5c-951c-d1016ce729f2")
-		(property "Reference" "C8"
-			(at 146.05 181.6099 0)
+		(property "Reference" "C10"
+			(at 208.28 181.6099 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13210,7 +13345,7 @@
 			)
 		)
 		(property "Value" "1uF"
-			(at 146.05 184.1499 0)
+			(at 208.28 184.1499 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13219,7 +13354,7 @@
 			)
 		)
 		(property "Footprint" "JLCImport:CL10A105KB8NNNC"
-			(at 141.2748 179.07 0)
+			(at 203.5048 179.07 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13228,7 +13363,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 142.24 182.88 0)
+			(at 204.47 182.88 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13237,7 +13372,7 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
-			(at 142.24 182.88 0)
+			(at 204.47 182.88 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13246,7 +13381,7 @@
 			)
 		)
 		(property "LCSC" "C15849"
-			(at 142.24 182.88 0)
+			(at 204.47 182.88 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13255,7 +13390,7 @@
 			)
 		)
 		(property "Manufacturer" "Samsung Electro-Mechanics"
-			(at 142.24 182.88 0)
+			(at 204.47 182.88 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13264,7 +13399,7 @@
 			)
 		)
 		(property "Manufacturer Part" "CL10A105KB8NNNC"
-			(at 142.24 182.88 0)
+			(at 204.47 182.88 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13279,9 +13414,9 @@
 			(uuid "19c9613e-2d78-4a3c-ba0b-ba9544012150")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "C8")
+					(reference "C10")
 					(unit 1)
 				)
 			)
@@ -13289,7 +13424,7 @@
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 110.49 101.6 90)
+		(at 123.19 60.96 90)
 		(mirror x)
 		(unit 1)
 		(exclude_from_sim no)
@@ -13297,8 +13432,8 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "138c5db1-5b12-43ff-b15e-d4fed218ac21")
-		(property "Reference" "R7"
-			(at 110.49 104.14 90)
+		(property "Reference" "R5"
+			(at 124.46 72.39 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13306,7 +13441,7 @@
 			)
 		)
 		(property "Value" "10"
-			(at 110.49 106.172 90)
+			(at 124.46 74.422 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13314,7 +13449,7 @@
 			)
 		)
 		(property "Footprint" "JLCImport:PTFR0603B120KP9"
-			(at 110.49 99.822 90)
+			(at 123.19 59.182 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13323,7 +13458,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 110.49 101.6 0)
+			(at 123.19 60.96 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13332,7 +13467,7 @@
 			)
 		)
 		(property "Description" "Resistor"
-			(at 110.49 101.6 0)
+			(at 123.19 60.96 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13347,9 +13482,9 @@
 			(uuid "1903ed8a-6d6f-4f43-b4b1-41fe11a860d3")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "R7")
+					(reference "R5")
 					(unit 1)
 				)
 			)
@@ -13417,7 +13552,7 @@
 			(uuid "b1dddc08-39ca-4d13-a3cc-353ade079c1f")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "J12")
 					(unit 1)
@@ -13436,7 +13571,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "16b2af61-5020-4321-a768-42bf5769ae24")
-		(property "Reference" "#PWR035"
+		(property "Reference" "#PWR030"
 			(at 304.8 170.18 0)
 			(effects
 				(font
@@ -13484,9 +13619,9 @@
 			(uuid "a59db560-9bbb-4cd1-a11b-043dfd2e6429")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "#PWR035")
+					(reference "#PWR030")
 					(unit 1)
 				)
 			)
@@ -13494,7 +13629,7 @@
 	)
 	(symbol
 		(lib_id "power:+3.3V")
-		(at 154.94 26.67 0)
+		(at 281.94 29.21 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -13502,8 +13637,8 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "17f9930d-fd6f-44dc-b5a0-46011fc5ac07")
-		(property "Reference" "#PWR03"
-			(at 154.94 30.48 0)
+		(property "Reference" "#PWR02"
+			(at 281.94 33.02 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13512,7 +13647,7 @@
 			)
 		)
 		(property "Value" "+3.3V"
-			(at 154.94 21.59 0)
+			(at 281.94 24.13 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13520,7 +13655,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 154.94 26.67 0)
+			(at 281.94 29.21 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13529,7 +13664,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 154.94 26.67 0)
+			(at 281.94 29.21 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13538,7 +13673,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"+3.3V\""
-			(at 154.94 26.67 0)
+			(at 281.94 29.21 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -13550,9 +13685,9 @@
 			(uuid "1f6426f2-d070-42b7-9457-c22338db8315")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "#PWR03")
+					(reference "#PWR02")
 					(unit 1)
 				)
 			)
@@ -13647,7 +13782,7 @@
 			(uuid "f32d2556-c9a6-4894-a9b4-b9ea542bc01b")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "PR2")
 					(unit 1)
@@ -13714,7 +13849,7 @@
 			(uuid "7001d852-4729-425b-8c02-9eab9dd27f50")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "H3")
 					(unit 1)
@@ -13781,7 +13916,7 @@
 			(uuid "343adce6-4b81-4b8b-9525-9175e69fc0d5")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "TP11")
 					(unit 1)
@@ -13857,7 +13992,7 @@
 			(uuid "6a45e497-2c1b-4fd2-8bd9-3421d201540e")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "J5")
 					(unit 1)
@@ -13875,7 +14010,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "21efd887-75af-41dc-ac7c-a52a78429b2e")
-		(property "Reference" "R16"
+		(property "Reference" "R17"
 			(at 387.35 162.5599 0)
 			(effects
 				(font
@@ -13954,9 +14089,9 @@
 			(uuid "585821af-8134-4edd-b037-775f40ccc32e")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "R16")
+					(reference "R17")
 					(unit 1)
 				)
 			)
@@ -14018,7 +14153,7 @@
 			)
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "FID3")
 					(unit 1)
@@ -14028,15 +14163,15 @@
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 110.49 99.06 90)
+		(at 123.19 58.42 90)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid "230f10db-690d-4425-a0de-1b0d870e1381")
-		(property "Reference" "R6"
-			(at 110.49 94.996 90)
+		(property "Reference" "R4"
+			(at 123.19 54.356 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14044,7 +14179,7 @@
 			)
 		)
 		(property "Value" "10"
-			(at 110.49 96.774 90)
+			(at 123.19 56.134 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14052,7 +14187,7 @@
 			)
 		)
 		(property "Footprint" "JLCImport:PTFR0603B120KP9"
-			(at 110.49 100.838 90)
+			(at 123.19 60.198 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14061,7 +14196,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 110.49 99.06 0)
+			(at 123.19 58.42 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14070,7 +14205,7 @@
 			)
 		)
 		(property "Description" "Resistor"
-			(at 110.49 99.06 0)
+			(at 123.19 58.42 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14085,9 +14220,9 @@
 			(uuid "7afcdbc8-6cc9-4020-a896-699fb5fb8179")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "R6")
+					(reference "R4")
 					(unit 1)
 				)
 			)
@@ -14095,15 +14230,15 @@
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 68.58 82.55 90)
+		(at 68.58 66.04 90)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid "2311d2c2-74ce-4795-ac2b-af93efed1a42")
-		(property "Reference" "R4"
-			(at 74.422 81.788 90)
+		(property "Reference" "R7"
+			(at 74.422 65.278 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14111,7 +14246,7 @@
 			)
 		)
 		(property "Value" "5.1k"
-			(at 75.184 83.566 90)
+			(at 75.184 67.056 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14119,7 +14254,7 @@
 			)
 		)
 		(property "Footprint" "JLCImport:0603WAF5101T5E"
-			(at 68.58 84.328 90)
+			(at 68.58 67.818 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14128,7 +14263,7 @@
 			)
 		)
 		(property "Datasheet" "https://www.uni-royal.cn/en/images/userfile/file/17232728285d06b84b01053a16.pdf"
-			(at 68.58 82.55 0)
+			(at 68.58 66.04 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14137,7 +14272,7 @@
 			)
 		)
 		(property "Description" "Resistor"
-			(at 68.58 82.55 0)
+			(at 68.58 66.04 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14146,7 +14281,7 @@
 			)
 		)
 		(property "LCSC" "C23186"
-			(at 68.58 82.55 0)
+			(at 68.58 66.04 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14155,7 +14290,7 @@
 			)
 		)
 		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
-			(at 68.58 82.55 0)
+			(at 68.58 66.04 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14164,7 +14299,7 @@
 			)
 		)
 		(property "Manufacturer Part" "0603WAF5101T5E"
-			(at 68.58 82.55 0)
+			(at 68.58 66.04 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14179,9 +14314,9 @@
 			(uuid "297474dc-215e-415e-b6d3-610437f79316")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "R4")
+					(reference "R7")
 					(unit 1)
 				)
 			)
@@ -14189,15 +14324,15 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 142.24 186.69 0)
+		(at 204.47 186.69 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid "23975c62-9397-4283-ae48-86492ed2a0f0")
-		(property "Reference" "#PWR037"
-			(at 142.24 193.04 0)
+		(property "Reference" "#PWR032"
+			(at 204.47 193.04 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14206,7 +14341,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 142.24 191.77 0)
+			(at 204.47 191.77 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14214,7 +14349,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 142.24 186.69 0)
+			(at 204.47 186.69 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14223,7 +14358,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 142.24 186.69 0)
+			(at 204.47 186.69 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14232,7 +14367,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 142.24 186.69 0)
+			(at 204.47 186.69 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14244,9 +14379,9 @@
 			(uuid "f2f54116-8810-45bf-89b2-ded803a79398")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "#PWR037")
+					(reference "#PWR032")
 					(unit 1)
 				)
 			)
@@ -14254,7 +14389,7 @@
 	)
 	(symbol
 		(lib_id "Connector:TestPoint")
-		(at 132.08 110.49 270)
+		(at 144.78 69.85 270)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -14262,8 +14397,8 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "23cdf218-a784-478c-a461-1a502b1925ab")
-		(property "Reference" "TP6"
-			(at 137.16 109.2199 90)
+		(property "Reference" "TP3"
+			(at 149.86 68.5799 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14272,7 +14407,7 @@
 			)
 		)
 		(property "Value" "TP_GND"
-			(at 137.16 111.7599 90)
+			(at 149.86 71.1199 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14281,7 +14416,7 @@
 			)
 		)
 		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
-			(at 132.08 115.57 0)
+			(at 144.78 74.93 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14290,7 +14425,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 132.08 115.57 0)
+			(at 144.78 74.93 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14299,7 +14434,7 @@
 			)
 		)
 		(property "Description" "test point"
-			(at 132.08 110.49 0)
+			(at 144.78 69.85 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14311,9 +14446,9 @@
 			(uuid "43ae38b5-9e6c-4c03-843b-d085bb9d230b")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "TP6")
+					(reference "TP3")
 					(unit 1)
 				)
 			)
@@ -14387,7 +14522,7 @@
 			(uuid "579eaa0d-8561-4783-8f41-8080365bbae7")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "J2")
 					(unit 1)
@@ -14405,7 +14540,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "268e3a36-35e8-4515-ac7d-7aa8e26a4d96")
-		(property "Reference" "#PWR012"
+		(property "Reference" "#PWR015"
 			(at 299.72 74.93 0)
 			(effects
 				(font
@@ -14454,9 +14589,9 @@
 			(uuid "cdb43d2d-07c0-4533-997f-33119c531ea3")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "#PWR012")
+					(reference "#PWR015")
 					(unit 1)
 				)
 			)
@@ -14464,7 +14599,7 @@
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 137.16 179.07 270)
+		(at 199.39 179.07 270)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -14472,8 +14607,8 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "268f3c76-233b-4486-8249-88694ffaf3ff")
-		(property "Reference" "R21"
-			(at 137.16 172.72 90)
+		(property "Reference" "R22"
+			(at 199.39 172.72 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14481,7 +14616,7 @@
 			)
 		)
 		(property "Value" "10k"
-			(at 137.16 175.26 90)
+			(at 199.39 175.26 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14489,7 +14624,7 @@
 			)
 		)
 		(property "Footprint" "JLCImport:0603WAF1002T5E"
-			(at 137.16 177.292 90)
+			(at 199.39 177.292 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14498,7 +14633,7 @@
 			)
 		)
 		(property "Datasheet" "https://www.uni-royal.cn/en/images/userfile/file/17232728285d06b84b01053a16.pdf"
-			(at 137.16 179.07 0)
+			(at 199.39 179.07 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14507,7 +14642,7 @@
 			)
 		)
 		(property "Description" "Resistor"
-			(at 137.16 179.07 0)
+			(at 199.39 179.07 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14516,7 +14651,7 @@
 			)
 		)
 		(property "LCSC" "C25804"
-			(at 137.16 179.07 0)
+			(at 199.39 179.07 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14525,7 +14660,7 @@
 			)
 		)
 		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
-			(at 137.16 179.07 0)
+			(at 199.39 179.07 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14534,7 +14669,7 @@
 			)
 		)
 		(property "Manufacturer Part" "0603WAF1002T5E"
-			(at 137.16 179.07 0)
+			(at 199.39 179.07 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14549,9 +14684,9 @@
 			(uuid "e9261aac-d40a-421d-9b25-581bf1e140f9")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "R21")
+					(reference "R22")
 					(unit 1)
 				)
 			)
@@ -14567,7 +14702,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "2933db0c-048d-4805-a310-44b025ba777b")
-		(property "Reference" "#PWR029"
+		(property "Reference" "#PWR024"
 			(at 229.87 138.43 0)
 			(effects
 				(font
@@ -14615,9 +14750,9 @@
 			(uuid "69d3b576-1b47-4f5f-aabc-2a76f6599cee")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "#PWR029")
+					(reference "#PWR024")
 					(unit 1)
 				)
 			)
@@ -14625,7 +14760,7 @@
 	)
 	(symbol
 		(lib_id "power:PWR_FLAG")
-		(at 34.29 33.02 0)
+		(at 87.63 44.45 0)
 		(mirror x)
 		(unit 1)
 		(exclude_from_sim no)
@@ -14633,8 +14768,8 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "301b7b0b-d273-41fc-9f07-0e67247fe8f1")
-		(property "Reference" "#FLG02"
-			(at 34.29 34.925 0)
+		(property "Reference" "#FLG01"
+			(at 87.63 46.355 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14643,7 +14778,7 @@
 			)
 		)
 		(property "Value" "PWR_FLAG"
-			(at 34.29 38.1 0)
+			(at 87.63 49.53 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14651,7 +14786,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 34.29 33.02 0)
+			(at 87.63 44.45 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14660,7 +14795,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 34.29 33.02 0)
+			(at 87.63 44.45 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14669,7 +14804,7 @@
 			)
 		)
 		(property "Description" "Special symbol for telling ERC where power comes from"
-			(at 34.29 33.02 0)
+			(at 87.63 44.45 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14681,9 +14816,9 @@
 			(uuid "2eab5a23-6fd4-45e0-bf47-d7bbf5c418db")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "#FLG02")
+					(reference "#FLG01")
 					(unit 1)
 				)
 			)
@@ -14698,7 +14833,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "32552155-aa6d-4091-af28-239cdc730b6f")
-		(property "Reference" "#PWR021"
+		(property "Reference" "#PWR020"
 			(at 184.15 107.95 0)
 			(effects
 				(font
@@ -14746,9 +14881,9 @@
 			(uuid "14be57fd-a12f-4bd9-b46e-2627758e2ee3")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "#PWR021")
+					(reference "#PWR020")
 					(unit 1)
 				)
 			)
@@ -14813,78 +14948,9 @@
 			(uuid "b91c65ae-bf1e-4ec3-ad37-16abd06821f8")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "H1")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Jumper:SolderJumper_2_Bridged")
-		(at 250.19 107.95 90)
-		(mirror x)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom no)
-		(on_board yes)
-		(dnp no)
-		(uuid "39d8f18b-c242-46f5-a073-7f4627954c31")
-		(property "Reference" "JP3"
-			(at 253.238 107.95 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "SolderJumper_2_Bridged"
-			(at 254 107.95 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Footprint" "Jumper:SolderJumper-2_P1.3mm_Bridged_RoundedPad1.0x1.5mm"
-			(at 250.19 107.95 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 250.19 107.95 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Solder Jumper, 2-pole, closed/bridged"
-			(at 250.19 107.95 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "2"
-			(uuid "15e968fe-6435-4024-8229-78b5887a8170")
-		)
-		(pin "1"
-			(uuid "4548fdd1-5003-479c-829a-f93e7a4458e1")
-		)
-		(instances
-			(project "cloudSmoker_ver2d"
-				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "JP3")
 					(unit 1)
 				)
 			)
@@ -14982,7 +15048,7 @@
 			(uuid "59c2c688-eb20-4c8a-8caa-74961b203f53")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "Q1")
 					(unit 1)
@@ -15000,7 +15066,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "422be785-7f19-46c2-8ac6-750fdc1b843b")
-		(property "Reference" "#PWR034"
+		(property "Reference" "#PWR029"
 			(at 265.43 170.18 0)
 			(effects
 				(font
@@ -15048,9 +15114,9 @@
 			(uuid "74754535-51f6-40ac-8694-27cec5fb7640")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "#PWR034")
+					(reference "#PWR029")
 					(unit 1)
 				)
 			)
@@ -15065,7 +15131,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "433ee90a-1810-45aa-835b-c1d52abd1d2f")
-		(property "Reference" "#PWR046"
+		(property "Reference" "#PWR041"
 			(at 147.32 252.73 0)
 			(effects
 				(font
@@ -15113,9 +15179,9 @@
 			(uuid "7f951094-9080-4c10-8ddd-3e48eee24f49")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "#PWR046")
+					(reference "#PWR041")
 					(unit 1)
 				)
 			)
@@ -15130,7 +15196,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "433f415a-3ca9-45ba-b3a0-72858f3f8704")
-		(property "Reference" "#PWR014"
+		(property "Reference" "#PWR016"
 			(at 241.3 86.36 0)
 			(effects
 				(font
@@ -15178,9 +15244,9 @@
 			(uuid "4cea888c-fb78-4d57-b512-ead7a4b47b0f")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "#PWR014")
+					(reference "#PWR016")
 					(unit 1)
 				)
 			)
@@ -15196,7 +15262,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "43745d54-f700-462f-ab5b-25f9f6ffc576")
-		(property "Reference" "C4"
+		(property "Reference" "C8"
 			(at 252.73 72.3899 0)
 			(effects
 				(font
@@ -15248,9 +15314,9 @@
 			(uuid "c7bc4302-e2e7-4c70-9b65-f35b7244f983")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "C4")
+					(reference "C8")
 					(unit 1)
 				)
 			)
@@ -15266,7 +15332,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "438f3313-0ff3-413b-aefa-f98813c0d47d")
-		(property "Reference" "#PWR031"
+		(property "Reference" "#PWR026"
 			(at 358.14 163.83 0)
 			(effects
 				(font
@@ -15314,9 +15380,9 @@
 			(uuid "12c12411-da52-4715-9a80-204bde3a2a94")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "#PWR031")
+					(reference "#PWR026")
 					(unit 1)
 				)
 			)
@@ -15393,7 +15459,7 @@
 			(uuid "7799aa4b-0043-4732-8bd8-940b4bf7416e")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "J8")
 					(unit 1)
@@ -15411,7 +15477,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "455f1dca-d88e-48ae-aec5-0daf93b837ac")
-		(property "Reference" "#PWR032"
+		(property "Reference" "#PWR027"
 			(at 389.89 163.83 0)
 			(effects
 				(font
@@ -15459,9 +15525,9 @@
 			(uuid "94fa07bc-e6d8-46d2-b938-eb0066c98feb")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "#PWR032")
+					(reference "#PWR027")
 					(unit 1)
 				)
 			)
@@ -15477,7 +15543,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "47d7ea57-33a5-4658-91b0-7677e6ec28b3")
-		(property "Reference" "#PWR048"
+		(property "Reference" "#PWR043"
 			(at 147.32 280.67 0)
 			(effects
 				(font
@@ -15525,9 +15591,9 @@
 			(uuid "76ce3f49-eac0-494a-8a85-400142e8a964")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "#PWR048")
+					(reference "#PWR043")
 					(unit 1)
 				)
 			)
@@ -15535,7 +15601,7 @@
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 76.2 30.48 0)
+		(at 203.2 33.02 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -15544,7 +15610,7 @@
 		(fields_autoplaced yes)
 		(uuid "47e89734-a5ba-4ac4-9ddc-acbde8181596")
 		(property "Reference" "R1"
-			(at 78.74 29.2099 0)
+			(at 205.74 31.7499 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15553,7 +15619,7 @@
 			)
 		)
 		(property "Value" "2.2k"
-			(at 78.74 31.7499 0)
+			(at 205.74 34.2899 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15562,7 +15628,7 @@
 			)
 		)
 		(property "Footprint" "JLCImport:0603WAF2201T5E"
-			(at 74.422 30.48 90)
+			(at 201.422 33.02 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15571,7 +15637,7 @@
 			)
 		)
 		(property "Datasheet" "kicad-embed://Uni-royal 0603 resistors.pdf"
-			(at 76.2 30.48 0)
+			(at 203.2 33.02 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15580,7 +15646,7 @@
 			)
 		)
 		(property "Description" "Resistor"
-			(at 76.2 30.48 0)
+			(at 203.2 33.02 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15589,7 +15655,7 @@
 			)
 		)
 		(property "LCSC" "C4190"
-			(at 76.2 30.48 0)
+			(at 203.2 33.02 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15598,7 +15664,7 @@
 			)
 		)
 		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
-			(at 76.2 30.48 0)
+			(at 203.2 33.02 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15607,7 +15673,7 @@
 			)
 		)
 		(property "Manufacturer Part" "0603WAF2201T5E"
-			(at 76.2 30.48 0)
+			(at 203.2 33.02 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15622,7 +15688,7 @@
 			(uuid "31f28c95-aa90-407b-9c63-f20cc2345b3a")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "R1")
 					(unit 1)
@@ -15640,7 +15706,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "48e2e2d2-a70f-4ccc-b1c7-298e89c1cc8e")
-		(property "Reference" "R14"
+		(property "Reference" "R15"
 			(at 212.09 114.554 90)
 			(effects
 				(font
@@ -15717,9 +15783,9 @@
 			(uuid "dc6ecaad-8fc9-4028-93a5-4b87fa8da584")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "R14")
+					(reference "R15")
 					(unit 1)
 				)
 			)
@@ -15784,7 +15850,7 @@
 			(uuid "0836532a-d4a5-4705-b156-8a7135c11a15")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "TP12")
 					(unit 1)
@@ -15857,74 +15923,9 @@
 			(uuid "b9ecb2fc-fbf1-440a-b1ee-7d07ab32a94d")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "J14")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:VBUS")
-		(at 59.69 104.14 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "4c9966f6-f467-4544-a208-4654dd1824e2")
-		(property "Reference" "#PWR020"
-			(at 59.69 107.95 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+5V"
-			(at 59.436 99.822 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 59.69 104.14 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 59.69 104.14 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"VBUS\""
-			(at 59.69 104.14 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "0fbd8267-5a7a-462a-854c-bea2496c207d")
-		)
-		(instances
-			(project "cloudSmoker_ver2d"
-				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "#PWR020")
 					(unit 1)
 				)
 			)
@@ -15996,7 +15997,7 @@
 			(uuid "2a600b65-a299-4ed1-b3ad-9e76ef9a75cf")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "SW2")
 					(unit 1)
@@ -16014,7 +16015,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "5309a0e9-36f6-485d-ae00-058627ca33db")
-		(property "Reference" "#PWR044"
+		(property "Reference" "#PWR039"
 			(at 120.65 251.46 0)
 			(effects
 				(font
@@ -16062,9 +16063,9 @@
 			(uuid "4a0a315a-4197-4d3e-a385-a4335a6b3309")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "#PWR044")
+					(reference "#PWR039")
 					(unit 1)
 				)
 			)
@@ -16126,7 +16127,7 @@
 			)
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "H5")
 					(unit 1)
@@ -16136,15 +16137,15 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 147.32 90.17 0)
+		(at 160.02 49.53 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid "56cae5eb-2942-4deb-b094-c39901aa2656")
-		(property "Reference" "#PWR018"
-			(at 147.32 96.52 0)
+		(property "Reference" "#PWR06"
+			(at 160.02 55.88 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16153,7 +16154,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 151.13 89.916 0)
+			(at 163.83 49.276 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16161,7 +16162,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 147.32 90.17 0)
+			(at 160.02 49.53 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16170,7 +16171,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 147.32 90.17 0)
+			(at 160.02 49.53 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16179,7 +16180,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 147.32 90.17 0)
+			(at 160.02 49.53 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16191,9 +16192,9 @@
 			(uuid "72d8c2be-b407-4015-b754-47b19dad3768")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "#PWR018")
+					(reference "#PWR06")
 					(unit 1)
 				)
 			)
@@ -16201,7 +16202,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 60.96 129.54 0)
+		(at 59.69 127 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -16209,8 +16210,8 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "59bb93df-d73d-4ce9-ae53-d9709471488f")
-		(property "Reference" "#PWR028"
-			(at 60.96 135.89 0)
+		(property "Reference" "#PWR023"
+			(at 59.69 133.35 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16219,7 +16220,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 60.96 134.62 0)
+			(at 59.69 132.08 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16227,7 +16228,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 60.96 129.54 0)
+			(at 59.69 127 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16236,7 +16237,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 60.96 129.54 0)
+			(at 59.69 127 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16245,7 +16246,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 60.96 129.54 0)
+			(at 59.69 127 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16257,9 +16258,9 @@
 			(uuid "b6430e03-8b42-41c7-a458-b2b875f2fd10")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "#PWR028")
+					(reference "#PWR023")
 					(unit 1)
 				)
 			)
@@ -16267,15 +16268,15 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 82.55 81.28 0)
+		(at 82.55 64.77 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid "5ae8cd10-a402-4dcf-97ea-514af2be91d2")
-		(property "Reference" "#PWR015"
-			(at 82.55 87.63 0)
+		(property "Reference" "#PWR011"
+			(at 82.55 71.12 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16284,7 +16285,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 82.55 85.598 0)
+			(at 82.55 69.088 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16292,7 +16293,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 82.55 81.28 0)
+			(at 82.55 64.77 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16301,7 +16302,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 82.55 81.28 0)
+			(at 82.55 64.77 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16310,7 +16311,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 82.55 81.28 0)
+			(at 82.55 64.77 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16322,9 +16323,103 @@
 			(uuid "9ab335bd-b131-45a0-9e30-47c938429b51")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "#PWR015")
+					(reference "#PWR011")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 62.23 44.45 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "5b0f6bf3-57d2-4bcd-9582-1f4823714d45")
+		(property "Reference" "R3"
+			(at 62.23 39.37 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "0 ohm"
+			(at 62.23 41.91 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "JLCImport:PTFR0603B120KP9"
+			(at 62.23 46.228 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 62.23 44.45 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Resistor"
+			(at 62.23 44.45 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C21189"
+			(at 62.23 44.45 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 62.23 44.45 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer Part" "0603WAF0000T5E"
+			(at 62.23 44.45 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "4da7b4b8-6d04-4c80-b7b5-ea86efb2eddd")
+		)
+		(pin "1"
+			(uuid "290bb941-fad2-45ae-97ad-adb7e2163b04")
+		)
+		(instances
+			(project "cloudSmoker_ver2e"
+				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
+					(reference "R3")
 					(unit 1)
 				)
 			)
@@ -16341,7 +16436,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "5ba90f8d-8fb5-4ed9-9ebd-f4953de9ca62")
-		(property "Reference" "#PWR036"
+		(property "Reference" "#PWR031"
 			(at 317.5 170.18 0)
 			(effects
 				(font
@@ -16389,9 +16484,9 @@
 			(uuid "51fffd64-9834-4257-8633-cb723026a288")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "#PWR036")
+					(reference "#PWR031")
 					(unit 1)
 				)
 			)
@@ -16399,7 +16494,7 @@
 	)
 	(symbol
 		(lib_id "power:VBUS")
-		(at 110.49 88.9 0)
+		(at 123.19 48.26 0)
 		(mirror y)
 		(unit 1)
 		(exclude_from_sim no)
@@ -16407,8 +16502,8 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "5ca7e8a2-b6d8-46f6-a8e3-d35cbcbedd64")
-		(property "Reference" "#PWR017"
-			(at 110.49 92.71 0)
+		(property "Reference" "#PWR05"
+			(at 123.19 52.07 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16417,7 +16512,7 @@
 			)
 		)
 		(property "Value" "+5V"
-			(at 110.49 85.09 0)
+			(at 123.19 44.45 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16425,7 +16520,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 110.49 88.9 0)
+			(at 123.19 48.26 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16434,7 +16529,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 110.49 88.9 0)
+			(at 123.19 48.26 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16443,7 +16538,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"VBUS\""
-			(at 110.49 88.9 0)
+			(at 123.19 48.26 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16455,9 +16550,9 @@
 			(uuid "b4e6eb30-4c60-479d-98be-e7f6bf576064")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "#PWR017")
+					(reference "#PWR05")
 					(unit 1)
 				)
 			)
@@ -16552,7 +16647,7 @@
 			(uuid "73d8224e-2051-45be-bf69-22a54b7c162b")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "PR3")
 					(unit 1)
@@ -16562,15 +16657,15 @@
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 102.87 114.3 90)
+		(at 107.95 81.28 90)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid "5ed610f6-f403-4ee1-a754-d9bc0a2e1e4a")
-		(property "Reference" "R13"
-			(at 102.87 116.84 90)
+		(property "Reference" "R8"
+			(at 107.95 83.82 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16578,7 +16673,7 @@
 			)
 		)
 		(property "Value" "100 mOhm Shunt"
-			(at 103.124 119.38 90)
+			(at 108.204 86.36 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16586,7 +16681,7 @@
 			)
 		)
 		(property "Footprint" "JLCImport:RLP25FEER100"
-			(at 102.87 116.078 90)
+			(at 107.95 83.058 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16595,7 +16690,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 102.87 114.3 0)
+			(at 107.95 81.28 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16604,7 +16699,7 @@
 			)
 		)
 		(property "Description" "Resistor"
-			(at 102.87 114.3 0)
+			(at 107.95 81.28 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16613,7 +16708,7 @@
 			)
 		)
 		(property "LCSC" "C160587"
-			(at 102.87 114.3 0)
+			(at 107.95 81.28 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16622,7 +16717,7 @@
 			)
 		)
 		(property "Manufacturer" "TA-I Tech"
-			(at 102.87 114.3 0)
+			(at 107.95 81.28 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16631,7 +16726,7 @@
 			)
 		)
 		(property "Manufacturer Part" "RLP25FEER100"
-			(at 102.87 114.3 0)
+			(at 107.95 81.28 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16646,9 +16741,9 @@
 			(uuid "6c8d2cf7-b61e-40f9-b24b-de1790048daf")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "R13")
+					(reference "R8")
 					(unit 1)
 				)
 			)
@@ -16656,7 +16751,7 @@
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 156.21 199.39 270)
+		(at 199.39 199.39 270)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -16664,8 +16759,8 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "5f6d0f2d-3db7-445a-a6af-6da43e9a3e46")
-		(property "Reference" "R22"
-			(at 156.21 193.04 90)
+		(property "Reference" "R23"
+			(at 199.39 193.04 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16673,7 +16768,7 @@
 			)
 		)
 		(property "Value" "10k"
-			(at 156.21 195.58 90)
+			(at 199.39 195.58 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16681,7 +16776,7 @@
 			)
 		)
 		(property "Footprint" "JLCImport:0603WAF1002T5E"
-			(at 156.21 197.612 90)
+			(at 199.39 197.612 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16690,7 +16785,7 @@
 			)
 		)
 		(property "Datasheet" "https://www.uni-royal.cn/en/images/userfile/file/17232728285d06b84b01053a16.pdf"
-			(at 156.21 199.39 0)
+			(at 199.39 199.39 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16699,7 +16794,7 @@
 			)
 		)
 		(property "Description" "Resistor"
-			(at 156.21 199.39 0)
+			(at 199.39 199.39 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16708,7 +16803,7 @@
 			)
 		)
 		(property "LCSC" "C25804"
-			(at 156.21 199.39 0)
+			(at 199.39 199.39 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16717,7 +16812,7 @@
 			)
 		)
 		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
-			(at 156.21 199.39 0)
+			(at 199.39 199.39 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16726,7 +16821,7 @@
 			)
 		)
 		(property "Manufacturer Part" "0603WAF1002T5E"
-			(at 156.21 199.39 0)
+			(at 199.39 199.39 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16741,9 +16836,9 @@
 			(uuid "70ac1e32-0939-4d6a-a1b7-0c7a3a564c5a")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "R22")
+					(reference "R23")
 					(unit 1)
 				)
 			)
@@ -16759,21 +16854,21 @@
 		(dnp no)
 		(uuid "6061e15e-1fd7-473f-9612-8847cce8cb82")
 		(property "Reference" "U4"
-			(at 226.06 75.438 0)
+			(at 244.856 122.428 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify right)
+				(justify left)
 			)
 		)
 		(property "Value" "ESP32-C3-WROOM-02U-N4"
-			(at 226.06 77.978 0)
+			(at 244.856 124.968 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify right)
+				(justify left)
 			)
 		)
 		(property "Footprint" "JLCImport:ESP32-C3-WROOM-02U-N4"
@@ -16888,7 +16983,7 @@
 			(uuid "d2d8d583-f098-41f5-b11b-670effbf52d7")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "U4")
 					(unit 1)
@@ -16898,7 +16993,7 @@
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 177.8 219.71 270)
+		(at 199.39 219.71 270)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -16906,8 +17001,8 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "63984cad-0096-467c-a33a-b0c6424079b6")
-		(property "Reference" "R23"
-			(at 177.8 213.36 90)
+		(property "Reference" "R24"
+			(at 199.39 213.36 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16915,7 +17010,7 @@
 			)
 		)
 		(property "Value" "10k"
-			(at 177.8 215.9 90)
+			(at 199.39 215.9 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16923,7 +17018,7 @@
 			)
 		)
 		(property "Footprint" "JLCImport:0603WAF1002T5E"
-			(at 177.8 217.932 90)
+			(at 199.39 217.932 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16932,7 +17027,7 @@
 			)
 		)
 		(property "Datasheet" "https://www.uni-royal.cn/en/images/userfile/file/17232728285d06b84b01053a16.pdf"
-			(at 177.8 219.71 0)
+			(at 199.39 219.71 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16941,7 +17036,7 @@
 			)
 		)
 		(property "Description" "Resistor"
-			(at 177.8 219.71 0)
+			(at 199.39 219.71 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16950,7 +17045,7 @@
 			)
 		)
 		(property "LCSC" "C25804"
-			(at 177.8 219.71 0)
+			(at 199.39 219.71 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16959,7 +17054,7 @@
 			)
 		)
 		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
-			(at 177.8 219.71 0)
+			(at 199.39 219.71 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16968,7 +17063,7 @@
 			)
 		)
 		(property "Manufacturer Part" "0603WAF1002T5E"
-			(at 177.8 219.71 0)
+			(at 199.39 219.71 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16983,74 +17078,9 @@
 			(uuid "2eed316b-1a81-4117-bff0-a3a67b2381f1")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "R23")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:VBUS")
-		(at 109.22 113.03 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "67b4d254-8452-4a63-8b75-553b134f58d3")
-		(property "Reference" "#PWR024"
-			(at 109.22 116.84 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+5V"
-			(at 112.776 111.252 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 109.22 113.03 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 109.22 113.03 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"VBUS\""
-			(at 109.22 113.03 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "c3ee79bf-6222-4bd1-8d3d-560717255f87")
-		)
-		(instances
-			(project "cloudSmoker_ver2d"
-				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "#PWR024")
+					(reference "R24")
 					(unit 1)
 				)
 			)
@@ -17065,7 +17095,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "6be3ef74-b901-4f9d-8102-b8d8f5b1c620")
-		(property "Reference" "C11"
+		(property "Reference" "C13"
 			(at 209.55 242.5699 0)
 			(effects
 				(font
@@ -17144,9 +17174,9 @@
 			(uuid "81866dd5-7850-4c57-b231-4a86e3a8009c")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "C11")
+					(reference "C13")
 					(unit 1)
 				)
 			)
@@ -17154,15 +17184,15 @@
 	)
 	(symbol
 		(lib_id "Device:C")
-		(at 184.15 223.52 180)
+		(at 205.74 223.52 180)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid "6ff7b936-a1b2-4d4b-aee9-ea0316b61090")
-		(property "Reference" "C10"
-			(at 187.96 222.2499 0)
+		(property "Reference" "C12"
+			(at 209.55 222.2499 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17171,7 +17201,7 @@
 			)
 		)
 		(property "Value" "1uF"
-			(at 187.96 224.7899 0)
+			(at 209.55 224.7899 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17180,7 +17210,7 @@
 			)
 		)
 		(property "Footprint" "JLCImport:CL10A105KB8NNNC"
-			(at 183.1848 219.71 0)
+			(at 204.7748 219.71 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17189,7 +17219,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 184.15 223.52 0)
+			(at 205.74 223.52 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17198,7 +17228,7 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
-			(at 184.15 223.52 0)
+			(at 205.74 223.52 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17207,7 +17237,7 @@
 			)
 		)
 		(property "LCSC" "C15849"
-			(at 184.15 223.52 0)
+			(at 205.74 223.52 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17216,7 +17246,7 @@
 			)
 		)
 		(property "Manufacturer" "Samsung Electro-Mechanics"
-			(at 184.15 223.52 0)
+			(at 205.74 223.52 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17225,7 +17255,7 @@
 			)
 		)
 		(property "Manufacturer Part" "CL10A105KB8NNNC"
-			(at 184.15 223.52 0)
+			(at 205.74 223.52 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17240,9 +17270,9 @@
 			(uuid "b75ce5d8-bc9a-4d29-b723-ebc15c6738a2")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "C10")
+					(reference "C12")
 					(unit 1)
 				)
 			)
@@ -17250,7 +17280,7 @@
 	)
 	(symbol
 		(lib_id "Jumper:SolderJumper_2_Bridged")
-		(at 152.4 43.18 0)
+		(at 279.4 45.72 0)
 		(mirror y)
 		(unit 1)
 		(exclude_from_sim no)
@@ -17259,7 +17289,7 @@
 		(dnp no)
 		(uuid "71308f28-f8a2-40b2-825b-2f76e9d4c2c0")
 		(property "Reference" "JP2"
-			(at 152.4 46.228 0)
+			(at 279.4 48.768 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17267,7 +17297,7 @@
 			)
 		)
 		(property "Value" "SolderJumper_2_Bridged"
-			(at 152.4 46.99 0)
+			(at 279.4 49.53 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17276,7 +17306,7 @@
 			)
 		)
 		(property "Footprint" "Jumper:SolderJumper-2_P1.3mm_Bridged_RoundedPad1.0x1.5mm"
-			(at 152.4 43.18 0)
+			(at 279.4 45.72 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17285,7 +17315,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 152.4 43.18 0)
+			(at 279.4 45.72 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17294,7 +17324,7 @@
 			)
 		)
 		(property "Description" "Solder Jumper, 2-pole, closed/bridged"
-			(at 152.4 43.18 0)
+			(at 279.4 45.72 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17309,7 +17339,7 @@
 			(uuid "8d628594-2191-408b-aa91-519a8008c372")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "JP2")
 					(unit 1)
@@ -17376,7 +17406,7 @@
 			(uuid "8088c5bc-e85d-4111-b0b1-bedbe52c6f46")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "TP13")
 					(unit 1)
@@ -17443,7 +17473,7 @@
 			(uuid "1fb3af54-c1c2-4212-b918-ab9905ae06d6")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "#PWR022")
 					(unit 1)
@@ -17453,16 +17483,15 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 184.15 227.33 0)
+		(at 68.58 54.61 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "76cb2314-09af-4214-a540-59cf79c5487e")
-		(property "Reference" "#PWR043"
-			(at 184.15 233.68 0)
+		(uuid "757a2c3a-dbe4-4cd0-b884-29b448e66a64")
+		(property "Reference" "#PWR010"
+			(at 68.58 60.96 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17471,7 +17500,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 184.15 232.41 0)
+			(at 68.58 58.928 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17479,7 +17508,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 184.15 227.33 0)
+			(at 68.58 54.61 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17488,7 +17517,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 184.15 227.33 0)
+			(at 68.58 54.61 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17497,7 +17526,73 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 184.15 227.33 0)
+			(at 68.58 54.61 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "4c55f479-7999-4274-93ba-2258066b616c")
+		)
+		(instances
+			(project "cloudSmoker_ver2e"
+				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
+					(reference "#PWR010")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 205.74 227.33 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "76cb2314-09af-4214-a540-59cf79c5487e")
+		(property "Reference" "#PWR038"
+			(at 205.74 233.68 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 205.74 232.41 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 205.74 227.33 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 205.74 227.33 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 205.74 227.33 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17509,9 +17604,9 @@
 			(uuid "03cc2094-2275-4880-bedd-2bff2e3a875c")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "#PWR043")
+					(reference "#PWR038")
 					(unit 1)
 				)
 			)
@@ -17519,7 +17614,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 129.54 21.59 90)
+		(at 256.54 24.13 90)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -17527,7 +17622,7 @@
 		(dnp no)
 		(uuid "773c7b14-742c-4a59-a630-77628938f7d0")
 		(property "Reference" "#PWR01"
-			(at 135.89 21.59 0)
+			(at 262.89 24.13 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17536,7 +17631,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 134.112 21.59 0)
+			(at 261.112 24.13 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17544,7 +17639,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 129.54 21.59 0)
+			(at 256.54 24.13 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17553,7 +17648,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 129.54 21.59 0)
+			(at 256.54 24.13 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17562,7 +17657,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 129.54 21.59 0)
+			(at 256.54 24.13 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17574,7 +17669,7 @@
 			(uuid "6d4fe2de-38b5-48f8-8267-4e60d46a5a3c")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "#PWR01")
 					(unit 1)
@@ -17584,15 +17679,15 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 132.08 113.03 0)
+		(at 144.78 72.39 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid "7a0f9f6c-ef93-4f9e-9d30-ad1390efcdff")
-		(property "Reference" "#PWR025"
-			(at 132.08 119.38 0)
+		(property "Reference" "#PWR013"
+			(at 144.78 78.74 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17601,7 +17696,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 132.08 117.348 0)
+			(at 144.78 76.708 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17609,7 +17704,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 132.08 113.03 0)
+			(at 144.78 72.39 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17618,7 +17713,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 132.08 113.03 0)
+			(at 144.78 72.39 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17627,7 +17722,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 132.08 113.03 0)
+			(at 144.78 72.39 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17639,9 +17734,9 @@
 			(uuid "81121168-ec5c-461c-8102-ceee365e4d17")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "#PWR025")
+					(reference "#PWR013")
 					(unit 1)
 				)
 			)
@@ -17658,7 +17753,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "7c9ac1f0-ac94-4036-a503-7beceac40139")
-		(property "Reference" "#PWR033"
+		(property "Reference" "#PWR028"
 			(at 252.73 170.18 0)
 			(effects
 				(font
@@ -17706,9 +17801,9 @@
 			(uuid "7445b292-fc85-4bf5-b560-e58373cccdd7")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "#PWR033")
+					(reference "#PWR028")
 					(unit 1)
 				)
 			)
@@ -17716,15 +17811,15 @@
 	)
 	(symbol
 		(lib_id "Connector:TestPoint")
-		(at 114.3 88.9 180)
+		(at 127 48.26 180)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid "7cea1051-d4ef-41c4-b38f-d60426aa7985")
-		(property "Reference" "TP5"
-			(at 116.84 90.9319 0)
+		(property "Reference" "TP1"
+			(at 129.54 50.2919 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17733,7 +17828,7 @@
 			)
 		)
 		(property "Value" "TP_5V"
-			(at 116.84 93.4719 0)
+			(at 129.54 52.8319 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17742,7 +17837,7 @@
 			)
 		)
 		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
-			(at 109.22 88.9 0)
+			(at 121.92 48.26 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17751,7 +17846,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 109.22 88.9 0)
+			(at 121.92 48.26 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17760,7 +17855,7 @@
 			)
 		)
 		(property "Description" "test point"
-			(at 114.3 88.9 0)
+			(at 127 48.26 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17772,9 +17867,9 @@
 			(uuid "43ae38b5-9e6c-4c03-843b-d085bb9d230c")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "TP5")
+					(reference "TP1")
 					(unit 1)
 				)
 			)
@@ -17782,7 +17877,7 @@
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 160.02 30.48 0)
+		(at 287.02 33.02 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -17791,7 +17886,7 @@
 		(fields_autoplaced yes)
 		(uuid "81bc79a9-dbca-40c4-af51-70fa5e7625d1")
 		(property "Reference" "R2"
-			(at 162.56 29.2099 0)
+			(at 289.56 31.7499 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17800,7 +17895,7 @@
 			)
 		)
 		(property "Value" "1k"
-			(at 162.56 31.7499 0)
+			(at 289.56 34.2899 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17809,7 +17904,7 @@
 			)
 		)
 		(property "Footprint" "JLCImport:0603WAF1001T5E"
-			(at 158.242 30.48 90)
+			(at 285.242 33.02 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17818,7 +17913,7 @@
 			)
 		)
 		(property "Datasheet" "kicad-embed://Uni-royal 0603 resistors.pdf"
-			(at 160.02 30.48 0)
+			(at 287.02 33.02 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17827,7 +17922,7 @@
 			)
 		)
 		(property "Description" "Resistor"
-			(at 160.02 30.48 0)
+			(at 287.02 33.02 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17836,7 +17931,7 @@
 			)
 		)
 		(property "LCSC" "C21190"
-			(at 160.02 30.48 0)
+			(at 287.02 33.02 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17845,7 +17940,7 @@
 			)
 		)
 		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
-			(at 160.02 30.48 0)
+			(at 287.02 33.02 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17854,7 +17949,7 @@
 			)
 		)
 		(property "Manufacturer Part" "0603WAF1001T5E"
-			(at 160.02 30.48 0)
+			(at 287.02 33.02 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17869,7 +17964,7 @@
 			(uuid "1bda03d4-2f65-4e9b-bd03-90221c6def0f")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "R2")
 					(unit 1)
@@ -17978,7 +18073,7 @@
 			(uuid "ef65b635-8ad9-45ca-ac35-3f1ab995b3b7")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "U7")
 					(unit 1)
@@ -17995,7 +18090,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "84d85e54-c16c-442f-b5d9-082050ead8fa")
-		(property "Reference" "R20"
+		(property "Reference" "R21"
 			(at 320.04 171.4499 0)
 			(effects
 				(font
@@ -18074,75 +18169,9 @@
 			(uuid "43a45fb8-2013-4ef4-95ff-6ccb7205736d")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "R20")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:VBUS")
-		(at 81.28 26.67 0)
-		(mirror y)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "857a00b0-1e15-4ab9-b413-4d55c03c03ce")
-		(property "Reference" "#PWR02"
-			(at 81.28 30.48 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+5V"
-			(at 81.28 22.86 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 81.28 26.67 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 81.28 26.67 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"VBUS\""
-			(at 81.28 26.67 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "fca69e2a-ad46-4a33-b3f8-f03c3775bcf9")
-		)
-		(instances
-			(project "cloudSmoker_ver2d"
-				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "#PWR02")
+					(reference "R21")
 					(unit 1)
 				)
 			)
@@ -18158,7 +18187,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "88292f94-8506-4010-961c-8d3b15f026aa")
-		(property "Reference" "#PWR047"
+		(property "Reference" "#PWR042"
 			(at 280.67 261.62 0)
 			(effects
 				(font
@@ -18206,9 +18235,9 @@
 			(uuid "3ea6ca08-eb61-4cf7-b9bd-433d584bc80d")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "#PWR047")
+					(reference "#PWR042")
 					(unit 1)
 				)
 			)
@@ -18216,7 +18245,7 @@
 	)
 	(symbol
 		(lib_id "power:PWR_FLAG")
-		(at 45.72 33.02 0)
+		(at 167.64 81.28 0)
 		(mirror x)
 		(unit 1)
 		(exclude_from_sim no)
@@ -18224,8 +18253,8 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "88330f25-28f5-49a4-a668-298aa49029bc")
-		(property "Reference" "#FLG03"
-			(at 45.72 34.925 0)
+		(property "Reference" "#FLG02"
+			(at 167.64 83.185 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18234,7 +18263,7 @@
 			)
 		)
 		(property "Value" "PWR_FLAG"
-			(at 45.72 38.1 0)
+			(at 167.64 86.36 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18242,7 +18271,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 45.72 33.02 0)
+			(at 167.64 81.28 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18251,7 +18280,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 45.72 33.02 0)
+			(at 167.64 81.28 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18260,7 +18289,7 @@
 			)
 		)
 		(property "Description" "Special symbol for telling ERC where power comes from"
-			(at 45.72 33.02 0)
+			(at 167.64 81.28 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18272,9 +18301,9 @@
 			(uuid "79a29244-a4fd-4fd3-9404-4ddd8bf089a4")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "#FLG03")
+					(reference "#FLG02")
 					(unit 1)
 				)
 			)
@@ -18282,7 +18311,7 @@
 	)
 	(symbol
 		(lib_id "Device:LED_Small")
-		(at 250.19 101.6 90)
+		(at 250.19 102.87 90)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -18291,7 +18320,7 @@
 		(fields_autoplaced yes)
 		(uuid "8ae2908e-c9ca-4cce-9d14-7348a74c64f7")
 		(property "Reference" "LED3"
-			(at 252.73 100.2664 90)
+			(at 252.73 101.5364 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18300,7 +18329,7 @@
 			)
 		)
 		(property "Value" "Yellow"
-			(at 252.73 102.8064 90)
+			(at 252.73 104.0764 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18309,7 +18338,7 @@
 			)
 		)
 		(property "Footprint" "JLCImport:FC-1608YXK-585F08"
-			(at 250.19 101.6 90)
+			(at 250.19 102.87 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18318,7 +18347,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 250.19 101.6 90)
+			(at 250.19 102.87 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18327,7 +18356,7 @@
 			)
 		)
 		(property "Description" "Light emitting diode, small symbol"
-			(at 250.19 101.6 0)
+			(at 250.19 102.87 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18336,7 +18365,7 @@
 			)
 		)
 		(property "LCSC" "C89811"
-			(at 250.19 101.6 0)
+			(at 250.19 102.87 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18345,7 +18374,7 @@
 			)
 		)
 		(property "Manufacturer" "Foshan NationStar Optoelectronics"
-			(at 250.19 101.6 0)
+			(at 250.19 102.87 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18354,7 +18383,7 @@
 			)
 		)
 		(property "Manufacturer Part" "NCD0603Y2"
-			(at 250.19 101.6 0)
+			(at 250.19 102.87 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18363,7 +18392,7 @@
 			)
 		)
 		(property "Sim.Pins" "1=K 2=A"
-			(at 250.19 101.6 0)
+			(at 250.19 102.87 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18378,7 +18407,7 @@
 			(uuid "8eb6e49f-e768-4a9d-8583-5e55301912d2")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "LED3")
 					(unit 1)
@@ -18396,7 +18425,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "8cd8fe27-9362-437a-9450-4357a09a40ee")
-		(property "Reference" "C7"
+		(property "Reference" "C9"
 			(at 398.78 179.0699 0)
 			(effects
 				(font
@@ -18475,9 +18504,9 @@
 			(uuid "3fcea2a9-2a8e-4f3c-963b-233ec464aea4")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "C7")
+					(reference "C9")
 					(unit 1)
 				)
 			)
@@ -18493,7 +18522,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "8d520dc6-61aa-4017-977c-f16765577330")
-		(property "Reference" "R24"
+		(property "Reference" "R25"
 			(at 199.39 233.68 90)
 			(effects
 				(font
@@ -18570,9 +18599,9 @@
 			(uuid "c817135a-f708-4834-89a3-2233caafdb7d")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "R24")
+					(reference "R25")
 					(unit 1)
 				)
 			)
@@ -18580,7 +18609,7 @@
 	)
 	(symbol
 		(lib_id "Device:C")
-		(at 140.97 82.55 90)
+		(at 153.67 41.91 90)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -18588,8 +18617,8 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "8de10166-be97-4697-ba2f-7aa83f8bd606")
-		(property "Reference" "C5"
-			(at 140.97 74.93 90)
+		(property "Reference" "C3"
+			(at 153.67 34.29 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18597,7 +18626,7 @@
 			)
 		)
 		(property "Value" "100nF"
-			(at 140.97 77.47 90)
+			(at 153.67 36.83 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18605,7 +18634,7 @@
 			)
 		)
 		(property "Footprint" "JLCImport:CC0603KRX7R9BB104"
-			(at 144.78 81.5848 0)
+			(at 157.48 40.9448 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18614,7 +18643,7 @@
 			)
 		)
 		(property "Datasheet" "kicad-embed://YAGEO MLCC Cap (C14663).pdf"
-			(at 140.97 82.55 0)
+			(at 153.67 41.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18623,7 +18652,7 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
-			(at 140.97 82.55 0)
+			(at 153.67 41.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18632,7 +18661,7 @@
 			)
 		)
 		(property "LCSC" "C14663"
-			(at 140.97 82.55 0)
+			(at 153.67 41.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18641,7 +18670,7 @@
 			)
 		)
 		(property "Manufacturer" "YAGEO"
-			(at 140.97 82.55 0)
+			(at 153.67 41.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18650,7 +18679,7 @@
 			)
 		)
 		(property "Manufacturer Part" "CC0603KRX7R9BB104"
-			(at 140.97 82.55 0)
+			(at 153.67 41.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18665,9 +18694,9 @@
 			(uuid "533143e3-56fd-4c4b-9bbb-512b84ca4ce0")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "C5")
+					(reference "C3")
 					(unit 1)
 				)
 			)
@@ -18675,7 +18704,7 @@
 	)
 	(symbol
 		(lib_id "JLCImport:TLV76733DGNR")
-		(at 123.19 29.21 0)
+		(at 250.19 31.75 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -18683,7 +18712,7 @@
 		(dnp no)
 		(uuid "90302fcd-868c-43e8-8e73-aa1459c51491")
 		(property "Reference" "U1"
-			(at 112.014 19.558 0)
+			(at 239.014 22.098 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18691,7 +18720,7 @@
 			)
 		)
 		(property "Value" "TLV76733DGNR"
-			(at 112.014 22.098 0)
+			(at 239.014 24.638 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18699,7 +18728,7 @@
 			)
 		)
 		(property "Footprint" "JLCImport:TLV76733DGNR"
-			(at 123.19 29.21 0)
+			(at 250.19 31.75 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18708,7 +18737,7 @@
 			)
 		)
 		(property "Datasheet" "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2303010107_Texas-Instruments-TLV76733DGNR_C2873382.pdf"
-			(at 123.19 29.21 0)
+			(at 250.19 31.75 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18717,7 +18746,7 @@
 			)
 		)
 		(property "Description" "-40℃~+125℃@(Tj) 1 1.5V@(1A) 16V 1A 3.3V 60uVrms 70dB@(1kHz) 80uA Fixed Over Current Protection、Over Temperature Protection、Soft Start、Enable Positive HVSSOP-8 Voltage Regulators - Linear, Low Drop Out (LDO) Regulators ROHS"
-			(at 123.19 29.21 0)
+			(at 250.19 31.75 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18726,7 +18755,7 @@
 			)
 		)
 		(property "LCSC" "C2873382"
-			(at 123.19 29.21 0)
+			(at 250.19 31.75 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18735,7 +18764,7 @@
 			)
 		)
 		(property "Manufacturer" "Texas Instruments"
-			(at 123.19 29.21 0)
+			(at 250.19 31.75 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18744,7 +18773,7 @@
 			)
 		)
 		(property "Manufacturer Part" "TLV76733DGNR"
-			(at 123.19 29.21 0)
+			(at 250.19 31.75 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -18780,7 +18809,7 @@
 			(uuid "de45c256-ee2b-4a7b-afde-d86c57f38006")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "U1")
 					(unit 1)
@@ -18851,9 +18880,106 @@
 			(uuid "51601f28-6ecf-4128-b7bc-3b2c7e648777")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "J16")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 55.88 49.53 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "92d5db1f-0179-4ec7-afb3-189360559b1d")
+		(property "Reference" "C4"
+			(at 59.69 48.2599 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "470nF"
+			(at 59.69 50.7999 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "JLCImport:CC0603KRX7R9BB104"
+			(at 56.8452 53.34 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 55.88 49.53 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Unpolarized capacitor"
+			(at 55.88 49.53 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C1623"
+			(at 55.88 49.53 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 55.88 49.53 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer Part" "CL10B474KA8NNNC"
+			(at 55.88 49.53 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "2fa55f97-1f9e-4f1a-8a65-0e07f0f86166")
+		)
+		(pin "2"
+			(uuid "8b04570f-4dd5-4fb2-9fce-e2c18a9ebd1e")
+		)
+		(instances
+			(project "cloudSmoker_ver2e"
+				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
+					(reference "C4")
 					(unit 1)
 				)
 			)
@@ -18931,7 +19057,7 @@
 			(uuid "c1a1de27-52b2-40e1-bd4b-70e5a2c5f43d")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "J7")
 					(unit 1)
@@ -19006,7 +19132,7 @@
 			(uuid "5540ce7b-e075-408e-8cda-5a28e9e43994")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "J11")
 					(unit 1)
@@ -19016,7 +19142,7 @@
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 250.19 95.25 0)
+		(at 250.19 96.52 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -19024,8 +19150,8 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "97335b6a-9cd9-4ab6-8acd-c11f5dff98c0")
-		(property "Reference" "R5"
-			(at 252.73 93.9799 0)
+		(property "Reference" "R9"
+			(at 252.73 95.2499 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19034,7 +19160,7 @@
 			)
 		)
 		(property "Value" "100"
-			(at 252.73 96.5199 0)
+			(at 252.73 97.7899 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19043,7 +19169,7 @@
 			)
 		)
 		(property "Footprint" "JLCImport:0603WAF1000T5E"
-			(at 248.412 95.25 90)
+			(at 248.412 96.52 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19052,7 +19178,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 250.19 95.25 0)
+			(at 250.19 96.52 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19061,7 +19187,7 @@
 			)
 		)
 		(property "Description" "Resistor"
-			(at 250.19 95.25 0)
+			(at 250.19 96.52 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19070,7 +19196,7 @@
 			)
 		)
 		(property "LCSC" "C22775"
-			(at 250.19 95.25 0)
+			(at 250.19 96.52 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19079,7 +19205,7 @@
 			)
 		)
 		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
-			(at 250.19 95.25 0)
+			(at 250.19 96.52 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19088,7 +19214,7 @@
 			)
 		)
 		(property "Manufacturer Part" "0603WAF1000T5E"
-			(at 250.19 95.25 0)
+			(at 250.19 96.52 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19103,9 +19229,9 @@
 			(uuid "6fd23221-065c-447b-8282-67ba15792264")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "R5")
+					(reference "R9")
 					(unit 1)
 				)
 			)
@@ -19121,7 +19247,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "978c9c01-8683-4fc9-8e40-105dc80edc7d")
-		(property "Reference" "R11"
+		(property "Reference" "R13"
 			(at 212.09 109.474 90)
 			(effects
 				(font
@@ -19198,9 +19324,9 @@
 			(uuid "198262ea-fb5c-4251-92a2-648c07fcdc25")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "R11")
+					(reference "R13")
 					(unit 1)
 				)
 			)
@@ -19215,7 +19341,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "97972a4b-cb59-4454-8f4a-babf00a4f7aa")
-		(property "Reference" "#PWR041"
+		(property "Reference" "#PWR036"
 			(at 398.78 226.06 0)
 			(effects
 				(font
@@ -19263,9 +19389,9 @@
 			(uuid "2368e641-8e91-4a36-9023-902b94959e18")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "#PWR041")
+					(reference "#PWR036")
 					(unit 1)
 				)
 			)
@@ -19273,7 +19399,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 236.22 38.1 270)
+		(at 474.98 44.45 270)
 		(mirror x)
 		(unit 1)
 		(exclude_from_sim no)
@@ -19282,8 +19408,8 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "9a28cc4b-42fc-46fa-b5db-c3202c634bc9")
-		(property "Reference" "#PWR07"
-			(at 229.87 38.1 0)
+		(property "Reference" "#PWR04"
+			(at 468.63 44.45 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19292,7 +19418,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 232.41 38.0999 90)
+			(at 471.17 44.4499 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19301,7 +19427,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 236.22 38.1 0)
+			(at 474.98 44.45 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19310,7 +19436,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 236.22 38.1 0)
+			(at 474.98 44.45 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19319,7 +19445,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 236.22 38.1 0)
+			(at 474.98 44.45 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19331,9 +19457,9 @@
 			(uuid "7ecb73c9-dfc9-47ab-adcd-1c49b7a6afd6")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "#PWR07")
+					(reference "#PWR04")
 					(unit 1)
 				)
 			)
@@ -19350,7 +19476,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "9af51176-bb72-4d67-85ea-b4d921ef9a50")
-		(property "Reference" "#PWR019"
+		(property "Reference" "#PWR018"
 			(at 299.72 100.33 0)
 			(effects
 				(font
@@ -19399,9 +19525,9 @@
 			(uuid "e721da79-1bd3-4435-a069-b402279d3d41")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "#PWR019")
+					(reference "#PWR018")
 					(unit 1)
 				)
 			)
@@ -19466,7 +19592,7 @@
 			(uuid "46a76ded-3997-47fe-8124-c400d5a67806")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "TP8")
 					(unit 1)
@@ -19476,7 +19602,7 @@
 	)
 	(symbol
 		(lib_id "power:PWR_FLAG")
-		(at 22.86 29.21 0)
+		(at 25.4 101.6 270)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -19484,8 +19610,8 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "9fc1f814-e6ca-413f-8d72-6eda814168a7")
-		(property "Reference" "#FLG01"
-			(at 22.86 27.305 0)
+		(property "Reference" "#FLG03"
+			(at 27.305 101.6 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19494,15 +19620,16 @@
 			)
 		)
 		(property "Value" "PWR_FLAG"
-			(at 22.86 24.13 0)
+			(at 29.21 101.5999 90)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify left)
 			)
 		)
 		(property "Footprint" ""
-			(at 22.86 29.21 0)
+			(at 25.4 101.6 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19511,7 +19638,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 22.86 29.21 0)
+			(at 25.4 101.6 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19520,7 +19647,7 @@
 			)
 		)
 		(property "Description" "Special symbol for telling ERC where power comes from"
-			(at 22.86 29.21 0)
+			(at 25.4 101.6 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19532,9 +19659,9 @@
 			(uuid "2ee1daf0-a26f-442b-ab76-95995360f147")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "#FLG01")
+					(reference "#FLG03")
 					(unit 1)
 				)
 			)
@@ -19542,15 +19669,15 @@
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 68.58 80.01 90)
+		(at 68.58 63.5 90)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid "a07b21ca-a759-46d8-be6e-fd6232c5fe78")
-		(property "Reference" "R3"
-			(at 73.152 76.962 90)
+		(property "Reference" "R6"
+			(at 73.152 60.452 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19559,7 +19686,7 @@
 			)
 		)
 		(property "Value" "5.1k"
-			(at 73.406 78.74 90)
+			(at 73.406 62.23 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19568,7 +19695,7 @@
 			)
 		)
 		(property "Footprint" "JLCImport:0603WAF5101T5E"
-			(at 68.58 81.788 90)
+			(at 68.58 65.278 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19577,7 +19704,7 @@
 			)
 		)
 		(property "Datasheet" "https://www.uni-royal.cn/en/images/userfile/file/17232728285d06b84b01053a16.pdf"
-			(at 68.58 80.01 0)
+			(at 68.58 63.5 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19586,7 +19713,7 @@
 			)
 		)
 		(property "Description" "Resistor"
-			(at 68.58 80.01 0)
+			(at 68.58 63.5 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19595,7 +19722,7 @@
 			)
 		)
 		(property "LCSC" "C23186"
-			(at 68.58 80.01 0)
+			(at 68.58 63.5 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19604,7 +19731,7 @@
 			)
 		)
 		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
-			(at 68.58 80.01 0)
+			(at 68.58 63.5 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19613,7 +19740,7 @@
 			)
 		)
 		(property "Manufacturer Part" "0603WAF5101T5E"
-			(at 68.58 80.01 0)
+			(at 68.58 63.5 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19628,9 +19755,9 @@
 			(uuid "297474dc-215e-415e-b6d3-610437f79317")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "R3")
+					(reference "R6")
 					(unit 1)
 				)
 			)
@@ -19702,7 +19829,7 @@
 			(uuid "7861d6a0-e9d7-495f-a45c-b137415d696c")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "SW3")
 					(unit 1)
@@ -19712,7 +19839,7 @@
 	)
 	(symbol
 		(lib_id "Connector_Generic:Conn_01x04")
-		(at 247.65 40.64 0)
+		(at 486.41 46.99 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom no)
@@ -19720,7 +19847,7 @@
 		(dnp yes)
 		(uuid "a3e2f16e-b9b6-4b75-8d7f-10ca9e6b416c")
 		(property "Reference" "J1"
-			(at 248.285 35.56 0)
+			(at 487.045 41.91 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19728,7 +19855,7 @@
 			)
 		)
 		(property "Value" "Conn_01x02_Pin"
-			(at 248.285 38.1 0)
+			(at 487.045 44.45 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19737,7 +19864,7 @@
 			)
 		)
 		(property "Footprint" "Connector_JST:JST_XH_B4B-XH-A_1x04_P2.50mm_Vertical"
-			(at 247.65 40.64 0)
+			(at 486.41 46.99 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19746,7 +19873,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 247.65 40.64 0)
+			(at 486.41 46.99 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19755,7 +19882,7 @@
 			)
 		)
 		(property "Description" "Generic connector, single row, 01x04, script generated (kicad-library-utils/schlib/autogen/connector/)"
-			(at 247.65 40.64 0)
+			(at 486.41 46.99 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19776,7 +19903,7 @@
 			(uuid "eb05a7bf-3a44-49ab-81a1-4b481891ac90")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "J1")
 					(unit 1)
@@ -19865,7 +19992,7 @@
 			(uuid "437edb3f-5db0-4528-a3ea-935ef333e791")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "J4")
 					(unit 1)
@@ -19875,7 +20002,7 @@
 	)
 	(symbol
 		(lib_id "Device:C")
-		(at 144.78 33.02 0)
+		(at 271.78 35.56 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -19884,7 +20011,7 @@
 		(fields_autoplaced yes)
 		(uuid "a7875fe9-21b8-4ce5-bb5e-b3ba78995348")
 		(property "Reference" "C2"
-			(at 148.59 31.7499 0)
+			(at 275.59 34.2899 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19893,7 +20020,7 @@
 			)
 		)
 		(property "Value" "2.2uF"
-			(at 148.59 34.2899 0)
+			(at 275.59 36.8299 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19902,7 +20029,7 @@
 			)
 		)
 		(property "Footprint" "JLCImport:CL10A225KO8NNNC"
-			(at 145.7452 36.83 0)
+			(at 272.7452 39.37 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19911,7 +20038,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 144.78 33.02 0)
+			(at 271.78 35.56 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19920,7 +20047,7 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
-			(at 144.78 33.02 0)
+			(at 271.78 35.56 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19929,7 +20056,7 @@
 			)
 		)
 		(property "LCSC" "C23630"
-			(at 144.78 33.02 0)
+			(at 271.78 35.56 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19938,7 +20065,7 @@
 			)
 		)
 		(property "Manufacturer" "Samsung Electro-Mechanics"
-			(at 144.78 33.02 0)
+			(at 271.78 35.56 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19947,7 +20074,7 @@
 			)
 		)
 		(property "Manufacturer Part" "CL10A225KO8NNNC"
-			(at 144.78 33.02 0)
+			(at 271.78 35.56 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19962,7 +20089,7 @@
 			(uuid "831cf0bf-0337-4844-b275-3a13ce947d9a")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "C2")
 					(unit 1)
@@ -19979,7 +20106,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "b14fea0e-9abb-43bc-822e-66d746332bd1")
-		(property "Reference" "R10"
+		(property "Reference" "R12"
 			(at 201.93 106.934 90)
 			(effects
 				(font
@@ -20056,9 +20183,9 @@
 			(uuid "7224c20c-635f-4f6d-9072-727c1706db9f")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "R10")
+					(reference "R12")
 					(unit 1)
 				)
 			)
@@ -20153,7 +20280,7 @@
 			(uuid "d0aeb124-4657-4ee5-baf7-1407fad779c6")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "PR1")
 					(unit 1)
@@ -20163,7 +20290,7 @@
 	)
 	(symbol
 		(lib_id "Device:LED_Small")
-		(at 76.2 36.83 90)
+		(at 203.2 39.37 90)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -20171,7 +20298,7 @@
 		(dnp no)
 		(uuid "b7b33372-00d7-4a1c-ae2a-a0a3b7579bb9")
 		(property "Reference" "LED1"
-			(at 78.74 35.4964 90)
+			(at 205.74 38.0364 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -20180,7 +20307,7 @@
 			)
 		)
 		(property "Value" "Red"
-			(at 78.74 38.0364 90)
+			(at 205.74 40.5764 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -20189,7 +20316,7 @@
 			)
 		)
 		(property "Footprint" "JLCImport:KT-0603R"
-			(at 76.2 36.83 90)
+			(at 203.2 39.37 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -20198,7 +20325,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 76.2 36.83 90)
+			(at 203.2 39.37 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -20207,7 +20334,7 @@
 			)
 		)
 		(property "Description" "Light emitting diode, small symbol"
-			(at 76.2 36.83 0)
+			(at 203.2 39.37 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -20216,7 +20343,7 @@
 			)
 		)
 		(property "LCSC" "C2286"
-			(at 76.2 36.83 0)
+			(at 203.2 39.37 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -20225,7 +20352,7 @@
 			)
 		)
 		(property "Manufacturer" "Hubei KENTO Elec"
-			(at 76.2 36.83 0)
+			(at 203.2 39.37 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -20234,7 +20361,7 @@
 			)
 		)
 		(property "Manufacturer Part" "KT-0603R"
-			(at 76.2 36.83 0)
+			(at 203.2 39.37 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -20243,7 +20370,7 @@
 			)
 		)
 		(property "Sim.Pins" "1=K 2=A"
-			(at 76.2 36.83 0)
+			(at 203.2 39.37 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -20258,7 +20385,7 @@
 			(uuid "dd6ebc36-7cca-4bf5-9da8-4e9dc98ec116")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "LED1")
 					(unit 1)
@@ -20268,7 +20395,7 @@
 	)
 	(symbol
 		(lib_id "Connector:TestPoint")
-		(at 123.19 46.99 270)
+		(at 250.19 49.53 270)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -20276,8 +20403,8 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "b7cb56a2-d651-4564-ab9a-9e91df74bf8f")
-		(property "Reference" "TP1"
-			(at 128.27 45.7199 90)
+		(property "Reference" "TP2"
+			(at 255.27 48.2599 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -20286,7 +20413,7 @@
 			)
 		)
 		(property "Value" "TP_GND_Clip"
-			(at 128.27 48.2599 90)
+			(at 255.27 50.7999 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -20295,7 +20422,7 @@
 			)
 		)
 		(property "Footprint" "TestPoint:TestPoint_Bridge_Pitch5.08mm_Drill0.7mm"
-			(at 123.19 52.07 0)
+			(at 250.19 54.61 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -20304,7 +20431,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 123.19 52.07 0)
+			(at 250.19 54.61 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -20313,7 +20440,7 @@
 			)
 		)
 		(property "Description" "test point"
-			(at 123.19 46.99 0)
+			(at 250.19 49.53 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -20325,9 +20452,9 @@
 			(uuid "b82ea3a1-5029-4acb-884e-2233c5d27122")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "TP1")
+					(reference "TP2")
 					(unit 1)
 				)
 			)
@@ -20335,7 +20462,7 @@
 	)
 	(symbol
 		(lib_id "Device:C")
-		(at 102.87 106.68 90)
+		(at 107.95 73.66 90)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -20343,7 +20470,7 @@
 		(dnp no)
 		(uuid "b82e4a03-decc-458a-919a-44c20377218c")
 		(property "Reference" "C6"
-			(at 102.87 100.838 90)
+			(at 107.95 67.818 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -20351,7 +20478,7 @@
 			)
 		)
 		(property "Value" "100nF"
-			(at 102.87 103.378 90)
+			(at 107.95 70.358 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -20359,7 +20486,7 @@
 			)
 		)
 		(property "Footprint" "JLCImport:CC0603KRX7R9BB104"
-			(at 106.68 105.7148 0)
+			(at 111.76 72.6948 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -20368,7 +20495,7 @@
 			)
 		)
 		(property "Datasheet" "kicad-embed://YAGEO MLCC Cap (C14663).pdf"
-			(at 102.87 106.68 0)
+			(at 107.95 73.66 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -20377,7 +20504,7 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
-			(at 102.87 106.68 0)
+			(at 107.95 73.66 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -20386,7 +20513,7 @@
 			)
 		)
 		(property "LCSC" "C14663"
-			(at 102.87 106.68 0)
+			(at 107.95 73.66 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -20395,7 +20522,7 @@
 			)
 		)
 		(property "Manufacturer" "YAGEO"
-			(at 102.87 106.68 0)
+			(at 107.95 73.66 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -20404,7 +20531,7 @@
 			)
 		)
 		(property "Manufacturer Part" "CC0603KRX7R9BB104"
-			(at 102.87 106.68 0)
+			(at 107.95 73.66 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -20419,7 +20546,7 @@
 			(uuid "a752e990-8718-4d4b-a6d3-b8f9f1bf55ed")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "C6")
 					(unit 1)
@@ -20486,7 +20613,7 @@
 			(uuid "d2514116-f050-43b1-8b25-73dfabc568e5")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "TP14")
 					(unit 1)
@@ -20553,74 +20680,9 @@
 			(uuid "e9a96e96-edf6-4fd7-b2a0-9b19f8bd50dc")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "H4")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:VBUS")
-		(at 96.52 114.3 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "bbbe0436-6257-4206-b3cc-cdb005ee44df")
-		(property "Reference" "#PWR026"
-			(at 96.52 118.11 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "VBUS"
-			(at 92.71 111.506 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 96.52 114.3 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 96.52 114.3 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"VBUS\""
-			(at 96.52 114.3 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "1d76fdd9-8b45-47f8-aef3-cea7fc917ce8")
-		)
-		(instances
-			(project "cloudSmoker_ver2d"
-				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "#PWR026")
 					(unit 1)
 				)
 			)
@@ -20685,7 +20747,7 @@
 			(uuid "d0d95404-f0c5-43aa-961d-0fa7eb2d8faa")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "TP7")
 					(unit 1)
@@ -20749,7 +20811,7 @@
 			)
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "FID2")
 					(unit 1)
@@ -20824,7 +20886,7 @@
 			(uuid "e72681c3-4def-46e9-9d82-a95acc04b406")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "J3")
 					(unit 1)
@@ -20888,9 +20950,75 @@
 			)
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "H6")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:VBUS")
+		(at 59.69 96.52 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "c1108123-cde8-41bc-a186-e9d9ef66c6c3")
+		(property "Reference" "#PWR017"
+			(at 59.69 100.33 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "VBUS"
+			(at 59.69 91.44 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 59.69 96.52 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 59.69 96.52 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"VBUS\""
+			(at 59.69 96.52 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "68294f4a-9a67-4288-a7e5-1580b55690c3")
+		)
+		(instances
+			(project "cloudSmoker_ver2e"
+				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
+					(reference "#PWR017")
 					(unit 1)
 				)
 			)
@@ -20965,7 +21093,7 @@
 			(uuid "be2481da-68b2-4f57-9681-f26bec7f531a")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "SW1")
 					(unit 1)
@@ -20975,7 +21103,7 @@
 	)
 	(symbol
 		(lib_id "Connector:TestPoint")
-		(at 213.36 85.09 0)
+		(at 203.2 85.09 0)
 		(mirror y)
 		(unit 1)
 		(exclude_from_sim no)
@@ -20983,8 +21111,8 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "c4828014-1b92-4e23-bfbd-01f290609642")
-		(property "Reference" "TP4"
-			(at 205.74 81.026 0)
+		(property "Reference" "TP6"
+			(at 195.58 81.026 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -20993,7 +21121,7 @@
 			)
 		)
 		(property "Value" "TP_EN"
-			(at 205.74 83.566 0)
+			(at 195.58 83.566 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21002,7 +21130,7 @@
 			)
 		)
 		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
-			(at 208.28 85.09 0)
+			(at 198.12 85.09 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21011,7 +21139,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 208.28 85.09 0)
+			(at 198.12 85.09 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21020,7 +21148,7 @@
 			)
 		)
 		(property "Description" "test point"
-			(at 213.36 85.09 0)
+			(at 203.2 85.09 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21032,9 +21160,9 @@
 			(uuid "2df17561-7ab5-4ddd-ae9a-08ac26ebeddd")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "TP4")
+					(reference "TP6")
 					(unit 1)
 				)
 			)
@@ -21099,7 +21227,7 @@
 			(uuid "57d29ec0-8330-4d71-b5d4-882e2f30509e")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "TP10")
 					(unit 1)
@@ -21170,75 +21298,9 @@
 			(uuid "2c9a6907-642a-4bef-a6b7-4ca1596ab20f")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "J13")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 22.86 33.02 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "cd6ff756-d3dc-43f1-8e4b-75a627a5995c")
-		(property "Reference" "#PWR06"
-			(at 22.86 39.37 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "GND"
-			(at 22.86 38.1 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 22.86 33.02 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 22.86 33.02 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 22.86 33.02 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "4fbfaeb2-931d-4f00-88a1-60ba0086f90c")
-		)
-		(instances
-			(project "cloudSmoker_ver2d"
-				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "#PWR06")
 					(unit 1)
 				)
 			)
@@ -21306,7 +21368,7 @@
 			(uuid "aabab7ea-dc12-4949-9f4d-f58988693933")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "J9")
 					(unit 1)
@@ -21323,7 +21385,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "ce75a5ba-872e-4db2-a889-887bcfdd68cb")
-		(property "Reference" "#PWR030"
+		(property "Reference" "#PWR025"
 			(at 161.29 162.56 0)
 			(effects
 				(font
@@ -21371,9 +21433,9 @@
 			(uuid "c12b2042-2a55-4be5-bf72-dc3c6e875c4a")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "#PWR030")
+					(reference "#PWR025")
 					(unit 1)
 				)
 			)
@@ -21381,15 +21443,15 @@
 	)
 	(symbol
 		(lib_id "power:+3.3V")
-		(at 132.08 81.28 0)
+		(at 144.78 40.64 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid "d00f51a1-ebec-4914-a7de-779117aaa8b0")
-		(property "Reference" "#PWR016"
-			(at 132.08 85.09 0)
+		(property "Reference" "#PWR03"
+			(at 144.78 44.45 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21398,7 +21460,7 @@
 			)
 		)
 		(property "Value" "+3.3V"
-			(at 132.08 76.708 0)
+			(at 144.78 36.068 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21406,7 +21468,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 132.08 81.28 0)
+			(at 144.78 40.64 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21415,7 +21477,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 132.08 81.28 0)
+			(at 144.78 40.64 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21424,7 +21486,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"+3.3V\""
-			(at 132.08 81.28 0)
+			(at 144.78 40.64 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21436,9 +21498,9 @@
 			(uuid "135bd345-ff69-4b0a-85c9-154b6c764da2")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "#PWR016")
+					(reference "#PWR03")
 					(unit 1)
 				)
 			)
@@ -21446,15 +21508,15 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 250.19 111.76 0)
+		(at 250.19 107.95 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid "d0d802d0-39df-42fe-9a3c-26e66391c68b")
-		(property "Reference" "#PWR023"
-			(at 250.19 118.11 0)
+		(property "Reference" "#PWR021"
+			(at 250.19 114.3 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21463,7 +21525,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 250.19 116.332 0)
+			(at 250.19 112.522 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21471,7 +21533,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 250.19 111.76 0)
+			(at 250.19 107.95 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21480,7 +21542,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 250.19 111.76 0)
+			(at 250.19 107.95 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21489,7 +21551,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 250.19 111.76 0)
+			(at 250.19 107.95 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21501,9 +21563,9 @@
 			(uuid "bbe5af33-ee14-47b3-bee3-da82ca522721")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "#PWR023")
+					(reference "#PWR021")
 					(unit 1)
 				)
 			)
@@ -21511,7 +21573,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 162.56 207.01 0)
+		(at 205.74 207.01 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -21519,8 +21581,8 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "d1dfd25a-f35c-4569-a273-08584cc57d29")
-		(property "Reference" "#PWR040"
-			(at 162.56 213.36 0)
+		(property "Reference" "#PWR035"
+			(at 205.74 213.36 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21529,7 +21591,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 162.56 212.09 0)
+			(at 205.74 212.09 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21537,7 +21599,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 162.56 207.01 0)
+			(at 205.74 207.01 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21546,7 +21608,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 162.56 207.01 0)
+			(at 205.74 207.01 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21555,7 +21617,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 162.56 207.01 0)
+			(at 205.74 207.01 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21567,9 +21629,9 @@
 			(uuid "e9e1bf90-31b7-47d4-8d27-1be802e70364")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "#PWR040")
+					(reference "#PWR035")
 					(unit 1)
 				)
 			)
@@ -21585,7 +21647,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "d20eda54-6db2-4778-8052-7d0182ffc886")
-		(property "Reference" "#PWR010"
+		(property "Reference" "#PWR012"
 			(at 241.3 69.85 0)
 			(effects
 				(font
@@ -21633,9 +21695,9 @@
 			(uuid "f873a645-b0b8-4424-a0f1-11a80f8161fb")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "#PWR010")
+					(reference "#PWR012")
 					(unit 1)
 				)
 			)
@@ -21643,7 +21705,7 @@
 	)
 	(symbol
 		(lib_id "Power_Protection:SRV05-4")
-		(at 59.69 114.3 0)
+		(at 59.69 111.76 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -21651,7 +21713,7 @@
 		(dnp no)
 		(uuid "d3837e13-57d2-4cf5-9612-9e219bbf659c")
 		(property "Reference" "U5"
-			(at 53.34 127 0)
+			(at 53.34 124.46 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21660,7 +21722,7 @@
 			)
 		)
 		(property "Value" "SRV05-4-P-T7"
-			(at 53.34 129.54 0)
+			(at 53.34 127 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21669,7 +21731,7 @@
 			)
 		)
 		(property "Footprint" "JLCImport:SRV05-4-P-T7"
-			(at 77.47 125.73 0)
+			(at 77.47 123.19 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21678,7 +21740,7 @@
 			)
 		)
 		(property "Datasheet" "http://www.onsemi.com/pub/Collateral/SRV05-4-D.PDF"
-			(at 59.69 114.3 0)
+			(at 59.69 111.76 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21687,7 +21749,7 @@
 			)
 		)
 		(property "Description" "ESD Protection Diodes with Low Clamping Voltage, SOT-23-6"
-			(at 59.69 114.3 0)
+			(at 59.69 111.76 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21696,7 +21758,7 @@
 			)
 		)
 		(property "LCSC" "C85364"
-			(at 59.69 114.3 0)
+			(at 59.69 111.76 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21705,7 +21767,7 @@
 			)
 		)
 		(property "Manufacturer" "ProTek Devices"
-			(at 59.69 114.3 0)
+			(at 59.69 111.76 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21714,7 +21776,7 @@
 			)
 		)
 		(property "Manufacturer Part" "SRV05-4-P-T7"
-			(at 59.69 114.3 0)
+			(at 59.69 111.76 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21741,7 +21803,7 @@
 			(uuid "1ad8d945-4f78-4058-8277-76049a6edcb3")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "U5")
 					(unit 1)
@@ -21751,15 +21813,15 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 22.86 118.11 0)
+		(at 22.86 101.6 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid "d3b6d1ae-bc75-4385-a50b-e5b95839ef5b")
-		(property "Reference" "#PWR027"
-			(at 22.86 124.46 0)
+		(property "Reference" "#PWR019"
+			(at 22.86 107.95 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21768,7 +21830,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 22.86 123.19 0)
+			(at 22.86 106.68 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21776,7 +21838,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 22.86 118.11 0)
+			(at 22.86 101.6 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21785,7 +21847,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 22.86 118.11 0)
+			(at 22.86 101.6 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21794,7 +21856,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 22.86 118.11 0)
+			(at 22.86 101.6 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21806,9 +21868,9 @@
 			(uuid "fd9b2630-d1fe-41b8-ad2b-068ac3d0ad5f")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "#PWR027")
+					(reference "#PWR019")
 					(unit 1)
 				)
 			)
@@ -21816,15 +21878,15 @@
 	)
 	(symbol
 		(lib_id "Device:C")
-		(at 162.56 203.2 180)
+		(at 205.74 203.2 180)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid "d9a8cb69-c71d-4dbc-9a6c-abc280095fcd")
-		(property "Reference" "C9"
-			(at 166.37 201.9299 0)
+		(property "Reference" "C11"
+			(at 209.55 201.9299 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21833,7 +21895,7 @@
 			)
 		)
 		(property "Value" "1uF"
-			(at 166.37 204.4699 0)
+			(at 209.55 204.4699 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21842,7 +21904,7 @@
 			)
 		)
 		(property "Footprint" "JLCImport:CL10A105KB8NNNC"
-			(at 161.5948 199.39 0)
+			(at 204.7748 199.39 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21851,7 +21913,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 162.56 203.2 0)
+			(at 205.74 203.2 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21860,7 +21922,7 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
-			(at 162.56 203.2 0)
+			(at 205.74 203.2 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21869,7 +21931,7 @@
 			)
 		)
 		(property "LCSC" "C15849"
-			(at 162.56 203.2 0)
+			(at 205.74 203.2 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21878,7 +21940,7 @@
 			)
 		)
 		(property "Manufacturer" "Samsung Electro-Mechanics"
-			(at 162.56 203.2 0)
+			(at 205.74 203.2 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21887,7 +21949,7 @@
 			)
 		)
 		(property "Manufacturer Part" "CL10A105KB8NNNC"
-			(at 162.56 203.2 0)
+			(at 205.74 203.2 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -21902,75 +21964,9 @@
 			(uuid "4958dc8a-3e8b-4dc6-9791-b5e289479b1c")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "C9")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:VBUS")
-		(at 45.72 77.47 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "dbdf5e6e-a381-46b2-8a6a-afd1c1f5f775")
-		(property "Reference" "#PWR013"
-			(at 45.72 81.28 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "VBUS"
-			(at 45.72 72.39 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 45.72 77.47 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 45.72 77.47 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"VBUS\""
-			(at 45.72 77.47 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "fd884659-5241-4893-a091-79c4d23624c3")
-		)
-		(instances
-			(project "cloudSmoker_ver2d"
-				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "#PWR013")
+					(reference "C11")
 					(unit 1)
 				)
 			)
@@ -21985,7 +21981,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "dc0b949f-c3e8-4850-bafb-c860ae7d5ea9")
-		(property "Reference" "#PWR039"
+		(property "Reference" "#PWR034"
 			(at 389.89 195.58 0)
 			(effects
 				(font
@@ -22033,9 +22029,9 @@
 			(uuid "fdf8d6be-2cb1-437b-a3c1-7fc0e3f4f896")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "#PWR039")
+					(reference "#PWR034")
 					(unit 1)
 				)
 			)
@@ -22130,7 +22126,7 @@
 			(uuid "8fcf4263-ac90-425d-9a1e-f7a1ab10ee21")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "PR4")
 					(unit 1)
@@ -22148,7 +22144,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "de9e9894-ba75-4262-9af1-e3e89324ca26")
-		(property "Reference" "TP2"
+		(property "Reference" "TP4"
 			(at 229.87 65.2779 0)
 			(effects
 				(font
@@ -22197,9 +22193,9 @@
 			(uuid "3c356c2c-f4e7-426d-b6fe-ac44e509342d")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "TP2")
+					(reference "TP4")
 					(unit 1)
 				)
 			)
@@ -22215,7 +22211,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "def8ef9c-89c7-4edf-9bbf-54f17e825a59")
-		(property "Reference" "#PWR038"
+		(property "Reference" "#PWR033"
 			(at 358.14 195.58 0)
 			(effects
 				(font
@@ -22263,9 +22259,9 @@
 			(uuid "d46c69b0-d823-4e9d-aa06-4c5a0638a0a3")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "#PWR038")
+					(reference "#PWR033")
 					(unit 1)
 				)
 			)
@@ -22327,7 +22323,7 @@
 			)
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "FID1")
 					(unit 1)
@@ -22337,7 +22333,7 @@
 	)
 	(symbol
 		(lib_id "Jumper:SolderJumper_2_Bridged")
-		(at 85.09 43.18 0)
+		(at 212.09 45.72 0)
 		(mirror y)
 		(unit 1)
 		(exclude_from_sim no)
@@ -22346,7 +22342,7 @@
 		(dnp no)
 		(uuid "dfc17813-468d-477b-845f-8fa7d0c1b5b2")
 		(property "Reference" "JP1"
-			(at 85.09 46.228 0)
+			(at 212.09 48.768 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -22354,7 +22350,7 @@
 			)
 		)
 		(property "Value" "SolderJumper_2_Bridged"
-			(at 85.09 46.99 0)
+			(at 212.09 49.53 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -22363,7 +22359,7 @@
 			)
 		)
 		(property "Footprint" "Jumper:SolderJumper-2_P1.3mm_Bridged_RoundedPad1.0x1.5mm"
-			(at 85.09 43.18 0)
+			(at 212.09 45.72 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -22372,7 +22368,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 85.09 43.18 0)
+			(at 212.09 45.72 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -22381,7 +22377,7 @@
 			)
 		)
 		(property "Description" "Solder Jumper, 2-pole, closed/bridged"
-			(at 85.09 43.18 0)
+			(at 212.09 45.72 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -22396,7 +22392,7 @@
 			(uuid "75db9432-de20-408d-8d39-233a5fbce997")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "JP1")
 					(unit 1)
@@ -22469,75 +22465,9 @@
 			(uuid "10e9c62f-50fc-42dd-be82-51cf785f554a")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "J10")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:VBUS")
-		(at 34.29 29.21 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "e377d8d8-d92d-4e90-b831-6dae6d864a5c")
-		(property "Reference" "#PWR04"
-			(at 34.29 33.02 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "VBUS"
-			(at 34.29 24.13 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 34.29 29.21 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 34.29 29.21 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Power symbol creates a global label with name \"VBUS\""
-			(at 34.29 29.21 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "776f926d-dd57-4408-8715-d662d90ef789")
-		)
-		(instances
-			(project "cloudSmoker_ver2d"
-				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "#PWR04")
 					(unit 1)
 				)
 			)
@@ -22635,7 +22565,7 @@
 			(uuid "3ec18051-1991-43c8-bc0d-4778af0611da")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "Q2")
 					(unit 1)
@@ -22702,7 +22632,7 @@
 			(uuid "453a1e48-3384-489e-ab8c-dc02f50cf609")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "H2")
 					(unit 1)
@@ -22712,15 +22642,15 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 123.19 46.99 0)
+		(at 250.19 49.53 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid "e74d4ed8-85f4-4a43-b909-fc7c77b1e70b")
-		(property "Reference" "#PWR09"
-			(at 123.19 53.34 0)
+		(property "Reference" "#PWR07"
+			(at 250.19 55.88 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -22729,7 +22659,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 118.11 48.768 0)
+			(at 245.11 51.308 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -22737,7 +22667,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 123.19 46.99 0)
+			(at 250.19 49.53 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -22746,7 +22676,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 123.19 46.99 0)
+			(at 250.19 49.53 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -22755,7 +22685,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 123.19 46.99 0)
+			(at 250.19 49.53 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -22767,9 +22697,9 @@
 			(uuid "9e7d4d5f-cfbd-420e-bef8-dd0571eefb6a")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "#PWR09")
+					(reference "#PWR07")
 					(unit 1)
 				)
 			)
@@ -22834,7 +22764,7 @@
 			(uuid "6019ac8a-00bd-4457-9300-c754aad6435b")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "TP9")
 					(unit 1)
@@ -22909,7 +22839,7 @@
 			(uuid "4aa2040d-3409-489a-b869-55496e12e0dd")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "J15")
 					(unit 1)
@@ -22926,7 +22856,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "ee953f33-6fc5-478c-919f-481414fe3a09")
-		(property "Reference" "R8"
+		(property "Reference" "R10"
 			(at 201.93 101.854 90)
 			(effects
 				(font
@@ -23003,9 +22933,9 @@
 			(uuid "8ca9934e-f7fe-47b2-9be4-be59fefe215c")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "R8")
+					(reference "R10")
 					(unit 1)
 				)
 			)
@@ -23021,7 +22951,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "f0380c68-15fa-47c6-95d6-6d5943257121")
-		(property "Reference" "#PWR011"
+		(property "Reference" "#PWR014"
 			(at 309.88 72.39 0)
 			(effects
 				(font
@@ -23070,9 +23000,9 @@
 			(uuid "08b99c27-60a7-4ec2-8327-15aabdaf81f6")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "#PWR011")
+					(reference "#PWR014")
 					(unit 1)
 				)
 			)
@@ -23080,15 +23010,15 @@
 	)
 	(symbol
 		(lib_id "Sensor_Energy:INA226")
-		(at 132.08 96.52 0)
+		(at 144.78 55.88 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid "f3685137-872a-4e14-a03d-077ed4619418")
-		(property "Reference" "U3"
-			(at 127.762 79.756 0)
+		(property "Reference" "U2"
+			(at 140.462 39.116 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -23097,7 +23027,7 @@
 			)
 		)
 		(property "Value" "INA226AIDGSR"
-			(at 127.762 82.296 0)
+			(at 140.462 41.656 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -23106,7 +23036,7 @@
 			)
 		)
 		(property "Footprint" "JLCImport:INA226AIDGSR"
-			(at 152.4 107.95 0)
+			(at 165.1 67.31 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -23115,7 +23045,7 @@
 			)
 		)
 		(property "Datasheet" "http://www.ti.com/lit/ds/symlink/ina226.pdf"
-			(at 140.97 99.06 0)
+			(at 153.67 58.42 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -23124,7 +23054,7 @@
 			)
 		)
 		(property "Description" "High-Side or Low-Side Measurement, Bi-Directional Current and Power Monitor (0-36V) with I2C Compatible Interface, VSSOP-10"
-			(at 132.08 96.52 0)
+			(at 144.78 55.88 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -23133,7 +23063,7 @@
 			)
 		)
 		(property "LCSC" "C49851"
-			(at 132.08 96.52 0)
+			(at 144.78 55.88 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -23142,7 +23072,7 @@
 			)
 		)
 		(property "Manufacturer" "Texas Instruments"
-			(at 132.08 96.52 0)
+			(at 144.78 55.88 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -23151,7 +23081,7 @@
 			)
 		)
 		(property "Manufacturer Part" "INA226AIDGSR"
-			(at 132.08 96.52 0)
+			(at 144.78 55.88 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -23190,9 +23120,9 @@
 			(uuid "c2368687-0d79-4d12-8ae7-dd8e80230141")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "U3")
+					(reference "U2")
 					(unit 1)
 				)
 			)
@@ -23208,7 +23138,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "f3f9b592-021d-452f-8667-ba0e8e14182c")
-		(property "Reference" "C3"
+		(property "Reference" "C7"
 			(at 238.76 72.3899 0)
 			(effects
 				(font
@@ -23287,9 +23217,9 @@
 			(uuid "3bcabf3f-dd53-4c6b-9140-b0ba8e61eed8")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "C3")
+					(reference "C7")
 					(unit 1)
 				)
 			)
@@ -23304,7 +23234,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "f4fb5ab0-949e-42cb-a855-984f39fa8f8b")
-		(property "Reference" "R19"
+		(property "Reference" "R20"
 			(at 298.45 171.704 0)
 			(effects
 				(font
@@ -23383,9 +23313,74 @@
 			(uuid "8faee403-cbbd-4807-849d-2723e069cde9")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "R19")
+					(reference "R20")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 55.88 54.61 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "f7f5503f-34a7-46f1-8eef-6a3464ae0083")
+		(property "Reference" "#PWR09"
+			(at 55.88 60.96 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 55.88 58.928 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 55.88 54.61 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 55.88 54.61 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 55.88 54.61 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "6685087f-3dd6-49e2-8895-2883c25155db")
+		)
+		(instances
+			(project "cloudSmoker_ver2e"
+				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
+					(reference "#PWR09")
 					(unit 1)
 				)
 			)
@@ -23458,7 +23453,7 @@
 			(uuid "8c0d5042-44c0-4e73-bc9b-0d0a5d1b24a9")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "J6")
 					(unit 1)
@@ -23475,7 +23470,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "f970f27e-0716-48da-824a-d660952e19a9")
-		(property "Reference" "R18"
+		(property "Reference" "R19"
 			(at 267.97 171.4499 0)
 			(effects
 				(font
@@ -23554,9 +23549,9 @@
 			(uuid "6551405d-2967-4e17-a18e-c5eee3b07971")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "R18")
+					(reference "R19")
 					(unit 1)
 				)
 			)
@@ -23572,7 +23567,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "f9df652b-087c-4bba-8eb5-841eeddbc7cd")
-		(property "Reference" "R15"
+		(property "Reference" "R16"
 			(at 355.6 162.5599 0)
 			(effects
 				(font
@@ -23651,9 +23646,9 @@
 			(uuid "211106ca-367e-4695-9ae4-9da4a4d6f900")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "R15")
+					(reference "R16")
 					(unit 1)
 				)
 			)
@@ -23661,7 +23656,7 @@
 	)
 	(symbol
 		(lib_id "Device:LED_Small")
-		(at 160.02 36.83 90)
+		(at 287.02 39.37 90)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -23670,7 +23665,7 @@
 		(fields_autoplaced yes)
 		(uuid "faac5c27-9485-473a-bd53-0a6f589f70ef")
 		(property "Reference" "LED2"
-			(at 162.56 35.4964 90)
+			(at 289.56 38.0364 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -23679,7 +23674,7 @@
 			)
 		)
 		(property "Value" "White"
-			(at 162.56 38.0364 90)
+			(at 289.56 40.5764 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -23688,7 +23683,7 @@
 			)
 		)
 		(property "Footprint" "JLCImport:0603White_light_C2290"
-			(at 160.02 36.83 90)
+			(at 287.02 39.37 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -23697,7 +23692,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 160.02 36.83 90)
+			(at 287.02 39.37 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -23706,7 +23701,7 @@
 			)
 		)
 		(property "Description" "Light emitting diode, small symbol"
-			(at 160.02 36.83 0)
+			(at 287.02 39.37 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -23715,7 +23710,7 @@
 			)
 		)
 		(property "LCSC" "C2290"
-			(at 160.02 36.83 0)
+			(at 287.02 39.37 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -23724,7 +23719,7 @@
 			)
 		)
 		(property "Manufacturer" "Hubei KENTO Elec"
-			(at 160.02 36.83 0)
+			(at 287.02 39.37 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -23733,7 +23728,7 @@
 			)
 		)
 		(property "Manufacturer Part" "KT-0603W"
-			(at 160.02 36.83 0)
+			(at 287.02 39.37 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -23742,7 +23737,7 @@
 			)
 		)
 		(property "Sim.Pins" "1=K 2=A"
-			(at 160.02 36.83 0)
+			(at 287.02 39.37 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -23757,7 +23752,7 @@
 			(uuid "9cf0ff6b-5b98-477f-bae9-833ca512c069")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "LED2")
 					(unit 1)
@@ -23775,7 +23770,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "fc534039-0184-434e-94e8-c87bbc5663a0")
-		(property "Reference" "R9"
+		(property "Reference" "R11"
 			(at 182.118 106.68 0)
 			(effects
 				(font
@@ -23854,9 +23849,9 @@
 			(uuid "71ef452c-b31f-477c-8abe-86db59a160fb")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "R9")
+					(reference "R11")
 					(unit 1)
 				)
 			)
@@ -23975,7 +23970,7 @@
 			(uuid "34fd09f0-d3b8-483a-a6eb-499c035d97be")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "U6")
 					(unit 1)
@@ -23985,7 +23980,7 @@
 	)
 	(symbol
 		(lib_id "Device:C")
-		(at 93.98 33.02 0)
+		(at 220.98 35.56 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -23994,7 +23989,7 @@
 		(fields_autoplaced yes)
 		(uuid "fe7fab43-3ae6-434e-a129-b3077d1719b8")
 		(property "Reference" "C1"
-			(at 97.79 31.7499 0)
+			(at 224.79 34.2899 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -24003,7 +23998,7 @@
 			)
 		)
 		(property "Value" "1uF"
-			(at 97.79 34.2899 0)
+			(at 224.79 36.8299 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -24012,7 +24007,7 @@
 			)
 		)
 		(property "Footprint" "JLCImport:CL10A105KB8NNNC"
-			(at 94.9452 36.83 0)
+			(at 221.9452 39.37 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -24021,7 +24016,7 @@
 			)
 		)
 		(property "Datasheet" "https://media.digikey.com/pdf/Data%20Sheets/Samsung%20PDFs/CL_Series_MLCC_ds.pdf"
-			(at 93.98 33.02 0)
+			(at 220.98 35.56 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -24030,7 +24025,7 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
-			(at 93.98 33.02 0)
+			(at 220.98 35.56 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -24039,7 +24034,7 @@
 			)
 		)
 		(property "LCSC" "C15849"
-			(at 93.98 33.02 0)
+			(at 220.98 35.56 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -24048,7 +24043,7 @@
 			)
 		)
 		(property "Manufacturer" "Samsung Electro-Mechanics"
-			(at 93.98 33.02 0)
+			(at 220.98 35.56 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -24057,7 +24052,7 @@
 			)
 		)
 		(property "Manufacturer Part" "CL10A105KB8NNNC"
-			(at 93.98 33.02 0)
+			(at 220.98 35.56 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -24072,7 +24067,7 @@
 			(uuid "e79d031a-9f87-487b-bd10-24ccc031f2a0")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "C1")
 					(unit 1)
@@ -24082,7 +24077,7 @@
 	)
 	(symbol
 		(lib_id "power:+3.3V")
-		(at 236.22 45.72 90)
+		(at 474.98 52.07 90)
 		(mirror x)
 		(unit 1)
 		(exclude_from_sim no)
@@ -24091,7 +24086,7 @@
 		(dnp no)
 		(uuid "fe993f82-2787-4b88-b6a1-1373d97fdedc")
 		(property "Reference" "#PWR08"
-			(at 240.03 45.72 0)
+			(at 478.79 52.07 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -24100,7 +24095,7 @@
 			)
 		)
 		(property "Value" "+3.3V"
-			(at 232.41 45.7201 90)
+			(at 471.17 52.0701 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -24109,7 +24104,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 236.22 45.72 0)
+			(at 474.98 52.07 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -24118,7 +24113,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 236.22 45.72 0)
+			(at 474.98 52.07 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -24127,7 +24122,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"+3.3V\""
-			(at 236.22 45.72 0)
+			(at 474.98 52.07 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -24139,7 +24134,7 @@
 			(uuid "2a4ef137-9eac-40c3-af1c-396d5e50aaf2")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "#PWR08")
 					(unit 1)
@@ -24156,7 +24151,7 @@
 		(on_board yes)
 		(dnp no)
 		(uuid "ffe44b25-bcd4-4005-9ef3-1eb6d880e46c")
-		(property "Reference" "TP3"
+		(property "Reference" "TP5"
 			(at 246.38 79.248 90)
 			(effects
 				(font
@@ -24205,9 +24200,9 @@
 			(uuid "1109f4c8-61ad-44b1-82ff-12e735cf6aac")
 		)
 		(instances
-			(project "cloudSmoker_ver2d"
+			(project "cloudSmoker_ver2e"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "TP3")
+					(reference "TP5")
 					(unit 1)
 				)
 			)

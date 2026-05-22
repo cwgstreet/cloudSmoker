@@ -38,8 +38,8 @@
         "other_text_upright": false,
         "pads": {
           "drill": 0.0,
-          "height": 0.7,
-          "width": 0.7
+          "height": 0.5,
+          "width": 1.0
         },
         "silk_line_width": 0.1,
         "silk_text_italic": false,
@@ -464,7 +464,7 @@
     "pinned_symbol_libs": []
   },
   "meta": {
-    "filename": "cloudSmoker_ver2d.kicad_pro",
+    "filename": "cloudSmoker_ver2e.kicad_pro",
     "version": 3
   },
   "net_settings": {
@@ -531,7 +531,7 @@
         "clearance": 0.15,
         "line_style": 0,
         "name": "I2C",
-        "pcb_color": "rgb(0, 255, 255)",
+        "pcb_color": "rgb(0, 194, 194)",
         "priority": 5,
         "schematic_color": "rgb(0, 132, 132)",
         "track_width": 0.22,
