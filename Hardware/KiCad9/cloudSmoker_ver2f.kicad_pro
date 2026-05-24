@@ -568,6 +568,8 @@
       {
         "bus_width": 16,
         "clearance": 0.15,
+        "diff_pair_gap": 0.2032,
+        "diff_pair_width": 0.2863,
         "name": "USB_DATA",
         "pcb_color": "rgb(0, 0, 255)",
         "priority": 3,
