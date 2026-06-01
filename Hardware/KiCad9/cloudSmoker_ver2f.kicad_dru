@@ -1,0 +1,4 @@
+(version 1)
+(rule "Narrow clearance for U6"
+   (constraint clearance (min 0.10mm))
+   (condition "A.Reference == 'U6' || B.Reference == 'U6'"))
