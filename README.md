@@ -24,15 +24,12 @@
 [![CC BY-NC-SA 4.0](https://img.shields.io/badge/Hardware-CC_BY--NC--SA_4.0-orange?logo=creativecommons&style=flat-square)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 [![CC BY-NC-SA 4.0](https://img.shields.io/badge/Enclosure-CC_BY--NC--SA_4.0-orange?logo=creativecommons&style=flat-square)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
+⚠️ **Version 2 Notice:** 
+<br>
 
-## 📜 Legacy Support (Version 1.0)
-The original version of this project was based on an **ESP8266** and was built on **Veroboard**. While it is no longer the main focus of development, you can still access all the original files:
+**This is the active development 
+branch for cloudSmoker V2. The original design is now deprecated but remains available on the v1-legacy branch.**
 
-*   **[Version 1.0 Release Page](https://github.com/cwgstreet/cloudSmoker/releases/tag/v1.0)**
-    *   `Hardware_v1.0.zip`: Includes Fritzing layouts, PDF schematics, and build photos.
-    *   `Firmware_v1.0.zip`: The stable code and compiled `.bin` for the original build.
-
-<!-- >**Note:** If you are building this project for the first time, we recommend using the **Version 2** PCB files found in this main branch. -->
 
 
 ---
@@ -46,6 +43,21 @@ The original version of this project was based on an **ESP8266** and was built o
 
 
 # cloudSmoker (v1-legacy) #
+
+
+## 📜 Legacy Support (Version 1.0)
+The original version of this project was based on an **ESP8266** and was built on **Veroboard**. While it is no longer the main focus of development, you can still access all the original files:
+
+*   **[Version 1.0 Release Page](https://github.com/cwgstreet/cloudSmoker/releases/tag/v1.0)**
+    *   `Hardware_v1.0.zip`: Includes Fritzing layouts, PDF schematics, and build photos.
+    *   `Firmware_v1.0.zip`: The stable code and compiled `.bin` for the original build.
+
+<!-- >**Note:** If you are building this project for the first time, we recommend using the **Version 2** PCB files found in this main branch. -->
+
+
+
+
+
 **WiFi BBQ Temperature Monitor Project**
 
 [comment]: <> (This project exists as a hands-on opportunity to learn more about electronics, IoT, Arduino / ESP8266 programming, GitHub markdown, etc)
