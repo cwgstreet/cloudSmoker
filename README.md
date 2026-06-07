@@ -36,6 +36,12 @@ The original version of this project was based on an **ESP8266** and was built o
 
 ---
 
+<img align="right" src="Images/CloudSmoker-Icon-multicolour-txt-no-bg-resized.png#gh-light-mode-only" width="400"/> 
+<img align="right" src="Images/CloudSmoker-Icon-multicolour-txt-with-bg-resized.jpg#gh-dark-mode-only" width="400"/>  
+
+<br>
+
+<br>
 
 
 # cloudSmoker (v1-legacy) #
