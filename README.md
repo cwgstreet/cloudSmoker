@@ -110,7 +110,7 @@ A public ThingSpeak [cloudSmoker dashboard](https://thingspeak.com/channels/1679
 
 ### Licence ###
 
-MIT Licence
+**cloudSmoker (ver1):** MIT Licence.  Note that licence terms have changed for cloudSmoker2 (Ver2)
 
 --- END ---
 
