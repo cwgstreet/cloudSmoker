@@ -1,0 +1,431 @@
+(footprint "USB_C_Receptacle_G-Switch_GT-USB-7010ASV"
+	(version 20241229)
+	(generator "pcbnew")
+	(generator_version "9.0")
+	(layer "F.Cu")
+	(descr "USB Type C, right-angle, SMT, https://datasheet.lcsc.com/lcsc/2204071530_G-Switch-GT-USB-7010ASV_C2988369.pdf")
+	(tags "USB C Type-C Receptacle SMD")
+	(property "Reference" "U3"
+		(at 4.25 -6.2 180)
+		(layer "F.SilkS")
+		(uuid "e4d15e7c-59c3-46bb-ade1-2b832e2dacb5")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "GT-USB-7010ASV"
+		(at 0 5 0)
+		(layer "F.Fab")
+		(uuid "7d7979c1-bc06-4460-b095-4c043a7149af")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" "https://www.lcsc.com/datasheet/C2988369.pdf"
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "53bdd11a-6efc-46bf-8d82-5950fe2476eb")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" "USB 2.0-only 16P Type-C Receptacle connector"
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "807456eb-6ded-45e0-90aa-f5e9bccbb077")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "LCSC" "C2988369"
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "36c9ee72-2a02-4278-a2aa-46846b5e8724")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Manufacturer" "G-Switch"
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "04186e88-f055-459c-8e3c-192a96480da3")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Manufacturer Part" "GT-USB-7010ASV"
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "2c37b11b-8aa3-4905-aa5e-baecd7e212a6")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(clearance 0.15)
+	(attr smd)
+	(fp_line
+		(start -4.58 -1.85)
+		(end -4.58 0.07)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "a6cffb84-b628-465e-a778-5ae6933484c5")
+	)
+	(fp_line
+		(start -4.58 2.59)
+		(end -4.58 2.08)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "fe378e6c-ea4b-415d-9c24-52e5f62c9d8d")
+	)
+	(fp_line
+		(start 4.58 0.07)
+		(end 4.58 -1.85)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "5e57428f-4ced-4fdb-8769-f1ffaaad7bdf")
+	)
+	(fp_line
+		(start 4.58 2.08)
+		(end 4.58 2.59)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "eb626461-2368-46cd-8393-b928748cf6e9")
+	)
+	(fp_line
+		(start -5.32 -4.85)
+		(end 5.32 -4.85)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "381c187f-1054-4604-9bbd-7b6869908397")
+	)
+	(fp_line
+		(start -5.32 4.18)
+		(end -5.32 -4.85)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "7cb8d7b8-b653-4350-8e4e-4b7f39de44b5")
+	)
+	(fp_line
+		(start 5.32 -4.85)
+		(end 5.32 4.18)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "0eda15d6-30d7-4d16-836c-ed183be8a831")
+	)
+	(fp_line
+		(start 5.32 4.18)
+		(end -5.32 4.18)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "2ee43ae6-626d-4171-b3d4-bab935759863")
+	)
+	(fp_line
+		(start -4.47 -3.675)
+		(end -4.47 3.675)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "0e0f2084-ef84-4d97-b7ce-b392c782d573")
+	)
+	(fp_line
+		(start -4.47 -3.675)
+		(end 4.47 -3.675)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "0a78ab13-8b33-4928-8086-a013b67799fe")
+	)
+	(fp_line
+		(start -4.47 3.675)
+		(end 4.47 3.675)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "bd904e4c-691d-44d4-9ed1-101016e85c51")
+	)
+	(fp_line
+		(start 4.47 3.675)
+		(end 4.47 -3.675)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "0f2b7ac1-ed55-4e66-91b7-c17b0f631976")
+	)
+	(fp_line
+		(start 4.6 2.8)
+		(end -4.56 2.8)
+		(stroke
+			(width 0.12)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "660a1a31-f07e-49f2-8d17-c13a5ceb1232")
+	)
+	(fp_text user "${REFERENCE}"
+		(at 0 0 0)
+		(layer "F.Fab")
+		(uuid "4401d5ac-53e5-43bb-a9f6-f9a6d33574e7")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(fp_text user "Board Edge"
+		(at -4.3 2.8 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(uuid "e4a4fe6d-c2d5-44a9-aea1-80b76c749655")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+			(justify left bottom)
+		)
+	)
+	(pad "" np_thru_hole circle
+		(at -2.89 -2.605)
+		(size 0.65 0.65)
+		(drill 0.65)
+		(layers "*.Cu" "*.Mask")
+		(uuid "fb79275f-d2f9-47b4-a793-15aa4eec0a21")
+	)
+	(pad "" np_thru_hole circle
+		(at 2.89 -2.605)
+		(size 0.65 0.65)
+		(drill 0.65)
+		(layers "*.Cu" "*.Mask")
+		(uuid "2f62e9f5-e9a4-460d-b2c7-7677a48642cc")
+	)
+	(pad "A1" smd rect
+		(at -3.2 -3.775)
+		(size 0.6 1.14)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(uuid "802821ac-a869-42fe-a431-4a205f2423da")
+	)
+	(pad "A4" smd rect
+		(at -2.4 -3.775)
+		(size 0.6 1.14)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(uuid "544cb710-2da4-487c-b58d-74be5f7aaa42")
+	)
+	(pad "A5" smd rect
+		(at -1.25 -3.725)
+		(size 0.3 1.24)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(uuid "a2643c2c-6d79-4ab1-a6be-05e1194d62e1")
+	)
+	(pad "A6" smd rect
+		(at -0.25 -3.725)
+		(size 0.3 1.24)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(uuid "9ff11590-660c-498b-9aae-6a48421b4110")
+	)
+	(pad "A7" smd rect
+		(at 0.25 -3.725)
+		(size 0.3 1.24)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(uuid "9ab89b3c-c4aa-4aa8-9f6a-cd2d131680d7")
+	)
+	(pad "A8" smd rect
+		(at 1.25 -3.725)
+		(size 0.3 1.24)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(uuid "b55a9de6-dfd8-4e69-963e-402212138413")
+	)
+	(pad "A9" smd rect
+		(at 2.4 -3.775)
+		(size 0.6 1.14)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(uuid "7964f15f-03ee-4c90-b545-c2327a02afb0")
+	)
+	(pad "A12" smd rect
+		(at 3.2 -3.775)
+		(size 0.6 1.14)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(uuid "93cb25db-b407-493d-b1b0-46f7e2680eae")
+	)
+	(pad "B1" smd rect
+		(at 3.2 -3.775)
+		(size 0.6 1.14)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(uuid "f5d7cc17-5202-4aff-9289-d0bf75d00166")
+	)
+	(pad "B4" smd rect
+		(at 2.4 -3.775)
+		(size 0.6 1.14)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(uuid "91448115-b8fb-4251-8a3d-be9ed75f3a55")
+	)
+	(pad "B5" smd rect
+		(at 1.75 -3.725)
+		(size 0.3 1.24)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(uuid "52183fd2-e632-40db-9394-65cecd52a962")
+	)
+	(pad "B6" smd rect
+		(at 0.75 -3.725)
+		(size 0.3 1.24)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(uuid "f8b0770e-9e07-4614-8adc-15d8cde148d5")
+	)
+	(pad "B7" smd rect
+		(at -0.75 -3.725)
+		(size 0.3 1.24)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(uuid "ec22ccef-dfb7-4b55-8c0f-72ec15fc875d")
+	)
+	(pad "B8" smd rect
+		(at -1.75 -3.725)
+		(size 0.3 1.24)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(uuid "4e4016f3-c09b-4387-8b63-7ccaba92eba6")
+	)
+	(pad "B9" smd rect
+		(at -2.4 -3.775)
+		(size 0.6 1.14)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(uuid "68a034ab-7280-41d2-83e3-41ca9f75c35a")
+	)
+	(pad "B12" smd rect
+		(at -3.2 -3.775)
+		(size 0.6 1.14)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(uuid "1cfdeb7e-e63d-46bc-acf4-097dbf58009a")
+	)
+	(pad "S1" thru_hole oval
+		(at -4.32 -3.125)
+		(size 1 2.1)
+		(drill oval 0.6 1.7)
+		(property pad_prop_heatsink)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "068f199a-6bb5-45ee-8182-9b9900fcf8ff")
+	)
+	(pad "S1" thru_hole oval
+		(at -4.32 1.075)
+		(size 1 1.8)
+		(drill oval 0.6 1.4)
+		(property pad_prop_heatsink)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "611b6d75-0721-4db6-8520-62de4a95475d")
+	)
+	(pad "S1" thru_hole oval
+		(at 4.32 -3.125)
+		(size 1 2.1)
+		(drill oval 0.6 1.7)
+		(property pad_prop_heatsink)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "5742919a-ec6c-476a-bee7-9aaeb09ee43e")
+	)
+	(pad "S1" thru_hole oval
+		(at 4.32 1.075)
+		(size 1 1.8)
+		(drill oval 0.6 1.4)
+		(property pad_prop_heatsink)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "b161763e-87ad-4205-badf-6f129cbe61bc")
+	)
+	(embedded_fonts no)
+	(model "${KIPRJMOD}/JLCImport.3dshapes/GT-USB-7010ASV.wrl"
+		(offset
+			(xyz 0 0 0)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz 0 0 0)
+		)
+	)
+	(model "${KIPRJMOD}/JLCImport.3dshapes/GT-USB-7010ASV.step"
+		(offset
+			(xyz 0 0 0)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz 0 0 0)
+		)
+	)
+	(model "${KIPRJMOD}/JLCImport.3dshapes/GT-USB-7010ASV.step"
+		(offset
+			(xyz 0 0 0)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz 0 0 0)
+		)
+	)
+)
