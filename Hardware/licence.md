@@ -1,4 +1,4 @@
-Copyright (c) 2026 C. W. Greenstreet (cwgstreet)
+**Copyright (c) 2026 C. W. Greenstreet (cwgstreet)**
 
 The hardware schematics, PCB layouts, and fabrication files in this directory 
 are licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 
