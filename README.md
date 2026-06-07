@@ -80,7 +80,7 @@ The original version of this project was based on an **ESP8266** and was built o
 </p>
 
 
-### Updates 🆕
+### Updates 
 1. **Removed pitTemp probe plug-in checks** - no longer displays LCD error or transmits pitTemp values to ThingSpeak if pit temperature probe is unplugged; necessary to allow pitTemp probe to be unplugged after meat is taken off grill so that resting meat temps can continue to be monitored (common to rest briskett in faux cambo for ~1 hour after removing meat from grill).
 <br>
 <br>
