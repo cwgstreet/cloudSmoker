@@ -1,21 +1,9 @@
-MIT License
+## Licensing & Open Source Architecture
 
-Copyright (c) [2021] [Carl W Greenstreet]
+Starting with **Revision 2** (the contents of this branch), the cloudSmoker project utilizes a mixed copyleft and non-commercial open-source model to promote community remixing while preventing unauthorized commercial exploitation:
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+* 💻 **Firmware / Software Source:** Distributed under the [GNU GPL v3](LICENSE) License (covers `src/`, `lib/`, and `include/`).
+* 🎛️ **Hardware (KiCad Schematic & PCB Design):** Distributed under the [CC BY-NC-SA 4.0](hardware/README.md) License inside the `/hardware` directory.
+* 📦 **Enclosure (3D Models & Enclosure Files):** Distributed under the [CC BY-NC-SA 4.0](enclosure/README.md) License inside the `/enclosure` directory.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+> ⚠️ **Note on Version History:** Legacy files belonging to cloudSmoker Revision 1 (found on the `main` or `v1-legacy` branch) remain under their original permissive MIT license terms. All new features, layouts, and assets developed for Revision 2 on this branch are bound by the terms above.
