@@ -1,0 +1,19 @@
+** Drc report for cloudSmoker_ver2f.kicad_pcb **
+** Created on 2026-06-12T11:53:19+0930 **
+** Report includes: Errors, Warnings, Exclusions **
+
+** Found 2 DRC violations **
+[starved_thermal]: Thermal relief connection to zone incomplete (layer F.Cu; pad min spoke count 2; actual 1)
+    Local override; error
+    @(158.1250 mm, 106.0750 mm): Zone 'VBUS' [+5V] on F.Cu, priority 8
+    @(155.2306 mm, 105.8000 mm): Pad 1 [+5V] of C1 on F.Cu
+[starved_thermal]: Thermal relief connection to zone incomplete (layer F.Cu; pad min spoke count 2; actual 1)
+    Local override; error
+    @(151.0000 mm, 105.7000 mm): Zone 'VBUS' [+5V] on F.Cu, priority 9
+    @(155.2306 mm, 105.8000 mm): Pad 1 [+5V] of C1 on F.Cu
+
+** Found 0 unconnected pads **
+
+** Found 0 Footprint errors **
+
+** End of Report **
