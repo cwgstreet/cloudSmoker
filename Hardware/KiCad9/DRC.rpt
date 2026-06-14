@@ -1,16 +1,23 @@
 ** Drc report for cloudSmoker_ver2f.kicad_pcb **
-** Created on 2026-06-12T11:53:19+0930 **
+** Created on 2026-06-14T14:14:16+0930 **
 ** Report includes: Errors, Warnings, Exclusions **
 
-** Found 2 DRC violations **
-[starved_thermal]: Thermal relief connection to zone incomplete (layer F.Cu; pad min spoke count 2; actual 1)
-    Local override; error
-    @(158.1250 mm, 106.0750 mm): Zone 'VBUS' [+5V] on F.Cu, priority 8
-    @(155.2306 mm, 105.8000 mm): Pad 1 [+5V] of C1 on F.Cu
-[starved_thermal]: Thermal relief connection to zone incomplete (layer F.Cu; pad min spoke count 2; actual 1)
-    Local override; error
-    @(151.0000 mm, 105.7000 mm): Zone 'VBUS' [+5V] on F.Cu, priority 9
-    @(155.2306 mm, 105.8000 mm): Pad 1 [+5V] of C1 on F.Cu
+** Found 5 DRC violations **
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(112.9500 mm, 81.1500 mm): Circle of R10 on F.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(112.9500 mm, 83.6500 mm): Circle of R12 on F.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(114.5500 mm, 85.6000 mm): Circle of R13 on F.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(112.9500 mm, 88.9000 mm): Circle of R14 on F.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(114.5500 mm, 90.8500 mm): Circle of R15 on F.Silkscreen
 
 ** Found 0 unconnected pads **
 

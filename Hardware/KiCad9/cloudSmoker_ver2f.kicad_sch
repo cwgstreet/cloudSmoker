@@ -7957,7 +7957,7 @@
 	)
 	(wire
 		(pts
-			(xy 251.46 27.94) (xy 251.46 24.13)
+			(xy 250.19 27.94) (xy 250.19 24.13)
 		)
 		(stroke
 			(width 0)
@@ -10742,7 +10742,7 @@
 	)
 	(wire
 		(pts
-			(xy 251.46 24.13) (xy 256.54 24.13)
+			(xy 250.19 24.13) (xy 256.54 24.13)
 		)
 		(stroke
 			(width 0)
@@ -11159,16 +11159,6 @@
 			(type default)
 		)
 		(uuid "eb9db317-e492-4dde-8c65-9cd836e0f2c5")
-	)
-	(wire
-		(pts
-			(xy 250.19 27.94) (xy 251.46 27.94)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "eba1dbc6-1421-4f45-b2dd-80e8fc761390")
 	)
 	(wire
 		(pts
@@ -13045,7 +13035,7 @@
 				)
 			)
 		)
-		(property "Footprint" "JLCImport:PTFR0603B120KP9"
+		(property "Footprint" "JLCImport:R0603_part-C23345"
 			(at 175.26 114.808 90)
 			(effects
 				(font
@@ -13579,73 +13569,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:R")
-		(at 116.84 77.47 270)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "138c5db1-5b12-43ff-b15e-d4fed218ac21")
-		(property "Reference" "R6"
-			(at 116.84 80.01 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "10"
-			(at 116.84 82.042 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "JLCImport:PTFR0603B120KP9"
-			(at 116.84 75.692 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 116.84 77.47 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Resistor"
-			(at 116.84 77.47 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "df1d1f7c-e976-4909-818f-38b11462f27d")
-		)
-		(pin "2"
-			(uuid "1903ed8a-6d6f-4f43-b4b1-41fe11a860d3")
-		)
-		(instances
-			(project "cloudSmoker_ver2f"
-				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "R6")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Connector_Audio:AudioJack2_SwitchT")
 		(at 34.29 199.39 0)
 		(unit 1)
@@ -14018,7 +13941,7 @@
 		(mirror x)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
 		(dnp no)
 		(uuid "1c6e7a44-bcd9-4219-8292-1687d307b43d")
@@ -14318,74 +14241,6 @@
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 116.84 69.85 270)
-		(mirror x)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "230f10db-690d-4425-a0de-1b0d870e1381")
-		(property "Reference" "R4"
-			(at 116.84 65.786 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "10"
-			(at 116.84 67.564 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "JLCImport:PTFR0603B120KP9"
-			(at 116.84 71.628 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 116.84 69.85 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Resistor"
-			(at 116.84 69.85 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "b41d1784-4108-4975-823c-83fd49de6c24")
-		)
-		(pin "2"
-			(uuid "7afcdbc8-6cc9-4020-a896-699fb5fb8179")
-		)
-		(instances
-			(project "cloudSmoker_ver2f"
-				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "R4")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:R")
 		(at 68.58 66.04 90)
 		(unit 1)
 		(exclude_from_sim no)
@@ -14548,7 +14403,7 @@
 		(at 144.78 83.82 270)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
 		(dnp no)
 		(fields_autoplaced yes)
@@ -15879,7 +15734,7 @@
 				)
 			)
 		)
-		(property "Footprint" "JLCImport:PTFR0603B120KP9"
+		(property "Footprint" "JLCImport:R0603_part-C23345"
 			(at 207.01 117.348 90)
 			(effects
 				(font
@@ -15953,7 +15808,7 @@
 		(at 266.7 247.65 270)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
 		(dnp no)
 		(fields_autoplaced yes)
@@ -16513,7 +16368,7 @@
 				)
 			)
 		)
-		(property "Footprint" "JLCImport:PTFR0603B120KP9"
+		(property "Footprint" "JLCImport:R0603_part-C21189_0-ohm"
 			(at 62.23 46.228 90)
 			(effects
 				(font
@@ -17444,7 +17299,7 @@
 		(mirror x)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
 		(dnp no)
 		(uuid "71d003d8-ab54-43ee-9a26-3b4aa8a2bca3")
@@ -17705,7 +17560,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 256.54 24.13 90)
+		(at 256.54 24.13 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -17713,7 +17568,7 @@
 		(dnp no)
 		(uuid "773c7b14-742c-4a59-a630-77628938f7d0")
 		(property "Reference" "#PWR01"
-			(at 262.89 24.13 0)
+			(at 256.54 30.48 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17722,7 +17577,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 261.112 24.13 0)
+			(at 256.54 28.702 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17906,7 +17761,7 @@
 		(mirror y)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
 		(dnp no)
 		(uuid "7cea1051-d4ef-41c4-b38f-d60426aa7985")
@@ -18503,103 +18358,6 @@
 			(project "cloudSmoker_ver2f"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "LED3")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:C")
-		(at 394.97 180.34 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "8cd8fe27-9362-437a-9450-4357a09a40ee")
-		(property "Reference" "C9"
-			(at 398.78 179.0699 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "1uF"
-			(at 398.78 181.6099 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "JLCImport:CC0603KRX7R9BB104"
-			(at 395.9352 184.15 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "kicad-embed://YAGEO MLCC Cap (C14663).pdf"
-			(at 394.97 180.34 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Unpolarized capacitor"
-			(at 394.97 180.34 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "LCSC" "C14663"
-			(at 394.97 180.34 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Manufacturer" "YAGEO"
-			(at 394.97 180.34 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Manufacturer Part" "CC0603KRX7R9BB104"
-			(at 394.97 180.34 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "2"
-			(uuid "9f0d8586-98a3-4128-94a8-d2bed5427940")
-		)
-		(pin "1"
-			(uuid "3fcea2a9-2a8e-4f3c-963b-233ec464aea4")
-		)
-		(instances
-			(project "cloudSmoker_ver2f"
-				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
-					(reference "C9")
 					(unit 1)
 				)
 			)
@@ -19356,7 +19114,7 @@
 				)
 			)
 		)
-		(property "Footprint" "JLCImport:PTFR0603B120KP9"
+		(property "Footprint" "JLCImport:R0603_part-C23345"
 			(at 207.01 112.268 90)
 			(effects
 				(font
@@ -19632,7 +19390,7 @@
 		(mirror x)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
 		(dnp no)
 		(uuid "9be0884e-1886-4007-a442-38fecb41686f")
@@ -19851,6 +19609,101 @@
 			(project "cloudSmoker_ver2f"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "R5")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 116.84 77.47 90)
+		(mirror x)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "a1cbba84-96b1-4729-b4ab-c913246d6838")
+		(property "Reference" "R6"
+			(at 116.84 80.01 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10"
+			(at 116.84 81.788 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "JLCImport:R0603_part-C22859_10-ohm"
+			(at 116.84 75.692 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 116.84 77.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Resistor"
+			(at 116.84 77.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C22859"
+			(at 116.84 77.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 116.84 77.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer Part" "0603WAF100JT5E"
+			(at 116.84 77.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "2670fb7e-2dd5-44f6-9585-409acf9dde6c")
+		)
+		(pin "2"
+			(uuid "16a32564-43d3-4f6a-8721-f43df7a354ba")
+		)
+		(instances
+			(project "cloudSmoker_ver2f"
+				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
+					(reference "R6")
 					(unit 1)
 				)
 			)
@@ -20130,7 +19983,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "~"
+		(property "Datasheet" "https://media.digikey.com/pdf/Data%20Sheets/Samsung%20PDFs/CL_Series_MLCC_ds.pdf"
 			(at 271.78 39.37 0)
 			(effects
 				(font
@@ -20281,7 +20134,7 @@
 				)
 			)
 		)
-		(property "Footprint" "JLCImport:PTFR0603B120KP9"
+		(property "Footprint" "JLCImport:R0603_part-C23345"
 			(at 207.01 109.728 90)
 			(effects
 				(font
@@ -20557,7 +20410,7 @@
 		(at 250.19 53.34 270)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
 		(dnp no)
 		(fields_autoplaced yes)
@@ -20786,7 +20639,7 @@
 		(mirror x)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
 		(dnp no)
 		(uuid "b8d0eb32-2c06-40bd-98ca-7c7ebbf2cf6e")
@@ -20920,7 +20773,7 @@
 		(mirror x)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
 		(dnp no)
 		(uuid "bc3441cf-12b3-4889-9b21-21482a30f213")
@@ -21267,7 +21120,7 @@
 		(mirror y)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
 		(dnp no)
 		(uuid "c4828014-1b92-4e23-bfbd-01f290609642")
@@ -21334,7 +21187,7 @@
 		(mirror x)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
 		(dnp no)
 		(uuid "c7176f9a-b562-4db7-b0b4-78770b43b827")
@@ -21661,6 +21514,103 @@
 			(project "cloudSmoker_ver2f"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "#PWR03")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 394.97 180.34 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "d01781a2-9015-499b-8f25-fa6fc6693cca")
+		(property "Reference" "C9"
+			(at 398.78 179.0699 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "1uF"
+			(at 398.78 181.6099 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "JLCImport:CL10A105KB8NNNC"
+			(at 395.9352 184.15 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://media.digikey.com/pdf/Data%20Sheets/Samsung%20PDFs/CL_Series_MLCC_ds.pdf"
+			(at 394.97 180.34 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Unpolarized capacitor"
+			(at 394.97 180.34 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C15849"
+			(at 394.97 180.34 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 394.97 180.34 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer Part" "CL10A105KB8NNNC"
+			(at 394.97 180.34 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "22c1f07c-92c0-4149-8115-6d0ad68d936f")
+		)
+		(pin "1"
+			(uuid "e7614c82-7049-47ef-82c1-fe10dd70014d")
+		)
+		(instances
+			(project "cloudSmoker_ver2f"
+				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
+					(reference "C9")
 					(unit 1)
 				)
 			)
@@ -22300,7 +22250,7 @@
 		(mirror y)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
 		(dnp no)
 		(uuid "de9e9894-ba75-4262-9af1-e3e89324ca26")
@@ -22870,7 +22820,7 @@
 		(at 229.87 130.81 270)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
 		(dnp no)
 		(fields_autoplaced yes)
@@ -23032,7 +22982,7 @@
 				)
 			)
 		)
-		(property "Footprint" "JLCImport:PTFR0603B120KP9"
+		(property "Footprint" "JLCImport:R0603_part-C23345"
 			(at 207.01 104.648 90)
 			(effects
 				(font
@@ -23163,6 +23113,100 @@
 			(project "cloudSmoker_ver2f"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "#PWR013")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 116.84 69.85 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "f199d294-7a60-44fe-b7e9-efbcd73d1861")
+		(property "Reference" "R4"
+			(at 116.84 65.278 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10"
+			(at 116.84 67.31 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "JLCImport:R0603_part-C22859_10-ohm"
+			(at 116.84 71.628 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 116.84 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Resistor"
+			(at 116.84 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C22859"
+			(at 116.84 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 116.84 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer Part" "0603WAF100JT5E"
+			(at 116.84 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "3f373d30-c70a-484b-8e75-0ecdc33641fd")
+		)
+		(pin "2"
+			(uuid "dc7ebdd0-1b47-4926-ac87-d6a628861f7c")
+		)
+		(instances
+			(project "cloudSmoker_ver2f"
+				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
+					(reference "R4")
 					(unit 1)
 				)
 			)
@@ -24307,7 +24351,7 @@
 		(at 241.3 80.01 270)
 		(unit 1)
 		(exclude_from_sim no)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
 		(dnp no)
 		(uuid "ffe44b25-bcd4-4005-9ef3-1eb6d880e46c")
