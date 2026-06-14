@@ -1,24 +1,14 @@
-
-<img align="right" src="Images/CloudSmoker-Icon-multicolour-txt-no-bg-resized.png#gh-light-mode-only" width="600"/> 
-<img align="right" src="Images/CloudSmoker-Icon-multicolour-txt-with-bg-resized.jpg#gh-dark-mode-only" width="600"/>  
+<div align="right">
+  <img src="https://github.com/cwgstreet/cloudSmoker/blob/2bfab04b95388c7ae71c3d2b0df8cb1d8890a34b/Images/CloudSmoker2%20graphic.png?raw=true" width="60%" alt="CloudSmoker2 Graphic">
+</div>
 <br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-
-
-
-
 
 ---
 
-# cloudSmoker2
+#  cloudSmoker2
 
 
+___
 
 [![GPLv3](https://img.shields.io/badge/Firmware-GPLv3-blue?logo=gnu&style=flat-square)](https://www.gnu.org/licenses/gpl-3.0.html)
 [![CC BY-NC-SA 4.0](https://img.shields.io/badge/Hardware-CC_BY--NC--SA_4.0-orange?logo=creativecommons&style=flat-square)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
@@ -80,7 +70,7 @@ The original version of this project was based on an **ESP8266** and was built o
 </p>
 
 
-### Updates 
+### Updates (ver1)
 1. **Removed pitTemp probe plug-in checks** - no longer displays LCD error or transmits pitTemp values to ThingSpeak if pit temperature probe is unplugged; necessary to allow pitTemp probe to be unplugged after meat is taken off grill so that resting meat temps can continue to be monitored (common to rest briskett in faux cambo for ~1 hour after removing meat from grill).
 <br>
 <br>
