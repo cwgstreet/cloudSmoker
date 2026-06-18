@@ -658,7 +658,7 @@
       "gencad": "",
       "idf": "",
       "netlist": "",
-      "plot": "",
+      "plot": "svg_files/",
       "pos_files": "",
       "specctra_dsn": "",
       "step": "",

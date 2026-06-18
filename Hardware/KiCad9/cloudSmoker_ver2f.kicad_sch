@@ -6588,18 +6588,6 @@
 		)
 		(uuid "05e6b25a-0c65-4f9e-8d57-19251bfa38ed")
 	)
-	(text "check TP8 is this correct?\n"
-		(exclude_from_sim no)
-		(at 213.36 131.064 0)
-		(effects
-			(font
-				(size 1 1)
-				(italic yes)
-				(color 255 0 0 1)
-			)
-		)
-		(uuid "07dc271c-58c2-4a19-98cb-43af3a96e009")
-	)
 	(text "JST XH 4-pin Male\n(DNP -add post-fabrication)"
 		(exclude_from_sim yes)
 		(at 107.696 172.466 0)
