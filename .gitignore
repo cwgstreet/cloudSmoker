@@ -32,3 +32,23 @@ fp-info-cache
 
 # --- Security ---
 lib/myConstants/secrets.h
+
+# ====================================================================
+# KiCad 9 & System Caches - cloudSmoker .gitignore
+# ====================================================================
+
+# Active lock files (prevent background crashes from locking git)
+*.lck
+.~lock.*
+*.tmp
+
+# KiCad Local Workspace Files (Window positions, local caches)
+*.kicad_prl
+fp-info-cache
+
+# Automatic Local Backups (Keep your zip backups local; GitHub shouldn't store them)
+*-backups/
+**/*-backups/
+
+# Intermediate Fabrication Assets (Keep zipped release files, drop loose files)
+production/cloudSmoker_ver2_2f/
