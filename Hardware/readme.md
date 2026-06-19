@@ -32,7 +32,7 @@ This directory serves as the root hardware repository for the **cloudSmoker2** p
 * **Component Portability**: Component symbols, tracking pads, and 3D packages are completely containerized locally inside the `JLCImport` folders. External global library paths are not required to audit the board.
 * **Fabrication Files**: The `KiCad9/production/` subdirectory houses pre-compiled fabrication packages including the zipped Gerber layer arrays, coordinates tables (`positions.csv`), and structural parts listings (`bom.csv`).
 
-### 2. Thermmister Data
+### 2. Thermistor Data
 * **`Thermistor datasheet/`**: Houses structural lookup sheets for the Semitec 105GT-2 high-temp food probes.
 
 ### 3. Physical & Enclosure Overlays
