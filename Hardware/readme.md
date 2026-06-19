@@ -25,17 +25,19 @@ This directory serves as the root hardware repository for the **cloudSmoker2** p
 └── licence.md                               # Open-source hardware licensing framework
 ```
 
-## ⚙️ Key Subsystems & Artifacts
+## ⚙️ Key File Subsystems
 
 ### 1. Electronic Design Automation (`KiCad9/`)
 * **ECAD Engine**: Engineered exclusively inside **KiCad 9**. Backward-compatibility issues can occur if parsed with older software builds.
 * **Component Portability**: Component symbols, tracking pads, and 3D packages are completely containerized locally inside the `JLCImport` folders. External global library paths are not required to audit the board.
 * **Fabrication Files**: The `KiCad9/production/` subdirectory houses pre-compiled fabrication packages including the zipped Gerber layer arrays, coordinates tables (`positions.csv`), and structural parts listings (`bom.csv`).
 
-### 2. Physical & Enclosure Overlays
+### 2. Thermmister Data
+* **`Thermistor datasheet/`**: Houses structural lookup sheets for the Semitec 105GT-2 high-temp food probes.
+
+### 3. Physical & Enclosure Overlays
 * **`arduino_housing_01_160717_CAD.PDF.pdf`**: Legacy cloudSmoker1 mechanical profile drawing used to verify PCB perimeter cuts, mounting hole positions, and connector face alignments against existing chassis designs.
 
-### 3. Thermmister Data
-* **`Thermistor datasheet/`**: Houses structural lookup sheets for the Semitec 105GT-2 high-temp food probes.
+
 ---
 
