@@ -20,7 +20,23 @@ ___
 **This is the active development 
 branch for cloudSmoker V2. The original design is now deprecated but remains available on the v1-legacy branch.**
 
+# Project Summary
 
+The **cloudSmoker** is a WiFi-enabled barbeque temperature monitor designed to take the guesswork out of low-and-slow cooks. 
+
+Building on the reliable foundation of the original cloudSmoker1 2022 release, Version 2 modernises the platform with a focus on precision, expanded capabilities, and a more comprehensive hardware design.
+
+### What’s New in cloudSmoker2
+*   **Expanded Monitoring:** Now supports up to four temperature probes for lager cooks.
+*   **Enhanced Precision:** Improved measurement accuracy and response via higher-resolution ADC, optimised bias resistor selection plus improved filtering and ADC management.
+*   **Modern Hardware:** Upgraded to a contemporary microcontroller, a refreshed display, and a custom 3D-printed enclosure.
+*   **Professional Build:** Transitioning to a custom-manufactured PCB using contemporary SMD (Surface Mount) components for increased reliability and a more compact footprint.
+*   **Refined Software:** Features seamless OTA (Over-The-Air) firmware updates, streamlined configuration menus, and robust exception monitoring.
+
+### How it Works
+The device tracks critical data points, such as pit and internal meat temperatures, and syncs them to an IoT dashboard. This allows for remote monitoring of real-time graphs and gauges from any browser or smartphone. 
+
+To ensure the cook stays on track, the system sends push notifications if temperatures drift or once the meat reaches its target. The project is designed to be cooker-agnostic, making it a reliable companion for a variety of smokers and BBQ setups.
 
 ---
 
