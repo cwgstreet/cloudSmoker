@@ -8,17 +8,19 @@
 #  cloudSmoker2
 
 # :construction: **Under Development**
-___
-
-[![GPLv3](https://img.shields.io/badge/Firmware-GPLv3-blue?logo=gnu&style=flat-square)](https://www.gnu.org/licenses/gpl-3.0.html)
-[![CC BY-NC-SA 4.0](https://img.shields.io/badge/Hardware-CC_BY--NC--SA_4.0-orange?logo=creativecommons&style=flat-square)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
-[![CC BY-NC-SA 4.0](https://img.shields.io/badge/Enclosure-CC_BY--NC--SA_4.0-orange?logo=creativecommons&style=flat-square)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 ⚠️ **Version 2 Notice:** 
 <br>
 
 **This is the active development 
 branch for cloudSmoker V2. The original design is now deprecated but remains available on the v1-legacy branch.**
+
+
+___
+
+[![GPLv3](https://img.shields.io/badge/Firmware-GPLv3-blue?logo=gnu&style=flat-square)](https://www.gnu.org/licenses/gpl-3.0.html)
+[![CC BY-NC-SA 4.0](https://img.shields.io/badge/Hardware-CC_BY--NC--SA_4.0-orange?logo=creativecommons&style=flat-square)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
+[![CC BY-NC-SA 4.0](https://img.shields.io/badge/Enclosure-CC_BY--NC--SA_4.0-orange?logo=creativecommons&style=flat-square)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 # Project Summary
 
