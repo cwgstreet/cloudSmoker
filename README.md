@@ -1,5 +1,5 @@
 <div align="right">
-  <img src="https://github.com/cwgstreet/cloudSmoker/blob/2bfab04b95388c7ae71c3d2b0df8cb1d8890a34b/Images/CloudSmoker2%20graphic.png?raw=true" width="60%" alt="CloudSmoker2 Graphic">
+  <img src="https://github.com/cwgstreet/cloudSmoker/blob/f71f9560538a947003fb284fc71c3b8596f17a33/Images/CloudSmoker2%20graphic%20shadow.png?raw=true" width="60%" alt="CloudSmoker2 Graphic">
 </div>
 <br>
 
