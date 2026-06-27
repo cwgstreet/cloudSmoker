@@ -1,0 +1,16 @@
+{
+  "output": {
+    "filePath": "repomix-output.xml",
+    "style": "xml"
+  },
+
+  "include": [
+    "src/**",
+    "include/**",
+    "lib/**",
+    "test/**",
+    "platformio.ini",
+    "README.md",
+    "*.md"
+  ]
+}

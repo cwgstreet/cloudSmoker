@@ -52,3 +52,7 @@ fp-info-cache
 
 # Intermediate Fabrication Assets (Keep zipped release files, drop loose files)
 production/cloudSmoker_ver2_2f/
+
+# Repomix output
+repomix-output.xml
+*.xml
