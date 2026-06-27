@@ -12,5 +12,13 @@
     "platformio.ini",
     "README.md",
     "*.md"
-  ]
+  ],
+
+  "ignore": {
+    "customPatterns": [
+      "**/*.backup",
+      "**/*.bak",
+      "**/*~"
+    ]
+  }
 }
