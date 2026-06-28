@@ -25,8 +25,11 @@
 // Note:  wrappers (ads1015, encoder, button) are already instantiated 
 // as extern globals in their respective library .cpp files!
 
+
+
 // Globals required by wrapEncoder.h
 bool hasRunFlag = 0;
+int16_t prevEncoderValue = 0; 
 
 void setup() {
     Serial.begin(SERIAL_MONITOR_SPEED);
