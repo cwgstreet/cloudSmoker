@@ -1,6 +1,6 @@
 /* ***************************************************************
- * periphials.h - library containing functions to test and use
- *   cloudSmoker hardware periphials: LCD and Serial Monitor
+ * peripherals.h - library containing functions to test and use
+ *   cloudSmoker hardware peripherals: LCD and Serial Monitor
  *
  *  C W Greenstreet, Ver1, 27Sep21
  *    MIT Licence - Released into the public domain

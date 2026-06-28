@@ -23,7 +23,8 @@
 
 #include "myConstants.h"  // all constants in one file
 
-const long BAUD_RATE = 74880;  // match native ESP8266 bootup baud rate to view bootup info, otherwise gibberish
+// speed defined in myConstants.h, which is set to 115200 for ESP32 native speed
+const long BAUD_RATE = SERIAL_MONITOR_SPEED;
 
 Press_Type button(BUTTON_PIN);  // instantiate button object from press_type (YABL child) library
 

@@ -1,6 +1,6 @@
 /* ***************************************************************
- * periphials.h - library containing functions to test and use
- *   cloudSmoker hardware periphials: LCD and Serial Monitor
+ * peripherals.h - library containing functions to test and use
+ *   cloudSmoker hardware peripherals: LCD and Serial Monitor
  *
  *  C W Greenstreet, Ver1, 27Sep21
  *    MIT Licence - Released into the public domain
@@ -15,7 +15,7 @@
 #include <hd44780ioClass/hd44780_I2Cexp.h>  // i2c expander i/o class header -> required for my YwRobot 1602 LCD
 
 // incliude local libraries
-#include "periphials.h"
+#include "peripherals.h"
 #include "helper_functions.h"
 
 /******************************************************

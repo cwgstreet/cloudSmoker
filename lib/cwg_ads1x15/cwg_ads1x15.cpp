@@ -24,7 +24,7 @@
 #include "cwg_MedianFilterLib2.h"  // fast, efficient median filter (fork that fixes memory leak)
 #include "cwg_ads1x15.h"
 #include "myConstants.h"  // all constants together in one file
-#include "periphials.h"
+#include "peripherals.h"
 
 // CWG_ADS1015 ads1015;  // instantiate ADS1015 ADC object at default address (ADDR conneced to GND)
 CWG_ADS1015 ads1015(0x48);  // instantiate ADS1015 ADC object at default address (0x48 when ADDR conneced to GND)

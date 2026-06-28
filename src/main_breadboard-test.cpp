@@ -17,77 +17,62 @@
 
 #include <Arduino.h>
 #include <Wire.h>
-#include "ADS1X15.h"
-#include "NewEncoder.h"
-#include <Bounce2.h>
+#include "myConstants.h"
+#include "cwg_ads1x15.h"
+#include "wrapEncoder.h"
+#include "press_type.h"
 
-// 1. Conditionally instantiate the correct ADC class based on platformio.ini flags
-#ifdef USE_ADS1015
-  ADS1015 adc;
-#elif defined(USE_ADS1115)
-  ADS1115 adc;
-#endif
+// Note:  wrappers (ads1015, encoder, button) are already instantiated 
+// as extern globals in their respective library .cpp files!
 
-// 2. Instantiate Encoder and Button
-// NewEncoder parameters: A pin, B pin, min value, max value, starting value, type
-NewEncoder encoder(PIN_ENCODER_A, PIN_ENCODER_B, -20, 20, 0, FULL_PULSE);
-Bounce debouncer = Bounce(); 
-
-int16_t currentEncoderValue = 0;
+// Globals required by wrapEncoder.h
+bool hasRunFlag = 0;
 
 void setup() {
-  Serial.begin(115200);
-  delay(1000);
-  Serial.println("\n--- cloudSmoker Hardware Test ---");
+    Serial.begin(SERIAL_MONITOR_SPEED);
+    delay(1000);
+    Serial.println(F("\n--- cloudSmoker2 Phase 1: ESP32 Hardware Test ---"));
 
-  // Initialize I2C with the pins defined in platformio.ini
-  Wire.begin(PIN_I2C_SDA, PIN_I2C_SCL);
+    // 1. Initialize I2C using the pins from myConstants (which pull from platformio.ini)
+    Wire.begin(I2C_SDA, I2C_SCL);
 
-  // Initialize ADC
-  if (!adc.begin()) {
-    Serial.println("Failed to initialize ADS1x15! Check wiring.");
-  } else {
-    Serial.println("ADS1x15 initialized successfully.");
-    adc.setGain(0); // 6.144 volt range
-  }
+    // 2. Initialize Custom ADC Wrapper
+    // gainSetting=0 (6.144V), modeSetting=1 (Single Shot), dataRateSetting=4 (1600sps)
+    ads1015.initialise(0, 1, 4);
+    Serial.println(F("CWG_ADS1015 Initialized."));
 
-  // Initialize Encoder
-  if (!encoder.begin()) {
-    Serial.println("Encoder Failed to Start. Check Pins.");
-  } else {
-    Serial.println("Encoder initialized.");
-  }
+    // 3. Initialize Custom Encoder Wrapper
+    encoder.initialise();
 
-  // Initialize Button
-  debouncer.attach(PIN_ENCODER_BTN, INPUT_PULLUP);
-  debouncer.interval(25); // 25ms debounce
+    // 4. Initialize Custom Button Wrapper (Yabl)
+    button.begin(BUTTON_PIN);
+    Serial.println(F("Press_Type Button Initialized."));
 }
 
 void loop() {
-  // 1. Read Button
-  debouncer.update();
-  if (debouncer.fell()) {
-    Serial.println("Encoder Button Pressed!");
-  }
+    // 1. Test Yabl Button Logic
+    button.update();
+    if (pressEventCode != NO_PRESS) {
+        button.functionTest(); // Prints "Short Press!", "Long Press!", etc.
+        pressEventCode = NO_PRESS; // Reset the global flag after handling
+    }
 
-  // 2. Read Encoder
-  int16_t newValue = encoder.getCount();
-  if (newValue != currentEncoderValue) {
-    Serial.print("Encoder Value: ");
-    Serial.println(newValue);
-    currentEncoderValue = newValue;
-  }
+    // 2. Test WrapEncoder Logic
+    if (encoder.moved()) {
+        int16_t currentVal = encoder.getCount();
+        Serial.print(F("Encoder Value Updated: "));
+        Serial.println(currentVal);
+    }
 
-  // 3. Read ADC (Channel 0) periodically
-  static unsigned long lastAdcRead = 0;
-  if (millis() - lastAdcRead > 2000) {
-    lastAdcRead = millis();
-    int16_t adc0 = adc.readADC(0);
-    float voltage = adc.toVoltage(1); // convert raw reading to voltage
-    
-    Serial.print("ADC CH0 Raw: ");
-    Serial.print(adc0);
-    Serial.print("\tVoltage: ");
-    Serial.println(adc0 * voltage, 4); 
-  }
+    // 3. Test ADC & Median Filter Logic (Non-blocking every 2 seconds)
+    static unsigned long lastAdcRead = 0;
+    if (millis() - lastAdcRead > 2000) {
+        lastAdcRead = millis();
+        
+        // Use custom median filter method (11 samples)
+        float meatVoltage = ads1015.getSensorValue_MedianFiltered_V(ADC_meatPin, 11);
+        
+        Serial.print(F("Meat Probe (A2) Median Filtered Voltage: "));
+        Serial.println(meatVoltage, 4);
+    }
 }

@@ -1,8 +1,9 @@
 /* ***************************************************************
  * myConstants.h - library listing all user-defined constants
  *
- *  C W Greenstreet, Ver1, 27Sep21
- *    MIT Licence - Released into the public domain
+ *  C W Greenstreet, cloudSmoker2 (Ver2), 27Jun26
+ *    Licence: GPLv3 (Licensed under the GNU GPLv3: Free to use and modify, but any public 
+ *           distribution must also share the full source code under this same license.
  *
  ** ************************************************************* */
 
@@ -17,7 +18,7 @@
 #include <pins_arduino.h>
 #endif  // end if-block
 
-
+// TODO:  Consider moving these constants to platformio.ini build_flags for easier configuration of different hardware setups
 /* ******************************************************
  *   Pin-out Summaries
  *     See github cloudSmoker wiki for schematic and breadboard hookup picture
@@ -55,16 +56,26 @@
 //*******************************************************/
 
 // ---------------------------------------------------------
-// Pin set-up listed below are for nodeMCU ESP8266
+// Pin set-up mapping to platformio.ini build_flags
+//
+//? Allows different build environments to be set up for different hardware configurations
+//?   (e.g. ESP32 vs ESP8266, or different pinouts for different breadboard layouts)
+// ---------------------------------------------------------
 //? Note to self:  constexp better than const for variable values that should be known at compile
 //?    time -> more memory efficient.  Also better than simple #define
-//! cannog use "extern constexp", must use "const" instead, as with constexp "...it must be immediately constructed or assigned a value"
+//! cannot use "extern constexp", must use "const" instead, as with constexp "...it must be immediately constructed or assigned a value"
 // ---------------------------------------------------------
-constexpr int I2C_SCL = D1;      // optional for LCD as hd44780 auto-configures but needed for ADS1015
-constexpr int I2C_SDA = D2;      // optional for LCD as hd44780 auto-configures but needed for ADS1015
-constexpr int ENCODER_DT = D4;   // pinB newEncoder lib config
-constexpr int ENCODER_CLK = D5;  // pinA newEncoder lib config
-constexpr int BUTTON_PIN = D3;   // KY40 SW (switch) pin (connected to Uno pin 4)
+// ---------------------------------------------------------
+constexpr int I2C_SCL = PIN_I2C_SCL;      
+constexpr int I2C_SDA = PIN_I2C_SDA;      
+constexpr int ENCODER_DT = PIN_ENCODER_B;   
+constexpr int ENCODER_CLK = PIN_ENCODER_A;  
+constexpr int BUTTON_PIN = PIN_ENCODER_BTN; 
+
+// ---------------------------------------------------------
+//? Baudrate: Updated for ESP32 native speed (consistent with platformio.ini build_flags)
+// ---------------------------------------------------------
+constexpr int SERIAL_MONITOR_SPEED = 115200;
 
 // ---------------------------------------------------------
 // ADS1015 ADC pin constants
@@ -75,13 +86,6 @@ constexpr int ADC_meatPin = 2;
 constexpr int ADC_pitPin = 3;
 
 
-// ---------------------------------------------------------
-// Baudrate:  Recommend 74480 baud rate for ESP8266 devices to match ESP8266 fixed bootloader initialisation speed
-//  (otherwise you will get startup gibberish characters on serial monitor before serial speed syncs)
-//  https://forum.arduino.cc/t/serial-monitor-only-shows-strange-symbols-arduino-mega-with-esp8266/640490/5
-//  note: may have to manually reset board after flashing for code to work correctly
-//#define SERIAL_MONITOR_SPEED 74880  // change to constexpr
-constexpr int SERIAL_MONITOR_SPEED = 74880;
 
 // *******************************************************
 //   Thermistor Hardware setup
@@ -92,14 +96,14 @@ constexpr int SERIAL_MONITOR_SPEED = 74880;
 //   +V_IN o-----|____|----+----|__/__|----o GND
 //  (~5 V)                 |      /
 //                Rbias    | Rthermistor
-//      (75E3 / 9.1E3 ohm) |  (10E6 ohm R25)
+//      (75E3 / 120E3 ohm) |  (10E6 ohm R25)
 //                         |
 //        ADC PIN          |
-//         (A0) o----------+
+//         (A0) o----------+  
 //                       Vout
-//
+//  TODO:  confirm ADS1115 ADC PIN
 // *******************************************************
-
+//TODO: update to single bias resistor value for both meat and pit probes, as per new design
 constexpr double MEAT_BIAS_RESISTOR_Ohm = 75.0e3;  // replace with DMM measured actual value for improved accuracy
 constexpr double PIT_BIAS_RESISTOR_Ohm = 9.1e3;
 
@@ -107,11 +111,13 @@ constexpr double PIT_BIAS_RESISTOR_Ohm = 9.1e3;
 //   Other constants
 // *******************************************************
 
+// TODO:  confirm these values with actual measurements and update as needed
 // empirically determined temperature correction factors - applied in cwg_steinhartHart lib
 constexpr double PIT_TEMP_OFFSET_DEGF = 8.0;
 constexpr double MEAT_TEMP_OFFSET_DEGF = 2.2;
 
-//empirical termperature offset correction factor
+// TODO:  confirm these values with actual measurements and update as needed
+//empirical temperature offset correction factor
 constexpr double MEAT_PROBE_OFFSET_degF = 2.0;
 constexpr double PIT_PROBE_OFFSET_degF = 28.0;
 
