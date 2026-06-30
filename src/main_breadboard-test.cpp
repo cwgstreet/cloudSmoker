@@ -39,17 +39,17 @@ void setup() {
     // 1. Initialize I2C using the pins from myConstants (which pull from platformio.ini)
     Wire.begin(I2C_SDA, I2C_SCL);
 
-    // 2. Initialize Custom ADC Wrapper
-    // gainSetting=0 (6.144V), modeSetting=1 (Single Shot), dataRateSetting=4 (1600sps)
-    ads1015.initialise(0, 1, 4);
-    Serial.println(F("CWG_ADS1015 Initialized."));
+    // // 2. Initialize Custom ADC Wrapper
+    // // gainSetting=0 (6.144V), modeSetting=1 (Single Shot), dataRateSetting=4 (1600sps)
+    // ads1015.initialise(0, 1, 4);
+    // Serial.println(F("CWG_ADS1015 Initialized."));
 
-    // 3. Initialize Custom Encoder Wrapper
-    encoder.initialise();
+    // // 3. Initialize Custom Encoder Wrapper
+    // encoder.initialise();
 
-    // 4. Initialize Custom Button Wrapper (Yabl)
-    button.begin(BUTTON_PIN);
-    Serial.println(F("Press_Type Button Initialized."));
+    // // 4. Initialize Custom Button Wrapper (Yabl)
+    // button.begin(BUTTON_PIN);
+    // Serial.println(F("Press_Type Button Initialized."));
 }
 
 void loop() {
