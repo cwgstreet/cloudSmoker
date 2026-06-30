@@ -1618,7 +1618,7 @@
 			)
 			(embedded_fonts no)
 		)
-		(symbol "Connector_Audio:AudioJack2_SwitchT"
+		(symbol "Connector_Audio:AudioJack2_Ground"
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
@@ -1630,7 +1630,7 @@
 					)
 				)
 			)
-			(property "Value" "AudioJack2_SwitchT"
+			(property "Value" "AudioJack2_Ground"
 				(at 0 6.35 0)
 				(effects
 					(font
@@ -1656,7 +1656,7 @@
 					(hide yes)
 				)
 			)
-			(property "Description" "Audio Jack, 2 Poles (Mono / TS), Switched T Pole (Normalling)"
+			(property "Description" "Audio Jack, 2 Poles (Mono / TS), Grounded Sleeve"
 				(at 0 0 0)
 				(effects
 					(font
@@ -1665,7 +1665,7 @@
 					(hide yes)
 				)
 			)
-			(property "ki_keywords" "audio jack receptacle mono headphones phone TS connector"
+			(property "ki_keywords" "audio jack receptacle mono phone headphone TS connector"
 				(at 0 0 0)
 				(effects
 					(font
@@ -1683,10 +1683,10 @@
 					(hide yes)
 				)
 			)
-			(symbol "AudioJack2_SwitchT_0_1"
+			(symbol "AudioJack2_Ground_0_1"
 				(rectangle
-					(start -2.54 0)
-					(end -3.81 -2.54)
+					(start -2.54 -2.54)
+					(end -3.81 0)
 					(stroke
 						(width 0.254)
 						(type default)
@@ -1707,21 +1707,9 @@
 						(type none)
 					)
 				)
-				(polyline
-					(pts
-						(xy 1.778 -0.254) (xy 2.032 -0.762)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
 				(rectangle
 					(start 2.54 3.81)
-					(end -2.54 -5.08)
+					(end -2.54 -2.54)
 					(stroke
 						(width 0.254)
 						(type default)
@@ -1742,20 +1730,26 @@
 						(type none)
 					)
 				)
-				(polyline
-					(pts
-						(xy 2.54 -2.54) (xy 1.778 -2.54) (xy 1.778 -0.254) (xy 1.524 -0.762)
+			)
+			(symbol "AudioJack2_Ground_1_1"
+				(pin passive line
+					(at 0 -5.08 90)
+					(length 2.54)
+					(name "~"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
 					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
+					(number "G"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
 					)
 				)
-			)
-			(symbol "AudioJack2_SwitchT_1_1"
 				(pin passive line
 					(at 5.08 2.54 180)
 					(length 2.54)
@@ -1785,24 +1779,6 @@
 						)
 					)
 					(number "T"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at 5.08 -2.54 180)
-					(length 2.54)
-					(name "~"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "TN"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -7653,10 +7629,6 @@
 		(uuid "194a60ca-9257-4470-94b0-a931f7de3762")
 	)
 	(no_connect
-		(at 39.37 222.25)
-		(uuid "1da4f504-cff8-43de-b68b-cb790fd53303")
-	)
-	(no_connect
 		(at 45.72 240.03)
 		(uuid "1e31f317-eadd-49ce-b324-777f49f346cc")
 	)
@@ -7671,10 +7643,6 @@
 	(no_connect
 		(at 80.01 232.41)
 		(uuid "359cd16a-33b3-428c-ac43-1fe2b8911721")
-	)
-	(no_connect
-		(at 41.91 181.61)
-		(uuid "360ebdce-970e-4a16-a0d0-0104ce011449")
 	)
 	(no_connect
 		(at 72.39 109.22)
@@ -7695,10 +7663,6 @@
 	(no_connect
 		(at 41.91 217.17)
 		(uuid "524be5d3-a3c7-4877-b8a6-0e004b725fdd")
-	)
-	(no_connect
-		(at 39.37 201.93)
-		(uuid "586cb68c-a2da-47ce-8b27-7d45d28a5200")
 	)
 	(no_connect
 		(at 337.82 100.33)
@@ -7771,10 +7735,6 @@
 	(no_connect
 		(at 80.01 191.77)
 		(uuid "e9eaa803-ea16-4b6e-858c-47cec81b395d")
-	)
-	(no_connect
-		(at 39.37 242.57)
-		(uuid "fff0f4fe-b71a-461f-9c02-18cffa2d5ccd")
 	)
 	(wire
 		(pts
@@ -9510,16 +9470,6 @@
 			(type default)
 		)
 		(uuid "83e71898-798f-46b2-9928-f1389c867248")
-	)
-	(wire
-		(pts
-			(xy 39.37 181.61) (xy 41.91 181.61)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "84048eea-c5c7-43a8-a1d2-fad2d4504825")
 	)
 	(wire
 		(pts
@@ -13581,7 +13531,7 @@
 		)
 	)
 	(symbol
-		(lib_id "Connector_Audio:AudioJack2_SwitchT")
+		(lib_id "Connector_Audio:AudioJack2_Ground")
 		(at 34.29 199.39 0)
 		(unit 1)
 		(exclude_from_sim no)
@@ -13614,7 +13564,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 34.29 199.39 0)
 			(effects
 				(font
@@ -13623,7 +13573,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Audio Jack, 2 Poles (Mono / TS), Switched T Pole (Normalling)"
+		(property "Description" "Audio Jack, 2 Poles (Mono / TS), Grounded Sleeve"
 			(at 34.29 199.39 0)
 			(effects
 				(font
@@ -13638,7 +13588,7 @@
 		(pin "S"
 			(uuid "c57580f4-7b0c-4282-aeaa-c21c2520f360")
 		)
-		(pin "TN"
+		(pin "G"
 			(uuid "b1dddc08-39ca-4d13-a3cc-353ade079c1f")
 		)
 		(instances
@@ -14776,6 +14726,71 @@
 			(project "cloudSmoker_ver2f"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "#PWR023")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 34.29 245.11 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "2bdd23c8-4381-4554-9336-4cc9d4d9ea95")
+		(property "Reference" "#PWR044"
+			(at 34.29 251.46 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 34.29 249.174 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 34.29 245.11 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 34.29 245.11 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 34.29 245.11 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "da4693fa-7566-413c-93e6-37c0099b1432")
+		)
+		(instances
+			(project "cloudSmoker_ver2f"
+				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
+					(reference "#PWR044")
 					(unit 1)
 				)
 			)
@@ -18681,7 +18696,7 @@
 		)
 	)
 	(symbol
-		(lib_id "Connector_Audio:AudioJack2_SwitchT")
+		(lib_id "Connector_Audio:AudioJack2_Ground")
 		(at 34.29 240.03 0)
 		(unit 1)
 		(exclude_from_sim no)
@@ -18715,7 +18730,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 34.29 240.03 0)
 			(effects
 				(font
@@ -18724,7 +18739,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Audio Jack, 2 Poles (Mono / TS), Switched T Pole (Normalling)"
+		(property "Description" "Audio Jack, 2 Poles (Mono / TS), Grounded Sleeve"
 			(at 34.29 240.03 0)
 			(effects
 				(font
@@ -18739,7 +18754,7 @@
 		(pin "S"
 			(uuid "75263cd0-411b-4633-88cd-484f6ca67131")
 		)
-		(pin "TN"
+		(pin "G"
 			(uuid "51601f28-6ecf-4128-b7bc-3b2c7e648777")
 		)
 		(instances
@@ -19464,6 +19479,71 @@
 		)
 	)
 	(symbol
+		(lib_id "power:GND")
+		(at 34.29 204.47 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "9f7044ec-c5b1-470a-815a-78f494b58d8c")
+		(property "Reference" "#PWR046"
+			(at 34.29 210.82 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 34.29 208.534 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 34.29 204.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 34.29 204.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 34.29 204.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "2479a93a-1d96-45f1-b6f8-7ed3278a5bca")
+		)
+		(instances
+			(project "cloudSmoker_ver2f"
+				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
+					(reference "#PWR046")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:PWR_FLAG")
 		(at 25.4 101.6 270)
 		(unit 1)
@@ -20116,6 +20196,136 @@
 			(project "cloudSmoker_ver2f"
 				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
 					(reference "#PWR016")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 34.29 184.15 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "afb37e6c-ca2b-4c53-8ecc-e1600f7b76b1")
+		(property "Reference" "#PWR047"
+			(at 34.29 190.5 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 34.29 188.214 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 34.29 184.15 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 34.29 184.15 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 34.29 184.15 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "75e1234b-a3fa-4db6-a4e8-f0a39e898406")
+		)
+		(instances
+			(project "cloudSmoker_ver2f"
+				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
+					(reference "#PWR047")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 34.29 224.79 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "b123501f-c554-490d-a33e-01cfe8ca7b75")
+		(property "Reference" "#PWR045"
+			(at 34.29 231.14 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 34.29 228.854 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 34.29 224.79 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 34.29 224.79 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 34.29 224.79 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "25ce1e5d-aa69-46c3-a5a7-0532ba3c708e")
+		)
+		(instances
+			(project "cloudSmoker_ver2f"
+				(path "/b6386f9e-9987-40e8-9dbb-e2a0551c3fff"
+					(reference "#PWR045")
 					(unit 1)
 				)
 			)
@@ -21261,7 +21471,7 @@
 		)
 	)
 	(symbol
-		(lib_id "Connector_Audio:AudioJack2_SwitchT")
+		(lib_id "Connector_Audio:AudioJack2_Ground")
 		(at 34.29 219.71 0)
 		(unit 1)
 		(exclude_from_sim no)
@@ -21295,7 +21505,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "d"
+		(property "Datasheet" "~"
 			(at 34.29 219.71 0)
 			(effects
 				(font
@@ -21304,7 +21514,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Audio Jack, 2 Poles (Mono / TS), Switched T Pole (Normalling)"
+		(property "Description" "Audio Jack, 2 Poles (Mono / TS), Grounded Sleeve"
 			(at 34.29 219.71 0)
 			(effects
 				(font
@@ -21319,7 +21529,7 @@
 		(pin "S"
 			(uuid "9917250f-8b1f-4de5-9567-3089ba539e23")
 		)
-		(pin "TN"
+		(pin "G"
 			(uuid "2c9a6907-642a-4bef-a6b7-4ca1596ab20f")
 		)
 		(instances
@@ -21332,7 +21542,7 @@
 		)
 	)
 	(symbol
-		(lib_id "Connector_Audio:AudioJack2_SwitchT")
+		(lib_id "Connector_Audio:AudioJack2_Ground")
 		(at 34.29 179.07 0)
 		(unit 1)
 		(exclude_from_sim no)
@@ -21365,7 +21575,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "~"
 			(at 34.29 179.07 0)
 			(effects
 				(font
@@ -21374,7 +21584,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Audio Jack, 2 Poles (Mono / TS), Switched T Pole (Normalling)"
+		(property "Description" "Audio Jack, 2 Poles (Mono / TS), Grounded Sleeve"
 			(at 34.29 179.07 0)
 			(effects
 				(font
@@ -21389,7 +21599,7 @@
 		(pin "S"
 			(uuid "4f0a1250-448a-435c-a40d-17395fb06351")
 		)
-		(pin "TN"
+		(pin "G"
 			(uuid "aabab7ea-dc12-4949-9f4d-f58988693933")
 		)
 		(instances
