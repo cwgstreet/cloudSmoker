@@ -111,15 +111,16 @@ constexpr double PIT_BIAS_RESISTOR_Ohm = 9.1e3;
 //   Other constants
 // *******************************************************
 
+//! NOT USED:  facility to add correction factors to Steinhart-Hart derrived temps
 // TODO:  confirm these values with actual measurements and update as needed
 // empirically determined temperature correction factors - applied in cwg_steinhartHart lib
-constexpr double PIT_TEMP_OFFSET_DEGF = 8.0;
-constexpr double MEAT_TEMP_OFFSET_DEGF = 2.2;
+//constexpr double PIT_TEMP_OFFSET_DEGF = 8.0;
+//constexpr double MEAT_TEMP_OFFSET_DEGF = 2.2;
 
 // TODO:  confirm these values with actual measurements and update as needed
 //empirical temperature offset correction factor
-constexpr double MEAT_PROBE_OFFSET_degF = 2.0;
-constexpr double PIT_PROBE_OFFSET_degF = 28.0;
+//constexpr double MEAT_PROBE_OFFSET_DEGF = 2.0;
+//constexpr double PIT_PROBE_OFFSET_DEGF = 28.0;
 
 
 #endif  // end header guard

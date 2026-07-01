@@ -6642,6 +6642,17 @@
 		)
 		(uuid "43d2b203-d803-4458-b5af-c730e32fa2bf")
 	)
+	(text "Ground shunt to use for probe insert detection"
+		(exclude_from_sim yes)
+		(at 59.182 175.768 0)
+		(effects
+			(font
+				(face "KiCad Font")
+				(size 1 1)
+			)
+		)
+		(uuid "512092e3-517a-4e6a-bceb-db45d84e4238")
+	)
 	(text "Place RC Filters close to ADC"
 		(exclude_from_sim no)
 		(at 191.008 246.38 0)

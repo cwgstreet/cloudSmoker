@@ -56,3 +56,7 @@ production/cloudSmoker_ver2_2f/
 # Repomix output
 repomix-output.xml
 *.xml
+
+# Ignore Image2Lcd utility
+Image2Lcd/
+grabcad/
