@@ -1,88 +1,62 @@
 /* ***************************************************************
- * lcd.h - library containing functions to use lcd, including
- *   custom characters
- *
- *  C W Greenstreet, Ver1, 4Dec21
- *    MIT Licence - Released into the public domain
- *
- ** ************************************************************* */
+ * lcd.h - library containing display functions for cloudSmoker2 project
+ * - Ported to TFT_eSPI for 1.28" GC9A01 Round Display
+ * 
+ * * C W Greenstreet, cloudSmoker2, 1Jul26
+ * Licence: GPLv3 (Licensed under the GNU GPLv3: Free to use and modify, but any public 
+ * distribution must also share the full source code under this same license.
+ * 
+ * * ************************************************************* */
 
 #ifndef LCD_H
 #define LCD_H
 
-#if ARDUINO >= 100  // this if-else block manages depreciated versions of Arduino IDE
 #include <Arduino.h>
-#else
-#include <WConstants.h>
-#include <WProgram.h>
-#include <pins_arduino.h>
-#endif  // end if-block
+#include <SPI.h>
+#include <TFT_eSPI.h>
 
-/******************************************************
-// Libraries required for periphial function tests:
-*******************************************************/
-
-// i2C devices
-#include <Wire.h>
-
-// YwRobot 1602 LCD with i2c i/o exapander backpack (PCF8574 or MCP23008)
-#include <hd44780.h>
-#include <hd44780ioClass/hd44780_I2Cexp.h>  // i2c expander i/o class header -> required for my YwRobot 1602 LCD
-
-// global variables declared in main program but needed in this library before they are declared elsewhere
-extern float meatDoneTemp;
-extern float pitTempTarget;
-extern float currentMeatTemp;
-extern float currentPitTemp;
-extern bool degCFlag;
-
-// define LCD geometry (YwRobot 1602 LCD)
-extern const int LCD_COLS;
-extern const int LCD_ROWS;
-
-/******************************************************
-// Class definitions for lcd functions and tests:
-*******************************************************/
-
-// child class of hd44780_I2Cexp which is a child of hd44780
-class CWG_LCD : public hd44780_I2Cexp {
-   public:
-    CWG_LCD(const int LCD_COLS, const int LCD_ROWS);  // constructor - will initialise lcdCols, lcdRows
-
-    // class methods
-    void initialiseLCD();
-    void displayTest();
-    void initialiseCustomCharSet();
-    void printMenuLine(const char *c);
-    void printMenuLine_noArrow(const char *c);
-    void showSplashScreen(bool degCFlag, float meatDoneTemp, float pitTempTarget);
-    void showLaunchPad();
-    void showSettingsMenu(int16_t currentEncoderValue);
-    void showBBQStatusScreen(bool degCFlag, float currentMeatTemp, float currentPitTemp);
- 
-    // degCFlag == 1 for Deg C, meatTargetFlag == 1 for meatTemp else pitTemp, adjTempFlag == 1 for setting temperatures
-    void getTargetTemperatureMsg(char (&messageBuffer)[17], bool degCFlag, float targetTemperature, bool meatTargetFlag, bool adjTempFlag);
-
-    void showSetMeatDoneTempMenu(int16_t prevEncoderValue);
-    void showSetPitTempTargetMenu(int16_t prevEncoderValue);
-    void showSetTempUnitsMenu(int16_t currentEncoderValue);
-
-    // meatTargetFlag = 1 for meatDoneTemp, else pitTemp
-    void showTemperatureTargetAdjustment(float temporaryTemperatureTarget, bool meatTargetFlag);
-
-    // void getTempMsg(char (&messageBuffer)[17], bool degCFlag, float tempVariable);  //need to finish
-
-   private:
-    int _numCols;
-    int _numRows;
+// Menu enumeration for navigation
+enum SettingsMenu {
+    MENU_MEAT_TEMP = 1,
+    MENU_PIT_TEMP = 2,
+    MENU_UNITS = 3,
+    MENU_BACK = 4,
+    MENU_COUNT = 4 
 };
 
-extern CWG_LCD lcd;  // ensure lcd object is visable everywhere
+class CWG_LCD {
+   public:
+    CWG_LCD();
+    
+    // Core initialization and management
+    void begin();
+    void clearScreen();
+    void drawUIFrame(const char* headerText);
 
-/******************************************************
-// Helper function prototype:
-*******************************************************/
+    // Drop-in compatible functions for cloudSmoker state machine
+    void showSplashScreen(bool degCFlag, float meatDoneTemp, float pitTempTarget);
+    void printMenuLine(const char* c);
+    void printMenuLine_noArrow(const char* c);
+    void showTemperatureTargetAdjustment(float temporaryTemperatureTarget, bool meatTargetFlag);
+    
+    // New navigation & screen layouts called by smokerStates.cpp
+    void showLaunchPad();
+    void showSettingsMenu(int16_t prevEncoderValue);
+    void showSetMeatDoneTempMenu(int16_t prevEncoderValue);
+    void showSetPitTempTargetMenu(int16_t prevEncoderValue);
+    void showSetTempUnitsMenu(int16_t prevEncoderValue);
+    void showBBQStatusScreen(bool degCFlag, float currentMeatTemp, float currentPitTemp);
+    
+    // Display controls for sleep/blanking modes
+    void display();
+    void noDisplay();
+    
+    // Legacy helper to prevent compilation errors if called elsewhere
+    void setCursor(uint8_t col, uint8_t row) { /* Handled automatically by UI layers */ }
 
-// void gotoRowCol(int thisRow, int thatCol);  //move into class?
+   private:
+    TFT_eSPI tft;
+    uint8_t menuPrintLine; // Keeps track of line tracking (0 or 1) from legacy cloudSmoker1 code
+};
 
-#endif  // end header guard
+#endif // LCD_H

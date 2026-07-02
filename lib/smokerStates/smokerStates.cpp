@@ -1,22 +1,20 @@
 /* ***************************************************************
- * smokerStates.h - cloudSmoker state machine implementation routines
+ * smokerStates.cpp - cloudSmoker state machine implementation routines
  *
  * See (github link tba) for cloudSmoker State Machine diagram
  *
- *  C W Greenstreet, Ver1, 16Dec21
- *    MIT Licence - Released into the public domain
+ * C W Greenstreet, cloudSmoker2, 1Jul26
+ * Licence: GPLv3 (Licensed under the GNU GPLv3: Free to use and modify, but any public 
+ * distribution must also share the full source code under this same license.
  *
  ** ************************************************************* */
 
-// set up debug scaffold; comment out following line if you want to "turn off" debugging to serial monitor
 //#define DEBUG_ADC_Temps 1  // uncomment to debug ADC1015 ADC readings
 
 // include 3rd party libraries
 #include <Arduino.h>
 #include <NewEncoder.h>
 #include <Wire.h>                           // i2C device communication
-#include <hd44780.h>                        // LCD library
-#include <hd44780ioClass/hd44780_I2Cexp.h>  // i2c expander i/o class header -> required for my YwRobot 1602 LCD
 
 // include local libraries
 #include "cwg_ads1x15.h"        // ADS1x15 I2C ADC device functionality
@@ -24,7 +22,7 @@
 #include "helper_functions.h"
 #include "lcd.h"
 #include "press_type.h"
-#include "secrets.h"
+#include "secrets.h"            // Ensure this file exists in your 'include/' or 'src/' directory
 #include "smokerStates.h"
 #include "wrapEncoder.h"
 
@@ -34,17 +32,26 @@
 // entryStates is an enum variable type defined in menu.h header file (as extern); smokerState is global
 entryStates_t smokerState;
 
+// External globals from main.cpp mapped with exact matching types
+extern float meatDoneTemp;
+extern float pitTempTarget;
+extern float currentMeatTemp;
+extern float currentPitTemp;
+extern bool degCFlag;
+extern int16_t prevEncoderValue;
+
+// Analog telemetry globals (matching the double precision in main)
+extern double voltagePit_medianFiltered_V;
+extern double voltageMeat_medianFiltered_V;
 extern float batteryVoltage_v;
 
-// initialise ThingSpeak
-//    WiFiClient cloudSmoker;
-//    ThingSpeak.begin(cloudSmoker);
-
 void processState(CWG_LCD &lcd) {
-    switch (smokerState) {
-        int16_t currentEncoderValue;
+    // Declare this at the top of the function to avoid switch-case initialization bypass errors
+    int16_t currentEncoderValue; 
 
-        case splashScreen: {  // note: case splashScreen == 1 explicitly per enum assignment in smokerState.
+    switch (smokerState) {
+
+        case splashScreen: {  
             lcd.showSplashScreen(degCFlag, meatDoneTemp, pitTempTarget);
             if (encoder.moved()) {
                 smokerState = launchPad;
@@ -52,33 +59,28 @@ void processState(CWG_LCD &lcd) {
         } break;
 
         case launchPad: {
-            // if necessary, reset encoder scale to match number of menu list items
             if (hasRunFlag == 0) {
                 Serial.println(F("Run Once! (launchPad::hasRunFlag == 0); Changing Encoder Settings - setTempUnits 0,1,0"));
                 encoder.newSettings(0, 1, 1, currentEncoderState);
-                currentEncoderValue = currentEncoderState.currentValue;  // do I need this line?  Check
+                currentEncoderValue = currentEncoderState.currentValue;  
                 Serial.println(currentEncoderValue);
                 prevEncoderValue = currentEncoderValue;
-
-                hasRunFlag = 1;  // ensure settings are only changed once given this is part of loop()
+                hasRunFlag = 1;  
             }
 
             lcd.showLaunchPad();
             if (button.triggered(DOUBLE_TAP)) {
-                yield();         // Do (almost) nothing -- yield allows ESP8266 background functions
-                hasRunFlag = 0;  // reset flag for next encoder scale change
-
-                smokerState = changeSettings;  // enter config menu
+                yield();         
+                hasRunFlag = 0;  
+                smokerState = changeSettings;  
             }
             if (button.triggered(SINGLE_TAP)) {
-                yield();                                                               // Do (almost) nothing -- yield allows ESP8266 background functions
-                Serial.println("-------------------Start Cook Now-----------------");  // debug
-                smokerState = getTemp;                                                 // start bbq cook
-                                                                                       // long unsigned startCookTime_ms = millis();  // capture cook start time; var defined as global (extern in helper_functions.h)
-                startCookTime_ms = millis();                                           // capture cook start time; var defined as global (extern in helper_functions.h)
-
-                Serial.print("startCookTime_ms = ");  // debug
-                Serial.println(startCookTime_ms);     // debug
+                yield();                                                               
+                Serial.println("-------------------Start Cook Now-----------------");  
+                smokerState = getTemp;                                                 
+                startCookTime_ms = millis();                                           
+                Serial.print("startCookTime_ms = ");  
+                Serial.println(startCookTime_ms);     
             }
         } break;
 
@@ -86,24 +88,15 @@ void processState(CWG_LCD &lcd) {
             lcd.showSettingsMenu(prevEncoderValue);
             currentEncoderValue = encoder.getCount();
 
-            // firstly, reset encoder scale to match number of Settings menu items (1 to 7)
             if (hasRunFlag == 0) {
                 Serial.println(F("Run Once! (changeSettings::hasRunFlag == 0); Changing Encoder Settings 1,8,1"));
                 encoder.newSettings(1, 8, 1, currentEncoderState);
                 Serial.println(currentEncoderValue);
                 prevEncoderValue = currentEncoderValue;
-
-                hasRunFlag = 1;  // ensure settings are only changed once within a loop
-
-                // debug statements
-                // Serial.println();
-                //  Serial.print(F("processStates hasRunFlag block triggered (==0) -> prevEncoderValue: "));  //debug
-                //  Serial.println(prevEncoderValue);
-                //  end debug
+                hasRunFlag = 1;  
             }
 
             if (button.triggered(SINGLE_TAP)) {
-                // debug statements
                 Serial.println();
                 Serial.print(F(" !!!  Button Triggered !!! "));
                 Serial.print(F("processStates smokerState = "));
@@ -112,39 +105,27 @@ void processState(CWG_LCD &lcd) {
                 Serial.print(currentEncoderValue);
                 Serial.print(F(" / prevEncoderValue = "));
                 Serial.println(prevEncoderValue);
-                // end debug
 
                 if (prevEncoderValue == 4) {
-                    smokerState = setMeatDoneTemp;  // enter sub-menu to set meat done temperature target
-                    hasRunFlag = 0;                 // reset flag to allow next encoder scale change
-
-                    // debug statements
-                    Serial.println();
-                    Serial.print(F("processStates -> [if (prevEncoderValue == 4)] smokerState = "));
-                    Serial.println(smokerState);
-                    Serial.print(F("processStates -> [if (prevEncoderValue == 4)]: currentEncoderValue = "));
-                    Serial.print(currentEncoderValue);
-                    Serial.print(F(" / prevEncoderValue = "));
-                    Serial.println(prevEncoderValue);
-                    // end debug
+                    smokerState = setMeatDoneTemp;  
+                    hasRunFlag = 0;                 
                     break;
                 }
                 if (prevEncoderValue == 5) {
-                    smokerState = setPitTempTarget;  // enter sub-menu to set meat done temperature target
-                    hasRunFlag = 0;                  // reset flag for next encoder scale change
+                    smokerState = setPitTempTarget;  
+                    hasRunFlag = 0;                  
                     break;
                 }
-
                 if (prevEncoderValue == 6) {
-                    hasRunFlag = 0;              // reset flag for next encoder scale change
-                    smokerState = setTempUnits;  // enter sub-menu to set meat done temperature target
+                    hasRunFlag = 0;              
+                    smokerState = setTempUnits;  
                     break;
                 }
             }
 
             if (button.triggered(HOLD)) {
-                smokerState = splashScreen;  // return to splashScreen
-                hasRunFlag = 0;              // allow another reset of encoder scale range
+                smokerState = splashScreen;  
+                hasRunFlag = 0;              
             }
         } break;
 
@@ -152,26 +133,22 @@ void processState(CWG_LCD &lcd) {
             lcd.showSetMeatDoneTempMenu(prevEncoderValue);
             currentEncoderValue = encoder.getCount();
 
-            // reset encoder scale to match number of menu list items
             if (hasRunFlag == 0) {
                 Serial.println(F("Run Once! (setMeatDoneTemp::hasRunFlag == 0); Changing Encoder Settings 0,2,0 "));
                 encoder.newSettings(0, 2, 0, currentEncoderState);
-                currentEncoderValue = currentEncoderState.currentValue;  // TODO: do I need this line?  Check
+                currentEncoderValue = currentEncoderState.currentValue;  
                 Serial.println(currentEncoderValue);
                 prevEncoderValue = currentEncoderValue;
-
-                hasRunFlag = 1;  // ensure settings are only changed once given this is part of loop()
+                hasRunFlag = 1;  
             }
 
-            // Select & Tap to set meatDoneTemp setting
             if (button.triggered(SINGLE_TAP)) {
                 if (prevEncoderValue == 1) {
-                    hasRunFlag = 0;  // reset hasRunFlag
+                    hasRunFlag = 0;  
                     bool adjustTempFlag = 1;
-                    float temporaryTemperatureTarget;  // temporary variable while desired meat done temperature is being adjusted
+                    float temporaryTemperatureTarget;  
 
                     while (adjustTempFlag) {
-                        // reset encoder scale to match number of menu list items
                         if (hasRunFlag == 0) {
                             Serial.println(F("Run Once! (setMeatDoneTemp inside block::hasRunFlag == 0); Changing Encoder Settings 122,220,203 or 90,105,95 "));
                             if (degCFlag) {
@@ -179,86 +156,72 @@ void processState(CWG_LCD &lcd) {
                             } else {
                                 encoder.newSettings(122, 220, 203, currentEncoderState);
                             }
-                            currentEncoderValue = currentEncoderState.currentValue;  // do I need this line?  Check
+                            currentEncoderValue = currentEncoderState.currentValue;  
                             Serial.println(currentEncoderValue);
                             prevEncoderValue = currentEncoderValue;
-                            hasRunFlag = 1;  // ensure settings are only changed once given this is part of loop()
+                            hasRunFlag = 1;  
                         }
                         bool meatTargetFlag = 1;
                         currentEncoderValue = encoder.getCount();
-                        temporaryTemperatureTarget = prevEncoderValue;  // implicit conversion of int16_t prevEncoderValue to float temporaryTemperatureTarget
+                        temporaryTemperatureTarget = prevEncoderValue;  
 
-                        yield();  // Do (almost) nothing -- yield allows ESP8266 background functions
+                        yield();  
                         lcd.showTemperatureTargetAdjustment(temporaryTemperatureTarget, meatTargetFlag);
 
-                        // exit temperature adjustment loop upon next button press
                         if (button.update()) {
                             if (button.triggered(SINGLE_TAP)) {
                                 adjustTempFlag = 0;
                                 meatDoneTemp = temporaryTemperatureTarget;
-                                hasRunFlag = 0;  // allow another reset of encoder scale range
-                                // smokerState = changeSettings;  // go up one level next loop
+                                hasRunFlag = 0;  
 
-                                // debug
                                 Serial.println();
                                 Serial.print(F("New meatDoneTemp value set -> new meatDoneTemp = "));
                                 Serial.println(meatDoneTemp);
-                                // end debug
 
-                                // reset encoder scale to match number of menu list items
                                 if (hasRunFlag == 0) {
                                     Serial.println(F("Run Once! (return to changeSettings::hasRunFlag == 0); Changing Encoder Settings - setMeatDoneTemp 0,2,0"));
                                     encoder.newSettings(0, 2, 0, currentEncoderState);
-                                    currentEncoderValue = currentEncoderState.currentValue;  // do I need this line?  Check
+                                    currentEncoderValue = currentEncoderState.currentValue;  
                                     Serial.println(currentEncoderValue);
                                     prevEncoderValue = currentEncoderValue;
-
-                                    hasRunFlag = 1;  // ensure settings are only changed once given this is part of loop()
+                                    hasRunFlag = 1;  
                                 }
                             }
                         }
-                    }  // end While
+                    }  
                     Serial.println(F("while (adjustTempFlag) -> exited while loop"));
-                }  // end if
-
+                }  
                 button.update();
             }
 
-            // hold button to exit
             if (button.triggered(HOLD)) {
-                smokerState = splashScreen;  // return to launchPad menu (one level up)
+                smokerState = splashScreen;  
                 Serial.print(F("Hold press - going up one level; smokerState = "));
                 Serial.println(smokerState);
-                hasRunFlag = 0;  // allow another reset of encoder scale range
+                hasRunFlag = 0;  
             }
-
         } break;
 
         case setPitTempTarget: {
-            // lcd.printMenuLine("sm set_pitTemp");  // temporary to confirm navigation branch
             lcd.showSetPitTempTargetMenu(prevEncoderValue);
             currentEncoderValue = encoder.getCount();
 
-            // reset encoder scale to match number of menu list items
             if (hasRunFlag == 0) {
                 Serial.println(F("Run Once! (setPitTempTarget::hasRunFlag == 0); Changing Encoder Settings 0,2,0 "));
                 encoder.newSettings(0, 2, 0, currentEncoderState);
-                currentEncoderValue = currentEncoderState.currentValue;  // do I need this line?  Check
+                currentEncoderValue = currentEncoderState.currentValue;  
                 Serial.println(currentEncoderValue);
                 prevEncoderValue = currentEncoderValue;
-
-                hasRunFlag = 1;  // ensure settings are only changed once given this is part of loop()
+                hasRunFlag = 1;  
             }
 
-            // Select & Tap to set meatDoneTemp setting
             if (button.triggered(SINGLE_TAP)) {
                 if (prevEncoderValue == 1) {
-                    hasRunFlag = 0;  // reset hasRunFlag
+                    hasRunFlag = 0;  
                     bool adjustTempFlag = 1;
-                    float temporaryTemperatureTarget;  // temporary variable while desired meat done temperature is being adjusted
+                    float temporaryTemperatureTarget;  
 
                     while (adjustTempFlag) {
-                        // reset encoder scale to match number of menu list items
                         if (hasRunFlag == 0) {
                             Serial.println(F("Run Once! (setPitTempTarget inside block::hasRunFlag == 0); Changing Encoder Settings degF:211,350,225 or degC:100,177,107  "));
                             if (degCFlag) {
@@ -266,208 +229,183 @@ void processState(CWG_LCD &lcd) {
                             } else {
                                 encoder.newSettings(212, 350, 225, currentEncoderState);
                             }
-                            currentEncoderValue = currentEncoderState.currentValue;  // do I need this line?  Check
+                            currentEncoderValue = currentEncoderState.currentValue;  
                             Serial.println(currentEncoderValue);
                             prevEncoderValue = currentEncoderValue;
-                            hasRunFlag = 1;  // ensure settings are only changed once given this is part of loop()
+                            hasRunFlag = 1;  
                         }
-                        bool meatTargetFlag = 0;  // 0 for pitTempTarget
+                        bool meatTargetFlag = 0;  
                         currentEncoderValue = encoder.getCount();
-                        temporaryTemperatureTarget = prevEncoderValue;  // implicit conversion of int16_t prevEncoderValue to float temporaryTemperatureTarget
+                        temporaryTemperatureTarget = prevEncoderValue;  
 
-                        yield();  // Do (almost) nothing -- yield allows ESP8266 background functions
+                        yield();  
                         lcd.showTemperatureTargetAdjustment(temporaryTemperatureTarget, meatTargetFlag);
 
-                        // exit temperature adjustment loop upon next button press
                         if (button.update()) {
                             if (button.triggered(SINGLE_TAP)) {
                                 adjustTempFlag = 0;
                                 pitTempTarget = temporaryTemperatureTarget;
-                                hasRunFlag = 0;  // allow another reset of encoder scale range
-                                // smokerState = changeSettings;  // go up one level next loop
+                                hasRunFlag = 0;  
 
-                                // debug
                                 Serial.println();
                                 Serial.print(F("New pitTempTarget value set -> new pitTempTarget = "));
                                 Serial.println(pitTempTarget);
-                                // end debug
 
-                                // reset encoder scale to match number of menu list items
                                 if (hasRunFlag == 0) {
                                     Serial.println(F("Run Once! (return to changeSettings::hasRunFlag == 0); Changing Encoder Settings - setPitTempTarget 0,2,0"));
                                     encoder.newSettings(0, 2, 0, currentEncoderState);
-                                    currentEncoderValue = currentEncoderState.currentValue;  // do I need this line?  Check
+                                    currentEncoderValue = currentEncoderState.currentValue;  
                                     Serial.println(currentEncoderValue);
                                     prevEncoderValue = currentEncoderValue;
-
-                                    hasRunFlag = 1;  // ensure settings are only changed once given this is part of loop()
+                                    hasRunFlag = 1;  
                                 }
                             }
                         }
-                    }  // end While
+                    }  
                     Serial.println(F("while (adjustTempFlag) -> exited while loop"));
-                }  // end if
-
+                }  
                 button.update();
             }
 
-            // hold button to exit
             if (button.triggered(HOLD)) {
-                smokerState = splashScreen;  // return to launchPad menu (one level up)
+                smokerState = splashScreen;  
                 Serial.print(F("Hold press - going back to splashScreen; smokerState = "));
                 Serial.println(smokerState);
-                hasRunFlag = 0;  // allow another reset of encoder scale range
+                hasRunFlag = 0;  
             }
-
         } break;
 
         case setTempUnits: {
             currentEncoderValue = encoder.getCount();
 
-            // reset encoder scale to match number of menu list items
             if (hasRunFlag == 0) {
                 Serial.println(F("Run Once! (setTempUnits::hasRunFlag == 0); Changing Encoder Settings 0,2,0"));
                 encoder.newSettings(0, 2, 0, currentEncoderState);
-                currentEncoderValue = currentEncoderState.currentValue;  // do I need this line?  Check
+                currentEncoderValue = currentEncoderState.currentValue;  
                 Serial.println(currentEncoderValue);
                 prevEncoderValue = currentEncoderValue;
-
-                hasRunFlag = 1;  // ensure settings are only changed once given this is part of loop()
+                hasRunFlag = 1;  
             }
 
             lcd.showSetTempUnitsMenu(prevEncoderValue);
 
             if (button.triggered(SINGLE_TAP)) {
-                if (prevEncoderValue == 1) {  // ensure temperature unit change line is selected
+                if (prevEncoderValue == 1) {  
                     if (degCFlag == 0) {
                         degCFlag = 1;
-                        Serial.println(F("degC Flag set - Temperature units now in degC!"));  // debug
+                        Serial.println(F("degC Flag set - Temperature units now in degC!"));  
                     } else {
                         degCFlag = 0;
-                        Serial.println(F("degF Flag set - Temperature units now in degF!"));  // debug
+                        Serial.println(F("degF Flag set - Temperature units now in degF!"));  
                     }
                 }
             }
 
             if (button.triggered(HOLD)) {
-                smokerState = splashScreen;  // return to splashScreen
-                hasRunFlag = 0;              // allow another reset of encoder scale range
+                smokerState = splashScreen;  
+                hasRunFlag = 0;              
             }
-            break;
+        } break; // FIXED: Closed the brace and terminated the block properly here
 
-            case getTemp: {
-                Serial.print("getTemp Case -> startCookTime_ms =");  // debug
-                Serial.println(startCookTime_ms);                    // debug
+        case getTemp: {
+            Serial.print("getTemp Case -> startCookTime_ms =");  
+            Serial.println(startCookTime_ms);                    
 
-                // obtain 11 ADC readings from designated pin and return a median filtered value (variables are globals)
-                double voltageVCC_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(ADC_VCCsupplyPin, 11);
-                batteryVoltage_v = voltageVCC_medianFiltered_V * 1;
-                double voltagePit_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(ADC_pitPin, 11);
-                double voltageMeat_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(ADC_meatPin, 11);
+            double voltageVCC_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(ADC_VCCsupplyPin, 11);
+            batteryVoltage_v = voltageVCC_medianFiltered_V * 1;
+            
+            // FIXED: Removed "double" declaration redefinition so values populate the global extern variables
+            voltagePit_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(ADC_pitPin, 11);
+            voltageMeat_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(ADC_meatPin, 11);
 
-                yield();  // mitigate potential blocking function, by allowing ESP8266 background functions to "play through" - avoid blocking watchdog timer, etc.
+            yield();  
 
-                // convert thermistor ADC voltage readings to temperature (degF; other units are just converted on fly for display)
-                currentMeatTemp = sh_meatProbe.getTempFahrenheit(voltageVCC_medianFiltered_V, voltageMeat_medianFiltered_V);
-                currentPitTemp = sh_pitProbe.getTempFahrenheit(voltageVCC_medianFiltered_V, voltagePit_medianFiltered_V);
+            currentMeatTemp = sh_meatProbe.getTempFahrenheit(voltageVCC_medianFiltered_V, voltageMeat_medianFiltered_V);
+            currentPitTemp = sh_pitProbe.getTempFahrenheit(voltageVCC_medianFiltered_V, voltagePit_medianFiltered_V);
 
-#ifdef DEBUG_ADC_Temps  // *****  debug - ADS1015 ADC *****
-                Serial.println();
-                Serial.println(F("MF_VCC\t|\tMF_PIT\t|\tPITdegF\t|\tMF_MEAT\t|\tMEATdegF"));
-                Serial.println(F("-------\t|\t-------\t|\t-------\t|\t-------\t|\t-------"));
-                Serial.print(voltageVCC_medianFiltered_V, 4);
-                Serial.print(F("\t|\t"));
-                Serial.print(voltagePit_medianFiltered_V, 4);
-                Serial.print(F("\t|\t"));
-                Serial.print(currentPitTemp);
-                Serial.print(F("\t|\t"));
-                Serial.print(voltageMeat_medianFiltered_V, 4);
-                Serial.print(F("\t|\t"));
-                Serial.println(currentMeatTemp);
-                Serial.println("leaving getTemps state now for txTemps");
-                Serial.println();
-#endif  // end DEBUG
+#ifdef DEBUG_ADC_Temps  
+            Serial.println();
+            Serial.println(F("MF_VCC\t|\tMF_PIT\t|\tPITdegF\t|\tMF_MEAT\t|\tMEATdegF"));
+            Serial.println(F("-------\t|\t-------\t|\t-------\t|\t-------\t|\t-------"));
+            Serial.print(voltageVCC_medianFiltered_V, 4);
+            Serial.print(F("\t|\t"));
+            Serial.print(voltagePit_medianFiltered_V, 4);
+            Serial.print(F("\t|\t"));
+            Serial.print(currentPitTemp);
+            Serial.print(F("\t|\t"));
+            Serial.print(voltageMeat_medianFiltered_V, 4);
+            Serial.print(F("\t|\t"));
+            Serial.println(currentMeatTemp);
+            Serial.println("leaving getTemps state now for txTemps");
+            Serial.println();
+#endif  
 
-                smokerState = txTemp;
-            } break;
+            smokerState = txTemp;
+        } break;
 
-            case txTemp: {
-                Serial.println("entering txTemp case -> transmitting data");  // debug
-                WiFiClient client;
-                ThingSpeak.begin(client);
+        case txTemp: {
+            Serial.println("entering txTemp case -> transmitting data");  
+            WiFiClient client;
+            ThingSpeak.begin(client);
 
-                // implicit typecast from double to float as ThingSpeak.setField requires float (otherwise no match in method overload signature)
-                float currentMeatTemp_float = currentMeatTemp;
-                float currentpitTemp_float = currentPitTemp;
+            float currentMeatTemp_float = currentMeatTemp;
+            float currentpitTemp_float = currentPitTemp;
 
-                // -----update fields to write ---------------
-                ThingSpeak.setField(1, currentMeatTemp_float);
-                ThingSpeak.setField(2, meatDoneTemp);
+            ThingSpeak.setField(1, currentMeatTemp_float);
+            ThingSpeak.setField(2, meatDoneTemp);
 
-                // only send values if pitProbe is plugged in;
-                //   if pitProbe is not plugged in, very high temperatures are calculated as an artefact
-                if (currentpitTemp_float > 500) {
-                    ThingSpeak.setField(3, currentpitTemp_float);
-                }
+            if (currentpitTemp_float > 500) {
+                ThingSpeak.setField(3, currentpitTemp_float);
+            }
 
-                ThingSpeak.setField(4, pitTempTarget);
-                ThingSpeak.setField(5, batteryVoltage_v);
-                // ------------------------------------------
+            ThingSpeak.setField(4, pitTempTarget);
+            ThingSpeak.setField(5, batteryVoltage_v);
 
-                ThingSpeak.writeFields(THNGSPK_CHANNEL_ID, THNGSPK_WRITE_API_KEY);
+            ThingSpeak.writeFields(THNGSPK_CHANNEL_ID, THNGSPK_WRITE_API_KEY);
 
-                // TODO:  send return codes (200 if successful) to serial monitor; action push notification tweet if failure return code received
+            hasRunFlag = 0;       
+            smokerState = Sleep;  
+            Serial.println("leaving for Sleep case");
+        } break;
 
-                hasRunFlag = 0;       // reset run-once flag
-                smokerState = Sleep;  // go back to sleep
-                Serial.println("leaving for Sleep case");
-            } break;
-
-            case Sleep: {
-                // TODO: explore putting ESP8266 to power savings sleep (modem / light / deep sleep) between readings for power savings
-
-                if (encoder.moved()) {
-                    lcd.display();                                              // turn on display pixels
-                    Serial.println("Sleep state, encoder moved -> waking up");  // debug code
-                    smokerState = bbqStatus;
-                    hasRunFlag = 1;
-                    Serial.println("leaving for bbqStatus state");
-                }
-
-                if (hasRunFlag == 0) {
-                    lcd.noDisplay();  // disable (hide) pixels on display
-
-                    unsigned long currentMillis = millis();  // grab current time
-
-                    // check if "...Interval" time has passed  and,
-                    if ((unsigned long)(currentMillis - previousMillis) >= transmitInterval) {
-                        previousMillis = millis();
-                        smokerState = getTemp;                                                                                   // when true, update ThingSpeak channel with new temperature readings
-                        hasRunFlag = 1;                                                                                          // set run-once flag
-                        Serial.println("sleep transmit duration interval reached. smokerState = txTemp, reset hasRunFlag =1 ");  // debug
-                    }
-                }
-
-            } break;
-
-            case bbqStatus: {
-                lcd.display();  // make sure screen is not blanked
-                lcd.showBBQStatusScreen(degCFlag, currentMeatTemp, currentPitTemp);
-
-                // non-blocking delay for BBQ Display before clearing screen / sleep
-                unsigned long currentMillis = millis();  // grab current time
-
-                // check if "displayInterval" time has passed  and,
-                if ((unsigned long)(currentMillis - previousDisplayMillis) >= displayInterval) {
-                    previousDisplayMillis = millis();
-                    smokerState = Sleep;  // when true, then go back to Sleep case (blank screen)
-                    hasRunFlag = 0;       // reset run-once flag
-                }
-            } break;
-
-            default: {
+        case Sleep: {
+            if (encoder.moved()) {
+                lcd.display();                                              
+                Serial.println("Sleep state, encoder moved -> waking up");  
                 smokerState = bbqStatus;
-            } break;
-        }
+                hasRunFlag = 1;
+                Serial.println("leaving for bbqStatus state");
+            }
+
+            if (hasRunFlag == 0) {
+                lcd.noDisplay();  
+
+                unsigned long currentMillis = millis();  
+
+                if ((unsigned long)(currentMillis - previousMillis) >= transmitInterval) {
+                    previousMillis = millis();
+                    smokerState = getTemp;                                                                                   
+                    hasRunFlag = 1;                                                                                          
+                    Serial.println("sleep transmit duration interval reached. smokerState = txTemp, reset hasRunFlag =1 ");  
+                }
+            }
+        } break;
+
+        case bbqStatus: {
+            lcd.display();  
+            lcd.showBBQStatusScreen(degCFlag, currentMeatTemp, currentPitTemp);
+
+            unsigned long currentMillis = millis();  
+
+            if ((unsigned long)(currentMillis - previousDisplayMillis) >= displayInterval) {
+                previousDisplayMillis = millis();
+                smokerState = Sleep;  
+                hasRunFlag = 0;       
+            }
+        } break;
+
+        default: {
+            smokerState = bbqStatus;
+        } break;
     }
 }
