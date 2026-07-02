@@ -84,42 +84,36 @@ void processState(CWG_LCD &lcd) {
             }
         } break;
 
-        case changeSettings: {
+case changeSettings: {
             lcd.showSettingsMenu(prevEncoderValue);
             currentEncoderValue = encoder.getCount();
 
             if (hasRunFlag == 0) {
-                Serial.println(F("Run Once! (changeSettings::hasRunFlag == 0); Changing Encoder Settings 1,8,1"));
-                encoder.newSettings(1, 8, 1, currentEncoderState);
-                Serial.println(currentEncoderValue);
-                prevEncoderValue = currentEncoderValue;
+                // We use MENU_COUNT to ensure the encoder matches our menu size
+                encoder.newSettings(1, MENU_COUNT, 1, currentEncoderState);
+                prevEncoderValue = currentEncoderState.currentValue;
                 hasRunFlag = 1;  
             }
 
             if (button.triggered(SINGLE_TAP)) {
-                Serial.println();
-                Serial.print(F(" !!!  Button Triggered !!! "));
-                Serial.print(F("processStates smokerState = "));
-                Serial.println(smokerState);
-                Serial.print(F("processStates -> Encoder: currentEncoderValue = "));
-                Serial.print(currentEncoderValue);
-                Serial.print(F(" / prevEncoderValue = "));
-                Serial.println(prevEncoderValue);
-
-                if (prevEncoderValue == 4) {
-                    smokerState = setMeatDoneTemp;  
-                    hasRunFlag = 0;                 
-                    break;
-                }
-                if (prevEncoderValue == 5) {
-                    smokerState = setPitTempTarget;  
-                    hasRunFlag = 0;                  
-                    break;
-                }
-                if (prevEncoderValue == 6) {
-                    hasRunFlag = 0;              
-                    smokerState = setTempUnits;  
-                    break;
+                // Use the enum constants instead of raw numbers
+                switch (prevEncoderValue) {
+                    case MENU_MEAT_TEMP:
+                        smokerState = setMeatDoneTemp;
+                        hasRunFlag = 0;
+                        break;
+                    case MENU_PIT_TEMP:
+                        smokerState = setPitTempTarget;
+                        hasRunFlag = 0;
+                        break;
+                    case MENU_UNITS:
+                        smokerState = setTempUnits;
+                        hasRunFlag = 0;
+                        break;
+                    case MENU_BACK:
+                        smokerState = launchPad; // Or wherever "Back" should take you
+                        hasRunFlag = 0;
+                        break;
                 }
             }
 
