@@ -5,4 +5,4 @@ The fabrication toolkit extracts the files necessary for (JLCPCB)[https://jlcpcb
  2) bom.csv -> Bill of Materials including JLCPCB Part Numbers
  3) positions.csv -> component positions file for pick & place
 
-Note:  check component positions and orientations carefully as translation errors occur between Kicad9 and JLCPCB despite using JLCPCB / EasyEDA footprints imported with JLC Import plug-in
+Note:  When ordering, check fab house component positions and orientations carefully as translation errors occur between Kicad9 and JLCPCB despite using JLCPCB / EasyEDA footprints imported with JLC Import plug-in
