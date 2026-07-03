@@ -85,16 +85,29 @@ void setup() {
     delay(1000);
     Serial.println("\n--- cloudSmoker 2 System Booting (ESP32) ---");
 
-    // UPGRADED: Initialize your new high-resolution TFT adapter panel layout
+    // debugging statements follow
+    Serial.println("Calling lcd.begin()"); // debug
+    lcd.begin();
+    Serial.println("LCD Initialised");      // debug
+    lcd.clearScreen();
+    
+ /*    // UPGRADED: Initialize your new high-resolution TFT adapter panel layout
     lcd.begin();
     lcd.clearScreen();
-
+ */
     // NOTE: Old hd44780 custom character memory layouts are deleted, 
     // since the TFT driver draws pixel metrics directly on-the-fly!
 
+    //encoder.initialise();
+    // check encoder initialisations ...
+    Serial.println("Before Encoder Init");
     encoder.initialise();
-    WifiManager_initialise();
-
+    Serial.println("After Encoder Init"); // If this message is not seen, it's hung in initialise()
+    
+    // Temporarily comment out WiFi to see if it lets us proceed
+    WifiManager_initialise(); 
+    Serial.println("Skipped WiFi, entering loop setup");
+ 
     // Initialise button press context tracking
     button.begin(BUTTON_PIN);
 

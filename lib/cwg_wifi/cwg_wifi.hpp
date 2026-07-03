@@ -37,44 +37,45 @@
 //  if empty, will auto-generate SSID, if password is blank, it will be anonymous AP (wm.autoConnect())
 // then goes into a blocking loop awaiting configuration and will return success result
 //-----------------------------------------------
+
 void WifiManager_initialise() {
     //! add lcd msg about server config
 
-    // explicitly set mode, ESP defaults to STA+AP
-    WiFi.mode(WIFI_STA);  // good practice to ensure code sets wifi mode how you want it
+    // 1. Set mode to Station (STA)
+    WiFi.mode(WIFI_STA);
 
-    // WiFiManager, Local intialization. Once its business is done, there is no need to keep it around
+    // 2. WiFiManager local initialisation
     WiFiManager wm;
 
-    // uncomment line below to reset settings - wipes stored testing credentials, stored by the esp library
-    // wm.resetSettings();
-
-    //? Debugging
-    // Debug is enabled by default on Serial in non-stable releases.
-    // To disable, uncomment following line (must add bcommandefore autoConnect/startConfigPortal
-    //!  My testing showed no space savings by turning off debugging - use WM_NODEBUG in platformio.ini build flag instead
-    //wm.setDebugOutput(false);
-
-    //? set Sta custom hostname
+    // 3. Set a hostname for your device on the network
     wm.setHostname("cloudSmoker");
 
-    bool res;
-    // res = wm.autoConnect(); // auto generated AP name from chipid
-    res = wm.autoConnect("cloudSmoker_setUp_AP"); // anonymous ap w/ custom name
-    //res = wm.autoConnect("AutoConnectAP", "password");  // password protected ap
+    // 4. SET TIMEOUT: This is the critical fix.
+    // If it can't connect to saved WiFi or user doesn't configure in 180 seconds,
+    // the portal will close and the function will continue execution.
+    wm.setConfigPortalTimeout(180); 
+
+    // 5. Attempt connection
+    Serial.println("Connecting to WiFi...");
+    bool res = wm.autoConnect("cloudSmoker_setUp_AP");
 
     if (!res) {
-        Serial.println("Failed to connect");
-        // ESP.restart();
+        // This will be reached if the timeout expires or connection fails
+        Serial.println("Failed to connect or connection timed out.");
+        Serial.println("Continuing in offline mode.");
     } else {
-        // if you get here you have connected to the WiFi
-        Serial.println("connected...yeey :)");
-        Serial.println();
-        Serial.print("ESP Board MAC Address:  ");
-        Serial.println(WiFi.macAddress());
+        Serial.println("Connected to WiFi!");
+        Serial.println("IP Address: " + WiFi.localIP().toString());
     }
+// 6. Reset settings if needed (uncomment to enable)
+//!  Warning - this will erase all saved WiFi credentials and settings!
+//!    Run once, comment back out and recompile to avoid repeated resets
+//    wm.resetSettings();
 
-}  // end wifi_initialise()
+} // end wifi_initialise()
+
+
+
 
 ///////////////////////////////////////////////////////////////////
 
