@@ -48,29 +48,31 @@ void WifiManager_initialise() {
     WiFiManager wm;
 
     // 3. Set a hostname for your device on the network
-    wm.setHostname("cloudSmoker");
+    wm.setHostname("cloudSmoker2");
 
     // 4. SET TIMEOUT: This is the critical fix.
     // If it can't connect to saved WiFi or user doesn't configure in 180 seconds,
     // the portal will close and the function will continue execution.
-    wm.setConfigPortalTimeout(180); 
-
+    wm.setConfigPortalTimeout(15); 
+    wm.setDebugOutput(true);         // ignore WM_NODEBUG flag, force verbose here
+ 
     // 5. Attempt connection
     Serial.println("Connecting to WiFi...");
     bool res = wm.autoConnect("cloudSmoker_setUp_AP");
 
     if (!res) {
         // This will be reached if the timeout expires or connection fails
-        Serial.println("Failed to connect or connection timed out.");
+        Serial.println("Failed to connect or connection timed out. Continuing offline.");
         Serial.println("Continuing in offline mode.");
     } else {
-        Serial.println("Connected to WiFi!");
-        Serial.println("IP Address: " + WiFi.localIP().toString());
+    Serial.println("Connected to WiFi! IP: " + WiFi.localIP().toString());
     }
 // 6. Reset settings if needed (uncomment to enable)
+//--------------------------------------------------------
 //!  Warning - this will erase all saved WiFi credentials and settings!
 //!    Run once, comment back out and recompile to avoid repeated resets
-//    wm.resetSettings();
+//--------------------------------------------------------
+//   wm.resetSettings();
 
 } // end wifi_initialise()
 
