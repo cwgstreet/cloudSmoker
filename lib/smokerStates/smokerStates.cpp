@@ -390,7 +390,7 @@ case changeSettings: {
                     previousMillis = millis();
                     smokerState = getTemp;                                                                                   
                     hasRunFlag = 1;                                                                                          
-                    Serial.println("sleep transmit duration interval reached. smokerState = txTemp, reset hasRunFlag =1 ");  
+                    Serial.println("sleep transmit duration interval reached. smokerState = getTemp, reset hasRunFlag =1 ");  
                 }
             }
         } break;
