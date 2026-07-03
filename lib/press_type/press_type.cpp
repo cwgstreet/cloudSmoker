@@ -80,7 +80,7 @@ void Press_Type::begin(int _pin) {
 
     Serial.begin(BAUD_RATE);
 
-#if DEBUG
+#if DEBUG  //TODO: fix so only prints if debug scaffolding turned on
     Serial.println("   ");  // blank line for visual space
     Serial.println("     Yabl Test follows");
     Serial.println("==============================");

@@ -49,40 +49,50 @@ void processState(CWG_LCD &lcd) {
     // Declare this at the top of the function to avoid switch-case initialization bypass errors
     int16_t currentEncoderValue; 
 
+    // Tracks whether we've *just* transitioned into this state this pass —
+    // lets each case draw its display screen once on entry instead on every loop (flickering)
+    static entryStates_t previousState = (entryStates_t)0;
+    bool enteringState = (smokerState != previousState);
+    previousState = smokerState;
+
     switch (smokerState) {
 
-        case splashScreen: {  
-            lcd.showSplashScreen(degCFlag, meatDoneTemp, pitTempTarget);
+   case splashScreen: {
+            if (enteringState) {  //only run once when entering this state
+                lcd.showSplashScreen(degCFlag, meatDoneTemp, pitTempTarget);
+            }
             if (encoder.moved()) {
                 smokerState = launchPad;
             }
         } break;
-
+     
         case launchPad: {
             if (hasRunFlag == 0) {
                 Serial.println(F("Run Once! (launchPad::hasRunFlag == 0); Changing Encoder Settings - setTempUnits 0,1,0"));
                 encoder.newSettings(0, 1, 1, currentEncoderState);
-                currentEncoderValue = currentEncoderState.currentValue;  
-                Serial.println(currentEncoderValue);
+                currentEncoderValue = currentEncoderState.currentValue;
                 prevEncoderValue = currentEncoderValue;
-                hasRunFlag = 1;  
+                hasRunFlag = 1;
             }
 
-            lcd.showLaunchPad();
+            if (enteringState) {
+                lcd.showLaunchPad();
+            }
+
             if (button.triggered(DOUBLE_TAP)) {
-                yield();         
-                hasRunFlag = 0;  
-                smokerState = changeSettings;  
+                yield();
+                hasRunFlag = 0;
+                smokerState = changeSettings;
             }
             if (button.triggered(SINGLE_TAP)) {
-                yield();                                                               
-                Serial.println("-------------------Start Cook Now-----------------");  
-                smokerState = getTemp;                                                 
-                startCookTime_ms = millis();                                           
-                Serial.print("startCookTime_ms = ");  
-                Serial.println(startCookTime_ms);     
+                yield();
+                Serial.println("-------------------Start Cook Now-----------------");
+                smokerState = getTemp;
+                startCookTime_ms = millis();
             }
-        } break;
+        } break; 
+
+    
 
 case changeSettings: {
             lcd.showSettingsMenu(prevEncoderValue);
