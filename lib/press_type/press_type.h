@@ -2,10 +2,11 @@
  * press_type.h - Header for Wrapper Library to determine button press type
  *   press_types:  short press, long press and double press
  *
- *  C W Greenstreet, Ver1, 7Sep21
- *    MIT Licence - Released into the public domain
+ * C W Greenstreet, cloudSmoker2, 1Jul26
+ * Licence: GPLv3 (Licensed under the GNU GPLv3: Free to use and modify, but any public
+ * distribution must also share the full source code under this same license.
  *
- * This wrapper library encapsulates and integrates selected fetures from
+ * This wrapper library encapsulates and integrates selected features from
  *    1) Yabl (Yet another button library for Arduino)
  *           https://github.com/yergin/Yabl
  *    2) Bounce2 (debouncng library)
@@ -26,10 +27,7 @@
 
 #include <Yabl.h>
 
-enum pressType_T { NO_PRESS,
-                   SHORT_PRESS,
-                   LONG_PRESS,
-                   DOUBLE_PRESS };
+enum pressType_T { NO_PRESS, SHORT_PRESS, LONG_PRESS, DOUBLE_PRESS };
 
 // pressEventCode_T defined in implementation file, press_type.cpp, hence extern keyword
 extern pressType_T pressEventCode;
@@ -38,25 +36,27 @@ extern const int BUTTON_PIN;
 
 // Press_Type class - wrapper class to determine press type; inherited from Yabl::Button class
 class Press_Type : public Button {
-   public:
-    Press_Type(const int switchPin);  // constructor - will initialise switchPin
+ public:
+  Press_Type(const int switchPin);  // constructor - will initialise switchPin
 
-    // prototype functions - see *.cpp for method code
-    void begin(const int _pin);
-    void functionTest();
-    void checkPress();
+  // prototype functions - see *.cpp for method code
+  void begin(const int _pin);
+  void functionTest();
+  void checkPress();
 
-   private:
-    int _pin;
+ private:
+  int _pin;
 };
 
 extern Press_Type button;  // ensure button object is visable everywhere
 
 /*****************************************************************
  *  Note: unsuccessful at declaring onButtonEventfunction prototype below within Press_Type class
- *     above as a member function without compiler giving "invalid use of non-static member function" error
+ *     above as a member function without compiler giving "invalid use of non-static member
+ * function" error
  *
- *  see discussion: https://arduino.stackexchange.com/questions/33795/error-invalid-use-of-non-static-member-function-while-calling-a-function-from
+ *  see discussion:
+ * https://arduino.stackexchange.com/questions/33795/error-invalid-use-of-non-static-member-function-while-calling-a-function-from
  *****************************************************************/
 void onButtonEvent(const EventInfo& info);
 

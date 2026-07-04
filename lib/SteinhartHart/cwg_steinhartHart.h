@@ -1,13 +1,19 @@
 /* ***************************************************************
- * cwg_steinhartHart.h - Library calculates temperature from NTC thermistor using SteinHart-Hart equation
- *    Ver 1			24 Feb 2022    MIT Licence
+ * cwg_steinhartHart.h - Library calculates temperature from NTC thermistor using SteinHart-Hart
+ * equation
  *
- * key changes:  modified open-source code to be more generic and permit interface to ADS1x14 external ADCs
- *                all defaults from cloudSmoker Project (https://github.com/cwgstreet/cloudSmoker)
- *    Note that original library has error in temperature compensation for self-heating using k-factor
- *     see https://github.com/fiendie/SteinhartHart/issues/3
+ *  C W Greenstreet, cloudSmoker2, 1Jul26
+ * Licence: GPLv3 (Licensed under the GNU GPLv3: Free to use and modify, but any public
+ *   distribution must also share the full source code under this same license.
  *
- *  Tool to get SHH coefficients: https://www.thinksrs.com/downloads/programs/therm%20calc/ntccalibrator/ntccalculator.html
+ * key changes:  modified open-source code to be more generic and permit interface to ADS1x14
+ * external ADCs all defaults from cloudSmoker Project (https://github.com/cwgstreet/cloudSmoker)
+ *
+ *    Note that original library has error in temperature compensation for self-heating using
+ * k-factor see https://github.com/fiendie/SteinhartHart/issues/3
+ *
+ *  Tool to get SHH coefficients:
+ * https://www.thinksrs.com/downloads/programs/therm%20calc/ntccalibrator/ntccalculator.html
  *
  * -----------------------------------------------------------------------------
  * Modified from SteinhartHart.h - Library for interacting with NTC thermistors
@@ -62,43 +68,38 @@
 #include "myConstants.h"
 
 class SteinhartHart {
-   public:
-    /**
-     * Constructor: SteinhratHart(biasResistorValue_ohm, a, b, c)
-     *
-     * Only the bias resistor value has to be specified in the constuctor.
-     * If no other parameters are given default values will be used based
-     *   on a Mavrick-723 temperature probe and cloudSmoker project design parmeters
-     */
+ public:
+  /**
+   * Constructor: SteinhratHart(biasResistorValue_ohm, a, b, c)
+   *
+   * Only the bias resistor value has to be specified in the constuctor.
+   * If no other parameters are given default values will be used based
+   *   on a Mavrick-723 temperature probe and cloudSmoker project design parmeters
+   */
 
-    SteinhartHart(
-        double biasResistorValue_ohm,
-        double a = 0.0006308217444,
-        double b = 0.000183627837,
-        double c = 0.00000007052387818) : _biasResistance(biasResistorValue_ohm),
-                                    _a(a),
-                                    _b(b),
-                                    _c(c){};
+  SteinhartHart(double biasResistorValue_ohm, double a = 0.0006308217444, double b = 0.000183627837,
+                double c = 0.00000007052387818)
+      : _biasResistance(biasResistorValue_ohm), _a(a), _b(b), _c(c) {};
 
-    //  public member functions:
-    double getTempKelvin(double ADCmeasuredVCC_volts, double ADCmeasuredThermistor_volts);
-    double getTempCelsius(double ADCmeasuredVCC_volts, double ADCmeasuredThermistor_volts);
-    double getTempFahrenheit(double ADCmeasuredVCC_volts, double ADCmeasuredThermistor_volts);
+  //  public member functions:
+  double getTempKelvin(double ADCmeasuredVCC_volts, double ADCmeasuredThermistor_volts);
+  double getTempCelsius(double ADCmeasuredVCC_volts, double ADCmeasuredThermistor_volts);
+  double getTempFahrenheit(double ADCmeasuredVCC_volts, double ADCmeasuredThermistor_volts);
 
-   private:
-    // private member function
-    double steinhartHart(double _Rth_ohm);
+ private:
+  // private member function
+  double steinhartHart(double _Rth_ohm);
 
-    //  Thermistor voltage divider variables
-    double _biasResistance;  //  bias resistor value
-    double _Vadc;            //  probe voltage measured by ADC (typically median filtered)
-    double _Vsupply;         //  supply voltage to voltage divider
-    double _Rth_ohm;         //  NTC thermistor resistance
+  //  Thermistor voltage divider variables
+  double _biasResistance;  //  bias resistor value
+  double _Vadc;            //  probe voltage measured by ADC (typically median filtered)
+  double _Vsupply;         //  supply voltage to voltage divider
+  double _Rth_ohm;         //  NTC thermistor resistance
 
-    // Manufacturing constants
-    double _a;
-    double _b;
-    double _c;
+  // Manufacturing constants
+  double _a;
+  double _b;
+  double _c;
 };
 
 // ensure objects are visable everywhere (global)

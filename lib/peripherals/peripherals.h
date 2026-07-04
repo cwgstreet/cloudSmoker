@@ -1,9 +1,10 @@
 /* ***************************************************************
  * peripherals.h - library containing functions to test and use
- *   cloudSmoker hardware serial monitor and LCD peripherals
+ *   cloudSmoker2 hardware serial monitor and LCD peripherals
  *
- *  C W Greenstreet, Ver1, 27Sep21
- *    MIT Licence - Released into the public domain
+ *  C W Greenstreet, cloudSmoker2, 1Jul26
+ * Licence: GPLv3 (Licensed under the GNU GPLv3: Free to use and modify, but any public
+ *   distribution must also share the full source code under this same license.
  *
  ** ************************************************************* */
 
@@ -27,17 +28,17 @@
 #include <Wire.h>
 
 // YwRobot 1602 LCD with i2c i/o expander backpack (PCF8574 or MCP23008)
-//#include <hd44780.h>
-//#include <hd44780ioClass/hd44780_I2Cexp.h>  // i2c expander i/o class header -> required for my YwRobot 1602 LCD
-
+// #include <hd44780.h>
+// #include <hd44780ioClass/hd44780_I2Cexp.h>  // i2c expander i/o class header -> required for my
+// YwRobot 1602 LCD
 
 /******************************************************
 // Class definitions for peripheral functions and tests:
 *******************************************************/
 
 class CWG_SerialMonitor {
-   public:
-    void functionTest();
+ public:
+  void functionTest();
 };
 
 extern CWG_SerialMonitor SerialTerminal;  // ensure lcd object is visible everywhere
