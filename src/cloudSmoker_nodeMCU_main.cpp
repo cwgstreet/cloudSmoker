@@ -38,6 +38,8 @@
  *    Revisions:
  *      2021.12.31    V1 partially complete but ran into Uno 2kb SRAM memory limitation wall
  *      2022.01.02    V2 ported code to ESP8266 (NodeMCU V1.0 ESP12E 80kb!)
+ *      2026.07.04    Fix confusing comment errors that erroneously swapped bias resistor values.  No change to code 
+ *                      calculations as code was correct
  *
  * ************************************************************************************
  */
