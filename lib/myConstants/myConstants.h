@@ -45,8 +45,8 @@
  *   ALRT       float     not used (float per datasheet)
  *   A0         VDD       monitor battery voltage and use for VDD in Steinhart-Hart calcs
  *   A1         n/a       no measurement - floating (per datasheet)
- *   A2         MEAT      Meat probe thermistor jack (measured 9.09k ohm 1% bias resistor - vs 1% 9.09k ohm design)
- *   A3         PIT       Pit probe thermistor jack  (measured 75.0k ohm 1% bias resistor - vs 1% 75k ohm design)
+ *   A2         MEAT      Meat probe thermistor jack (measured 75.0k ohm 1% bias resistor - vs 1% 75k ohm design)
+ *   A3         PIT       Pit probe thermistor jack  (measured 9.09k ohm 1% bias resistor - vs 1% 9.09k ohm design)
  *  */
 
 
