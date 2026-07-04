@@ -38,7 +38,7 @@
 //                ____           ____
 //   +V_IN o-----|____|----+----|____|----o GND
 //  (~5 V)        Rbias    | Rthermistor
-//             (10E6 ohm)  |  (75E3 ohm)
+//        (PIT: 75E3 ohm)  |  (10E6 ohm)
 //    ADC PIN              |
 //      (A0) o-------------+
 //                       Vout
