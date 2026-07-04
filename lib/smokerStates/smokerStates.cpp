@@ -95,18 +95,22 @@ void processState(CWG_LCD& lcd) {
     } break;
 
     case changeSettings: {
-      lcd.showSettingsMenu(prevEncoderValue);
+      static int16_t lastDrawnSelection = -1;
       currentEncoderValue = encoder.getCount();
 
       if (hasRunFlag == 0) {
-        // We use MENU_COUNT to ensure the encoder matches our menu size
         encoder.newSettings(1, MENU_COUNT, 1, currentEncoderState);
         prevEncoderValue = currentEncoderState.currentValue;
         hasRunFlag = 1;
+        lastDrawnSelection = -1;
+      }
+
+      if (prevEncoderValue != lastDrawnSelection) {
+        lcd.showSettingsMenu(prevEncoderValue);
+        lastDrawnSelection = prevEncoderValue;
       }
 
       if (button.triggered(SINGLE_TAP)) {
-        // Use the enum constants instead of raw numbers
         switch (prevEncoderValue) {
           case MENU_MEAT_TEMP:
             smokerState = setMeatDoneTemp;
@@ -121,7 +125,7 @@ void processState(CWG_LCD& lcd) {
             hasRunFlag = 0;
             break;
           case MENU_BACK:
-            smokerState = launchPad;  // Or wherever "Back" should take you
+            smokerState = launchPad;
             hasRunFlag = 0;
             break;
         }
@@ -134,17 +138,20 @@ void processState(CWG_LCD& lcd) {
     } break;
 
     case setMeatDoneTemp: {
-      lcd.showSetMeatDoneTempMenu(prevEncoderValue);
+      static int16_t lastDrawnSelection = -1;
       currentEncoderValue = encoder.getCount();
 
       if (hasRunFlag == 0) {
-        Serial.println(
-            F("Run Once! (setMeatDoneTemp::hasRunFlag == 0); Changing Encoder Settings 0,2,0 "));
-        encoder.newSettings(0, 2, 0, currentEncoderState);
+        encoder.newSettings(1, 2, 1, currentEncoderState);  // 1=Edit, 2=Back
         currentEncoderValue = currentEncoderState.currentValue;
-        Serial.println(currentEncoderValue);
         prevEncoderValue = currentEncoderValue;
         hasRunFlag = 1;
+        lastDrawnSelection = -1;
+      }
+
+      if (prevEncoderValue != lastDrawnSelection) {
+        lcd.showSetMeatDoneTempMenu(prevEncoderValue, meatDoneTemp, degCFlag);
+        lastDrawnSelection = prevEncoderValue;
       }
 
       if (button.triggered(SINGLE_TAP)) {
@@ -152,28 +159,30 @@ void processState(CWG_LCD& lcd) {
           hasRunFlag = 0;
           bool adjustTempFlag = 1;
           float temporaryTemperatureTarget;
+          int16_t lastDrawnAdjustValue = -1;
 
           while (adjustTempFlag) {
             if (hasRunFlag == 0) {
-              Serial.println(
-                  F("Run Once! (setMeatDoneTemp inside block::hasRunFlag == 0); Changing Encoder "
-                    "Settings 122,220,203 or 90,105,95 "));
               if (degCFlag) {
                 encoder.newSettings(90, 105, 95, currentEncoderState);
               } else {
                 encoder.newSettings(122, 220, 203, currentEncoderState);
               }
               currentEncoderValue = currentEncoderState.currentValue;
-              Serial.println(currentEncoderValue);
               prevEncoderValue = currentEncoderValue;
               hasRunFlag = 1;
+              lastDrawnAdjustValue = -1;
             }
             bool meatTargetFlag = 1;
             currentEncoderValue = encoder.getCount();
             temporaryTemperatureTarget = prevEncoderValue;
 
             yield();
-            lcd.showTemperatureTargetAdjustment(temporaryTemperatureTarget, meatTargetFlag);
+
+            if ((int16_t)temporaryTemperatureTarget != lastDrawnAdjustValue) {
+              lcd.showTemperatureTargetAdjustment(temporaryTemperatureTarget, meatTargetFlag);
+              lastDrawnAdjustValue = (int16_t)temporaryTemperatureTarget;
+            }
 
             if (button.update()) {
               if (button.triggered(SINGLE_TAP)) {
@@ -181,48 +190,45 @@ void processState(CWG_LCD& lcd) {
                 meatDoneTemp = temporaryTemperatureTarget;
                 hasRunFlag = 0;
 
-                Serial.println();
                 Serial.print(F("New meatDoneTemp value set -> new meatDoneTemp = "));
                 Serial.println(meatDoneTemp);
 
-                if (hasRunFlag == 0) {
-                  Serial.println(
-                      F("Run Once! (return to changeSettings::hasRunFlag == 0); Changing Encoder "
-                        "Settings - setMeatDoneTemp 0,2,0"));
-                  encoder.newSettings(0, 2, 0, currentEncoderState);
-                  currentEncoderValue = currentEncoderState.currentValue;
-                  Serial.println(currentEncoderValue);
-                  prevEncoderValue = currentEncoderValue;
-                  hasRunFlag = 1;
-                }
+                encoder.newSettings(1, 2, 1, currentEncoderState);
+                currentEncoderValue = currentEncoderState.currentValue;
+                prevEncoderValue = currentEncoderValue;
+                hasRunFlag = 1;
+                lastDrawnSelection = -1;  // force settings screen to redraw on return
               }
             }
           }
-          Serial.println(F("while (adjustTempFlag) -> exited while loop"));
+        } else if (prevEncoderValue == 2) {
+          smokerState = changeSettings;
+          hasRunFlag = 0;
         }
         button.update();
       }
 
       if (button.triggered(HOLD)) {
-        smokerState = splashScreen;
-        Serial.print(F("Hold press - going up one level; smokerState = "));
-        Serial.println(smokerState);
+        smokerState = changeSettings;  // up one level, not all the way to splashScreen
         hasRunFlag = 0;
       }
     } break;
 
     case setPitTempTarget: {
-      lcd.showSetPitTempTargetMenu(prevEncoderValue);
+      static int16_t lastDrawnSelection = -1;
       currentEncoderValue = encoder.getCount();
 
       if (hasRunFlag == 0) {
-        Serial.println(
-            F("Run Once! (setPitTempTarget::hasRunFlag == 0); Changing Encoder Settings 0,2,0 "));
-        encoder.newSettings(0, 2, 0, currentEncoderState);
+        encoder.newSettings(1, 2, 1, currentEncoderState);  // 1=Edit, 2=Back
         currentEncoderValue = currentEncoderState.currentValue;
-        Serial.println(currentEncoderValue);
         prevEncoderValue = currentEncoderValue;
         hasRunFlag = 1;
+        lastDrawnSelection = -1;
+      }
+
+      if (prevEncoderValue != lastDrawnSelection) {
+        lcd.showSetPitTempTargetMenu(prevEncoderValue, pitTempTarget, degCFlag);
+        lastDrawnSelection = prevEncoderValue;
       }
 
       if (button.triggered(SINGLE_TAP)) {
@@ -230,28 +236,30 @@ void processState(CWG_LCD& lcd) {
           hasRunFlag = 0;
           bool adjustTempFlag = 1;
           float temporaryTemperatureTarget;
+          int16_t lastDrawnAdjustValue = -1;
 
           while (adjustTempFlag) {
             if (hasRunFlag == 0) {
-              Serial.println(
-                  F("Run Once! (setPitTempTarget inside block::hasRunFlag == 0); Changing Encoder "
-                    "Settings degF:211,350,225 or degC:100,177,107  "));
               if (degCFlag) {
                 encoder.newSettings(100, 177, 107, currentEncoderState);
               } else {
                 encoder.newSettings(212, 350, 225, currentEncoderState);
               }
               currentEncoderValue = currentEncoderState.currentValue;
-              Serial.println(currentEncoderValue);
               prevEncoderValue = currentEncoderValue;
               hasRunFlag = 1;
+              lastDrawnAdjustValue = -1;
             }
             bool meatTargetFlag = 0;
             currentEncoderValue = encoder.getCount();
             temporaryTemperatureTarget = prevEncoderValue;
 
             yield();
-            lcd.showTemperatureTargetAdjustment(temporaryTemperatureTarget, meatTargetFlag);
+
+            if ((int16_t)temporaryTemperatureTarget != lastDrawnAdjustValue) {
+              lcd.showTemperatureTargetAdjustment(temporaryTemperatureTarget, meatTargetFlag);
+              lastDrawnAdjustValue = (int16_t)temporaryTemperatureTarget;
+            }
 
             if (button.update()) {
               if (button.triggered(SINGLE_TAP)) {
@@ -259,68 +267,64 @@ void processState(CWG_LCD& lcd) {
                 pitTempTarget = temporaryTemperatureTarget;
                 hasRunFlag = 0;
 
-                Serial.println();
                 Serial.print(F("New pitTempTarget value set -> new pitTempTarget = "));
                 Serial.println(pitTempTarget);
 
-                if (hasRunFlag == 0) {
-                  Serial.println(
-                      F("Run Once! (return to changeSettings::hasRunFlag == 0); Changing Encoder "
-                        "Settings - setPitTempTarget 0,2,0"));
-                  encoder.newSettings(0, 2, 0, currentEncoderState);
-                  currentEncoderValue = currentEncoderState.currentValue;
-                  Serial.println(currentEncoderValue);
-                  prevEncoderValue = currentEncoderValue;
-                  hasRunFlag = 1;
-                }
+                encoder.newSettings(1, 2, 1, currentEncoderState);
+                currentEncoderValue = currentEncoderState.currentValue;
+                prevEncoderValue = currentEncoderValue;
+                hasRunFlag = 1;
+                lastDrawnSelection = -1;
               }
             }
           }
-          Serial.println(F("while (adjustTempFlag) -> exited while loop"));
+        } else if (prevEncoderValue == 2) {
+          smokerState = changeSettings;
+          hasRunFlag = 0;
         }
         button.update();
       }
 
       if (button.triggered(HOLD)) {
-        smokerState = splashScreen;
-        Serial.print(F("Hold press - going back to splashScreen; smokerState = "));
-        Serial.println(smokerState);
+        smokerState = changeSettings;
         hasRunFlag = 0;
       }
     } break;
 
     case setTempUnits: {
+      static int16_t lastDrawnSelection = -1;
       currentEncoderValue = encoder.getCount();
 
       if (hasRunFlag == 0) {
-        Serial.println(
-            F("Run Once! (setTempUnits::hasRunFlag == 0); Changing Encoder Settings 0,2,0"));
-        encoder.newSettings(0, 2, 0, currentEncoderState);
+        encoder.newSettings(1, 2, 1, currentEncoderState);  // 1=Toggle, 2=Back
         currentEncoderValue = currentEncoderState.currentValue;
-        Serial.println(currentEncoderValue);
         prevEncoderValue = currentEncoderValue;
         hasRunFlag = 1;
+        lastDrawnSelection = -1;
       }
 
-      lcd.showSetTempUnitsMenu(prevEncoderValue);
+      if (prevEncoderValue != lastDrawnSelection) {
+        lcd.showSetTempUnitsMenu(prevEncoderValue, degCFlag);
+        lastDrawnSelection = prevEncoderValue;
+      }
 
       if (button.triggered(SINGLE_TAP)) {
         if (prevEncoderValue == 1) {
-          if (degCFlag == 0) {
-            degCFlag = 1;
-            Serial.println(F("degC Flag set - Temperature units now in degC!"));
-          } else {
-            degCFlag = 0;
-            Serial.println(F("degF Flag set - Temperature units now in degF!"));
-          }
+          degCFlag = !degCFlag;
+          Serial.println(degCFlag ? F("degC Flag set - Temperature units now in degC!")
+                                  : F("degF Flag set - Temperature units now in degF!"));
+          lastDrawnSelection = -1;  // force redraw so "Current: degX" updates immediately
+        } else if (prevEncoderValue == 2) {
+          smokerState = changeSettings;
+          hasRunFlag = 0;
         }
       }
 
       if (button.triggered(HOLD)) {
-        smokerState = splashScreen;
+        smokerState = changeSettings;
         hasRunFlag = 0;
       }
-    } break;  // FIXED: Closed the brace and terminated the block properly here
+    } break;
 
     case getTemp: {
       Serial.print("getTemp Case -> startCookTime_ms =");

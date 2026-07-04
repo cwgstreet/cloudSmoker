@@ -58,6 +58,7 @@ class CWG_LCD {
  private:
   TFT_eSPI tft;
   uint8_t menuPrintLine;  // Keeps track of line tracking (0 or 1) from legacy cloudSmoker1 code
+  void drawProgressDots(int currentIndex, int totalItems);  // currentIndex is 1-basedprivate:
 };
 
 #endif  // LCD_H

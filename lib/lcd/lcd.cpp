@@ -126,20 +126,108 @@ void CWG_LCD::showLaunchPad() {
   tft.drawString("Ready to Cook", 120, 120, 2);
 }
 
+// Draws small dots along the bottom arc of the round display, one per menu item,
+// with the current selection lit up gold. currentIndex is 1-based.
+void CWG_LCD::drawProgressDots(int currentIndex, int totalItems) {
+  const int centerX = 120, centerY = 120;
+  const int ringRadius = 95;
+  const int dotRadius = 5;
+
+  for (int i = 1; i <= totalItems; i++) {
+    float angleDeg = (totalItems == 1) ? 180.0f : 130.0f + (100.0f * (i - 1) / (totalItems - 1));
+    float angleRad = angleDeg * (PI / 180.0f);
+    int dx = centerX + (int)(ringRadius * cos(angleRad));
+    int dy = centerY + (int)(ringRadius * sin(angleRad));
+    uint16_t color = (i == currentIndex) ? TFT_GOLD : TFT_DARKGREY;
+    tft.fillCircle(dx, dy, dotRadius, color);
+  }
+}
+
 void CWG_LCD::showSettingsMenu(int16_t prevEncoderValue) {
-  // TODO: Implement actual UI for settings menu
+  clearScreen();
+  drawUIFrame("SETTINGS");
+
+  static const char* menuLabels[MENU_COUNT + 1] = {"",  // index 0 unused - menu values are 1-based
+                                                   "Meat Temp", "Pit Temp", "Units", "Back"};
+
+  int16_t index = constrain(prevEncoderValue, 1, (int16_t)MENU_COUNT);
+
+  tft.setTextDatum(MC_DATUM);
+  tft.setTextColor(TFT_WHITE, TFT_BLACK);
+  tft.drawString(menuLabels[index], 120, 120, 4);
+
+  drawProgressDots(index, MENU_COUNT);
 }
 
-void CWG_LCD::showSetMeatDoneTempMenu(int16_t prevEncoderValue) {
-  // TODO: Implement actual UI for meat temp menu
+void CWG_LCD::showSetMeatDoneTempMenu(int16_t prevEncoderValue, float meatDoneTemp, bool degCFlag) {
+  clearScreen();
+  drawUIFrame("MEAT TARGET");
+
+  char currentValueStr[20];
+  if (degCFlag) {
+    snprintf(currentValueStr, sizeof(currentValueStr), "Current: %.0fC",
+             convertDegFtoDegC(meatDoneTemp));
+  } else {
+    snprintf(currentValueStr, sizeof(currentValueStr), "Current: %.0fF", meatDoneTemp);
+  }
+
+  int16_t index = constrain(prevEncoderValue, 1, 2);
+  const char* label = (index == 1) ? "Edit" : "Back";
+
+  tft.setTextDatum(MC_DATUM);
+  tft.setTextColor(TFT_LIGHTGREY, TFT_BLACK);
+  tft.drawString(currentValueStr, 120, 90, 2);
+
+  tft.setTextColor(TFT_WHITE, TFT_BLACK);
+  tft.drawString(label, 120, 130, 4);
+
+  drawProgressDots(index, 2);
 }
 
-void CWG_LCD::showSetPitTempTargetMenu(int16_t prevEncoderValue) {
-  // TODO: Implement actual UI for pit temp menu
+void CWG_LCD::showSetPitTempTargetMenu(int16_t prevEncoderValue, float pitTempTarget,
+                                       bool degCFlag) {
+  clearScreen();
+  drawUIFrame("PIT TARGET");
+
+  char currentValueStr[20];
+  if (degCFlag) {
+    snprintf(currentValueStr, sizeof(currentValueStr), "Current: %.0fC",
+             convertDegFtoDegC(pitTempTarget));
+  } else {
+    snprintf(currentValueStr, sizeof(currentValueStr), "Current: %.0fF", pitTempTarget);
+  }
+
+  int16_t index = constrain(prevEncoderValue, 1, 2);
+  const char* label = (index == 1) ? "Edit" : "Back";
+
+  tft.setTextDatum(MC_DATUM);
+  tft.setTextColor(TFT_LIGHTGREY, TFT_BLACK);
+  tft.drawString(currentValueStr, 120, 90, 2);
+
+  tft.setTextColor(TFT_WHITE, TFT_BLACK);
+  tft.drawString(label, 120, 130, 4);
+
+  drawProgressDots(index, 2);
 }
 
-void CWG_LCD::showSetTempUnitsMenu(int16_t prevEncoderValue) {
-  // TODO: Implement actual UI for temp units menu
+void CWG_LCD::showSetTempUnitsMenu(int16_t prevEncoderValue, bool degCFlag) {
+  clearScreen();
+  drawUIFrame("UNITS");
+
+  char currentUnitStr[20];
+  snprintf(currentUnitStr, sizeof(currentUnitStr), "Current: deg%s", degCFlag ? "C" : "F");
+
+  int16_t index = constrain(prevEncoderValue, 1, 2);
+  const char* label = (index == 1) ? "Toggle" : "Back";
+
+  tft.setTextDatum(MC_DATUM);
+  tft.setTextColor(TFT_LIGHTGREY, TFT_BLACK);
+  tft.drawString(currentUnitStr, 120, 90, 2);
+
+  tft.setTextColor(TFT_WHITE, TFT_BLACK);
+  tft.drawString(label, 120, 130, 4);
+
+  drawProgressDots(index, 2);
 }
 
 void CWG_LCD::showBBQStatusScreen(bool degCFlag, float currentMeatTemp, float meatDoneTemp,
