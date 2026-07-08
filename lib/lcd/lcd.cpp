@@ -12,6 +12,8 @@
 
 #include "helper_functions.h"
 
+extern char bootResetReasonStr[24];  //! DEBUG CODE - temporary
+
 // Constructor
 CWG_LCD::CWG_LCD() : tft(TFT_eSPI()), menuPrintLine(0) {}
 
@@ -70,6 +72,11 @@ void CWG_LCD::showSplashScreen(bool degCFlag, float meatDoneTemp, float pitTempT
 
   tft.setTextColor(TFT_GREEN, TFT_BLACK);
   tft.drawString("Turn Encoder", 120, 205, 2);
+
+  //! DEBUG CODE BLOCK - Temporary
+  tft.setTextColor(TFT_DARKGREY, TFT_BLACK);
+  tft.drawString(bootResetReasonStr, 120, 228, 1);  // small font, clear of "Turn Encoder" above it
+                                                    //! end DEBUG block
 }
 
 // Handles alternating text lines dynamically inside the display circle center
@@ -121,9 +128,17 @@ void CWG_LCD::showTemperatureTargetAdjustment(float temporaryTemperatureTarget,
 void CWG_LCD::showLaunchPad() {
   clearScreen();
   drawUIFrame("LAUNCH PAD");
+
   tft.setTextDatum(MC_DATUM);
+
   tft.setTextColor(TFT_WHITE, TFT_BLACK);
-  tft.drawString("Ready to Cook", 120, 120, 2);
+  tft.drawString("Ready to Cook", 120, 95, 2);
+
+  tft.setTextColor(TFT_GREEN, TFT_BLACK);
+  tft.drawString("Press: Start Cook", 120, 140, 2);
+
+  tft.setTextColor(TFT_CYAN, TFT_BLACK);
+  tft.drawString("Dbl-Press: Setup", 120, 165, 2);
 }
 
 // Draws small dots along the bottom arc of the round display, one per menu item,
@@ -133,8 +148,16 @@ void CWG_LCD::drawProgressDots(int currentIndex, int totalItems) {
   const int ringRadius = 95;
   const int dotRadius = 5;
 
+  const float arcCenterDeg = 90.0f;
+  const float arcSpanDeg = 100.0f;
+
   for (int i = 1; i <= totalItems; i++) {
-    float angleDeg = (totalItems == 1) ? 180.0f : 130.0f + (100.0f * (i - 1) / (totalItems - 1));
+    // Reversed vs. before: item 1 now starts at the left end of the arc,
+    // so turning the encoder clockwise (increasing index) sweeps the
+    // highlighted dot left -> right, matching the direction of the turn.
+    float angleDeg = (totalItems == 1) ? arcCenterDeg
+                                       : (arcCenterDeg + arcSpanDeg / 2.0f) -
+                                             (arcSpanDeg * (i - 1) / (totalItems - 1));
     float angleRad = angleDeg * (PI / 180.0f);
     int dx = centerX + (int)(ringRadius * cos(angleRad));
     int dy = centerY + (int)(ringRadius * sin(angleRad));

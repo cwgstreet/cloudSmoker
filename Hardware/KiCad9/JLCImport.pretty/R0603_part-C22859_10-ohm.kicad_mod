@@ -198,7 +198,7 @@
 		(uuid "dc26d42c-e518-413f-bf62-20c23eef53e1")
 	)
 	(embedded_fonts no)
-	(model "${EASYEDA2KICAD}/easyeda2kicad.3dshapes/R0603.wrl"
+	(model "${JLC3D}/0603WAF0000T5E.step"
 		(offset
 			(xyz 0 0 0)
 		)

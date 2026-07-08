@@ -47,6 +47,11 @@
 // Always include ThingSpeak header file after other header files and custom macros
 #include <ThingSpeak.h>
 
+//! BEGIN DEBUG CODE BLOCK
+#include <esp_system.h>
+
+char bootResetReasonStr[24] = "";  // set once in setup(), shown on the splash screen for diagnosis
+
 //? ************** Selective Debug Scaffolding *********************
 // #define DEBUG_SERIAL 1
 // #define DEBUG_LCD 1           // Configured for local TFT verification testing
@@ -87,6 +92,34 @@ CWG_LCD lcd;
 
 void setup() {
   Serial.begin(SERIAL_MONITOR_SPEED);
+
+  esp_reset_reason_t resetReason = esp_reset_reason();
+  switch (resetReason) {
+    case ESP_RST_POWERON:
+      strcpy(bootResetReasonStr, "RST:POWERON");
+      break;
+    case ESP_RST_EXT:
+      strcpy(bootResetReasonStr, "RST:EXT_PIN");
+      break;
+    case ESP_RST_SW:
+      strcpy(bootResetReasonStr, "RST:SW");
+      break;
+    case ESP_RST_PANIC:
+      strcpy(bootResetReasonStr, "RST:PANIC");
+      break;
+    case ESP_RST_WDT:
+      strcpy(bootResetReasonStr, "RST:WDT");
+      break;
+    case ESP_RST_BROWNOUT:
+      strcpy(bootResetReasonStr, "RST:BROWNOUT");
+      break;
+    default:
+      snprintf(bootResetReasonStr, sizeof(bootResetReasonStr), "RST:OTHER(%d)", resetReason);
+      break;
+  }
+  Serial.print(F("Reset reason: "));
+  Serial.println(bootResetReasonStr);
+
   delay(1000);
   Serial.println("\n--- cloudSmoker 2 System Booting (ESP32) ---");
 
@@ -96,20 +129,10 @@ void setup() {
   Serial.println("LCD Initialised");  // debug
   lcd.clearScreen();
 
-  /*    // UPGRADED: Initialize your new high-resolution TFT adapter panel layout
-     lcd.begin();
-     lcd.clearScreen();
-  */
-  // NOTE: Old hd44780 custom character memory layouts are deleted,
-  // since the TFT driver draws pixel metrics directly on-the-fly!
-
-  // encoder.initialise();
-  //  check encoder initialisations ...
   Serial.println("Before Encoder Init");
   encoder.initialise();
   Serial.println("After Encoder Init");  // If this message is not seen, it's hung in initialise()
 
-  // Temporarily comment out WiFi to see if it lets us proceed
   WifiManager_initialise();
   Serial.println("Skipped WiFi, entering loop setup");
 

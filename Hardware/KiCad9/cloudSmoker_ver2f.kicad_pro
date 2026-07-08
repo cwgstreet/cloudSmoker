@@ -661,7 +661,7 @@
       "plot": "svg_files/",
       "pos_files": "",
       "specctra_dsn": "",
-      "step": "",
+      "step": "cloudSmoker_ver2f.step",
       "svg": "",
       "vrml": ""
     },

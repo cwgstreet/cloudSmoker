@@ -42,9 +42,9 @@ class CWG_LCD {
   // New navigation & screen layouts called by smokerStates.cpp
   void showLaunchPad();
   void showSettingsMenu(int16_t prevEncoderValue);
-  void showSetMeatDoneTempMenu(int16_t prevEncoderValue);
-  void showSetPitTempTargetMenu(int16_t prevEncoderValue);
-  void showSetTempUnitsMenu(int16_t prevEncoderValue);
+  void showSetMeatDoneTempMenu(int16_t prevEncoderValue, float meatDoneTemp, bool degCFlag);
+  void showSetPitTempTargetMenu(int16_t prevEncoderValue, float pitTempTarget, bool degCFlag);
+  void showSetTempUnitsMenu(int16_t prevEncoderValue, bool degCFlag);
   void showBBQStatusScreen(bool degCFlag, float currentMeatTemp, float meatDoneTemp,
                            float currentPitTemp, float pitTempTarget);
 

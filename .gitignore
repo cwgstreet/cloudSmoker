@@ -60,3 +60,6 @@ repomix-output.xml
 # Ignore Image2Lcd utility
 Image2Lcd/
 grabcad/
+
+ Ignore FreeCAD backup
+*.FCBak
