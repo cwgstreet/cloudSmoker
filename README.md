@@ -40,6 +40,20 @@ The device tracks critical data points, such as pit and internal meat temperatur
 
 To ensure the cook stays on track, the system sends push notifications if temperatures drift or once the meat reaches its target. The project is designed to be cooker-agnostic, making it a reliable companion for a variety of smokers and BBQ setups.
 
+
+> ### 🌟 **Update:** cloudSmoker2 development is progressing!  Boards now built and firmware port / enhancement is underway.
+
+<img align="left" src="https://github.com/cwgstreet/cloudSmoker/blob/main/Images/cloudSmoker2_pcbs_done_captioned.jpg" width="500"/> 
+
+<br clear="left"/>
+<br>
+
+
+<br>
+<br>
+<br>
+<br>
+
 ---
 
 <img align="right" src="Images/CloudSmoker-Icon-multicolour-txt-no-bg-resized.png#gh-light-mode-only" width="400"/> 
