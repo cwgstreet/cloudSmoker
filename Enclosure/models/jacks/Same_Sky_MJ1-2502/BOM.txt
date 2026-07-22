@@ -1,0 +1,3 @@
+3DX_Same_Sky_Supplier: Same Sky
+3DX_Same_Sky_Description: 2.5 mm, Mono, Right Angle, Through Hole, Threaded Bushing, 2 Conductors, 1 Internal Switch, Audio Jack Connector
+3DX_Same_Sky_Model Number: MJ1-2502
