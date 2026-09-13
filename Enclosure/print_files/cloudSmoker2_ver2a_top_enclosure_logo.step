@@ -1,7 +1,7 @@
 ISO-10303-21;
 HEADER;
 FILE_DESCRIPTION(('FreeCAD Model'),'2;1');
-FILE_NAME('Open CASCADE Shape Model','2026-07-27T16:46:17',(''),(''),
+FILE_NAME('Open CASCADE Shape Model','2026-09-13T14:58:59',(''),(''),
   'Open CASCADE STEP processor 7.8','FreeCAD','Unknown');
 FILE_SCHEMA((
 'AP242_MANAGED_MODEL_BASED_3D_ENGINEERING_MIM_LF. {1 0 10303 442 1 1 4 
@@ -15,7 +15,8 @@ DATA;
 #4 = PRODUCT_DEFINITION_SHAPE('','',#5);
 #5 = PRODUCT_DEFINITION('design','',#6,#9);
 #6 = PRODUCT_DEFINITION_FORMATION('','',#7);
-#7 = PRODUCT('Logo_refined_copy','Logo_refined_copy','',(#8));
+#7 = PRODUCT('top_enclosure_logo_refined_shape',
+  'top_enclosure_logo_refined_shape','',(#8));
 #8 = PRODUCT_CONTEXT('',#2,'mechanical');
 #9 = PRODUCT_DEFINITION_CONTEXT('part definition',#2,'design');
 #10 = SHAPE_REPRESENTATION('',(#11,#15,#8500,#10644,#11894,#12082,#12246
