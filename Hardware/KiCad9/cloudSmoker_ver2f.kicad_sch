@@ -6776,7 +6776,7 @@
 		)
 		(uuid "9722bcee-7bc3-41b1-bcd1-cb8033ecd006")
 	)
-	(text "Display module has integrated \ntransistor for Backlight control\n\n3V3 logic signal safe\n"
+	(text "Display module has integrated \ntransistor for Backlight control\n\n3V3 logic signal safe (no level shifting required)\n"
 		(exclude_from_sim no)
 		(at 378.968 80.264 0)
 		(effects
@@ -11364,7 +11364,7 @@
 		(column_widths 5.08 5.08 15.24 8.89)
 		(row_heights 2.54 2.54 2.54 2.54 2.54)
 		(cells
-			(table_cell "5V"
+			(table_cell "3V3"
 				(exclude_from_sim no)
 				(at 358.394 115.57 0)
 				(size 5.08 2.54)
@@ -11415,7 +11415,7 @@
 				)
 				(uuid "1f2ae5af-b877-4192-a43d-616ad54a5ce6")
 			)
-			(table_cell "+5V"
+			(table_cell "+3.3V"
 				(exclude_from_sim no)
 				(at 383.794 115.57 0)
 				(size 8.89 2.54)
