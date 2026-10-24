@@ -36,7 +36,7 @@
  *   D5 (GPI014) CLK      KY40 (PinA)         green
  */
 
-/* ADS1015 ADS pinout setup
+/* ADS1115 ADS pinout setup
  *   Pin        Function  Comment
  *   -------    --------  -----------------------------------------------
  *   VDD        ~5V       red //TODO Investigate benefits of driving off 3.3V
@@ -80,7 +80,7 @@ constexpr int BUTTON_PIN = PIN_ENC_SW;
 constexpr int SERIAL_MONITOR_SPEED = 115200;
 
 // ---------------------------------------------------------
-// ADS1015 ADC pin constants
+// ADS1115 ADC pin constants
 // ---------------------------------------------------------
 constexpr int ADC_VCCsupplyPin = 0;
 // pin1 left floating (per datasheet) - no measurement

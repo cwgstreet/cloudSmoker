@@ -331,13 +331,13 @@ void processState(CWG_LCD& lcd) {
       Serial.println(startCookTime_ms);
 
       double voltageVCC_medianFiltered_V =
-          ads1015.getSensorValue_MedianFiltered_V(ADC_VCCsupplyPin, 11);
+          ads1115.getSensorValue_MedianFiltered_V(ADC_VCCsupplyPin, 11);
       batteryVoltage_v = voltageVCC_medianFiltered_V * 1;
 
       // FIXED: Removed "double" declaration redefinition so values populate the global extern
       // variables
-      voltagePit_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(ADC_pitPin, 11);
-      voltageMeat_medianFiltered_V = ads1015.getSensorValue_MedianFiltered_V(ADC_meatPin, 11);
+      voltagePit_medianFiltered_V = ads1115.getSensorValue_MedianFiltered_V(ADC_pitPin, 11);
+      voltageMeat_medianFiltered_V = ads1115.getSensorValue_MedianFiltered_V(ADC_meatPin, 11);
 
       yield();
 

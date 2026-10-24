@@ -22,7 +22,7 @@
 #include "wrapEncoder.h"
 #include "press_type.h"
 
-// Note:  wrappers (ads1015, encoder, button) are already instantiated 
+// Note:  wrappers (ADS1115, encoder, button) are already instantiated 
 // as extern globals in their respective library .cpp files!
 
 
@@ -41,8 +41,8 @@ void setup() {
 
     // 2. Initialize Custom ADC Wrapper
     // gainSetting=0 (6.144V), modeSetting=1 (Single Shot), dataRateSetting=4 (1600sps)
-    ads1015.initialise(0, 1, 4);
-    Serial.println(F("CWG_ADS1015 Initialized."));
+    ADS1115.initialise(0, 1, 4);
+    Serial.println(F("CWG_ADS1115 Initialized."));
 
     // 3. Initialize Custom Encoder Wrapper
     encoder.initialise();
@@ -73,7 +73,7 @@ void loop() {
         lastAdcRead = millis();
         
         // Use custom median filter method (11 samples)
-        float meatVoltage = ads1015.getSensorValue_MedianFiltered_V(ADC_meatPin, 11);
+        float meatVoltage = ADS1115.getSensorValue_MedianFiltered_V(ADC_meatPin, 11);
         
         Serial.print(F("Meat Probe (A2) Median Filtered Voltage: "));
         Serial.println(meatVoltage, 4);

@@ -17,7 +17,7 @@
  *          once up, running and debugged)
  *      YwRobot 1602 LCD with i2c i/o expander backpack (PCF8574 or MCP23008)
  *      KY40 Rotary Encoder
- *      ADS1015 - 12 bit ADC; I2C addressable
+ *      ADS1115 - 12 bit ADC; I2C addressable
  *      Maverick brand ET-723/733 (NPN  thermistor) temperature probes
  *
  *    3rd Party Libraries / Credits:
@@ -100,7 +100,7 @@ bool degCFlag = 0;           // temperature unit flag: 1 for Centigrade or 0 for
 
 // other Globals
 // float batteryVoltage = 999;  // 999 as null proxy
-float voltageFactor = 0;  // dependent on ADS1015 settings used
+float voltageFactor = 0;  // dependent on ADS1115 settings used
 // double voltageVCC_medianFiltered_V;
 float batteryVoltage_v;
 double voltagePit_medianFiltered_V;
@@ -143,11 +143,11 @@ void setup() {
 
     smokerState = splashScreen;  // initial state for state machine; temporarily disable during testing
 
-    // configure ADS1015 I2C ADC
+    // configure ADS1115 I2C ADC
     const uint8_t GAIN_SETTING = 0;       // 2/3x gain, max (ful scale) voltage: ±6.144V, 1 bit(LSB) = 3mV
     const uint8_t MODE_SETTING = 1;       // single shot
     const uint8_t DATA_RATE_SETTING = 4;  // default 1660 samples/sec
-    ads1015.initialise(GAIN_SETTING, MODE_SETTING, DATA_RATE_SETTING);
+    ADS1115.initialise(GAIN_SETTING, MODE_SETTING, DATA_RATE_SETTING);
 
  
 // ***************************

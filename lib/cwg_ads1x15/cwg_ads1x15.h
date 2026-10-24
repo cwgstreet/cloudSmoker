@@ -4,7 +4,8 @@
  *    1) RobTillaart/ADS1X15 library, licenced under MIT Licence
  *         reference:  https://github.com/RobTillaart/ADS1X15
  *    2) Luis Llamas/Arduino-MedianFilter, licenced under Apache Licence 2.0
- *         reference: https://github-com.translate.goog/luisllamasbinaburo/Arduino-MedianFilter?_x_tr_sl=auto&_x_tr_tl=en&_x_tr_hl=en
+ *         reference:
+ * https://github-com.translate.goog/luisllamasbinaburo/Arduino-MedianFilter?_x_tr_sl=auto&_x_tr_tl=en&_x_tr_hl=en
  *
  *  C W Greenstreet, Ver1, 17Feb2022
  *    MIT Licence - Released into the public domain
@@ -29,29 +30,29 @@
 
 /******************************************************
 // Class definition:
-//   CWG_ADS1015 is child (derrived) class of public library ADS1x15::ADS1015
+//   CWG_ADS1115 is child (derrived) class of public library ADS1x15::ADS1115
 ******************************************************/
 
-class CWG_ADS1015 : public ADS1015 {
-   public:
-    // constructors of derrived class; mandatory device address, and optional the Wire interface as parameter.
-    CWG_ADS1015(uint8_t Address = ADS1015_ADDRESS, TwoWire *wire = &Wire) : ADS1015(Address = ADS1015_ADDRESS) {
-    }
-    virtual ~CWG_ADS1015() {
-    }
+class CWG_ADS1115 : public ADS1115 {
+ public:
+  // constructors of derrived class; mandatory device address, and optional the Wire interface as
+  // parameter.
+  CWG_ADS1115(uint8_t Address = ADS1115_ADDRESS, TwoWire* wire = &Wire)
+      : ADS1115(Address = ADS1115_ADDRESS) {}
+  virtual ~CWG_ADS1115() {}
 
-    // methods (function):
-    void initialise(uint8_t gainSetting, uint8_t modeSetting, uint8_t dataRateSetting);
-    float getVoltageFactor_V();
-    float getSensorValue_MedianFiltered_V(uint8_t pin, int windowSize);
-    // float getMedFiltered();
+  // methods (function):
+  void initialise(uint8_t gainSetting, uint8_t modeSetting, uint8_t dataRateSetting);
+  float getVoltageFactor_V();
+  float getSensorValue_MedianFiltered_V(uint8_t pin, int windowSize);
+  // float getMedFiltered();
 
-   protected:
-    //
+ protected:
+  //
 };
 
 // ensure objects are visable everywhere (global)
-extern CWG_ADS1015 ads1015;
+extern CWG_ADS1115 ads1115;
 
 //==============================================================================================
 // For reference:
@@ -60,12 +61,12 @@ extern CWG_ADS1015 ads1015;
 //
 //  Also note that AD1015 is notionally 12 bit but only for full scale differential measurements
 //     with the one bit used for sign (neg / positive)
-//   When single shot, the ADS1015 ADC is effectively 11 bit (2^11 = 2048 measurements)
+//   When single shot, the ADS1115 ADC is effectively 11 bit (2^11 = 2048 measurements)
 //  For example, using default 2/3x gain, 6.144V fsv / 2048 measurements = 0.003 or 3mV LSB
 // -------------------------
 // PGA gain settings, max Voltage and LSB (least significant bit)
 //   taken from Adafruit ADS1x15 library, where bit = LSB
-//                                                                ADS1015  ADS1115
+//                                                                ADS1115  ADS1115
 //                                                                -------  -------
 // ads.setGain(GAIN_TWOTHIRDS);  // 2/3x gain +/- 6.144V  1 bit = 3mV      0.1875mV (default)
 // ads.setGain(GAIN_ONE);        // 1x gain   +/- 4.096V  1 bit = 2mV      0.125mV

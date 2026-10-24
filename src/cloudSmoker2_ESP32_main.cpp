@@ -17,7 +17,7 @@
  *   ESP32 (Firebeetle32 V4)
  *   1.28" GC9A01 Round TFT Display (via TFT_eSPI)
  *   EC11 Rotary Encoder Module with Push Button
- *   ADS1015 - 12 bit ADC; I2C addressable
+ *   ADS1115 - 12 bit ADC; I2C addressable
  *   Maverick brand ET-723/733 (NPN thermistor) temperature probes; R25 = 10K ohm, Beta = 3950K
  *
  * ************************************************************************************
@@ -142,11 +142,11 @@ void setup() {
   // Enter initial splash sequence handling
   smokerState = splashScreen;
 
-  // Configure ADS1015 I2C ADC hardware interface lines
+  // Configure ADS1115 I2C ADC hardware interface lines
   const uint8_t GAIN_SETTING = 0;       // 2/3x gain, max scale voltage: ±6.144V
   const uint8_t MODE_SETTING = 1;       // Single shot operation
   const uint8_t DATA_RATE_SETTING = 4;  // Baseline sampling configuration
-  ads1015.initialise(GAIN_SETTING, MODE_SETTING, DATA_RATE_SETTING);
+  ads1115.initialise(GAIN_SETTING, MODE_SETTING, DATA_RATE_SETTING);
 
   // Execution hooks for debug routines
 #ifdef DEBUG_SERIAL
