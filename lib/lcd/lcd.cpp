@@ -26,7 +26,7 @@ void CWG_LCD::begin() {
 #endif
 
   tft.init();
-  tft.setRotation(0);  // Adjust 0-3 if your physical screen orientation is upside down
+  tft.setRotation(2);  // Adjust 0-3 if your physical screen orientation is upside down
   clearScreen();
 }
 
