@@ -72,7 +72,7 @@ constexpr int I2C_SCL = PIN_I2C_SCL;
 constexpr int I2C_SDA = PIN_I2C_SDA;
 constexpr int ENCODER_DT = PIN_ENC_DT;
 constexpr int ENCODER_CLK = PIN_ENC_CLK;
-constexpr int BUTTON_PIN = PIN_ENC_DTTN;
+constexpr int BUTTON_PIN = PIN_ENC_SW;
 
 // ---------------------------------------------------------
 //? Baudrate: Updated for ESP32 native speed (consistent with platformio.ini build_flags)
