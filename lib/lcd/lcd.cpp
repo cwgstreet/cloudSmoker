@@ -19,9 +19,9 @@ CWG_LCD::CWG_LCD() : tft(TFT_eSPI()), menuPrintLine(0) {}
 
 // Initialize display and manage backlight pin from platformio.ini
 void CWG_LCD::begin() {
-#ifdef PIN_TFT_BLK
-  pinMode(PIN_TFT_BLK, OUTPUT);
-  digitalWrite(PIN_TFT_BLK, HIGH);  // Turn backlight on
+#ifdef PIN_DISP_BL
+  pinMode(PIN_DISP_BL, OUTPUT);
+  digitalWrite(PIN_DISP_BL, HIGH);  // Turn backlight on
 #endif
 
   tft.init();
@@ -307,13 +307,13 @@ void CWG_LCD::showBBQStatusScreen(bool degCFlag, float currentMeatTemp, float me
 }
 
 void CWG_LCD::display() {
-#ifdef PIN_TFT_BLK
-  digitalWrite(PIN_TFT_BLK, HIGH);
+#ifdef PIN_DISP_BL
+  digitalWrite(PIN_DISP_BL, HIGH);
 #endif
 }
 
 void CWG_LCD::noDisplay() {
-#ifdef PIN_TFT_BLK
-  digitalWrite(PIN_TFT_BLK, LOW);
+#ifdef PIN_DISP_BL
+  digitalWrite(PIN_DISP_BL, LOW);
 #endif
 }
