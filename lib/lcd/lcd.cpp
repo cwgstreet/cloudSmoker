@@ -25,6 +25,9 @@ void CWG_LCD::begin() {
   digitalWrite(PIN_DISP_BL, HIGH);  // Turn backlight on
 #endif
 
+  Serial.printf("lcd at %p, tft at %p, sizeof(TFT_eSPI)=%u\n", (void*)this, (void*)&tft,
+                (unsigned)sizeof(TFT_eSPI));  // AI debug recommended
+
   tft.init();
   tft.setRotation(0);  // Adjust 0-3 if your physical screen orientation is upside down
   clearScreen();
