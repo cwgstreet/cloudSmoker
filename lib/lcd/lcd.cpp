@@ -15,7 +15,8 @@
 extern char bootResetReasonStr[24];  //! DEBUG CODE - temporary
 
 // Constructor
-CWG_LCD::CWG_LCD() : tft(TFT_eSPI()), menuPrintLine(0) {}
+CWG_LCD::CWG_LCD() : tft(), menuPrintLine(0) {}
+// CWG_LCD::CWG_LCD() : tft(TFT_eSPI()), menuPrintLine(0) {}
 
 // Initialize display and manage backlight pin from platformio.ini
 void CWG_LCD::begin() {
