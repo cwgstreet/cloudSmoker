@@ -1,8 +1,8 @@
 /* ***************************************************************
  * helper_functions.h - library containing genral use helper functions
  *
- *  C W Greenstreet, Ver1, 27Sep21
- *    MIT Licence - Released into the public domain
+ *  C W Greenstreet, Ver2, 25Oct2026
+ *    GPLv3 Licence
  *
  ** ************************************************************* */
 
@@ -25,6 +25,5 @@ extern long unsigned startCookTime_ms;
 float convertDegFtoDegC(float tempDegF);
 long unsigned getElapsedCookTime_ms();
 float getCountMS(float tempMS);
-
 
 #endif  // end header guard

@@ -9,8 +9,8 @@
  *          Note: my code on based on warhog fork, MedianFilterLib2
  * https://github.com/warhog/Arduino-MedianFilter
  *
- *  C W Greenstreet, Ver1, 17Feb2022
- *    MIT Licence - Released into the public domain
+ *  C W Greenstreet, Ver2, 25Oct2026
+ *    GPLv3 Licence
  *
  ** ************************************************************* */
 

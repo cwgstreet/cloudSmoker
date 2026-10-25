@@ -7,8 +7,8 @@
  *         reference:
  * https://github-com.translate.goog/luisllamasbinaburo/Arduino-MedianFilter?_x_tr_sl=auto&_x_tr_tl=en&_x_tr_hl=en
  *
- *  C W Greenstreet, Ver1, 17Feb2022
- *    MIT Licence - Released into the public domain
+ *  C W Greenstreet, Ver2, 25Oct2026
+ *    GPLv3 Licence
  *
  ** ************************************************************* */
 
