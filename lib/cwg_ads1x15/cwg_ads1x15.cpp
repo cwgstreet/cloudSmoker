@@ -42,8 +42,8 @@ CWG_ADS1115 ads1115(
  *  initialise() method: set up ADC hardware and configure programmable settings
  *    gainSetting: (gainSetting/±Max Volage) 0/6.144V default, 1/4.096V, 2/2.048V, 4/1.024V,
  * 8/0.512V, 16/0.256V, modeSetting: 0 = Continuous, 1 = Single Shot (default) dataRateSetting:
- * (rateSetting/samples per second) 0/128, 1/250, 2/490, 3/920, 4/1660 (default), 5/2400, 6/3300,
- * 7/3300
+ * (rateSetting/samples per second) 0/8, 1/16, 2/32, 3/64, 4/128 (default), 5/250, 6/475,
+ * 7/860
  ** --------------------------------------*/
 void CWG_ADS1115::initialise(uint8_t gainSetting, uint8_t modeSetting, uint8_t dataRateSetting) {
   Wire.begin(I2C_SDA, I2C_SCL);
