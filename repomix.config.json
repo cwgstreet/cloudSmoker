@@ -16,6 +16,7 @@
 
   "ignore": {
     "customPatterns": [
+      "**/secrets.h",
       "**/*.backup",
       "**/*.bak",
       "**/*~"
