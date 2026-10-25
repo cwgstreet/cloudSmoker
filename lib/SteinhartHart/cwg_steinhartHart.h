@@ -70,11 +70,11 @@
 class SteinhartHart {
  public:
   /**
-   * Constructor: SteinhratHart(biasResistorValue_ohm, a, b, c)
+   * Constructor: SteinhartHart(biasResistorValue_ohm, a, b, c)
    *
-   * Only the bias resistor value has to be specified in the constuctor.
+   * Only the bias resistor value has to be specified in the constructor.
    * If no other parameters are given default values will be used based
-   *   on a Mavrick-723 temperature probe and cloudSmoker project design parmeters
+   *   on a Maverick-723 temperature probe and cloudSmoker project design parameters
    */
 
   SteinhartHart(double biasResistorValue_ohm, double a = 0.0006308217444, double b = 0.000183627837,
@@ -102,7 +102,7 @@ class SteinhartHart {
   double _c;
 };
 
-// ensure objects are visable everywhere (global)
+// ensure objects are visible everywhere (global)
 extern SteinhartHart sh_meatProbe;  // meat thermometer
 extern SteinhartHart sh_pitProbe;   // meat thermometer
 

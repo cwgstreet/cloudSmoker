@@ -5,7 +5,7 @@
  *   1)   tazpu / WifiManager, MIT Licence
  *         reference:  https://github.com/tzapu/WiFiManager
  * *
- *  C W Greenstreet, VVer2, 25Oct2026
+ *  C W Greenstreet, Ver2, 25Oct2026
  *    GPLv3 Licence
  *
  ** ************************************************************* */

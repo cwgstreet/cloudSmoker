@@ -80,8 +80,6 @@ void Press_Type::begin(int _pin) {
   button.attach(_pin, INPUT_PULLUP);  // pin configured to pull-up mode
   button.callback(onButtonEvent);
 
-  // Serial.begin(BAUD_RATE);  //!redundant - already done in main.cpp.  Remove?
-
 #if DEBUG  // Debug scaffolding - set in main.cpp to #define DEBUG 1 to enable debug output to
            // serial monitor
   Serial.println("   ");  // blank line for visual space

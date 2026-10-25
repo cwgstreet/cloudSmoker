@@ -43,7 +43,7 @@ void ESP_ISR WrapEncoder::updateValue(uint8_t updatedState) {
 }
 
 void WrapEncoder::initialise() {
-  // delay(500);   //can remove if blocking - for asthetics
+  // delay(500);   //can remove if blocking - for aesthetics
   Serial.println(F("Starting"));
   if (!encoder.begin()) {
     Serial.println(

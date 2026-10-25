@@ -3,7 +3,7 @@
  * equation Ver 1
  *
  *  C W Greenstreet, cloudSmoker2, 1Jul26
- * Licence: GPLv3 (Licensed under the GNU GPLv3: Free to use and modify, but any public
+ *   Licence: GPLv3 (Licensed under the GNU GPLv3: Free to use and modify, but any public
  *   distribution must also share the full source code under this same license.
  *
  * key changes:  modified open-source code to be more generic and permit interface to ADS1x14
@@ -75,7 +75,7 @@
 #include "myConstants.h"  // all constants together in one file
 
 // instantiate objects
-//?  Constructor format: SteinhratHart(biasResistorValue_ohm, a, b, c)
+//?  Constructor format: SteinhartHart(biasResistorValue_ohm, a, b, c)
 //?  SteinhartHart(double biasResistorValue_ohm, double a = (0.0006257736399999999774), double b =
 //?    (0.0001842254689999999883), double c = (6.942654599999999779e-08));
 

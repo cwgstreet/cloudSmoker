@@ -6,7 +6,7 @@
  *     https://github.com/gfvalvo/NewEncoder/blob/master/examples/CustomEncoder/CustomEncoder.ino
  *
  *  C W Greenstreet, cloudSmoker2, 1Jul26
- * Licence: GPLv3 (Licensed under the GNU GPLv3: Free to use and modify, but any public
+ *   Licence: GPLv3 (Licensed under the GNU GPLv3: Free to use and modify, but any public
  *   distribution must also share the full source code under this same license.
  *
  ** ************************************************************ */

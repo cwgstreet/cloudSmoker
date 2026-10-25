@@ -6,7 +6,7 @@
  *    GPLv3 Licence
  *
  *   Forked from
- *    1) warhog / meadianFilterLib2, licenced under Apache Licence 2.0
+ *    1) warhog / medianFilterLib2, licenced under Apache Licence 2.0
  *         reference:  https://github.com/warhog/Arduino-MedianFilter
  *         which itself was a fork of:
  *    2) Luis Llamas/Arduino-MedianFilter, licenced under Apache Licence 2.0

@@ -3,8 +3,8 @@
  *   V2.ESP32   (Ported from NodeMCU ESP8266 to Firebeetle ESP32 V4)
  *
  *  C W Greenstreet, cloudSmoker2, 1Jul26
- * Licence: GPLv3 (Licensed under the GNU GPLv3: Free to use and modify, but any public
- *   distribution must also share the full source code under this same license.
+ *     Licence: GPLv3 (Licensed under the GNU GPLv3: Free to use and modify, but any public
+ *     distribution must also share the full source code under this same license.
  *
  *   Purpose:  cloudSmoker Barbecue Temperature Monitor (Upgraded with 1.28" TFT Display)
  *               using breadboard as a programming test jig
@@ -12,14 +12,14 @@
  *    Project Repository:  https://github.com/cwgstreet/cloudSmoker
  *    Project Wiki:        https://github.com/cwgstreet/cloudSmoker/wiki
  *
- *   Code intended to work with the following hardware:
+ *   cloudSmoker2 (Ver2) Code intended to work with the following hardware:
  *   --------------------------------------------------------
- *   ESP32 (Firebeetle32 V4)
+ *   ESP32-C3 (Firebeetle32 V4)
  *   1.28" GC9A01 Round TFT Display (via TFT_eSPI)
  *   EC11 Rotary Encoder Module with Push Button
  *   ADS1115 - 12 bit ADC; I2C addressable
  *   Maverick brand ET-723/733 (NPN thermistor) temperature probes; R25 = 10K ohm, Beta = 3950K
- *
+ *   Ref: https://github.com/cwgstreet/cloudSmoker/wiki/V2-Parts-List
  * ************************************************************************************
  */
 
