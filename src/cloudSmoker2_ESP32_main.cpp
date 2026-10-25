@@ -143,9 +143,10 @@ void setup() {
   smokerState = splashScreen;
 
   // Configure ADS1115 I2C ADC hardware interface lines
-  const uint8_t GAIN_SETTING = 0;       // 2/3x gain, max scale voltage: ±6.144V
-  const uint8_t MODE_SETTING = 1;       // Single shot operation
-  const uint8_t DATA_RATE_SETTING = 4;  // Baseline sampling configuration
+  const uint8_t GAIN_SETTING = 0;  // 2/3x gain, max scale voltage: ±6.144V
+  const uint8_t MODE_SETTING = 1;  // Single shot operation
+  const uint8_t DATA_RATE_SETTING =
+      4;  // Baseline sampling configuration; 4 = 128 SPS for ADS1115 (default)
   ads1115.initialise(GAIN_SETTING, MODE_SETTING, DATA_RATE_SETTING);
 
   // Execution hooks for debug routines
