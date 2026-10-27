@@ -94,6 +94,14 @@ float CWG_ADS1115::getSensorValue_MedianFiltered_V(uint8_t pin, int windowSize) 
   Serial.println(voltageFactor, 10);
 #endif
 
+  // The previous call may have left a conversion running on its own pin.
+  // Wait for it to finish, discard its result, then request the wanted pin.
+  while (!ads1115.isReady()) {
+    yield();
+  }
+  ads1115.getValue();  // discard: this (last) result belongs to the previous pin
+  ads1115.requestADC(pin);
+
   uint8_t i;
   for (i = 0; i < windowSize;) {
     yield();
@@ -123,8 +131,9 @@ float CWG_ADS1115::getSensorValue_MedianFiltered_V(uint8_t pin, int windowSize) 
   float valueADC_medianFiltered_V = medianFilter.GetFiltered();
 
 #if DEBUG
-  // Serial.println();
-  Serial.print(F("\tMedian Filtered Analog0 = "));
+  Serial.print(F("\tMedian Filtered Analog"));
+  Serial.print(pin);
+  Serial.print(F(" = "));
   Serial.println(valueADC_medianFiltered_V, 4);
 #endif  // end DEBUG
 
