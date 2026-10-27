@@ -80,8 +80,10 @@
 //?    (0.0001842254689999999883), double c = (6.942654599999999779e-08));
 
 // cloudSmoker2 uses single bias resistor value for all thermistors
-SteinhartHart sh_meatProbe(BIAS_RESISTOR_Ohm);  // meat thermometer
-SteinhartHart sh_pitProbe(BIAS_RESISTOR_Ohm);   // pit thermometer
+SteinhartHart sh_pitProbe(BIAS_RESISTOR_Ohm);    // pit thermometer
+SteinhartHart sh_meat1Probe(BIAS_RESISTOR_Ohm);  // meat thermometer
+SteinhartHart sh_meat2Probe(BIAS_RESISTOR_Ohm);  // meat thermometer, MEAT2
+SteinhartHart sh_meat3Probe(BIAS_RESISTOR_Ohm);  // meat thermometer, MEAT3
 
 // --------------------------
 //  steinhartHart() function purpose: Returns the temperature in degrees kelvin for a given

@@ -37,14 +37,18 @@ entryStates_t smokerState;
 // External globals from main.cpp mapped with exact matching types
 extern float meatDoneTemp;
 extern float pitTempTarget;
-extern float currentMeatTemp;
 extern float currentPitTemp;
+extern float currentMeat1Temp;
+extern float currentMeat2Temp;
+extern float currentMeat3Temp;
 extern bool degCFlag;
 extern int16_t prevEncoderValue;
 
 // Analog telemetry globals (matching the double precision in main)
 extern double voltagePit_medianFiltered_V;
-extern double voltageMeat_medianFiltered_V;
+extern double voltageMeat1_medianFiltered_V;
+extern double voltageMeat2_medianFiltered_V;
+extern double voltageMeat3_medianFiltered_V;
 extern float batteryVoltage_v;
 
 void processState(CWG_LCD& lcd) {
@@ -331,37 +335,47 @@ void processState(CWG_LCD& lcd) {
       Serial.print("getTemp Case -> startCookTime_ms =");
       Serial.println(startCookTime_ms);
 
-      double voltageVCC_medianFiltered_V =
-          ads1115.getSensorValue_MedianFiltered_V(ADC_VCCsupplyPin, 11);
-      batteryVoltage_v = voltageVCC_medianFiltered_V * 1;
+      // TEMPORARY: bias supply reference is a fixed 5.0 V until the INA226 bus voltage replaces it
+      double voltageVCC_medianFiltered_V = ADC_biasSupplyInterim_V;
+      batteryVoltage_v = voltageVCC_medianFiltered_V;  // placeholder: not a measurement yet
 
-      // FIXED: Removed "double" declaration redefinition so values populate the global extern
-      // variables
       voltagePit_medianFiltered_V = ads1115.getSensorValue_MedianFiltered_V(ADC_pitPin, 11);
-      voltageMeat_medianFiltered_V = ads1115.getSensorValue_MedianFiltered_V(ADC_meatPin, 11);
+      voltageMeat1_medianFiltered_V = ads1115.getSensorValue_MedianFiltered_V(ADC_meat1Pin, 11);
+      voltageMeat2_medianFiltered_V = ads1115.getSensorValue_MedianFiltered_V(ADC_meat2Pin, 11);
+      voltageMeat3_medianFiltered_V = ads1115.getSensorValue_MedianFiltered_V(ADC_meat3Pin, 11);
 
       yield();
 
-      currentMeatTemp =
-          sh_meatProbe.getTempFahrenheit(voltageVCC_medianFiltered_V, voltageMeat_medianFiltered_V);
       currentPitTemp =
           sh_pitProbe.getTempFahrenheit(voltageVCC_medianFiltered_V, voltagePit_medianFiltered_V);
+      currentMeat1Temp = sh_meat1Probe.getTempFahrenheit(voltageVCC_medianFiltered_V,
+                                                         voltageMeat1_medianFiltered_V);
+      sh_meat2Probe.getTempFahrenheit(voltageVCC_medianFiltered_V, voltageMeat2_medianFiltered_V);
+      currentMeat3Temp = sh_meat3Probe.getTempFahrenheit(voltageVCC_medianFiltered_V,
+                                                         voltageMeat3_medianFiltered_V);
 
 #ifdef DEBUG_ADC_Temps
       Serial.println();
-      Serial.println(F("MF_VCC\t|\tMF_PIT\t|\tPITdegF\t|\tMF_MEAT\t|\tMEATdegF"));
-      Serial.println(F("-------\t|\t-------\t|\t-------\t|\t-------\t|\t-------"));
+      Serial.println(
+          F("REF_V\t|\tPIT_V\t|\tPIT_F\t|\tMEAT1_V\t|\tMEAT1_F\t|\tMEAT2_V\t|\tMEAT2_F\t|\tMEAT3_"
+            "V\t|\tMEAT3_F"));
       Serial.print(voltageVCC_medianFiltered_V, 4);
       Serial.print(F("\t|\t"));
       Serial.print(voltagePit_medianFiltered_V, 4);
       Serial.print(F("\t|\t"));
       Serial.print(currentPitTemp);
       Serial.print(F("\t|\t"));
-      Serial.print(voltageMeat_medianFiltered_V, 4);
+      Serial.print(voltageMeat1_medianFiltered_V, 4);
       Serial.print(F("\t|\t"));
-      Serial.println(currentMeatTemp);
-      Serial.println("leaving getTemps state now for txTemps");
-      Serial.println();
+      Serial.print(currentMeat1Temp);
+      Serial.print(F("\t|\t"));
+      Serial.print(voltageMeat2_medianFiltered_V, 4);
+      Serial.print(F("\t|\t"));
+      Serial.print(currentMeat2Temp);
+      Serial.print(F("\t|\t"));
+      Serial.print(voltageMeat3_medianFiltered_V, 4);
+      Serial.print(F("\t|\t"));
+      Serial.println(currentMeat3Temp);
 #endif
 
       smokerState = txTemp;
@@ -372,7 +386,7 @@ void processState(CWG_LCD& lcd) {
       WiFiClient client;
       ThingSpeak.begin(client);
 
-      float currentMeatTemp_float = currentMeatTemp;
+      float currentMeatTemp_float = currentMeat1Temp;
       float currentpitTemp_float = currentPitTemp;
 
       ThingSpeak.setField(1, currentMeatTemp_float);
@@ -422,13 +436,13 @@ void processState(CWG_LCD& lcd) {
 
       // TODO: gating this draw on enteringState only paints the rings/digits once,
       // on the moment we arrive at this state. It won't update again while we sit
-      // here, even though currentMeatTemp/currentPitTemp keep changing underneath it.
+      // here, even though currentMeat1Temp/currentPitTemp keep changing underneath it.
       // Fine for now (unblocks compiling + visual check on the bench), but before this
       // screen is trusted for a real cook, it needs a periodic-refresh trigger instead
       // of a one-shot draw - e.g. redraw every N seconds, or only when a temp value
       // has moved by some threshold - rather than either "draw once" or "draw every loop".
       if (enteringState) {
-        lcd.showBBQStatusScreen(degCFlag, currentMeatTemp, meatDoneTemp, currentPitTemp,
+        lcd.showBBQStatusScreen(degCFlag, currentMeat1Temp, meatDoneTemp, currentPitTemp,
                                 pitTempTarget);
       }
 

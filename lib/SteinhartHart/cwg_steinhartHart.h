@@ -103,12 +103,16 @@ class SteinhartHart {
 };
 
 // ensure objects are visible everywhere (global)
-extern SteinhartHart sh_meatProbe;  // meat thermometer
-extern SteinhartHart sh_pitProbe;   // meat thermometer
+extern SteinhartHart sh_pitProbe;    // pit thermometer (AIN0)
+extern SteinhartHart sh_meat1Probe;  // meat thermometer, MEAT1 (AIN1)
+extern SteinhartHart sh_meat2Probe;  // meat thermometer, MEAT2 (AIN2)
+extern SteinhartHart sh_meat3Probe;  // meat thermometer, MEAT3 (AIN3)
 
 // make external voltage reading variables declared elsewhere visible in this library
-extern double voltageMeat_medianFiltered_V;
+extern double voltageMeat1_medianFiltered_V;
 extern double voltagePit_medianFiltered_V;
 extern double voltageVCC_medianFiltered_V;
+extern double voltageMeat2_medianFiltered_V;
+extern double voltageMeat3_medianFiltered_V;
 
 #endif  // end header guard

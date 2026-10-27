@@ -64,17 +64,21 @@ char bootResetReasonStr[24] = "";  // set once in setup(), shown on the splash s
 //? *******************************************************************
 
 // Temperature variables- global; all temps stored in degF and converted to DegC on the fly
-float meatDoneTemp = 203;    // Default brisket target internal temp
-float pitTempTarget = 225;   // Traditional low-and-slow cooking target temperature
-float currentMeatTemp = 40;  // Initial baseline temperature
+float meatDoneTemp = 203;   // Default brisket target internal temp
+float pitTempTarget = 225;  // Traditional low-and-slow cooking target temperature
 float currentPitTemp = 60;
-bool degCFlag = 0;  // Temperature unit flag: 1 for Centigrade, 0 for Fahrenheit
+float currentMeat1Temp = 40;  // Initial baseline temperature
+float currentMeat2Temp = 40;  // Initial baseline temperature
+float currentMeat3Temp = 40;  // Initial baseline temperature
+bool degCFlag = 0;            // Temperature unit flag: 1 for Centigrade, 0 for Fahrenheit
 
 // Analog telemetry globals
 float voltageFactor = 0;
 float batteryVoltage_v;
 double voltagePit_medianFiltered_V;
-double voltageMeat_medianFiltered_V;
+double voltageMeat1_medianFiltered_V;
+double voltageMeat2_medianFiltered_V;
+double voltageMeat3_medianFiltered_V;
 
 // Timing metrics - global
 long unsigned startCookTime_ms;

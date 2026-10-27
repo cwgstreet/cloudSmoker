@@ -80,12 +80,16 @@ constexpr int BUTTON_PIN = PIN_ENC_SW;
 constexpr int SERIAL_MONITOR_SPEED = 115200;
 
 // ---------------------------------------------------------
-// ADS1115 ADC pin constants
+// ADS1115 ADC channel constants (schematic: PIT=AIN0, MEAT1=AIN1, MEAT2=AIN2, MEAT3=AIN3)
 // ---------------------------------------------------------
-constexpr int ADC_VCCsupplyPin = 0;
-// pin1 left floating (per datasheet) - no measurement
-constexpr int ADC_meatPin = 2;
-constexpr int ADC_pitPin = 3;
+constexpr uint8_t ADC_pitPin = 0;    // AIN0
+constexpr uint8_t ADC_meat1Pin = 1;  // AIN1
+constexpr uint8_t ADC_meat2Pin = 2;  // AIN2
+constexpr uint8_t ADC_meat3Pin = 3;  // AIN3
+// VCC supply measurement removed: obsolete from Ver1, supply reference now from INA226 bus voltage
+
+//! TEMPORARY: fixed bias-supply reference until the INA226 bus-voltage reading replaces it
+constexpr double ADC_biasSupplyInterim_V = 5.0;
 
 // *******************************************************
 //   Thermistor Hardware setup

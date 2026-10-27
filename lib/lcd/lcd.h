@@ -45,7 +45,7 @@ class CWG_LCD {
   void showSetMeatDoneTempMenu(int16_t prevEncoderValue, float meatDoneTemp, bool degCFlag);
   void showSetPitTempTargetMenu(int16_t prevEncoderValue, float pitTempTarget, bool degCFlag);
   void showSetTempUnitsMenu(int16_t prevEncoderValue, bool degCFlag);
-  void showBBQStatusScreen(bool degCFlag, float currentMeatTemp, float meatDoneTemp,
+  void showBBQStatusScreen(bool degCFlag, float currentMeat1Temp, float meatDoneTemp,
                            float currentPitTemp, float pitTempTarget);
 
   // Display controls for sleep/blanking modes

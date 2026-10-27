@@ -55,8 +55,8 @@ void CWG_ADS1115::initialise(uint8_t gainSetting, uint8_t modeSetting, uint8_t d
   ads1115.setMode(modeSetting);  // 1 == default SINGLE SHOT MODE
   ads1115.setDataRate(
       dataRateSetting);  // 4 == default ADS1115 data rate of 1600 sps; available range 128-3300 sps
-  ads1115.requestADC(A0);  // parameters not set in the device until an explicit read/request of the
-                           // ADC (any read call will do)
+  ads1115.requestADC(0);  // parameters not set in the device until an explicit read/request of the
+                          // ADC (any read call will do)
 }
 
 /* ----------------------------------------
