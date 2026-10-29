@@ -55,11 +55,45 @@ extern float batteryVoltage_v;
 //    mistakenly become DONE.
 enum DoneStatus { UNKNOWN, NO_DATA, NOT_DONE, DONE };
 
+// Per-probe DON state. Flags are set once per cook and cleared when a new cook starts.
+DoneStatus meat1LastStatus = UNKNOWN;
+DoneStatus meat2LastStatus = UNKNOWN;
+DoneStatus meat3LastStatus = UNKNOWN;
+bool meat1DoneFlag = false;
+bool meat2DoneFlag = false;
+bool meat3DoneFlag = false;
+
 DoneStatus probeDoneStatus(float tempF, float targetF) {
   if (isnan(tempF)) {
     return NO_DATA;
   }
   return (tempF >= targetF) ? DONE : NOT_DONE;
+}
+
+// Reports done transitions for one probe and sends the alert once per cook.
+// lastStatus and doneFlag are references, so the helper updates each probe's own variables.
+void checkProbeDone(const char* name, float tempF, DoneStatus& lastStatus, bool& doneFlag) {
+  DoneStatus status = probeDoneStatus(tempF, meatDoneTemp);
+
+  if (status != lastStatus) {
+    Serial.print(name);
+    Serial.print(F(" done status -> "));
+    if (status == DONE) {
+      Serial.println(F("DONE"));
+    } else if (status == NOT_DONE) {
+      Serial.println(F("NOT DONE"));
+    } else {
+      Serial.println(F("NO DATA - Check Probe"));
+    }
+    lastStatus = status;
+  }
+
+  if (status == DONE && !doneFlag) {
+    doneFlag = true;
+    Serial.print(name);
+    Serial.println(F(" DONE flag set: alert due (first time this cook)"));
+    // ntfy alert call goes here in the next step
+  }
 }
 
 void processState(CWG_LCD& lcd) {
@@ -104,7 +138,16 @@ void processState(CWG_LCD& lcd) {
       }
       if (button.triggered(SINGLE_TAP)) {
         yield();
-        Serial.println("-------------------Start Cook Now-----------------");
+        Serial.println("\n-------------------Start Cook Now-----------------");
+
+        // New cook: clear per-probe done state so each probe alerts once for this cook
+        meat1DoneFlag = false;
+        meat2DoneFlag = false;
+        meat3DoneFlag = false;
+        meat1LastStatus = UNKNOWN;
+        meat2LastStatus = UNKNOWN;
+        meat3LastStatus = UNKNOWN;
+
         smokerState = getTemp;
         startCookTime_ms = millis();
       }
@@ -367,21 +410,10 @@ void processState(CWG_LCD& lcd) {
       currentMeat3Temp = sh_meat3Probe.getTempFahrenheit(voltageVCC_medianFiltered_V,
                                                          voltageMeat3_medianFiltered_V);
 
-      // Done decision (MEAT1 only for now). NO_DATA can never become DONE.
-      static DoneStatus lastMeat1Status = UNKNOWN;
-
-      DoneStatus meat1Status = probeDoneStatus(currentMeat1Temp, meatDoneTemp);
-      if (meat1Status != lastMeat1Status) {
-        Serial.print(F("MEAT1 done status -> "));
-        if (meat1Status == DONE) {
-          Serial.println(F("DONE"));
-        } else if (meat1Status == NOT_DONE) {
-          Serial.println(F("NOT DONE"));
-        } else {
-          Serial.println(F("NO DATA"));
-        }
-        lastMeat1Status = meat1Status;
-      }
+      // Done decisions for each meat probe
+      checkProbeDone("MEAT1", currentMeat1Temp, meat1LastStatus, meat1DoneFlag);
+      checkProbeDone("MEAT2", currentMeat2Temp, meat2LastStatus, meat2DoneFlag);
+      checkProbeDone("MEAT3", currentMeat3Temp, meat3LastStatus, meat3DoneFlag);
 
 #ifdef DEBUG_ADC_Temps
       Serial.println();
