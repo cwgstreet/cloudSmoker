@@ -51,6 +51,17 @@ extern double voltageMeat2_medianFiltered_V;
 extern double voltageMeat3_medianFiltered_V;
 extern float batteryVoltage_v;
 
+// Done decision for one probe. NaN (no probe) is checked first, so it can never
+//    mistakenly become DONE.
+enum DoneStatus { UNKNOWN, NO_DATA, NOT_DONE, DONE };
+
+DoneStatus probeDoneStatus(float tempF, float targetF) {
+  if (isnan(tempF)) {
+    return NO_DATA;
+  }
+  return (tempF >= targetF) ? DONE : NOT_DONE;
+}
+
 void processState(CWG_LCD& lcd) {
   // Declare this at the top of the function to avoid switch-case initialization bypass errors
   int16_t currentEncoderValue;
@@ -348,11 +359,29 @@ void processState(CWG_LCD& lcd) {
 
       currentPitTemp =
           sh_pitProbe.getTempFahrenheit(voltageVCC_medianFiltered_V, voltagePit_medianFiltered_V);
+
       currentMeat1Temp = sh_meat1Probe.getTempFahrenheit(voltageVCC_medianFiltered_V,
                                                          voltageMeat1_medianFiltered_V);
-      sh_meat2Probe.getTempFahrenheit(voltageVCC_medianFiltered_V, voltageMeat2_medianFiltered_V);
+      currentMeat2Temp = sh_meat2Probe.getTempFahrenheit(voltageVCC_medianFiltered_V,
+                                                         voltageMeat2_medianFiltered_V);
       currentMeat3Temp = sh_meat3Probe.getTempFahrenheit(voltageVCC_medianFiltered_V,
                                                          voltageMeat3_medianFiltered_V);
+
+      // Done decision (MEAT1 only for now). NO_DATA can never become DONE.
+      static DoneStatus lastMeat1Status = UNKNOWN;
+
+      DoneStatus meat1Status = probeDoneStatus(currentMeat1Temp, meatDoneTemp);
+      if (meat1Status != lastMeat1Status) {
+        Serial.print(F("MEAT1 done status -> "));
+        if (meat1Status == DONE) {
+          Serial.println(F("DONE"));
+        } else if (meat1Status == NOT_DONE) {
+          Serial.println(F("NOT DONE"));
+        } else {
+          Serial.println(F("NO DATA"));
+        }
+        lastMeat1Status = meat1Status;
+      }
 
 #ifdef DEBUG_ADC_Temps
       Serial.println();

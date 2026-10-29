@@ -44,7 +44,7 @@
 //                ____           ____
 //   +V_IN o-----|____|----+----|____|----o GND
 //  (~5 V)        Rbias    | Rthermistor
-//             (120E3 ohm) |  (10E6 ohm)
+//             (120E3 ohm) |  (1E6 ohm)
 //    ADC PIN              |
 //      (A0) o-------------+
 //                       Vout
@@ -61,6 +61,7 @@
 //?
 //?  rearrange to solve for Thermistor Resistance, Rth
 //?   Rth = -[(Vo * Rb) / (Vo - V_IN)]   -> don't miss the negative sign!
+//?    or Rth = Vo · Rb / (Vcc − Vo)
 //? *************************************************************************
 
 // set up debug scaffold; comment out following line if you want to "turn off" serial monitor
@@ -115,7 +116,7 @@ double SteinhartHart::steinhartHart(double _Rth_ohm) {
 #endif  // end DEBUG
 
   return 1.0 / (_a + _b * log_r +
-                _c * log_r3);  // Steinhart-Hart poloynomial relationship, returns temp in deg K
+                _c * log_r3);  // Steinhart-Hart polynomial relationship, returns temp in deg K
 }
 
 // --------------------------
@@ -123,16 +124,33 @@ double SteinhartHart::steinhartHart(double _Rth_ohm) {
 //   thermistor resistance
 //      value using the Steinhart-Hart polynomial relationship
 // --------------------------
+
 double SteinhartHart::getTempKelvin(double ADCmeasuredVCC_volts,
                                     double ADCmeasuredThermistor_volts) {
   _Vadc = ADCmeasuredThermistor_volts;
   _Vsupply = ADCmeasuredVCC_volts;
 
-  // calc thermistor resistance from voltage divider parameters:
+  // validity check: reject readings outside the usable divider range
+  //   near 0 (unplugged, shorted or noise) or near Vcc (open circuit): no probe
+  if (_Vsupply <= 0.0) {
+    _Rth_ohm = NAN;
+    return NAN;
+  }
+  double fraction = _Vadc / _Vsupply;
+  if (fraction < ADC_PROBE_MIN_FRACTION || fraction > ADC_PROBE_MAX_FRACTION) {
+#if DEBUG
+    Serial.print(F("\t probe out of range, fraction = "));
+    Serial.println(fraction, 6);
+#endif
+    _Rth_ohm = NAN;
+    return NAN;  // no probe: do not convert this to a temperature
+  }
+
+  //? calc thermistor resistance from voltage divider parameters:
   //? Voltage divider eqn (for low side thermistor):  Vo = Vcc * ( Rth /(Rth + Rb) )
   //?  rearrange voltage divider equation to solve for Thermistor Resistance, Rth
   //?   Rth = -1 * (Vo * Rb)/(Vo - Vcc)   -> don't miss the negative sign!
-  // test to prevent division by zero
+  //?      Alternatively Rth = Vo ·Rb / (Vcc − Vo)
   if ((_Vadc - _Vsupply) != 0.0) {
     _Rth_ohm = -1 * ((_Vadc * _biasResistance) / (_Vadc - _Vsupply));
 #if DEBUG
@@ -151,8 +169,9 @@ double SteinhartHart::getTempKelvin(double ADCmeasuredVCC_volts,
     Serial.println(_Rth_ohm);
 #endif  // end DEBUG
   } else {
+    _Rth_ohm = NAN;  // no valid divider reading: do not reuse a stale resistance
     Serial.println(
-        F("** _Rth_ohn calculation Divide by zero Error! Problem: _vadc - _Vsupply = zero!"));
+        F("** _Rth_ohm calculation Divide by Zero error! Problem: _Vadc - _Vsupply = zero!"));
   }
 
   return steinhartHart(_Rth_ohm);

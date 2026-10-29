@@ -255,6 +255,14 @@ void CWG_LCD::showSetTempUnitsMenu(int16_t prevEncoderValue, bool degCFlag) {
   drawProgressDots(index, 2);
 }
 
+// Progress fraction for an arc. Missing probe (NaN) or a bad target gives an empty arc.
+static float progressFraction(float temp, float target) {
+  if (isnan(temp) || target <= 0.0f) {
+    return 0.0f;
+  }
+  return constrain(temp / target, 0.0f, 1.0f);
+}
+
 void CWG_LCD::showBBQStatusScreen(bool degCFlag, float currentMeat1Temp, float meatDoneTemp,
                                   float currentPitTemp, float pitTempTarget) {
   clearScreen();
@@ -264,8 +272,8 @@ void CWG_LCD::showBBQStatusScreen(bool degCFlag, float currentMeat1Temp, float m
   const int meatRadius = 96, meatThickness = 14;
 
   // Clamp to [0,1] so an over-target probe doesn't overflow the ring past full
-  float pitFraction = constrain(currentPitTemp / pitTempTarget, 0.0f, 1.0f);
-  float meatFraction = constrain(currentMeat1Temp / meatDoneTemp, 0.0f, 1.0f);
+  float pitFraction = progressFraction(currentPitTemp, pitTempTarget);
+  float meatFraction = progressFraction(currentMeat1Temp, meatDoneTemp);
 
   uint16_t pitAngle = (uint16_t)(360.0f * pitFraction);
   uint16_t meatAngle = (uint16_t)(360.0f * meatFraction);
@@ -292,9 +300,16 @@ void CWG_LCD::showBBQStatusScreen(bool degCFlag, float currentMeat1Temp, float m
   float meatDisplay = degCFlag ? convertDegFtoDegC(currentMeat1Temp) : currentMeat1Temp;
 
   char pitStr[16], meatStr[16];
-  snprintf(pitStr, sizeof(pitStr), "%.0f%s", pitDisplay, unit);
-  snprintf(meatStr, sizeof(meatStr), "%.0f%s", meatDisplay, unit);
-
+  if (isnan(currentPitTemp)) {
+    snprintf(pitStr, sizeof(pitStr), "--%s", unit);  // no probe
+  } else {
+    snprintf(pitStr, sizeof(pitStr), "%.0f%s", pitDisplay, unit);
+  }
+  if (isnan(currentMeat1Temp)) {
+    snprintf(meatStr, sizeof(meatStr), "--%s", unit);  // no probe
+  } else {
+    snprintf(meatStr, sizeof(meatStr), "%.0f%s", meatDisplay, unit);
+  }
   tft.setTextDatum(MC_DATUM);
 
   tft.setTextColor(TFT_ORANGE, TFT_BLACK);

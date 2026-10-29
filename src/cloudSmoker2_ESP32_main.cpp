@@ -56,7 +56,7 @@ char bootResetReasonStr[24] = "";  // set once in setup(), shown on the splash s
 // #define DEBUG_SERIAL 1
 // #define DEBUG_LCD 1           // Configured for local TFT verification testing
 // #define DEBUG_PRESSTYPE  1
-// #define DEBUG_FREEMEM 1       // Configured for ESP32 internal Heap diagnostics
+// #define DEBUG_FREEMEM 1  // Configured for ESP32 internal Heap diagnostics; good heartbeat test
 //?  end Selective Debug Scaffolding *********************************
 
 //? *******************************************************************
@@ -127,7 +127,7 @@ void setup() {
   delay(1000);
   Serial.println("\n--- cloudSmoker 2 System Booting (ESP32) ---");
 
-  // debugging statements follow
+  // initialisations with debugging output to Serial Monitor
   Serial.println("Calling lcd.begin()");  // debug
   lcd.begin();
   Serial.println("LCD Initialised");  // debug
