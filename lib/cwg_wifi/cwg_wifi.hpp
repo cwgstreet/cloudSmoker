@@ -53,7 +53,8 @@ void WifiManager_initialise() {
   // 4. SET TIMEOUT: This is the critical fix.
   // If it can't connect to saved WiFi or user doesn't configure in 180 seconds,
   // the portal will close and the function will continue execution.
-  wm.setConfigPortalTimeout(15);
+  wm.setConfigPortalTimeout(15);  // normal operation, short timeout for operations
+  // wm.setConfigPortalTimeout(180);  // TEMP: long portal window for phone setup testing
   wm.setDebugOutput(true);  // ignore WM_NODEBUG flag, force verbose here
 
   // 5. Attempt connection

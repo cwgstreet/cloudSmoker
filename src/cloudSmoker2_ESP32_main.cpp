@@ -138,7 +138,7 @@ void setup() {
   Serial.println("After Encoder Init");  // If this message is not seen, it's hung in initialise()
 
   WifiManager_initialise();
-  Serial.println("Skipped WiFi, entering loop setup");
+  Serial.println("WiFi setup finished, entering main loop");
 
   // Initialise button press context tracking
   button.begin(BUTTON_PIN);

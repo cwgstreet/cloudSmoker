@@ -30,6 +30,14 @@
 // always include thingspeak header file after other header files and custom macros
 #include <ThingSpeak.h>
 
+// include WiFi and HTTPClient for ntfy.sh notifications
+#include <HTTPClient.h>
+#include <WiFi.h>
+#include <WiFiClientSecure.h>
+
+// include APIs for ntfy.sh notifications
+#include "secrets.h"
+
 // entryStates is an enum variable type defined in menu.h header file (as extern); smokerState is
 // global
 entryStates_t smokerState;
@@ -63,6 +71,12 @@ bool meat1DoneFlag = false;
 bool meat2DoneFlag = false;
 bool meat3DoneFlag = false;
 
+// ntfy.sh alert sent flags for each probe. These are set once per cook
+//  when the alert is sent, and cleared when a new cook starts.
+bool meat1SentFlag = false;  // set once the MEAT1 alert has been delivered this cook
+bool meat2SentFlag = false;
+bool meat3SentFlag = false;
+
 DoneStatus probeDoneStatus(float tempF, float targetF) {
   if (isnan(tempF)) {
     return NO_DATA;
@@ -70,9 +84,25 @@ DoneStatus probeDoneStatus(float tempF, float targetF) {
   return (tempF >= targetF) ? DONE : NOT_DONE;
 }
 
+// Sends one message to the ntfy topic over HTTPS. Returns true only on HTTP 200.
+bool sendNtfyAlert(const String& message) {
+  WiFiClientSecure client;
+  client.setInsecure();  // HTTPS encryption without certificate check (accepted risk)
+  HTTPClient http;
+  String url = String("https://ntfy.sh/") + NTFY_TOPIC;
+  http.begin(client, url);
+  http.setTimeout(5000);
+  int code = http.POST(message);
+  http.end();
+  Serial.print(F("ntfy HTTP code: "));
+  Serial.println(code);
+  return code == 200;
+}
+
 // Reports done transitions for one probe and sends the alert once per cook.
 // lastStatus and doneFlag are references, so the helper updates each probe's own variables.
-void checkProbeDone(const char* name, float tempF, DoneStatus& lastStatus, bool& doneFlag) {
+void checkProbeDone(const char* name, float tempF, DoneStatus& lastStatus, bool& doneFlag,
+                    bool& sentFlag) {
   DoneStatus status = probeDoneStatus(tempF, meatDoneTemp);
 
   if (status != lastStatus) {
@@ -92,7 +122,20 @@ void checkProbeDone(const char* name, float tempF, DoneStatus& lastStatus, bool&
     doneFlag = true;
     Serial.print(name);
     Serial.println(F(" DONE flag set: alert due (first time this cook)"));
-    // ntfy alert call goes here in the next step
+  }
+
+  // Alert: send once per cook, retried each cycle until it succeeds
+  if (doneFlag && !sentFlag && WiFi.status() == WL_CONNECTED) {
+    String msg = String(name) + " reached " + String(tempF, 0) + "F (target " +
+                 String(meatDoneTemp, 0) + "F)";
+    if (sendNtfyAlert(msg)) {
+      sentFlag = true;
+      Serial.print(name);
+      Serial.println(F(" alert sent"));
+    } else {
+      Serial.print(name);
+      Serial.println(F(" alert not sent, will retry"));
+    }
   }
 }
 
@@ -144,6 +187,9 @@ void processState(CWG_LCD& lcd) {
         meat1DoneFlag = false;
         meat2DoneFlag = false;
         meat3DoneFlag = false;
+        meat1SentFlag = false;
+        meat2SentFlag = false;
+        meat3SentFlag = false;
         meat1LastStatus = UNKNOWN;
         meat2LastStatus = UNKNOWN;
         meat3LastStatus = UNKNOWN;
@@ -411,9 +457,9 @@ void processState(CWG_LCD& lcd) {
                                                          voltageMeat3_medianFiltered_V);
 
       // Done decisions for each meat probe
-      checkProbeDone("MEAT1", currentMeat1Temp, meat1LastStatus, meat1DoneFlag);
-      checkProbeDone("MEAT2", currentMeat2Temp, meat2LastStatus, meat2DoneFlag);
-      checkProbeDone("MEAT3", currentMeat3Temp, meat3LastStatus, meat3DoneFlag);
+      checkProbeDone("MEAT1", currentMeat1Temp, meat1LastStatus, meat1DoneFlag, meat1SentFlag);
+      checkProbeDone("MEAT2", currentMeat2Temp, meat2LastStatus, meat2DoneFlag, meat2SentFlag);
+      checkProbeDone("MEAT3", currentMeat3Temp, meat3LastStatus, meat3DoneFlag, meat3SentFlag);
 
 #ifdef DEBUG_ADC_Temps
       Serial.println();
