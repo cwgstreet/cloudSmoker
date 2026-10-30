@@ -41,7 +41,7 @@ const char* const THNGSPK_WRITE_API_KEY = "APIKEY";
 // Replace with Thingspeak Write API Key
 
 // TODO include Read API Key for potential future use:
-// const char* constTHNGSPK_READ_API_KEY = "APIKEY";
+// const char* const THNGSPK_READ_API_KEY = "APIKEY";
 // Replace with Thingspeak Read API Key
 
 // ******************************************************
