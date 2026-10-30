@@ -31,7 +31,8 @@ fp-info-cache
 **/launch.json
 
 # --- Security ---
-lib/myConstants/secrets.h
+secrets.h
+**/secrets.h
 
 # ====================================================================
 # KiCad 9 & System Caches - cloudSmoker .gitignore
