@@ -47,7 +47,7 @@ const char* THNGSPK_WRITE_API_KEY = "APIKEY";
 // ******************************************************
 //? ntfy.sh Connection Parameters
 // *******************************************************/
-const char* NTFY_TOPIC = "TOPIC KEY"
+const char* NTFY_TOPIC = "YOUR_NTFY_TOPIC_HERE";
 /* Replace with your ntfy.sh topic key - generate a long, random
     topic name rather than using your project name or another easily guessed string.
    Anyone who discovers the topic name could potentially subscribe to your notifications
