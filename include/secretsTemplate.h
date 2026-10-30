@@ -27,9 +27,9 @@
 //!     Not used!  cloudSmoker went with more secure Wifi Manager
 //!       instead where this info is entered on start-up
 // *******************************************************
-const char* SSID = "YOUR_SSID";
+const char* const SSID = "YOUR_SSID";
 // The SSID (name) of the Wi-Fi network you want to connect to
-const char* WIFI_PASSWORD = "YOUR_WIFI_PASSWORD";
+const char* const WIFI_PASSWORD = "YOUR_WIFI_PASSWORD";
 // The password of the Wi-Fi network
 
 // ******************************************************
@@ -37,17 +37,17 @@ const char* WIFI_PASSWORD = "YOUR_WIFI_PASSWORD";
 // *******************************************************/
 const unsigned long THNGSPK_CHANNEL_ID = CHANNEL_ID_NUMBER;
 // Replace with Thingspeak Channel ID
-const char* THNGSPK_WRITE_API_KEY = "APIKEY";
+const char* const THNGSPK_WRITE_API_KEY = "APIKEY";
 // Replace with Thingspeak Write API Key
 
 // TODO include Read API Key for potential future use:
-// const char* THNGSPK_READ_API_KEY = "APIKEY";
+// const char* constTHNGSPK_READ_API_KEY = "APIKEY";
 // Replace with Thingspeak Read API Key
 
 // ******************************************************
 //? ntfy.sh Connection Parameters
 // *******************************************************/
-const char* NTFY_TOPIC = "YOUR_NTFY_TOPIC_HERE";
+const char* const NTFY_TOPIC = "YOUR_NTFY_TOPIC_HERE";
 /* Replace with your ntfy.sh topic key - generate a long, random
     topic name rather than using your project name or another easily guessed string.
    Anyone who discovers the topic name could potentially subscribe to your notifications
