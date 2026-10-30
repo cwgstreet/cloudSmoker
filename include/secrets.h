@@ -16,7 +16,12 @@
 // ******************************************************
 //?  ThingSpeak Connection Parameters
 // *******************************************************/
-const unsigned long THNGSPK_CHANNEL_ID = 1679986; 
-const char* THNGSPK_WRITE_API_KEY = "NCLS0W62VML4VO11"; 
+const unsigned long THNGSPK_CHANNEL_ID = 1679986;
+const char* THNGSPK_WRITE_API_KEY = "NCLS0W62VML4VO11";
+
+// ******************************************************
+//?  ntfy.sh Connection Parameters
+// *******************************************************/
+const char* NTFY_TOPIC = "cwg-smoker-5e3b9c71a2f48d06";
 
 #endif  // SECRETS_H
