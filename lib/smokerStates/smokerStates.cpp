@@ -18,6 +18,7 @@
 #include <Wire.h>  // i2C device communication
 
 // include local libraries
+#include "calibration.h"
 #include "cwg_ads1x15.h"        // ADS1x15 I2C ADC device functionality
 #include "cwg_steinhartHart.h"  // Thermistor steinhart hart temperature calcs
 #include "helper_functions.h"
@@ -137,6 +138,11 @@ void checkProbeDone(const char* name, float tempF, DoneStatus& lastStatus, bool&
       Serial.println(F(" alert not sent, will retry"));
     }
   }
+}
+
+// Corrected probe temperature in degF: Steinhart-Hart result, then the per-probe calibration
+static float probeF(SteinhartHart& sh, ProbeId id, float vccV, float vadcV) {
+  return calApplyF(id, sh.getTempFahrenheit(vccV, vadcV));
 }
 
 void processState(CWG_LCD& lcd) {
@@ -447,15 +453,13 @@ void processState(CWG_LCD& lcd) {
       yield();
 
       currentPitTemp =
-          sh_pitProbe.getTempFahrenheit(voltageVCC_medianFiltered_V, voltagePit_medianFiltered_V);
-
-      currentMeat1Temp = sh_meat1Probe.getTempFahrenheit(voltageVCC_medianFiltered_V,
-                                                         voltageMeat1_medianFiltered_V);
-      currentMeat2Temp = sh_meat2Probe.getTempFahrenheit(voltageVCC_medianFiltered_V,
-                                                         voltageMeat2_medianFiltered_V);
-      currentMeat3Temp = sh_meat3Probe.getTempFahrenheit(voltageVCC_medianFiltered_V,
-                                                         voltageMeat3_medianFiltered_V);
-
+          probeF(sh_pitProbe, PROBE_PIT, voltageVCC_medianFiltered_V, voltagePit_medianFiltered_V);
+      currentMeat1Temp = probeF(sh_meat1Probe, PROBE_MEAT1, voltageVCC_medianFiltered_V,
+                                voltageMeat1_medianFiltered_V);
+      currentMeat2Temp = probeF(sh_meat2Probe, PROBE_MEAT2, voltageVCC_medianFiltered_V,
+                                voltageMeat2_medianFiltered_V);
+      currentMeat3Temp = probeF(sh_meat3Probe, PROBE_MEAT3, voltageVCC_medianFiltered_V,
+                                voltageMeat3_medianFiltered_V);
       // Done decisions for each meat probe
       checkProbeDone("MEAT1", currentMeat1Temp, meat1LastStatus, meat1DoneFlag, meat1SentFlag);
       checkProbeDone("MEAT2", currentMeat2Temp, meat2LastStatus, meat2DoneFlag, meat2SentFlag);

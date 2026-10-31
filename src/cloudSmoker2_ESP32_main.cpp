@@ -34,6 +34,7 @@
 #include <Wire.h>  // Master I2C bus management
 
 // internal (user) libraries:
+#include "calibration.h"  // per-probe two-point calibration (gain and offset) constants
 #include "cwg_ads1x15.h"  // ADS1x15 I2C ADC functionality
 #include "cwg_steinhartHart.h"
 #include "cwg_wifi.hpp"
@@ -96,6 +97,8 @@ CWG_LCD lcd;
 
 void setup() {
   Serial.begin(SERIAL_MONITOR_SPEED);
+
+  calInit();  // load per-probe calibration from NVS (non-volatile storage)
 
   esp_reset_reason_t resetReason = esp_reset_reason();
   switch (resetReason) {
@@ -177,6 +180,9 @@ void loop() {
 
   // Handle primary state machine transitions passing the updated display reference
   processState(lcd);
+
+  // cal / calShow / calReset from the serial monitor
+  calPollSerial();
 
   // ***** debug - ESP32 Native Free Heap Memory Checking *****
 #ifdef DEBUG_FREEMEM
