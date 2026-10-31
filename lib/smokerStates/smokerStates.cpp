@@ -78,6 +78,12 @@ bool meat1SentFlag = false;  // set once the MEAT1 alert has been delivered this
 bool meat2SentFlag = false;
 bool meat3SentFlag = false;
 
+// alert send attempts per probe per cook
+constexpr uint8_t NTFY_MAX_ATTEMPTS = 10;
+uint8_t meat1AlertAttempts = 0;
+uint8_t meat2AlertAttempts = 0;
+uint8_t meat3AlertAttempts = 0;
+
 DoneStatus probeDoneStatus(float tempF, float targetF) {
   if (isnan(tempF)) {
     return NO_DATA;
@@ -100,10 +106,50 @@ bool sendNtfyAlert(const String& message) {
   return code == 200;
 }
 
+// Adds one field to the form body, skipping NaN so missing probes aren't uploaded.
+void appendThingSpeakField(String& body, int field, float value) {
+  if (isnan(value)) {
+    return;
+  }
+  body += "&field" + String(field) + "=" + String(value, 2);
+}
+
+// Sends one update to ThingSpeak over HTTPS. Returns true only if ThingSpeak accepts it.
+bool sendThingSpeak(float meat1F, float meatTargetF, float pitF, float pitTargetF, float batteryV) {
+  if (WiFi.status() != WL_CONNECTED) {
+    return false;
+  }
+
+  String body = String("api_key=") + THNGSPK_WRITE_API_KEY;
+  appendThingSpeakField(body, 1, meat1F);
+  appendThingSpeakField(body, 2, meatTargetF);
+  appendThingSpeakField(body, 3, pitF);
+  appendThingSpeakField(body, 4, pitTargetF);
+  appendThingSpeakField(body, 5, batteryV);
+
+  WiFiClientSecure client;
+  client.setInsecure();
+  HTTPClient http;
+  http.begin(client, "https://api.thingspeak.com/update");
+  http.addHeader("Content-Type", "application/x-www-form-urlencoded");
+  http.setTimeout(5000);
+  int code = http.POST(body);
+  String response = http.getString();
+  http.end();
+
+  // ThingSpeak returns the entry number on success, or 0 if it rejected the update
+  long entryId = response.toInt();
+  Serial.print(F("ThingSpeak HTTP "));
+  Serial.print(code);
+  Serial.print(F(" entry "));
+  Serial.println(entryId);
+  return code == 200 && entryId > 0;
+}
+
 // Reports done transitions for one probe and sends the alert once per cook.
 // lastStatus and doneFlag are references, so the helper updates each probe's own variables.
 void checkProbeDone(const char* name, float tempF, DoneStatus& lastStatus, bool& doneFlag,
-                    bool& sentFlag) {
+                    bool& sentFlag, uint8_t& attempts) {
   DoneStatus status = probeDoneStatus(tempF, meatDoneTemp);
 
   if (status != lastStatus) {
@@ -125,8 +171,9 @@ void checkProbeDone(const char* name, float tempF, DoneStatus& lastStatus, bool&
     Serial.println(F(" DONE flag set: alert due (first time this cook)"));
   }
 
-  // Alert: send once per cook, retried each cycle until it succeeds
-  if (doneFlag && !sentFlag && WiFi.status() == WL_CONNECTED) {
+  // Alert: one send per cycle while online, up to NTFY_MAX_ATTEMPTS. Offline cycles don't count.
+  if (doneFlag && !sentFlag && attempts < NTFY_MAX_ATTEMPTS && WiFi.status() == WL_CONNECTED) {
+    attempts++;
     String msg = String(name) + " reached " + String(tempF, 0) + "F (target " +
                  String(meatDoneTemp, 0) + "F)";
     if (sendNtfyAlert(msg)) {
@@ -135,7 +182,14 @@ void checkProbeDone(const char* name, float tempF, DoneStatus& lastStatus, bool&
       Serial.println(F(" alert sent"));
     } else {
       Serial.print(name);
-      Serial.println(F(" alert not sent, will retry"));
+      Serial.print(F(" alert not sent, attempt "));
+      Serial.print(attempts);
+      Serial.print(F(" of "));
+      Serial.println(NTFY_MAX_ATTEMPTS);
+      if (attempts >= NTFY_MAX_ATTEMPTS) {
+        Serial.print(name);
+        Serial.println(F(" retry limit reached, no further attempts this cook"));
+      }
     }
   }
 }
@@ -193,9 +247,20 @@ void processState(CWG_LCD& lcd) {
         meat1DoneFlag = false;
         meat2DoneFlag = false;
         meat3DoneFlag = false;
+
         meat1SentFlag = false;
         meat2SentFlag = false;
         meat3SentFlag = false;
+
+        meat1AlertAttempts = 0;
+        meat2AlertAttempts = 0;
+        meat3AlertAttempts = 0;
+
+        constexpr uint8_t NTFY_MAX_ATTEMPTS = 10;  // alert send attempts per probe per cook
+        uint8_t meat1AlertAttempts = 0;
+        uint8_t meat2AlertAttempts = 0;
+        uint8_t meat3AlertAttempts = 0;
+
         meat1LastStatus = UNKNOWN;
         meat2LastStatus = UNKNOWN;
         meat3LastStatus = UNKNOWN;
@@ -461,9 +526,12 @@ void processState(CWG_LCD& lcd) {
       currentMeat3Temp = probeF(sh_meat3Probe, PROBE_MEAT3, voltageVCC_medianFiltered_V,
                                 voltageMeat3_medianFiltered_V);
       // Done decisions for each meat probe
-      checkProbeDone("MEAT1", currentMeat1Temp, meat1LastStatus, meat1DoneFlag, meat1SentFlag);
-      checkProbeDone("MEAT2", currentMeat2Temp, meat2LastStatus, meat2DoneFlag, meat2SentFlag);
-      checkProbeDone("MEAT3", currentMeat3Temp, meat3LastStatus, meat3DoneFlag, meat3SentFlag);
+      checkProbeDone("MEAT1", currentMeat1Temp, meat1LastStatus, meat1DoneFlag, meat1SentFlag,
+                     meat1AlertAttempts);
+      checkProbeDone("MEAT2", currentMeat2Temp, meat2LastStatus, meat2DoneFlag, meat2SentFlag,
+                     meat2AlertAttempts);
+      checkProbeDone("MEAT3", currentMeat3Temp, meat3LastStatus, meat3DoneFlag, meat3SentFlag,
+                     meat3AlertAttempts);
 
 #ifdef DEBUG_ADC_Temps
       Serial.println();
@@ -494,27 +562,8 @@ void processState(CWG_LCD& lcd) {
 
     case txTemp: {
       Serial.println("entering txTemp case -> transmitting data");
-      WiFiClient client;
-      ThingSpeak.begin(client);
-
-      float currentMeatTemp_float = currentMeat1Temp;
-      float currentpitTemp_float = currentPitTemp;
-
-      ThingSpeak.setField(1, currentMeatTemp_float);
-      ThingSpeak.setField(2, meatDoneTemp);
-
-      if (currentpitTemp_float > 500) {
-        ThingSpeak.setField(3, currentpitTemp_float);
-      }
-
-      ThingSpeak.setField(4, pitTempTarget);
-      ThingSpeak.setField(5, batteryVoltage_v);
-
-      ThingSpeak.writeFields(THNGSPK_CHANNEL_ID, THNGSPK_WRITE_API_KEY);
-
-      hasRunFlag = 0;
-      smokerState = Sleep;
-      Serial.println("leaving for Sleep case");
+      // TODO: Battery field is NAN until the INA226 bus voltage replaces the placeholder
+      sendThingSpeak(currentMeat1Temp, meatDoneTemp, currentPitTemp, pitTempTarget, NAN);
     } break;
 
     case Sleep: {
