@@ -177,12 +177,21 @@ void calPollSerial() {
   while (Serial.available()) {
     char c = Serial.read();
     if (c == '\n' || c == '\r') {
+      Serial.println();         // move to a new line after the typed command
       if (line.length() > 0) {  // ignore the blank line from "\r\n" endings
         handleCommand(line);
         line = "";
       }
+    } else if (c == 8 || c == 127) {  // backspace or delete: remove the last character
+      if (line.length() > 0) {
+        line.remove(line.length() - 1);
+        Serial.write(8);    // move the cursor back
+        Serial.write(' ');  // blank out the old character
+        Serial.write(8);
+      }
     } else if (line.length() < 80) {
       line += c;
+      Serial.write(c);  // echo the typed character
     }
   }
 }
