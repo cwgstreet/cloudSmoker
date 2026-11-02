@@ -78,6 +78,12 @@ bool meat1SentFlag = false;  // set once the MEAT1 alert has been delivered this
 bool meat2SentFlag = false;
 bool meat3SentFlag = false;
 
+constexpr int16_t CAL_MENU_COUNT = 5;  // PIT, MEAT1, MEAT2, MEAT3, BACK
+ProbeId calSelectedProbe = PROBE_PIT;  // probe currently being calibrated
+static const char* const calNames[] = {"PIT", "MEAT1", "MEAT2", "MEAT3"};  // index = ProbeId
+constexpr unsigned long CAL_ICE_TIMEOUT_MS = 120000;  // give up after two minutes
+float calIceReading_F = NAN;  // captured ice-point reading (degF), used by the boil step
+
 // alert send attempts per probe per cook
 constexpr uint8_t NTFY_MAX_ATTEMPTS = 10;
 uint8_t meat1AlertAttempts = 0;
@@ -199,6 +205,42 @@ static float probeF(SteinhartHart& sh, ProbeId id, float vccV, float vadcV) {
   return calApplyF(id, sh.getTempFahrenheit(vccV, vadcV));
 }
 
+// Raw Steinhart-Hart reading in degF for one probe, with no calibration applied.
+// Prints the measured divider voltage each time, for diagnosis during calibration.
+// Returns NAN for an unplugged or open probe, so a capture can be refused.
+static float rawProbeF(ProbeId id) {
+  float v = NAN;
+  SteinhartHart* sh = nullptr;
+
+  switch (id) {
+    case PROBE_PIT:
+      sh = &sh_pitProbe;
+      v = ads1115.getSensorValue_MedianFiltered_V(ADC_pitPin, 11);
+      break;
+    case PROBE_MEAT1:
+      sh = &sh_meat1Probe;
+      v = ads1115.getSensorValue_MedianFiltered_V(ADC_meat1Pin, 11);
+      break;
+    case PROBE_MEAT2:
+      sh = &sh_meat2Probe;
+      v = ads1115.getSensorValue_MedianFiltered_V(ADC_meat2Pin, 11);
+      break;
+    case PROBE_MEAT3:
+      sh = &sh_meat3Probe;
+      v = ads1115.getSensorValue_MedianFiltered_V(ADC_meat3Pin, 11);
+      break;
+    default:
+      return NAN;
+  }
+
+  Serial.print(F("raw "));
+  Serial.print(calNames[id]);
+  Serial.print(F(" V = "));
+  Serial.println(v, 4);
+
+  return sh->getTempFahrenheit(calRailV(), v);
+}
+
 void processState(CWG_LCD& lcd) {
   // Declare this at the top of the function to avoid switch-case initialization bypass errors
   int16_t currentEncoderValue;
@@ -275,7 +317,7 @@ void processState(CWG_LCD& lcd) {
       currentEncoderValue = encoder.getCount();
 
       if (hasRunFlag == 0) {
-        encoder.newSettings(1, MENU_COUNT, 1, currentEncoderState);
+        encoder.newRange(1, MENU_COUNT, 1, true, currentEncoderState);  // menus always wrap
         prevEncoderValue = currentEncoderState.currentValue;
         hasRunFlag = 1;
         lastDrawnSelection = -1;
@@ -298,6 +340,10 @@ void processState(CWG_LCD& lcd) {
             break;
           case MENU_UNITS:
             smokerState = setTempUnits;
+            hasRunFlag = 0;
+            break;
+          case MENU_CALIBRATION:
+            smokerState = calProbeMenu;
             hasRunFlag = 0;
             break;
           case MENU_BACK:
@@ -507,7 +553,7 @@ void processState(CWG_LCD& lcd) {
       Serial.println(startCookTime_ms);
 
       // TEMPORARY: bias supply reference is a fixed 5.0 V until the INA226 bus voltage replaces it
-      double voltageVCC_medianFiltered_V = ADC_biasSupplyInterim_V;
+      double voltageVCC_medianFiltered_V = calRailV();
       batteryVoltage_v = voltageVCC_medianFiltered_V;  // placeholder: not a measurement yet
 
       voltagePit_medianFiltered_V = ads1115.getSensorValue_MedianFiltered_V(ADC_pitPin, 11);
@@ -564,6 +610,10 @@ void processState(CWG_LCD& lcd) {
       Serial.println("entering txTemp case -> transmitting data");
       // TODO: Battery field is NAN until the INA226 bus voltage replaces the placeholder
       sendThingSpeak(currentMeat1Temp, meatDoneTemp, currentPitTemp, pitTempTarget, NAN);
+
+      Serial.println("leaving for Sleep case");
+      smokerState = Sleep;
+      hasRunFlag = 0;  // Sleep only runs its timer when hasRunFlag is 0
     } break;
 
     case Sleep: {
@@ -610,6 +660,143 @@ void processState(CWG_LCD& lcd) {
       if ((unsigned long)(currentMillis - previousDisplayMillis) >= displayInterval) {
         previousDisplayMillis = millis();
         smokerState = Sleep;
+        hasRunFlag = 0;
+      }
+    } break;
+    case calProbeMenu: {
+      static int16_t lastDrawnSelection = -1;
+      currentEncoderValue = encoder.getCount();
+
+      if (hasRunFlag == 0) {
+        encoder.newRange(1, CAL_MENU_COUNT, 1, true, currentEncoderState);  // hard stops
+        prevEncoderValue = currentEncoderState.currentValue;
+        hasRunFlag = 1;
+        lastDrawnSelection = -1;
+      }
+
+      if (prevEncoderValue != lastDrawnSelection) {
+        lcd.showCalProbeMenu(prevEncoderValue);
+        lastDrawnSelection = prevEncoderValue;
+      }
+
+      if (button.triggered(SINGLE_TAP)) {
+        if (prevEncoderValue == CAL_MENU_COUNT) {  // Back
+          smokerState = changeSettings;
+          hasRunFlag = 0;
+        } else {
+          calSelectedProbe = (ProbeId)(prevEncoderValue - 1);
+          smokerState = calWaitIce;  // not written yet, see note below
+          hasRunFlag = 0;
+        }
+      }
+
+      if (button.triggered(DOUBLE_TAP) && prevEncoderValue != CAL_MENU_COUNT) {
+        ProbeId id = (ProbeId)(prevEncoderValue - 1);
+        calReset(id);
+        Serial.print(F("calibration reset for "));
+        Serial.println(calNames[id]);
+        lastDrawnSelection = -1;  // redraw the menu
+      }
+
+      if (button.triggered(HOLD)) {
+        smokerState = changeSettings;
+        hasRunFlag = 0;
+      }
+    } break;
+
+    case calWaitIce: {
+      static float iceSamples[10];
+      static uint8_t sampleCount = 0;
+      static unsigned long captureStart = 0;
+      static unsigned long lastSample = 0;
+      static float lastReading = NAN;
+      static bool drawNeeded = true;
+      static bool captured = false;
+      static bool timedOut = false;
+
+      if (hasRunFlag == 0) {
+        sampleCount = 0;
+        captured = false;
+        timedOut = false;
+        lastReading = NAN;
+        captureStart = millis();
+        lastSample = millis() - 1000;  // take the first sample straight away
+        drawNeeded = true;
+        hasRunFlag = 1;
+      }
+
+      if (button.triggered(HOLD)) {  // cancel at any point
+        smokerState = calProbeMenu;
+        hasRunFlag = 0;
+        break;
+      }
+
+      // Sample once per second. Capture when the last 10 readings span under 0.5 degF.
+      if (!captured && !timedOut) {
+        if ((unsigned long)(millis() - captureStart) >= CAL_ICE_TIMEOUT_MS) {
+          timedOut = true;
+          drawNeeded = true;
+        } else if ((unsigned long)(millis() - lastSample) >= 1000) {
+          lastSample = millis();
+          lastReading = rawProbeF(calSelectedProbe);
+          drawNeeded = true;
+
+          if (isnan(lastReading)) {
+            sampleCount = 0;  // unplugged or open: restart the settling window
+          } else {
+            if (sampleCount < 10) {
+              iceSamples[sampleCount++] = lastReading;
+            } else {  // slide the window: drop the oldest, add the newest
+              for (uint8_t i = 1; i < 10; i++) {
+                iceSamples[i - 1] = iceSamples[i];
+              }
+              iceSamples[9] = lastReading;
+            }
+
+            if (sampleCount == 10) {
+              float lo = iceSamples[0];
+              float hi = iceSamples[0];
+              float sum = 0.0f;
+              for (uint8_t i = 0; i < 10; i++) {
+                if (iceSamples[i] < lo) lo = iceSamples[i];
+                if (iceSamples[i] > hi) hi = iceSamples[i];
+                sum += iceSamples[i];
+              }
+              if (hi - lo < 0.5f) {
+                calIceReading_F = sum / 10.0f;  // average of the settled window
+                captured = true;
+                Serial.print(F("ice point captured for "));
+                Serial.print(calNames[calSelectedProbe]);
+                Serial.print(F(": "));
+                Serial.print(calIceReading_F, 2);
+                Serial.println(F(" degF"));
+              }
+            }
+          }
+        }
+      }
+
+      if (drawNeeded) {
+        drawNeeded = false;
+        if (timedOut) {
+          lcd.showCalCapture("ICE POINT", "Timed out", NAN, false, "Press to return");
+        } else if (captured) {
+          lcd.showCalCapture("ICE POINT", "Captured", calIceReading_F, true, "Press to continue");
+        } else if (isnan(lastReading)) {
+          lcd.showCalCapture("ICE POINT", "Check probe", NAN, false, "Hold to cancel");
+        } else {
+          lcd.showCalCapture("ICE POINT", "Settling...", lastReading, true, "Keep ice in bath");
+        }
+      }
+
+      if (timedOut && button.triggered(SINGLE_TAP)) {
+        smokerState = calProbeMenu;
+        hasRunFlag = 0;
+      }
+
+      if (captured && button.triggered(SINGLE_TAP)) {
+        // TODO: change to calWaitBoil once the boil step is written
+        smokerState = calProbeMenu;
         hasRunFlag = 0;
       }
     } break;

@@ -173,7 +173,8 @@ void CWG_LCD::showSettingsMenu(int16_t prevEncoderValue) {
   drawUIFrame("SETTINGS");
 
   static const char* menuLabels[MENU_COUNT + 1] = {"",  // index 0 unused - menu values are 1-based
-                                                   "Meat Temp", "Pit Temp", "Units", "Back"};
+                                                   "Meat Temp", "Pit Temp", "Units",
+                                                   "Calibrate", "Back"};
 
   int16_t index = constrain(prevEncoderValue, 1, (int16_t)MENU_COUNT);
 
@@ -182,6 +183,51 @@ void CWG_LCD::showSettingsMenu(int16_t prevEncoderValue) {
   tft.drawString(menuLabels[index], 120, 120, 4);
 
   drawProgressDots(index, MENU_COUNT);
+}
+
+void CWG_LCD::showCalProbeMenu(int16_t prevEncoderValue) {
+  clearScreen();
+  drawUIFrame("CALIBRATE");
+
+  static const char* calLabels[6] = {"",  // index 0 unused - menu values are 1-based
+                                     "PIT", "MEAT1", "MEAT2", "MEAT3", "Back"};
+  int16_t index = constrain(prevEncoderValue, 1, 5);
+
+  tft.setTextDatum(MC_DATUM);
+  tft.setTextColor(TFT_WHITE, TFT_BLACK);
+  tft.drawString(calLabels[index], 120, 120, 4);
+
+  tft.setTextColor(TFT_LIGHTGREY, TFT_BLACK);
+  if (index == 5) {
+    tft.drawString("Press: back", 120, 160, 2);
+  } else {
+    tft.drawString("Press: calibrate", 120, 150, 2);
+    tft.drawString("Dbl-press: reset", 120, 170, 2);
+  }
+
+  drawProgressDots(index, 5);
+}
+
+void CWG_LCD::showCalCapture(const char* header, const char* message, float value, bool hasValue,
+                             const char* hint) {
+  clearScreen();
+  drawUIFrame(header);
+
+  tft.setTextDatum(MC_DATUM);
+  tft.setTextColor(TFT_LIGHTGREY, TFT_BLACK);
+  tft.drawString(message, 120, 90, 2);
+
+  char valueStr[16];
+  if (hasValue) {
+    snprintf(valueStr, sizeof(valueStr), "%.1fF", value);
+  } else {
+    snprintf(valueStr, sizeof(valueStr), "--");
+  }
+  tft.setTextColor(TFT_WHITE, TFT_BLACK);
+  tft.drawString(valueStr, 120, 130, 4);
+
+  tft.setTextColor(TFT_LIGHTGREY, TFT_BLACK);
+  tft.drawString(hint, 120, 170, 2);
 }
 
 void CWG_LCD::showSetMeatDoneTempMenu(int16_t prevEncoderValue, float meatDoneTemp, bool degCFlag) {

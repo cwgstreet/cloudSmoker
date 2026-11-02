@@ -40,8 +40,12 @@ enum entryStates_t {
   getTemp,
   txTemp,
   Sleep,
-  bbqStatus
-};  // 10
+  bbqStatus,
+  calProbeMenu,  // choose which probe to calibrate, or reset it
+  calWaitIce,    // settling and capture at 0 degF
+  calWaitBoil,   // reference temperature entry and capture at boiling
+  calResult      // show gain and offset, save or cancel
+};
 
 // smokerState type defined in implementation smokerState.cpp, hence extern keyword
 extern entryStates_t smokerState;
