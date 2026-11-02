@@ -144,12 +144,33 @@ bool calSetRailV(float volts) {
 // ---- serial entry (interim until the encoder settings screen) ----
 
 // Prints one probe's current gain and offset, for checking values after entry.
+// Prints one probe's gain and offset, with the name padded so the values line up.
 static void printCal(ProbeId id) {
-  Serial.print(probeNames[id]);
+  char name[8];
+  snprintf(name, sizeof(name), "%-6s", probeNames[id]);  // left-justified, 6 characters
+  Serial.print(name);
   Serial.print(F("  gain = "));
   Serial.print(calTable[id].gain, 6);
   Serial.print(F("  offset = "));
   Serial.println(calTable[id].offset, 4);
+}
+
+// Prints the serial command summary. Called once when the device leaves the splash screen,
+// and whenever the user types "help".
+void calPrintHelp() {
+  Serial.println();
+  Serial.println(F("================ cloudSmoker2 serial commands ================"));
+  Serial.println(F("  help                          show this list"));
+  Serial.println(F("  calShow                       show rail voltage and all probe factors"));
+  Serial.println(F("  calReset                      reset all probes to gain 1.0, offset 0.0"));
+  Serial.println(F("  cal <probe> <gain> <offset>   set one probe, e.g.  cal MEAT1 1.0526 -5.47"));
+  Serial.println(F("                                  probes: PIT, MEAT1, MEAT2, MEAT3"));
+  Serial.println(F("                                  gain 0.9 to 1.1, offset -9 to +9 degF"));
+  Serial.println(F("  railV <volts>                 set measured +5 V rail, e.g.  railV 5.09"));
+  Serial.println(F("                                  range 4.5 to 5.5 V"));
+  Serial.println(F("=============================================================="));
+  Serial.println(F("Type a command and press Enter. The device echoes what you type."));
+  Serial.println();
 }
 
 // Parses one complete command line. Commands are case-sensitive except the probe name:
@@ -159,6 +180,11 @@ static void printCal(ProbeId id) {
 //   calReset                      return all four probes to identity
 static void handleCommand(String cmd) {
   cmd.trim();
+
+  if (cmd == "help") {
+    calPrintHelp();
+    return;
+  }
 
   if (cmd == "calShow") {
     Serial.print(F("RAIL  = "));
@@ -230,7 +256,7 @@ static void handleCommand(String cmd) {
     return;
   }
 
-  Serial.println(F("commands: cal <probe> <gain> <offset> | railV <volts> | calShow | calReset"));
+  Serial.println(F("unknown command. Type help for the command list."));
 }
 
 // Called once per loop(). Reads any waiting serial characters and builds a line until

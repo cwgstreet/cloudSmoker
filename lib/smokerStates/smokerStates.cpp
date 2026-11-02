@@ -293,6 +293,7 @@ void processState(CWG_LCD& lcd) {
         lcd.showSplashScreen(degCFlag, meatDoneTemp, pitTempTarget);
       }
       if (encoder.moved()) {
+        calPrintHelp();  // one-time command summary on first encoder move
         smokerState = launchPad;
       }
     } break;

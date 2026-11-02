@@ -30,6 +30,9 @@ void calReset(ProbeId id);                          // back to identity (a = 1, 
 float calApplyF(ProbeId id, float tempF);
 void calPollSerial();  // calShow / calReset / cal / railV commands
 
+// formatted serial terminal command summary, printed on first encoder move and by "help"
+void calPrintHelp();
+
 // Measured bias supply: the +5 V rail feeding the thermistor dividers, in volts.
 // Defaults to 5.00 V until set. Stored in NVS.
 float calRailV();
