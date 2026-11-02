@@ -230,6 +230,31 @@ void CWG_LCD::showCalCapture(const char* header, const char* message, float valu
   tft.drawString(hint, 120, 170, 2);
 }
 
+void CWG_LCD::showCalResult(const char* probeName, float gain, float offset, bool showValues,
+                            const char* note, const char* hint) {
+  clearScreen();
+  drawUIFrame("RESULT");
+
+  tft.setTextDatum(MC_DATUM);
+  tft.setTextColor(TFT_LIGHTGREY, TFT_BLACK);
+  tft.drawString(probeName, 120, 80, 2);
+
+  char buf[24];
+  tft.setTextColor(TFT_WHITE, TFT_BLACK);
+  if (showValues) {
+    snprintf(buf, sizeof(buf), "gain %.4f", gain);
+    tft.drawString(buf, 120, 110, 2);
+    snprintf(buf, sizeof(buf), "offset %+.2fF", offset);
+    tft.drawString(buf, 120, 135, 2);
+  }
+  if (note[0] != '\0') {
+    tft.drawString(note, 120, 158, 2);
+  }
+
+  tft.setTextColor(TFT_LIGHTGREY, TFT_BLACK);
+  tft.drawString(hint, 120, 175, 2);
+}
+
 void CWG_LCD::showSetMeatDoneTempMenu(int16_t prevEncoderValue, float meatDoneTemp, bool degCFlag) {
   clearScreen();
   drawUIFrame("MEAT TARGET");

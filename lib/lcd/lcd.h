@@ -46,6 +46,8 @@ class CWG_LCD {
   void showCalProbeMenu(int16_t prevEncoderValue);
   void showCalCapture(const char* header, const char* message, float value, bool hasValue,
                       const char* hint);
+  void showCalResult(const char* probeName, float gain, float offset, bool showValues,
+                     const char* note, const char* hint);
   void showSetMeatDoneTempMenu(int16_t prevEncoderValue, float meatDoneTemp, bool degCFlag);
   void showSetPitTempTargetMenu(int16_t prevEncoderValue, float pitTempTarget, bool degCFlag);
   void showSetTempUnitsMenu(int16_t prevEncoderValue, bool degCFlag);

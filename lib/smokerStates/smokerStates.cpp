@@ -82,7 +82,9 @@ constexpr int16_t CAL_MENU_COUNT = 5;  // PIT, MEAT1, MEAT2, MEAT3, BACK
 ProbeId calSelectedProbe = PROBE_PIT;  // probe currently being calibrated
 static const char* const calNames[] = {"PIT", "MEAT1", "MEAT2", "MEAT3"};  // index = ProbeId
 constexpr unsigned long CAL_ICE_TIMEOUT_MS = 120000;  // give up after two minutes
-float calIceReading_F = NAN;  // captured ice-point reading (degF), used by the boil step
+float calIceReading_F = NAN;   // captured ice-point reading (degF), used by the boil step
+int16_t calBoilRef_F = 212;    // boiling reference entered on the encoder (degF)
+float calBoilReading_F = NAN;  // captured boil-point reading (degF)
 
 // alert send attempts per probe per cook
 constexpr uint8_t NTFY_MAX_ATTEMPTS = 10;
@@ -239,6 +241,40 @@ static float rawProbeF(ProbeId id) {
   Serial.println(v, 4);
 
   return sh->getTempFahrenheit(calRailV(), v);
+}
+
+// Settling test: feed one reading per second. Returns true when the last 10 readings span
+// less than 0.5 degF, and sets out to their average. A NaN reading restarts the window.
+static bool settleStep(float reading, float* window, uint8_t& count, float& out) {
+  if (isnan(reading)) {
+    count = 0;
+    return false;
+  }
+  if (count < 10) {
+    window[count++] = reading;
+  } else {  // slide the window: drop the oldest, add the newest
+    for (uint8_t i = 1; i < 10; i++) {
+      window[i - 1] = window[i];
+    }
+    window[9] = reading;
+  }
+  if (count < 10) {
+    return false;
+  }
+
+  float lo = window[0];
+  float hi = window[0];
+  float sum = 0.0f;
+  for (uint8_t i = 0; i < 10; i++) {
+    if (window[i] < lo) lo = window[i];
+    if (window[i] > hi) hi = window[i];
+    sum += window[i];
+  }
+  if (hi - lo < 0.5f) {
+    out = sum / 10.0f;
+    return true;
+  }
+  return false;
 }
 
 void processState(CWG_LCD& lcd) {
@@ -722,6 +758,7 @@ void processState(CWG_LCD& lcd) {
         captureStart = millis();
         lastSample = millis() - 1000;  // take the first sample straight away
         drawNeeded = true;
+        calIceReading_F = NAN;  // no stale ice value from an earlier probe
         hasRunFlag = 1;
       }
 
@@ -795,9 +832,160 @@ void processState(CWG_LCD& lcd) {
       }
 
       if (captured && button.triggered(SINGLE_TAP)) {
-        // TODO: change to calWaitBoil once the boil step is written
+        smokerState = calWaitBoil;
+        hasRunFlag = 0;
+      }
+
+    } break;
+
+    case calWaitBoil: {
+      static bool capturing = false;  // false: setting the reference, true: capturing
+      static float boilWindow[10];
+      static uint8_t boilCount = 0;
+      static unsigned long boilStart = 0;
+      static unsigned long boilLastSample = 0;
+      static float boilLast = NAN;
+      static bool boilDone = false;
+      static bool boilTimedOut = false;
+      static bool drawNeeded = true;
+      static int16_t lastDrawnRef = -1;
+
+      if (hasRunFlag == 0) {
+        encoder.newRange(185, 215, 212, false, currentEncoderState);  // hard stops
+        prevEncoderValue = currentEncoderState.currentValue;
+        capturing = false;
+        boilCount = 0;
+        boilDone = false;
+        boilTimedOut = false;
+        boilLast = NAN;
+        calBoilReading_F = NAN;
+        lastDrawnRef = -1;
+        drawNeeded = true;
+        hasRunFlag = 1;
+      }
+
+      if (button.triggered(HOLD)) {  // cancel at any point, nothing saved
         smokerState = calProbeMenu;
         hasRunFlag = 0;
+        break;
+      }
+
+      if (!capturing) {
+        // Setting the reference: the encoder moves the value, the button starts capture
+        currentEncoderValue = encoder.getCount();
+        if (prevEncoderValue != lastDrawnRef) {
+          lcd.showCalCapture("BOIL REFERENCE", "Set boil temp", prevEncoderValue, true,
+                             "Press when in boil");
+          lastDrawnRef = prevEncoderValue;
+        }
+        if (button.triggered(SINGLE_TAP)) {
+          calBoilRef_F = prevEncoderValue;
+          Serial.print(F("boil reference set to "));
+          Serial.println(calBoilRef_F);
+          capturing = true;
+          boilCount = 0;
+          boilStart = millis();
+          boilLastSample = millis() - 1000;  // first sample straight away
+          drawNeeded = true;
+        }
+      } else {
+        // Capturing: same settling test as the ice point
+        if (!boilDone && !boilTimedOut) {
+          if ((unsigned long)(millis() - boilStart) >= CAL_ICE_TIMEOUT_MS) {
+            boilTimedOut = true;
+            drawNeeded = true;
+          } else if ((unsigned long)(millis() - boilLastSample) >= 1000) {
+            boilLastSample = millis();
+            boilLast = rawProbeF(calSelectedProbe);
+            if (settleStep(boilLast, boilWindow, boilCount, calBoilReading_F)) {
+              boilDone = true;
+              Serial.print(F("boil point captured for "));
+              Serial.print(calNames[calSelectedProbe]);
+              Serial.print(F(": "));
+              Serial.print(calBoilReading_F, 2);
+              Serial.println(F(" degF"));
+            }
+            drawNeeded = true;
+          }
+        }
+
+        if (drawNeeded) {
+          drawNeeded = false;
+          if (boilTimedOut) {
+            lcd.showCalCapture("BOIL POINT", "Timed out", NAN, false, "Press to return");
+          } else if (boilDone) {
+            lcd.showCalCapture("BOIL POINT", "Captured", calBoilReading_F, true,
+                               "Press to continue");
+          } else if (isnan(boilLast)) {
+            lcd.showCalCapture("BOIL POINT", "Check probe", NAN, false, "Hold to cancel");
+          } else {
+            lcd.showCalCapture("BOIL POINT", "Settling...", boilLast, true, "Keep probe in boil");
+          }
+        }
+
+        if (boilDone && button.triggered(SINGLE_TAP)) {
+          smokerState = calResult;
+          hasRunFlag = 0;
+        }
+        if (boilTimedOut && button.triggered(SINGLE_TAP)) {
+          smokerState = calProbeMenu;
+          hasRunFlag = 0;
+        }
+      }
+    } break;
+
+    case calResult: {
+      static float gainCalc = 1.0f;
+      static float offsetCalc = 0.0f;
+      static bool valid = false;
+      static bool rejected = false;
+      static bool drawNeeded = true;
+
+      if (hasRunFlag == 0) {
+        float m1 = calIceReading_F;      // ice point reading, degF
+        float m2 = calBoilReading_F;     // boil point reading, degF
+        float t2 = (float)calBoilRef_F;  // reference boil temperature, degF
+        valid = !isnan(m1) && !isnan(m2) && (m2 - m1) >= 100.0f;
+        if (valid) {
+          // Two-point fit: gain maps M1 to 32 and M2 to T2; offset follows from the ice point
+          gainCalc = (t2 - 32.0f) / (m2 - m1);
+          offsetCalc = 32.0f - gainCalc * m1;
+        }
+        rejected = false;
+        drawNeeded = true;
+        hasRunFlag = 1;
+      }
+
+      if (button.triggered(HOLD)) {  // cancel: nothing saved
+        smokerState = calProbeMenu;
+        hasRunFlag = 0;
+        break;
+      }
+
+      if (drawNeeded) {
+        drawNeeded = false;
+        if (!valid) {
+          lcd.showCalResult(calNames[calSelectedProbe], 0.0f, 0.0f, false, "Readings too close",
+                            "Hold: return");
+        } else if (rejected) {
+          lcd.showCalResult(calNames[calSelectedProbe], gainCalc, offsetCalc, true,
+                            "Outside limits", "Hold: return");
+        } else {
+          lcd.showCalResult(calNames[calSelectedProbe], gainCalc, offsetCalc, true, "",
+                            "Press: save  Hold: cancel");
+        }
+      }
+
+      if (valid && !rejected && button.triggered(SINGLE_TAP)) {
+        if (calSet(calSelectedProbe, gainCalc, offsetCalc)) {
+          Serial.print(F("calibration saved for "));
+          Serial.println(calNames[calSelectedProbe]);
+          smokerState = calProbeMenu;
+          hasRunFlag = 0;
+        } else {
+          rejected = true;
+          drawNeeded = true;
+        }
       }
     } break;
 
