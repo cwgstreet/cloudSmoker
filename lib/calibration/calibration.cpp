@@ -165,13 +165,14 @@ static void printCal(ProbeId id) {
 void calPrintHelp() {
   Serial.println();
   Serial.println(F("================ cloudSmoker2 serial commands ================"));
-  Serial.println(F("  help                          show this list"));
-  Serial.println(F("  calShow                       show rail voltage and all probe factors"));
-  Serial.println(F("  calReset                      reset all probes to gain 1.0, offset 0.0"));
-  Serial.println(F("  cal <probe> <gain> <offset>   set one probe, e.g.  cal MEAT1 1.0526 -5.47"));
+  Serial.println(F("  help                            show this list"));
+  Serial.println(F("  calShow                         show rail voltage and all probe factors"));
+  Serial.println(F("  calReset                        reset all probes to gain 1.0, offset 0.0"));
+  Serial.println(
+      F("  calSet <probe> <gain><offset>   set one probe, e.g.  cal MEAT1 1.0526 -5.47"));
   Serial.println(F("                                  probes: PIT, MEAT1, MEAT2, MEAT3"));
   Serial.println(F("                                  gain 0.9 to 1.1, offset -9 to +9 degF"));
-  Serial.println(F("  railV <volts>                 set measured +5 V rail, e.g.  railV 5.09"));
+  Serial.println(F("  railV <volts>                   set measured +5 V rail, e.g.  railV 5.09"));
   Serial.println(F("                                  range 4.5 to 5.5 V"));
   Serial.println(F("=============================================================="));
   Serial.println(F("Type a command and press Enter. The device echoes what you type."));
