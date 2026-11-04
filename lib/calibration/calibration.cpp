@@ -168,8 +168,9 @@ void calPrintHelp() {
   Serial.println(F("  help                            show this list"));
   Serial.println(F("  calShow                         show rail voltage and all probe factors"));
   Serial.println(F("  calReset                        reset all probes to gain 1.0, offset 0.0"));
+  Serial.println(F("  calReset <probe>                reset one probe, e.g.  calReset MEAT1"));
   Serial.println(
-      F("  calSet <probe> <gain><offset>   set one probe, e.g.  cal MEAT1 1.0526 -5.47"));
+      F("  cal <probe> <gain> <offset>     set one probe, e.g.  cal MEAT1 1.0526 -5.47"));
   Serial.println(F("                                  probes: PIT, MEAT1, MEAT2, MEAT3"));
   Serial.println(F("                                  gain 0.9 to 1.1, offset -9 to +9 degF"));
   Serial.println(F("  railV <volts>                   set measured +5 V rail, e.g.  railV 5.09"));
@@ -181,9 +182,10 @@ void calPrintHelp() {
 
 // Parses one complete command line. Commands are case-sensitive except the probe name:
 //   cal <probe> <gain> <offset>   e.g.  cal PIT 1.0526 -2.105
+//   calReset                      return all four probes to identity
+//   calReset <probe>              return one probe to identity, e.g.  calReset MEAT1
 //   railV <volts>                 e.g.  railV 5.09
 //   calShow                       print the rail and all four probes
-//   calReset                      return all four probes to identity
 static void handleCommand(String cmd) {
   cmd.trim();
 
@@ -207,6 +209,25 @@ static void handleCommand(String cmd) {
       calReset((ProbeId)i);
     }
     Serial.println(F("calibration reset to identity (gain 1, offset 0)"));
+    return;
+  }
+
+  if (cmd.startsWith("calReset ")) {
+    String name = cmd.substring(9);
+    name.trim();
+    ProbeId id = PROBE_COUNT;  // PROBE_COUNT means "not found"
+    for (uint8_t i = 0; i < PROBE_COUNT; i++) {
+      if (name.equalsIgnoreCase(probeNames[i])) {
+        id = (ProbeId)i;
+      }
+    }
+    if (id == PROBE_COUNT) {
+      Serial.println(F("unknown probe: use PIT, MEAT1, MEAT2 or MEAT3"));
+      return;
+    }
+    calReset(id);
+    Serial.print(F("reset: "));
+    printCal(id);
     return;
   }
 
