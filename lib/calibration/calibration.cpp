@@ -110,8 +110,9 @@ bool calSet(ProbeId id, float gain, float offset) {
   char kg[16], ko[16];
   keyFor(id, 'g', kg, sizeof(kg));
   keyFor(id, 'o', ko, sizeof(ko));
-  prefs.putFloat(kg, gain);  // writes to flash; keep calls rare, not per cycle
-  prefs.putFloat(ko, offset);
+  if (prefs.putFloat(kg, gain) != sizeof(float) || prefs.putFloat(ko, offset) != sizeof(float)) {
+    return false;  // write failed: RAM copy left unchanged
+  }
   calTable[id] = ProbeCal{gain, offset};
   return true;
 }
@@ -136,7 +137,11 @@ bool calSetRailV(float volts) {
   if (!railOk(volts)) {
     return false;
   }
-  prefs.putFloat("rail", volts);
+  // Checks each putFloat() return value: a failed flash write returns 0, not sizeof(float).
+  // RAM is updated only after both writes succeed, so a failed save never reports success.
+  if (prefs.putFloat("rail", volts) != sizeof(float)) {
+    return false;
+  }
   railVolts = volts;
   return true;
 }
