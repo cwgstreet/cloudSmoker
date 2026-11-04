@@ -29,10 +29,8 @@
 #include "myConstants.h"  // all constants together in one file
 #include "peripherals.h"
 
-// CWG_ADS1115 ADS1115;  // instantiate ADS1115 ADC object at default address (ADDR connected to
-// GND)
-CWG_ADS1115 ads1115(
-    0x48);  // instantiate ads1115 ADC object at default address (0x48 when ADDR connected to GND)
+// instantiate ads1115 ADC object at default address (0x48 when ADDR connected to GND)
+CWG_ADS1115 ads1115(0x48);
 
 /******************************************************
 //  Class methods (member functions)
@@ -40,23 +38,23 @@ CWG_ADS1115 ads1115(
 
 /* ----------------------------------------
  *  initialise() method: set up ADC hardware and configure programmable settings
- *    gainSetting: (gainSetting/±Max Volage) 0/6.144V default, 1/4.096V, 2/2.048V, 4/1.024V,
- * 8/0.512V, 16/0.256V, modeSetting: 0 = Continuous, 1 = Single Shot (default) dataRateSetting:
- * (rateSetting/samples per second) 0/8, 1/16, 2/32, 3/64, 4/128 (default), 5/250, 6/475,
- * 7/860
+ *    gainSetting: PGA range. 0 = +/-6.144V (default, 0.1875 mV per count), 1 = +/-4.096V,
+ *                 2 = +/-2.048V, 4 = +/-1.024V, 8 = +/-0.512V, 16 = +/-0.256V
+ *    modeSetting: 0 = Continuous, 1 = Single Shot (default)
+ *    dataRateSetting: index into ADS1115 rates: 0/8, 1/16, 2/32, 3/64, 4/128 (default),
+ *                 5/250, 6/475, 7/860 samples per second
  ** --------------------------------------*/
 void CWG_ADS1115::initialise(uint8_t gainSetting, uint8_t modeSetting, uint8_t dataRateSetting) {
-  Wire.begin(I2C_SDA, I2C_SCL);
+  Wire.begin(I2C_SDA, I2C_SCL);  // move to setup() once the INA226 is added
   ads1115.begin();
-  if (!ads1115.isConnected()) {
-    Serial.print(F(" **ERROR** ADS1x15 not connected! "));
+  deviceOk = ads1115.isConnected();  // remember the result for deviceFound()
+  if (!deviceOk) {
+    Serial.print(F(" **ERROR** ADS1115 not connected! "));
   }
-  ads1115.setGain(gainSetting);  // 0 == default PGA max voltage ±6.144V -> use for 5V setup
-  ads1115.setMode(modeSetting);  // 1 == default SINGLE SHOT MODE
-  ads1115.setDataRate(
-      dataRateSetting);  // 4 == default ADS1115 data rate of 1600 sps; available range 128-3300 sps
-  ads1115.requestADC(0);  // parameters not set in the device until an explicit read/request of the
-                          // ADC (any read call will do)
+  ads1115.setGain(gainSetting);          // 0 = +/-6.144V range, suits the 5 V bias
+  ads1115.setMode(modeSetting);          // 1 = single shot
+  ads1115.setDataRate(dataRateSetting);  // 4 = 128 SPS
+  ads1115.requestADC(0);                 // settings take effect only after an explicit request
 }
 
 /* ----------------------------------------

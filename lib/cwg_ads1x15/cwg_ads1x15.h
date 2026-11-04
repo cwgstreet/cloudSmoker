@@ -35,8 +35,7 @@
 
 class CWG_ADS1115 : public ADS1115 {
  public:
-  // constructors of derrived class; mandatory device address, and optional the Wire interface as
-  // parameter.
+  // constructor: device address, and optionally the Wire interface (defaults to &Wire)
   CWG_ADS1115(uint8_t Address = ADS1115_ADDRESS, TwoWire* wire = &Wire) : ADS1115(Address, wire) {}
   virtual ~CWG_ADS1115() {}
 
@@ -44,13 +43,15 @@ class CWG_ADS1115 : public ADS1115 {
   void initialise(uint8_t gainSetting, uint8_t modeSetting, uint8_t dataRateSetting);
   float getVoltageFactor_V();
   float getSensorValue_MedianFiltered_V(uint8_t pin, int windowSize);
-  // float getMedFiltered();
+
+  // true only if the device acknowledged on the bus during initialise()
+  bool deviceFound() const { return deviceOk; }
 
  protected:
-  //
+  bool deviceOk = false;  // set by initialise()
 };
 
-// ensure objects are visable everywhere (global)
+// ensure objects are visible everywhere (global)
 extern CWG_ADS1115 ads1115;
 
 //==============================================================================================
