@@ -731,9 +731,10 @@ void processState(CWG_LCD& lcd) {
     } break;
 
     case Sleep: {
-      if (encoder.moved()) {
+      // Encoder move or any button press wakes the cook screen
+      if (encoder.moved() || button.triggered(SINGLE_TAP) || button.triggered(HOLD)) {
         lcd.display();
-        Serial.println("Sleep state, encoder moved -> waking up");
+        Serial.println("Sleep state, input -> waking up");
         smokerState = bbqStatus;
         hasRunFlag = 1;
         Serial.println("leaving for bbqStatus state");
@@ -756,18 +757,35 @@ void processState(CWG_LCD& lcd) {
     } break;
 
     case bbqStatus: {
+      static bool endConfirm = false;
+
       lcd.display();
 
-      // TODO: gating this draw on enteringState only paints the rings/digits once,
-      // on the moment we arrive at this state. It won't update again while we sit
-      // here, even though currentMeat1Temp/currentPitTemp keep changing underneath it.
-      // Fine for now (unblocks compiling + visual check on the bench), but before this
-      // screen is trusted for a real cook, it needs a periodic-refresh trigger instead
-      // of a one-shot draw - e.g. redraw every N seconds, or only when a temp value
-      // has moved by some threshold - rather than either "draw once" or "draw every loop".
       if (enteringState) {
+        endConfirm = false;                // re-entering always cancels a pending end
+        previousDisplayMillis = millis();  // start the display timer on entry, not on last timeout
         lcd.showBBQStatusScreen(degCFlag, currentMeat1Temp, meatDoneTemp, currentPitTemp,
                                 pitTempTarget);
+      }
+
+      // Hold asks to end the cook; a tap then ends it, and a second hold cancels
+      if (button.triggered(HOLD)) {
+        if (!endConfirm) {
+          endConfirm = true;
+          lcd.showEndCookConfirm();
+        } else {
+          endConfirm = false;
+          lcd.showBBQStatusScreen(degCFlag, currentMeat1Temp, meatDoneTemp, currentPitTemp,
+                                  pitTempTarget);
+        }
+        previousDisplayMillis = millis();  // keep the screen up for a full display interval
+      } else if (endConfirm && button.triggered(SINGLE_TAP)) {
+        endConfirm = false;
+        cookSaveEnd();
+        Serial.println(F("cook ended by user -> launch pad"));
+        smokerState = launchPad;
+        hasRunFlag = 0;
+        break;
       }
 
       unsigned long currentMillis = millis();
@@ -777,6 +795,7 @@ void processState(CWG_LCD& lcd) {
         hasRunFlag = 0;
       }
     } break;
+
     case railStatus: {
       static unsigned long lastDrawMs = 0;
       static bool firstDraw = true;

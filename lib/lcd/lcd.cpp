@@ -277,6 +277,18 @@ void CWG_LCD::showRailStatus(float ina226V, float storedV) {
   tft.drawString("Hold: return", 120, 175, 2);
 }
 
+void CWG_LCD::showEndCookConfirm() {
+  clearScreen();
+  drawUIFrame("END COOK?");
+
+  tft.setTextDatum(MC_DATUM);
+  tft.setTextColor(TFT_WHITE, TFT_BLACK);
+  tft.drawString("Tap: end cook", 120, 110, 2);
+
+  tft.setTextColor(TFT_LIGHTGREY, TFT_BLACK);
+  tft.drawString("Hold: keep cooking", 120, 140, 2);
+}
+
 // Shown while setup() is blocked (Wi-Fi connect and portal timeout). loop() is not running
 // yet, so the state machine cannot draw anything; the splash screen replaces this message
 // once loop() starts.
