@@ -664,7 +664,8 @@ void processState(CWG_LCD& lcd) {
       Serial.print("getTemp Case -> startCookTime_ms =");
       Serial.println(startCookTime_ms);
 
-      // TEMPORARY: bias supply reference is a fixed 5.0 V until the INA226 bus voltage replaces it
+      // TEMPORARY: bias supply reference is a fixed 5.0 V until the INA226 bus voltage replaces
+      // it
       double voltageVCC_medianFiltered_V = calRailV();
       batteryVoltage_v = voltageVCC_medianFiltered_V;  // placeholder: not a measurement yet
 
@@ -783,7 +784,8 @@ void processState(CWG_LCD& lcd) {
         endConfirm = false;
         cookSaveEnd();
         Serial.println(F("cook ended by user -> launch pad"));
-        smokerState = launchPad;
+        // show the probe targets, then on encoder move, it will proceed to launchPad
+        smokerState = splashScreen;
         hasRunFlag = 0;
         break;
       }
