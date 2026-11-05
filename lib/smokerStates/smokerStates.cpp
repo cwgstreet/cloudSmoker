@@ -101,6 +101,9 @@ static uint8_t packCookFlags() {
          (meat2SentFlag ? 8 : 0) | (meat3DoneFlag ? 16 : 0) | (meat3SentFlag ? 32 : 0);
 }
 
+// Set on resume so the cook screen appears once the first readings are in
+static bool showCookOnNextSleep = false;
+
 // Called from setup() after the time sync. Decides whether a stored cook resumes, is treated
 // as finished, or does not exist. Resume has no startup choices: it just carries on.
 // Returns true if a cook was resumed, so setup() can show the message.
@@ -141,6 +144,7 @@ bool cookApplyOnBoot() {
   meat3SentFlag = (flags & 32) != 0;
   startCookTime_ms = millis();
   smokerState = getTemp;
+  showCookOnNextSleep = true;
   return true;
 }
 
@@ -732,8 +736,19 @@ void processState(CWG_LCD& lcd) {
     } break;
 
     case Sleep: {
+      // First sleep after a resume: show the cook screen now that the first readings are in
+      if (showCookOnNextSleep) {
+        showCookOnNextSleep = false;
+        lcd.display();
+        Serial.println("resumed cook: showing cook screen");
+        smokerState = bbqStatus;
+        hasRunFlag = 1;
+        break;
+      }
+
       // Encoder move or any button press wakes the cook screen
-      if (encoder.moved() || button.triggered(SINGLE_TAP) || button.triggered(HOLD)) {
+      if (encoder.moved() || button.triggered(SINGLE_TAP) || button.triggered(DOUBLE_TAP) ||
+          button.triggered(HOLD)) {
         lcd.display();
         Serial.println("Sleep state, input -> waking up");
         smokerState = bbqStatus;
