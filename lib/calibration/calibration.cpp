@@ -43,6 +43,7 @@
 #include <Preferences.h>  // ESP32 NVS key/value storage, part of the Arduino core
 #include <math.h>         // isnan(), isfinite()
 
+#include "cookstore.h"   // stored cook state, for the cookShow and cookEnd bench commands
 #include "cwg_ina226.h"  // live +5 V rail reading, used by calRailV()
 
 // Display names, used in both the NVS keys and the serial commands
@@ -303,6 +304,20 @@ static void handleCommand(String cmd) {
     Serial.println(F("charge count reset to 0"));
     return;
   }
+
+#ifdef DEBUG_COOK_CMDS
+  if (cmd == "cookShow") {
+    Serial.print(F("stored cook active: "));
+    Serial.println(cookStoreActive() ? F("yes") : F("no"));
+    return;
+  }
+
+  if (cmd == "cookEnd") {
+    cookSaveEnd();  // clears the stored cook flag only; charge count and targets untouched
+    Serial.println(F("stored cook cleared"));
+    return;
+  }
+#endif
 
   Serial.println(F("unknown command. Type help for the command list."));
 }
