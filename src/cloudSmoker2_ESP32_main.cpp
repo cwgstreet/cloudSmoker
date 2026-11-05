@@ -36,6 +36,7 @@
 // internal (user) libraries:
 #include "calibration.h"  // per-probe two-point calibration (gain and offset) constants
 #include "cwg_ads1x15.h"  // ADS1x15 I2C ADC functionality
+#include "cwg_ina226.h"
 #include "cwg_steinhartHart.h"
 #include "cwg_wifi.hpp"
 #include "lcd.h"          // UPGRADED: with new TFT_eSPI adapter class framework
@@ -155,6 +156,20 @@ void setup() {
   const uint8_t DATA_RATE_SETTING =
       4;  // Baseline sampling configuration; 4 = 128 SPS for ADS1115 (default)
   ads1115.initialise(GAIN_SETTING, MODE_SETTING, DATA_RATE_SETTING);
+
+  // initialise INA226 current/voltage monitor with calibration values for 5V rail and 100mA shunt
+  ina226.initialise(0.79f, 0.1f);
+
+  Serial.print(F("INA226 found: "));
+  Serial.println(ina226.deviceFound() ? F("yes") : F("NO"));
+  Serial.print(F("INA226 maxCurrent = "));
+  Serial.print(ina226.getMaxCurrent(), 6);
+  Serial.print(F(" A, shunt = "));
+  Serial.print(ina226.getShunt(), 4);
+  Serial.println(F(" ohm"));
+  Serial.print(F("INA226 rail = "));
+  Serial.print(ina226.getRailV(), 4);
+  Serial.println(F(" V"));
 
   // Execution hooks for debug routines
 #ifdef DEBUG_SERIAL
