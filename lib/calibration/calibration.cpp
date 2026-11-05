@@ -182,6 +182,12 @@ void calPrintHelp() {
   Serial.println(F("                                  gain 0.9 to 1.1, offset -9 to +9 degF"));
   Serial.println(F("  railV <volts>                   set measured +5 V rail, e.g.  railV 5.09"));
   Serial.println(F("                                  range 4.5 to 5.5 V"));
+  Serial.println(F("  charge                          show charge drawn from the power bank"));
+  Serial.println(F("  chargeReset                     restart the charge count at 0"));
+#ifdef DEBUG_COOK_CMDS
+  Serial.println(F("  cookShow                        debug: show whether a cook is stored"));
+  Serial.println(F("  cookEnd                         debug: clear the stored cook"));
+#endif
   Serial.println(F("=============================================================="));
   Serial.println(F("Type a command and press Enter. The device echoes what you type."));
   Serial.println();
