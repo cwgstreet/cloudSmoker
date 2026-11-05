@@ -46,6 +46,7 @@ class CWG_LCD {
   void showSettingsMenu(int16_t prevEncoderValue);
   void showRailStatus(float ina226V, float storedV);
   void showEndCookConfirm();
+  void showResumePrompt(bool timeUnverified);
   void showInitMessage(const char* line1, const char* line2);
   void showCalProbeMenu(int16_t prevEncoderValue);
   void showCalCapture(const char* header, const char* message, float value, bool hasValue,

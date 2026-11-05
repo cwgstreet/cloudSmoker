@@ -104,15 +104,45 @@ static uint8_t packCookFlags() {
 // Set on resume so the cook screen appears once the first readings are in
 static bool showCookOnNextSleep = false;
 
-// Called from setup() after the time sync. Decides whether a stored cook resumes, is treated
-// as finished, or does not exist. Resume has no startup choices: it just carries on.
-// Returns true if a cook was resumed, so setup() can show the message.
+// Set at boot when the resume prompt is shown; it tells the prompt whether time is unverified
+static bool resumeUnverified = false;
+
+// Restores the stored cook into the running state and starts it.
+static void applyResume() {
+  float meatT, pitT, charge;
+  bool degC;
+  uint8_t flags;
+  if (!cookLoad(meatT, pitT, degC, charge, flags)) {
+    return;
+  }
+
+  meatDoneTemp = meatT;
+  pitTempTarget = pitT;
+  degCFlag = degC;
+  ina226.setChargeUsed_mAh(charge);
+
+  meat1DoneFlag = (flags & 1) != 0;
+  meat1SentFlag = (flags & 2) != 0;
+  meat2DoneFlag = (flags & 4) != 0;
+  meat2SentFlag = (flags & 8) != 0;
+  meat3DoneFlag = (flags & 16) != 0;
+  meat3SentFlag = (flags & 32) != 0;
+
+  startCookTime_ms = millis();
+  showCookOnNextSleep = true;
+  smokerState = getTemp;
+}
+
+// Called from setup() after the time sync. Returns true if an interrupted cook needs the
+// resume prompt. A stale cook (12 h or more) is closed here and is never prompted.
 bool cookApplyOnBoot() {
-  static const char* const bootNames[] = {"none", "resume", "resume (time unverified)",
-                                          "finished (stale), starting at launch pad"};
+  static const char* const bootNames[] = {"none", "resume prompt",
+                                          "resume prompt (time unverified)",
+                                          "finished (stale), starting at setup"};
   CookBoot_t boot = cookBootCheck();
   Serial.print(F("cook boot check: "));
   Serial.println(bootNames[boot]);
+
   if (boot == COOK_NONE) {
     return false;
   }
@@ -124,7 +154,7 @@ bool cookApplyOnBoot() {
     return false;
   }
 
-  // Targets carry over either way: they are the launch pad values for a stale cook
+  // Targets always load: they are the setup values if the user restarts or the cook is stale
   meatDoneTemp = meatT;
   pitTempTarget = pitT;
   degCFlag = degC;
@@ -134,17 +164,7 @@ bool cookApplyOnBoot() {
     return false;
   }
 
-  // Resume: restore the charge count and the done and sent flags, so no alert repeats
-  ina226.setChargeUsed_mAh(charge);
-  meat1DoneFlag = (flags & 1) != 0;
-  meat1SentFlag = (flags & 2) != 0;
-  meat2DoneFlag = (flags & 4) != 0;
-  meat2SentFlag = (flags & 8) != 0;
-  meat3DoneFlag = (flags & 16) != 0;
-  meat3SentFlag = (flags & 32) != 0;
-  startCookTime_ms = millis();
-  smokerState = getTemp;
-  showCookOnNextSleep = true;
+  resumeUnverified = (boot == COOK_RESUME_UNVERIFIED);
   return true;
 }
 
@@ -733,6 +753,22 @@ void processState(CWG_LCD& lcd) {
       Serial.println("leaving for Sleep case");
       smokerState = Sleep;
       hasRunFlag = 0;  // Sleep only runs its timer when hasRunFlag is 0
+    } break;
+
+    case resumePrompt: {
+      if (enteringState) {
+        lcd.showResumePrompt(resumeUnverified);
+      }
+
+      if (button.triggered(SINGLE_TAP)) {
+        applyResume();  // carries on with the stored cook; sets smokerState to getTemp
+        hasRunFlag = 0;
+      } else if (button.triggered(HOLD)) {
+        cookSaveEnd();  // restart: the stored cook is closed, its targets stay as setup values
+        Serial.println(F("cook restarted by user -> setup"));
+        smokerState = splashScreen;
+        hasRunFlag = 0;
+      }
     } break;
 
     case Sleep: {

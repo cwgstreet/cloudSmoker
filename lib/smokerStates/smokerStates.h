@@ -45,7 +45,8 @@ enum entryStates_t {
   calWaitIce,    // settling and capture at 0 degF
   calWaitBoil,   // reference temperature entry and capture at boiling
   calResult,     // show gain and offset, save or cancel
-  railStatus     // bench check: INA226 rail and stored rail voltage
+  railStatus,    // bench check: INA226 rail and stored rail voltage
+  resumePrompt   // interrupted cook found at boot: tap to resume, hold to restart
 };
 
 bool cookApplyOnBoot();

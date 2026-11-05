@@ -161,7 +161,7 @@ void setup() {
   smokerState = splashScreen;
 
   if (cookApplyOnBoot()) {
-    lcd.showInitMessage("Resumed cook", clockValid() ? "" : "time unverified");
+    smokerState = resumePrompt;
   }
 
   // Configure ADS1115 I2C ADC hardware interface lines

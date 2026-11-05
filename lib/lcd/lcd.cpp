@@ -289,6 +289,23 @@ void CWG_LCD::showEndCookConfirm() {
   tft.drawString("Hold: keep cooking", 120, 140, 2);
 }
 
+void CWG_LCD::showResumePrompt(bool timeUnverified) {
+  clearScreen();
+  drawUIFrame("RESUME COOK?");
+
+  tft.setTextDatum(MC_DATUM);
+  tft.setTextColor(TFT_WHITE, TFT_BLACK);
+  tft.drawString("Tap: resume", 120, 105, 2);
+
+  tft.setTextColor(TFT_LIGHTGREY, TFT_BLACK);
+  tft.drawString("Hold: restart", 120, 135, 2);
+
+  if (timeUnverified) {
+    tft.setTextColor(TFT_YELLOW, TFT_BLACK);
+    tft.drawString("time unverified", 120, 170, 2);
+  }
+}
+
 // Shown while setup() is blocked (Wi-Fi connect and portal timeout). loop() is not running
 // yet, so the state machine cannot draw anything; the splash screen replaces this message
 // once loop() starts.
