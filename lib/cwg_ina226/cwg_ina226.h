@@ -4,6 +4,10 @@
  *    1) RobTillaart/INA226 library, licenced under MIT Licence
  *         reference:  https://github.com/RobTillaart/INA226
  *
+ *  Purpose of INA226 is
+ *    a) 5V rail measurement for Steinhart-Hart temperature calculations, and b) coulomb counting
+ * for battery charge used b) coulomb counting for power bank battery charge used
+ *
  *  C W Greenstreet, Ver2, 4Nov2026
  *    GPLv3 Licence
  *
@@ -15,7 +19,7 @@
 #include <INA226.h>  // Tillaart INA226 library, MIT licence
 #include <Wire.h>
 
-// INA226 wrapper for the +5 V supply measurement and power-bank coulomb counting.
+// INA226 wrapper for the +5 V rail measurement and power-bank coulomb counting.
 // Shunt is 0.1 ohm on the USB-C input; VIN+ is the supply side, VIN- the load side.
 class CWG_INA226 : public INA226 {
  public:
@@ -31,8 +35,23 @@ class CWG_INA226 : public INA226 {
   // +5 V rail voltage in volts, or NAN if the device is not present
   float getRailV();
 
+  // call once per loop() pass; samples and integrates at most once per second
+  void updateCharge();
+
+  // charge drawn through the shunt since the last reset, in mAh at the 5 V rail
+  float getChargeUsed_mAh() const { return (float)(chargeUsed_As / 3.6); }
+
+  // restart the count from zero
+  void resetCharge() {
+    chargeUsed_As = 0.0;
+    haveSample = false;
+  }
+
  protected:
-  bool deviceOk = false;  // set by initialise()
+  bool deviceOk = false;           // set by initialise()
+  double chargeUsed_As = 0.0;      // coulombs (amp-seconds) drawn through the shunt
+  unsigned long lastSampleUs = 0;  // micros() time of the last sample
+  bool haveSample = false;         // false until the first call starts the clock
 };
 
 // ensure object is visible everywhere (global)

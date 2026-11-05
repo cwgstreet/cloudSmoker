@@ -1,8 +1,12 @@
 /* ***************************************************************
- * cwg_ina226.h - library to extend ina226 library functionality
+ * cwg_ina226.cpp - library to extend ina226 library functionality
  *   includes
  *    1) RobTillaart/INA226 library, licenced under MIT Licence
  *         reference:  https://github.com/RobTillaart/INA226
+ *
+ *  Purpose of INA226 is
+ *    a) 5V rail measurement for Steinhart-Hart temperature calculations, and b) coulomb counting
+ * for battery charge used b) coulomb counting for power bank battery charge used
  *
  *  C W Greenstreet, Ver2, 4Nov2026
  *    GPLv3 Licence
@@ -47,4 +51,36 @@ float CWG_INA226::getRailV() {
     return NAN;
   }
   return getBusVoltage();
+}
+
+/* ----------------------------------------
+ *  updateCharge() method: integrate current over time to count charge (coulomb counting).
+ *  Call once per loop() pass. Does nothing until 1 s has passed since the last sample.
+ *  Uses micros() so the interval is the real elapsed time, even when a blocking call
+ *  (ADC reads, ThingSpeak upload) has stretched a loop pass.
+ ** --------------------------------------*/
+void CWG_INA226::updateCharge() {
+  if (!deviceOk) {
+    return;
+  }
+
+  unsigned long nowUs = micros();
+
+  if (!haveSample) {  // first call only starts the clock
+    lastSampleUs = nowUs;
+    haveSample = true;
+    return;
+  }
+
+  // unsigned subtraction stays correct when micros() wraps (about every 71 minutes)
+  unsigned long elapsedUs = nowUs - lastSampleUs;
+  if (elapsedUs < 1000000UL) {
+    return;  // less than 1 s since the last sample
+  }
+
+  double dt_s = (double)elapsedUs / 1e6;
+  lastSampleUs = nowUs;
+
+  float amps = getCurrent();  // positive = current flowing from the power bank to the board
+  chargeUsed_As += (double)amps * dt_s;
 }

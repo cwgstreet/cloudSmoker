@@ -203,6 +203,8 @@ void loop() {
   // cal / calShow / calReset from the serial monitor
   calPollSerial();
 
+  ina226.updateCharge();  // coulomb counter for power bank SOC, once per second
+
   // ***** debug - ESP32 Native Free Heap Memory Checking *****
 #ifdef DEBUG_FREEMEM
   static unsigned long lastMemCheck = 0;

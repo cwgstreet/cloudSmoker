@@ -291,6 +291,19 @@ static void handleCommand(String cmd) {
     return;
   }
 
+  if (cmd == "charge") {
+    Serial.print(F("charge used = "));
+    Serial.print(ina226.getChargeUsed_mAh(), 2);
+    Serial.println(F(" mAh at 5 V"));
+    return;
+  }
+
+  if (cmd == "chargeReset") {
+    ina226.resetCharge();
+    Serial.println(F("charge count reset to 0"));
+    return;
+  }
+
   Serial.println(F("unknown command. Type help for the command list."));
 }
 
