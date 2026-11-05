@@ -174,7 +174,7 @@ void CWG_LCD::showSettingsMenu(int16_t prevEncoderValue) {
 
   static const char* menuLabels[MENU_COUNT + 1] = {"",  // index 0 unused - menu values are 1-based
                                                    "Meat Temp", "Pit Temp", "Units",
-                                                   "Calibrate", "Back"};
+                                                   "Calibrate", "Rail",     "Back"};
 
   int16_t index = constrain(prevEncoderValue, 1, (int16_t)MENU_COUNT);
 
@@ -253,6 +253,28 @@ void CWG_LCD::showCalResult(const char* probeName, float gain, float offset, boo
 
   tft.setTextColor(TFT_LIGHTGREY, TFT_BLACK);
   tft.drawString(hint, 120, 175, 2);
+}
+
+void CWG_LCD::showRailStatus(float ina226V, float storedV) {
+  clearScreen();
+  drawUIFrame("RAIL");
+
+  char buf[32];
+  tft.setTextDatum(MC_DATUM);
+
+  tft.setTextColor(TFT_WHITE, TFT_BLACK);
+  if (isnan(ina226V)) {
+    snprintf(buf, sizeof(buf), "INA226: no device");
+  } else {
+    snprintf(buf, sizeof(buf), "INA226 %.3f V", ina226V);
+  }
+  tft.drawString(buf, 120, 100, 2);
+
+  tft.setTextColor(TFT_LIGHTGREY, TFT_BLACK);
+  snprintf(buf, sizeof(buf), "stored %.2f V", storedV);
+  tft.drawString(buf, 120, 130, 2);
+
+  tft.drawString("Hold: return", 120, 175, 2);
 }
 
 void CWG_LCD::showSetMeatDoneTempMenu(int16_t prevEncoderValue, float meatDoneTemp, bool degCFlag) {

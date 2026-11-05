@@ -44,7 +44,8 @@ enum entryStates_t {
   calProbeMenu,  // choose which probe to calibrate, or reset it
   calWaitIce,    // settling and capture at 0 degF
   calWaitBoil,   // reference temperature entry and capture at boiling
-  calResult      // show gain and offset, save or cancel
+  calResult,     // show gain and offset, save or cancel
+  railStatus     // bench check: INA226 rail and stored rail voltage
 };
 
 // smokerState type defined in implementation smokerState.cpp, hence extern keyword

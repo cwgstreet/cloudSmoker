@@ -21,8 +21,9 @@ enum SettingsMenu {
   MENU_PIT_TEMP = 2,
   MENU_UNITS = 3,
   MENU_CALIBRATION = 4,
-  MENU_BACK = 5,
-  MENU_COUNT = 5
+  MENU_RAIL = 5,
+  MENU_BACK = 6,
+  MENU_COUNT = 6
 };
 
 class CWG_LCD {
@@ -43,6 +44,7 @@ class CWG_LCD {
   // New navigation & screen layouts called by smokerStates.cpp
   void showLaunchPad();
   void showSettingsMenu(int16_t prevEncoderValue);
+  void showRailStatus(float ina226V, float storedV);
   void showCalProbeMenu(int16_t prevEncoderValue);
   void showCalCapture(const char* header, const char* message, float value, bool hasValue,
                       const char* hint);

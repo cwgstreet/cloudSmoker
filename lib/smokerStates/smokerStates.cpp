@@ -20,6 +20,7 @@
 // include local libraries
 #include "calibration.h"
 #include "cwg_ads1x15.h"        // ADS1x15 I2C ADC device functionality
+#include "cwg_ina226.h"         // INA226 rail voltage and coulomb counting
 #include "cwg_steinhartHart.h"  // Thermistor steinhart hart temperature calcs
 #include "helper_functions.h"
 #include "lcd.h"
@@ -383,6 +384,10 @@ void processState(CWG_LCD& lcd) {
             smokerState = calProbeMenu;
             hasRunFlag = 0;
             break;
+          case MENU_RAIL:
+            smokerState = railStatus;
+            hasRunFlag = 0;
+            break;
           case MENU_BACK:
             smokerState = launchPad;
             hasRunFlag = 0;
@@ -697,6 +702,26 @@ void processState(CWG_LCD& lcd) {
       if ((unsigned long)(currentMillis - previousDisplayMillis) >= displayInterval) {
         previousDisplayMillis = millis();
         smokerState = Sleep;
+        hasRunFlag = 0;
+      }
+    } break;
+    case railStatus: {
+      static unsigned long lastDrawMs = 0;
+      static bool firstDraw = true;
+
+      if (hasRunFlag == 0) {
+        hasRunFlag = 1;
+        firstDraw = true;
+      }
+
+      if (firstDraw || millis() - lastDrawMs >= 1000) {
+        firstDraw = false;
+        lastDrawMs = millis();
+        lcd.showRailStatus(ina226.getRailV(), calRailV());
+      }
+
+      if (button.triggered(HOLD)) {
+        smokerState = changeSettings;
         hasRunFlag = 0;
       }
     } break;
