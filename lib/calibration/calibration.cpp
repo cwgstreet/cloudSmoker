@@ -43,6 +43,8 @@
 #include <Preferences.h>  // ESP32 NVS key/value storage, part of the Arduino core
 #include <math.h>         // isnan(), isfinite()
 
+#include "cwg_ina226.h"  // live +5 V rail reading, used by calRailV()
+
 // Display names, used in both the NVS keys and the serial commands
 static const char* const probeNames[PROBE_COUNT] = {"PIT", "MEAT1", "MEAT2", "MEAT3"};
 
@@ -129,24 +131,28 @@ float calApplyF(ProbeId id, float tempF) {
   return calTable[id].gain * tempF + calTable[id].offset;
 }
 
-// Returns the measured rail voltage used by the Steinhart-Hart calculation.
-float calRailV() { return railVolts; }
+/// Returns the rail voltage required by the Steinhart-Hart calculation.
+// Uses the live INA226 reading when it's present and within the rail limits.
+// Otherwise falls back to the stored value set with railV.
+float calRailV() {
+  float live = ina226.getRailV();  // NaN if the INA226 is not present
+  if (railOk(live)) {
+    return live;
+  }
+  return railVolts;
+}
 
 // Validates, saves the rail voltage to NVS, and updates the RAM copy. Returns false if rejected.
 bool calSetRailV(float volts) {
   if (!railOk(volts)) {
     return false;
   }
-  // Checks each putFloat() return value: a failed flash write returns 0, not sizeof(float).
-  // RAM is updated only after both writes succeed, so a failed save never reports success.
   if (prefs.putFloat("rail", volts) != sizeof(float)) {
-    return false;
+    return false;  // write failed: RAM copy left unchanged
   }
   railVolts = volts;
   return true;
 }
-
-// ---- serial entry (interim until the encoder settings screen) ----
 
 // Prints one probe's current gain and offset, for checking values after entry.
 // Prints one probe's gain and offset, with the name padded so the values line up.
@@ -196,7 +202,9 @@ static void handleCommand(String cmd) {
 
   if (cmd == "calShow") {
     Serial.print(F("RAIL  = "));
-    Serial.print(railVolts, 4);
+    Serial.print(calRailV(), 4);  // value used by the temperature calculations
+    Serial.print(F(" V used   stored = "));
+    Serial.print(railVolts, 4);  // fallback value set with railV
     Serial.println(F(" V"));
     for (uint8_t i = 0; i < PROBE_COUNT; i++) {
       printCal((ProbeId)i);

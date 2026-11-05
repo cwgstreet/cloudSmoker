@@ -173,8 +173,8 @@ void CWG_LCD::showSettingsMenu(int16_t prevEncoderValue) {
   drawUIFrame("SETTINGS");
 
   static const char* menuLabels[MENU_COUNT + 1] = {"",  // index 0 unused - menu values are 1-based
-                                                   "Meat Temp", "Pit Temp", "Units",
-                                                   "Calibrate", "Rail",     "Back"};
+                                                   "Meat Temp", "Pit Temp",     "Units",
+                                                   "Calibrate", "Rail Voltage", "Back"};
 
   int16_t index = constrain(prevEncoderValue, 1, (int16_t)MENU_COUNT);
 
@@ -257,7 +257,7 @@ void CWG_LCD::showCalResult(const char* probeName, float gain, float offset, boo
 
 void CWG_LCD::showRailStatus(float ina226V, float storedV) {
   clearScreen();
-  drawUIFrame("RAIL");
+  drawUIFrame("RAIL VOLTAGE");
 
   char buf[32];
   tft.setTextDatum(MC_DATUM);
@@ -271,7 +271,7 @@ void CWG_LCD::showRailStatus(float ina226V, float storedV) {
   tft.drawString(buf, 120, 100, 2);
 
   tft.setTextColor(TFT_LIGHTGREY, TFT_BLACK);
-  snprintf(buf, sizeof(buf), "stored %.2f V", storedV);
+  snprintf(buf, sizeof(buf), "used %.3f V", storedV);
   tft.drawString(buf, 120, 130, 2);
 
   tft.drawString("Hold: return", 120, 175, 2);
