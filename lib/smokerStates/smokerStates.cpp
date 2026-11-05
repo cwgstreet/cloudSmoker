@@ -19,6 +19,7 @@
 
 // include local libraries
 #include "calibration.h"
+#include "cookstore.h"
 #include "cwg_ads1x15.h"        // ADS1x15 I2C ADC device functionality
 #include "cwg_ina226.h"         // INA226 rail voltage and coulomb counting
 #include "cwg_steinhartHart.h"  // Thermistor steinhart hart temperature calcs
@@ -92,6 +93,56 @@ bool meat3DoneFlag = false;
 bool meat1SentFlag = false;  // set once the MEAT1 alert has been delivered this cook
 bool meat2SentFlag = false;
 bool meat3SentFlag = false;
+
+// Packs the done and sent flags for all three probes into one byte.
+// bit 0 MEAT1 done, 1 MEAT1 sent, 2 MEAT2 done, 3 MEAT2 sent, 4 MEAT3 done, 5 MEAT3 sent
+static uint8_t packCookFlags() {
+  return (meat1DoneFlag ? 1 : 0) | (meat1SentFlag ? 2 : 0) | (meat2DoneFlag ? 4 : 0) |
+         (meat2SentFlag ? 8 : 0) | (meat3DoneFlag ? 16 : 0) | (meat3SentFlag ? 32 : 0);
+}
+
+// Called from setup() after the time sync. Decides whether a stored cook resumes, is treated
+// as finished, or does not exist. Resume has no startup choices: it just carries on.
+// Returns true if a cook was resumed, so setup() can show the message.
+bool cookApplyOnBoot() {
+  static const char* const bootNames[] = {"none", "resume", "resume (time unverified)",
+                                          "finished (stale), starting at launch pad"};
+  CookBoot_t boot = cookBootCheck();
+  Serial.print(F("cook boot check: "));
+  Serial.println(bootNames[boot]);
+  if (boot == COOK_NONE) {
+    return false;
+  }
+
+  float meatT, pitT, charge;
+  bool degC;
+  uint8_t flags;
+  if (!cookLoad(meatT, pitT, degC, charge, flags)) {
+    return false;
+  }
+
+  // Targets carry over either way: they are the launch pad values for a stale cook
+  meatDoneTemp = meatT;
+  pitTempTarget = pitT;
+  degCFlag = degC;
+
+  if (boot == COOK_STALE) {
+    cookSaveEnd();
+    return false;
+  }
+
+  // Resume: restore the charge count and the done and sent flags, so no alert repeats
+  ina226.setChargeUsed_mAh(charge);
+  meat1DoneFlag = (flags & 1) != 0;
+  meat1SentFlag = (flags & 2) != 0;
+  meat2DoneFlag = (flags & 4) != 0;
+  meat2SentFlag = (flags & 8) != 0;
+  meat3DoneFlag = (flags & 16) != 0;
+  meat3SentFlag = (flags & 32) != 0;
+  startCookTime_ms = millis();
+  smokerState = getTemp;
+  return true;
+}
 
 constexpr int16_t CAL_MENU_COUNT = 5;  // PIT, MEAT1, MEAT2, MEAT3, BACK
 ProbeId calSelectedProbe = PROBE_PIT;  // probe currently being calibrated
@@ -349,6 +400,9 @@ void processState(CWG_LCD& lcd) {
         meat1AlertAttempts = 0;
         meat2AlertAttempts = 0;
         meat3AlertAttempts = 0;
+
+        ina226.resetCharge();
+        cookSaveStart(meatDoneTemp, pitTempTarget, degCFlag, ina226.getChargeUsed_mAh());
 
         constexpr uint8_t NTFY_MAX_ATTEMPTS = 10;  // alert send attempts per probe per cook
         uint8_t meat1AlertAttempts = 0;
@@ -636,6 +690,7 @@ void processState(CWG_LCD& lcd) {
                      meat2AlertAttempts);
       checkProbeDone("MEAT3", currentMeat3Temp, meat3LastStatus, meat3DoneFlag, meat3SentFlag,
                      meat3AlertAttempts);
+      cookSaveFlags(packCookFlags());
 
 #ifdef DEBUG_ADC_Temps
       Serial.println();

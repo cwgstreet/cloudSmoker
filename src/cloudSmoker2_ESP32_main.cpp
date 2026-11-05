@@ -35,6 +35,7 @@
 
 // internal (user) libraries:
 #include "calibration.h"  // per-probe two-point calibration (gain and offset) constants
+#include "cookstore.h"
 #include "cwg_ads1x15.h"  // ADS1x15 I2C ADC functionality
 #include "cwg_ina226.h"
 #include "cwg_steinhartHart.h"
@@ -101,6 +102,8 @@ void setup() {
 
   calInit();  // load per-probe calibration from NVS (non-volatile storage)
 
+  cookStoreBegin();
+
   esp_reset_reason_t resetReason = esp_reset_reason();
   switch (resetReason) {
     case ESP_RST_POWERON:
@@ -147,12 +150,19 @@ void setup() {
 
   WifiManager_initialise();
   Serial.println("WiFi setup finished, entering main loop");
+  if (WiFi.status() == WL_CONNECTED) {
+    timeSyncWait(5000);  // settle the clock before deciding resume or stale
+  }
 
   // Initialise button press context tracking
   button.begin(BUTTON_PIN);
 
   // Enter initial splash sequence handling
   smokerState = splashScreen;
+
+  if (cookApplyOnBoot()) {
+    lcd.showInitMessage("Resumed cook", clockValid() ? "" : "time unverified");
+  }
 
   // Configure ADS1115 I2C ADC hardware interface lines
   const uint8_t GAIN_SETTING = 0;  // 2/3x gain, max scale voltage: ±6.144V
@@ -204,6 +214,8 @@ void loop() {
   calPollSerial();
 
   ina226.updateCharge();  // coulomb counter for power bank SOC, once per second
+
+  cookCheckpoint(ina226.getChargeUsed_mAh());
 
   // ***** debug - ESP32 Native Free Heap Memory Checking *****
 #ifdef DEBUG_FREEMEM

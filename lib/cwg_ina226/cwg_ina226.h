@@ -47,6 +47,12 @@ class CWG_INA226 : public INA226 {
     haveSample = false;
   }
 
+  // restore the count after a resume (mAh at 5 V)
+  void setChargeUsed_mAh(float mAh) {
+    chargeUsed_As = (double)mAh * 3.6;
+    haveSample = false;
+  }
+
  protected:
   bool deviceOk = false;           // set by initialise()
   double chargeUsed_As = 0.0;      // coulombs (amp-seconds) drawn through the shunt

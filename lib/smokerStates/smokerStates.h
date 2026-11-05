@@ -48,6 +48,8 @@ enum entryStates_t {
   railStatus     // bench check: INA226 rail and stored rail voltage
 };
 
+bool cookApplyOnBoot();
+
 // smokerState type defined in implementation smokerState.cpp, hence extern keyword
 extern entryStates_t smokerState;
 
