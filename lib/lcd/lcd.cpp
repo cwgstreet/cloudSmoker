@@ -277,6 +277,21 @@ void CWG_LCD::showRailStatus(float ina226V, float storedV) {
   tft.drawString("Hold: return", 120, 175, 2);
 }
 
+// Shown while setup() is blocked (Wi-Fi connect and portal timeout). loop() is not running
+// yet, so the state machine cannot draw anything; the splash screen replaces this message
+// once loop() starts.
+void CWG_LCD::showInitMessage(const char* line1, const char* line2) {
+  clearScreen();
+  drawUIFrame("STARTING");
+
+  tft.setTextDatum(MC_DATUM);
+  tft.setTextColor(TFT_WHITE, TFT_BLACK);
+  tft.drawString(line1, 120, 100, 2);
+
+  tft.setTextColor(TFT_LIGHTGREY, TFT_BLACK);
+  tft.drawString(line2, 120, 135, 2);
+}
+
 void CWG_LCD::showSetMeatDoneTempMenu(int16_t prevEncoderValue, float meatDoneTemp, bool degCFlag) {
   clearScreen();
   drawUIFrame("MEAT TARGET");

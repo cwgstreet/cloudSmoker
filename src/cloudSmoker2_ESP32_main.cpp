@@ -141,6 +141,10 @@ void setup() {
   encoder.initialise();
   Serial.println("After Encoder Init");  // If this message is not seen, it's hung in initialise()
 
+  // Show in initialisation screen
+  // Do this here so that the user sees while the WiFiManager portal is being configured
+  lcd.showInitMessage("Connecting Wi-Fi", "Please wait");
+
   WifiManager_initialise();
   Serial.println("WiFi setup finished, entering main loop");
 

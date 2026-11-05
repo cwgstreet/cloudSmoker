@@ -40,6 +40,20 @@
 // include APIs for ntfy.sh notifications
 #include "secrets.h"
 
+// Debug timing: prints how long a state's block took when the case block exits.
+// With DEBUG_TIMING undefined, TIME_BLOCK() expands to nothing.
+#ifdef DEBUG_TIMING
+struct ScopeTimer {
+  const char* name;
+  unsigned long startUs;
+  ScopeTimer(const char* n) : name(n), startUs(micros()) {}
+  ~ScopeTimer() { Serial.printf("[TIMING] %s took %lu us\n", name, micros() - startUs); }
+};
+#define TIME_BLOCK(name) ScopeTimer timeBlock_(name)
+#else
+#define TIME_BLOCK(name)
+#endif
+
 // entryStates is an enum variable type defined in menu.h header file (as extern); smokerState is
 // global
 entryStates_t smokerState;
@@ -591,6 +605,8 @@ void processState(CWG_LCD& lcd) {
     } break;
 
     case getTemp: {
+      TIME_BLOCK("getTemp");
+      // TIME_BLOCK only active when DEBUG_TIMING is defined, otherwise expands to nothing
       Serial.print("getTemp Case -> startCookTime_ms =");
       Serial.println(startCookTime_ms);
 
@@ -649,6 +665,7 @@ void processState(CWG_LCD& lcd) {
     } break;
 
     case txTemp: {
+      TIME_BLOCK("txTemp");
       Serial.println("entering txTemp case -> transmitting data");
       // TODO: Battery field is NAN until the INA226 bus voltage replaces the placeholder
       sendThingSpeak(currentMeat1Temp, meatDoneTemp, currentPitTemp, pitTempTarget, NAN);
