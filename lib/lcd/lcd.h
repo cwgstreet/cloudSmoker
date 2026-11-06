@@ -46,7 +46,7 @@ class CWG_LCD {
   void showSettingsMenu(int16_t prevEncoderValue);
   void showRailStatus(float ina226V, float storedV);
   void showEndCookConfirm();
-  void showMeatTargetEdit(const char* label, int16_t value, bool degCFlag);
+  void showMeatTargetEdit(const char* label, int16_t value, bool degCFlag, bool belowSafe);
   void showListMenu(const char* header, const char* const* labels, const char* const* details,
                     uint8_t count, uint8_t selected);
   void showResumePrompt(bool timeUnverified);

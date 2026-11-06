@@ -881,11 +881,10 @@ void processState(CWG_LCD& lcd) {
       const char* probeName = (editMeatIndex == 0) ? "MEAT1" : (editMeatIndex == 1) ? "MEAT2" : "MEAT3";
 
       if (hasRunFlag == 0) {
-        // The encoder counts in the display units. The limits are 50 to 105 C, which is 122 to
-        // 221 F, so both unit modes cover the same temperatures.
+        // The encoder counts in the display units. Limits: 46 to 104 C, or 115 to 220 F.
         float currentF = meatTarget[editMeatIndex];
-        int16_t lo = degCFlag ? 50 : 122;
-        int16_t hi = degCFlag ? 105 : 220;
+        int16_t lo = degCFlag ? 46 : 115;
+        int16_t hi = degCFlag ? 104 : 220;
         float currentDisplay = degCFlag ? convertDegFtoDegC(currentF) : currentF;
         int16_t start = (int16_t)(currentDisplay + 0.5f);
         encoder.newRange(lo, hi, constrain(start, lo, hi), false, currentEncoderState);
@@ -894,16 +893,18 @@ void processState(CWG_LCD& lcd) {
         lastDrawnValue = -1000;
       }
 
+      // Work out the value in degF once, for the safety check and for storage
+      float enteredF = degCFlag ? ((float)prevEncoderValue * 9.0f / 5.0f + 32.0f)
+                                : (float)prevEncoderValue;
+      bool belowSafe = enteredF < 145.0f;  // USDA minimum for whole cuts of beef, pork, lamb
+
       if (prevEncoderValue != lastDrawnValue) {
-        lcd.showMeatTargetEdit(probeName, prevEncoderValue, degCFlag);
+        lcd.showMeatTargetEdit(probeName, prevEncoderValue, degCFlag, belowSafe);
         lastDrawnValue = prevEncoderValue;
       }
 
       if (button.triggered(SINGLE_TAP)) {
-        // Convert the entry to degF for storage. Everything else in the code uses degF.
-        float enteredF = degCFlag ? ((float)prevEncoderValue * 9.0f / 5.0f + 32.0f)
-                                  : (float)prevEncoderValue;
-        meatTarget[editMeatIndex] = enteredF;
+        meatTarget[editMeatIndex] = enteredF;  // stored as degF
         Serial.print(F("meat target set: "));
         Serial.print(probeName);
         Serial.print(F(" -> "));
@@ -911,6 +912,11 @@ void processState(CWG_LCD& lcd) {
         Serial.print(degCFlag ? F(" C (stored as ") : F(" F (stored as "));
         Serial.print(enteredF, 1);
         Serial.println(F(" F)"));
+        if (belowSafe) {
+          Serial.print(F("WARNING: "));
+          Serial.print(probeName);
+          Serial.println(F(" target below USDA 145F minimum for whole cuts"));
+        }
         smokerState = meatTempMenu;
         hasRunFlag = 0;
       }

@@ -492,7 +492,8 @@ void CWG_LCD::showBBQStatusScreen(bool degCFlag, float currentMeatTemp, const ch
   tft.drawString(meatStr, 120, 156, 4);
 }
 
-void CWG_LCD::showMeatTargetEdit(const char* label, int16_t value, bool degCFlag) {
+
+void CWG_LCD::showMeatTargetEdit(const char* label, int16_t value, bool degCFlag, bool belowSafe) {
   clearScreen();
 
   char header[20];
@@ -504,8 +505,15 @@ void CWG_LCD::showMeatTargetEdit(const char* label, int16_t value, bool degCFlag
 
   tft.setTextDatum(MC_DATUM);
   tft.setTextColor(TFT_WHITE, TFT_BLACK);
-  tft.drawString(valueStr, 120, 115, 4);
+  tft.drawString(valueStr, 120, 100, 4);
+
+  if (belowSafe) {
+    tft.setTextColor(TFT_YELLOW, TFT_BLACK);
+    tft.drawString("BELOW SAFE MINIMUM", 120, 135, 2);
+    tft.drawString("USDA whole cuts: 145F", 120, 152, 2);
+    tft.drawString("(63C), 3 min rest", 120, 169, 2);
+  }
 
   tft.setTextColor(TFT_LIGHTGREY, TFT_BLACK);
-  tft.drawString("Tap: save  Hold: back", 120, 160, 2);
+  tft.drawString("Tap: save  Hold: back", 120, 200, 2);
 }
