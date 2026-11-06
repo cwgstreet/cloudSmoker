@@ -28,14 +28,14 @@ WrapEncoder::EncoderState
 // Interrupt handler: moves the value one step per click.
 // At an end of the range, wraps to the other end if wrapEnabled is true, otherwise stops.
 void ESP_ISR WrapEncoder::updateValue(uint8_t updatedState) {
-  if ((updatedState & DELTA_MASK) == INCREMENT_DELTA) {
+  if ((updatedState & DELTA_MASK) == DECREMENT_DELTA) {
     liveState.currentClick = UpClick;
     if (liveState.currentValue < _maxValue) {
       liveState.currentValue++;
     } else if (wrapEnabled) {
       liveState.currentValue = _minValue;
     }
-  } else if ((updatedState & DELTA_MASK) == DECREMENT_DELTA) {
+  } else if ((updatedState & DELTA_MASK) == INCREMENT_DELTA) {
     liveState.currentClick = DownClick;
     if (liveState.currentValue > _minValue) {
       liveState.currentValue--;
