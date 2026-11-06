@@ -669,6 +669,10 @@ void processState(CWG_LCD& lcd) {
             smokerState = railStatus;
             hasRunFlag = 0;
             break;
+          case MENU_BANK:
+            smokerState = bankMenu;
+            hasRunFlag = 0;
+            break;
           case MENU_BACK:
             smokerState = launchPad;
             hasRunFlag = 0;

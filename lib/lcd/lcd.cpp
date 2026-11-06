@@ -135,22 +135,6 @@ void CWG_LCD::drawProgressDots(int currentIndex, int totalItems) {
   }
 }
 
-void CWG_LCD::showSettingsMenu(int16_t prevEncoderValue) {
-  clearScreen();
-  drawUIFrame("SETTINGS");
-
-  static const char* menuLabels[MENU_COUNT + 1] = {"",  // index 0 unused - menu values are 1-based
-                                                   "Meat Temp", "Pit Temp",     "Units",
-                                                   "Calibrate", "Rail Voltage", "Back"};
-
-  int16_t index = constrain(prevEncoderValue, 1, (int16_t)MENU_COUNT);
-
-  tft.setTextDatum(MC_DATUM);
-  tft.setTextColor(TFT_WHITE, TFT_BLACK);
-  tft.drawString(menuLabels[index], 120, 120, 4);
-
-  drawProgressDots(index, MENU_COUNT);
-}
 
 void CWG_LCD::showCalProbeMenu(int16_t prevEncoderValue) {
   clearScreen();
@@ -636,4 +620,21 @@ void CWG_LCD::showValueEdit(const char* header, const char* valueText) {
 
   tft.setTextColor(TFT_LIGHTGREY, TFT_BLACK);
   tft.drawString("Tap: save  Hold: back", 120, 160, 2);
+}
+
+void CWG_LCD::showSettingsMenu(int16_t prevEncoderValue) {
+  clearScreen();
+  drawUIFrame("SETTINGS");
+
+  // Index 0 unused: menu values are 1-based. One label per MENU_* entry, in order.
+  static const char* menuLabels[MENU_COUNT + 1] = {"", "Meat Temp", "Pit Temp", "Units",
+                                                   "Calibrate", "Rail", "Power Bank", "Back"};
+
+  int16_t index = constrain(prevEncoderValue, 1, (int16_t)MENU_COUNT);
+
+  tft.setTextDatum(MC_DATUM);
+  tft.setTextColor(TFT_WHITE, TFT_BLACK);
+  tft.drawString(menuLabels[index], 120, 120, 4);
+
+  drawProgressDots(index, MENU_COUNT);
 }
