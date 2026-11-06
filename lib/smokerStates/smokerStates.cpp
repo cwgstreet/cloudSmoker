@@ -67,6 +67,8 @@ static const float BANK_USABLE_FACTOR = 0.74f;
 float bankCapacity_mAh = 10000.0f;  // nominal capacity from the box, kept across cooks
 uint8_t bankStartPct = 100;         // charge when plugged in, reset to 100 for each new cook
 static uint8_t bankEditIndex = 0;   // 0 = capacity, 1 = charge
+static float bankBaseMah = 0.0f;  // usable charge at the start of this cook, mAh at 5 V
+static uint32_t readingsSerial = 0;  // bumps after each getTemp, so the cook screen redraws on new readings
 extern float pitMax;
 extern float pitMin;
 extern float currentPitTemp;
@@ -424,6 +426,7 @@ static void applyResume() {
   pitMax = pitMaxT;
   degCFlag = degC;
   ina226.setChargeUsed_mAh(charge);
+  bankBaseMah = cookLoadBank();
 
   meat1DoneFlag = (flags & 1) != 0;
   meat1SentFlag = (flags & 2) != 0;
@@ -528,11 +531,25 @@ static float meatFractionFor(float meatF, float targetF) {
 
 
 
+
+// Remaining power bank charge as a percentage of its full usable capacity (capacity x 0.74).
+// A cook started at 50% reads 50% at the start, and 25% after half of that is used.
+// Returns -1 if no cook base is known.
+static int bankRemainingPct() {
+  float fullUsable = bankCapacity_mAh * BANK_USABLE_FACTOR;
+  if (fullUsable <= 0.0f || bankBaseMah <= 0.0f) {
+    return -1;
+  }
+  float remaining = bankBaseMah - ina226.getChargeUsed_mAh();
+  return (int)constrain(100.0f * remaining / fullUsable, 0.0f, 100.0f);
+}
+
 // Draws one cook page: 0 = overview, 1 = PIT over MEAT1, 2 = MEAT2 over MEAT3
 static void drawCookPage(CWG_LCD& lcd, uint8_t page) {
   if (page == 0) {
     lcd.showCookOverview(degCFlag, currentPitTemp, currentMeat1Temp, currentMeat2Temp,
                          currentMeat3Temp);
+    lcd.showBankLine(bankRemainingPct());
   } else if (page == 1) {
     lcd.showZoomPage(degCFlag, "PIT", TFT_ORANGE, currentPitTemp, pitFractionFor(currentPitTemp),
                      "MEAT1", TFT_CYAN, currentMeat1Temp,
@@ -615,6 +632,7 @@ void processState(CWG_LCD& lcd) {
         ina226.resetCharge();
         cookSaveStart(meatTarget, pitMin, pitMax, degCFlag, ina226.getChargeUsed_mAh());
         cookSaveBank(bankCapacity_mAh * BANK_USABLE_FACTOR * bankStartPct / 100.0f);
+        bankBaseMah = bankCapacity_mAh * BANK_USABLE_FACTOR * bankStartPct / 100.0f;
 
         pitOutSinceMs = 0; pitAlertSent = false; pitAlertAttempts = 0;
         constexpr uint8_t NTFY_MAX_ATTEMPTS = 10;  // alert send attempts per probe per cook
@@ -756,6 +774,7 @@ void processState(CWG_LCD& lcd) {
                      meat3AlertAttempts, meatTarget[2]);
       cookSaveFlags(packCookFlags());
       checkPitBand(currentPitTemp, pitMin, pitMax);
+      readingsSerial++;
 
 #ifdef DEBUG_ADC_Temps
       Serial.println();
@@ -868,7 +887,11 @@ void processState(CWG_LCD& lcd) {
         currentEncoderValue = encoder.getCount();
         uint8_t page = (uint8_t)((prevEncoderValue - 1) % 3);  // 0 overview, 1 PIT/MEAT1, 2 MEAT2/MEAT3
         bool pageChanged = (prevEncoderValue != lastPageValue);
-        bool refreshDue = false;  // readings only change in getTemp, so no timed redraw
+        static uint32_t lastSerial = 0;
+        bool refreshDue = (readingsSerial != lastSerial);
+        if (refreshDue) {
+          lastSerial = readingsSerial;
+        }
 
         if (pageChanged || refreshDue) {
           lastPageValue = prevEncoderValue;

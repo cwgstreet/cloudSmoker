@@ -49,6 +49,7 @@ class CWG_LCD {
   void showRailStatus(float ina226V, float storedV);
   void showEndCookConfirm();
   void showCookOverview(bool degCFlag, float pitTemp, float meat1Temp, float meat2Temp, float meat3Temp);
+  void showBankLine(int pct);
   void showZoomPage(bool degCFlag, const char* topName, uint16_t topColour, float topTemp, float topFraction, const char* bottomName, uint16_t bottomColour, float bottomTemp, float bottomFraction);
   void showPageDots(int currentIndex, int totalItems) { drawProgressDots(currentIndex, totalItems); }
   void showBBQStatusScreen(bool degCFlag, float currentMeatTemp, const char* meatLabel,

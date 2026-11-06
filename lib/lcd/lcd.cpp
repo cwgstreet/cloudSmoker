@@ -638,3 +638,16 @@ void CWG_LCD::showSettingsMenu(int16_t prevEncoderValue) {
 
   drawProgressDots(index, MENU_COUNT);
 }
+
+// Remaining charge of the power bank as a percentage of its full usable capacity.
+// Drawn under the overview grid. A negative value hides the line.
+void CWG_LCD::showBankLine(int pct) {
+  if (pct < 0) {
+    return;
+  }
+  char text[16];
+  snprintf(text, sizeof(text), "Bank %d%%", pct);
+  tft.setTextDatum(MC_DATUM);
+  tft.setTextColor(TFT_LIGHTGREY, TFT_BLACK);
+  tft.drawString(text, 120, 206, 2);
+}
