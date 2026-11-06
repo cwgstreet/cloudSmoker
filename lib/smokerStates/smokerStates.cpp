@@ -124,7 +124,7 @@ static bool showCookOnNextSleep = false;
 // Set at boot when the resume prompt is shown; it tells the prompt whether time is unverified
 static bool resumeUnverified = false;
 
-// Restores the stored cook into the running state and starts it.
+
 
 // Called from setup() after the time sync. Returns true if an interrupted cook needs the
 // resume prompt. A stale cook (12 h or more) is closed here and is never prompted.
@@ -337,9 +337,25 @@ static unsigned long pitOutSinceMs = 0;  // 0 = PIT inside its band
 static bool pitAlertSent = false;
 static uint8_t pitAlertAttempts = 0;
 
+// Defaults for the next cook. Called when a cook ends, so Min Off and other per-cook changes
+// don't carry over. Units are a device setting and are kept.
+static void resetCookSettingsToDefaults() {
+  for (uint8_t i = 0; i < 3; i++) {
+    meatTarget[i] = 203.0f;
+  }
+  pitMin = 225.0f;
+  pitMax = 250.0f;
+  Serial.println(F("settings reset to defaults for next cook"));
+}
+
+
+
 // Called once per getTemp pass. A missing PIT reading never counts as out of band.
+// A Min of NAN means Min is Off: only the Max limit applies.
 static void checkPitBand(float pitF, float minF, float maxF) {
-  bool outside = !isnan(pitF) && (pitF < minF || pitF > maxF);
+  bool belowMin = !isnan(minF) && pitF < minF;
+  bool aboveMax = pitF > maxF;
+  bool outside = !isnan(pitF) && (belowMin || aboveMax);
 
   if (!outside) {
     if (pitOutSinceMs != 0) {
@@ -366,8 +382,10 @@ static void checkPitBand(float pitF, float minF, float maxF) {
   }
 
   pitAlertAttempts++;
-  String msg = String("PIT out of range: ") + String(pitF, 0) + "F (band " + String(minF, 0) +
-               "-" + String(maxF, 0) + "F for 5 min)";
+  String band = isnan(minF) ? String("below ") + String(maxF, 0) + "F"
+                            : String(minF, 0) + "-" + String(maxF, 0) + "F";
+  String msg = String("PIT out of range: ") + String(pitF, 0) + "F (band " + band +
+               " for 5 min)";
   if (sendNtfyAlert(msg)) {
     pitAlertSent = true;
     Serial.println(F("PIT alert sent"));
@@ -437,6 +455,7 @@ bool cookApplyOnBoot() {
 
   if (boot == COOK_STALE) {
     cookSaveEnd();
+    resetCookSettingsToDefaults();
     return false;
   }
 
@@ -719,7 +738,8 @@ void processState(CWG_LCD& lcd) {
         applyResume();  // carries on with the stored cook; sets smokerState to getTemp
         hasRunFlag = 0;
       } else if (button.triggered(HOLD)) {
-        cookSaveEnd();  // restart: the stored cook is closed, its targets stay as setup values
+        cookSaveEnd();
+        resetCookSettingsToDefaults();  // a restarted cook always starts from defaults
         Serial.println(F("cook restarted by user -> setup"));
         smokerState = splashScreen;
         hasRunFlag = 0;
@@ -778,11 +798,11 @@ void processState(CWG_LCD& lcd) {
         previousDisplayMillis = millis();  // start the display timer on entry, not on last timeout
         lastDrawMs = millis();
         lcd.showBBQStatusScreen(degCFlag, meatTemp, meatLabel, meatTargetF, currentPitTemp,
-                                pitMax);
+                                pitMin, pitMax);
       } else if (!endConfirm && (unsigned long)(millis() - lastDrawMs) >= 1000) {
         lastDrawMs = millis();  // refresh once a second while the readings change
         lcd.showBBQStatusScreen(degCFlag, meatTemp, meatLabel, meatTargetF, currentPitTemp,
-                                pitMax);
+                                pitMin, pitMax);
       }
 
       // Hold asks to end the cook; a tap then ends it, and a second hold cancels
@@ -793,13 +813,14 @@ void processState(CWG_LCD& lcd) {
         } else {
           endConfirm = false;
           lcd.showBBQStatusScreen(degCFlag, meatTemp, meatLabel, meatTargetF, currentPitTemp,
-                                  pitMax);
+                                  pitMin, pitMax);
           lastDrawMs = millis();
         }
         previousDisplayMillis = millis();  // keep the screen up for a full display interval
       } else if (endConfirm && button.triggered(SINGLE_TAP)) {
         endConfirm = false;
         cookSaveEnd();
+        resetCookSettingsToDefaults();
         Serial.println(F("cook ended by user -> launch pad"));
         // show the probe targets first, then an encoder move brings up the launch pad
         smokerState = splashScreen;
@@ -869,7 +890,7 @@ void processState(CWG_LCD& lcd) {
         int16_t hi = degCFlag ? 104 : 220;
         float currentDisplay = degCFlag ? convertDegFtoDegC(currentF) : currentF;
         int16_t start = (int16_t)(currentDisplay + 0.5f);
-        encoder.newRange(lo, hi, constrain(start, lo, hi), false, currentEncoderState);
+        encoder.newRange(lo, hi, constrain(start, lo, hi), true, currentEncoderState);
         prevEncoderValue = currentEncoderState.currentValue;
         hasRunFlag = 1;
         lastDrawnValue = -1000;
@@ -924,10 +945,14 @@ void processState(CWG_LCD& lcd) {
       }
 
       if (prevEncoderValue != lastDrawnSelection) {
-        float minShown = degCFlag ? convertDegFtoDegC(pitMin) : pitMin;
-        float maxShown = degCFlag ? convertDegFtoDegC(pitMax) : pitMax;
         char unit = degCFlag ? 'C' : 'F';
-        snprintf(pitDetail[0], sizeof(pitDetail[0]), "%.0f%c", minShown, unit);
+        if (isnan(pitMin)) {
+          snprintf(pitDetail[0], sizeof(pitDetail[0]), "Off");
+        } else {
+          float minShown = degCFlag ? convertDegFtoDegC(pitMin) : pitMin;
+          snprintf(pitDetail[0], sizeof(pitDetail[0]), "%.0f%c", minShown, unit);
+        }
+        float maxShown = degCFlag ? convertDegFtoDegC(pitMax) : pitMax;
         snprintf(pitDetail[1], sizeof(pitDetail[1]), "%.0f%c", maxShown, unit);
         lcd.showListMenu("PIT TEMP", pitLabels, pitDetails, 3, (uint8_t)prevEncoderValue);
         lastDrawnSelection = prevEncoderValue;
@@ -955,41 +980,60 @@ void processState(CWG_LCD& lcd) {
       currentEncoderValue = encoder.getCount();
       const char* label = (editPitIndex == 0) ? "PIT MIN" : "PIT MAX";
 
+      // Min has one extra position below its lowest value: that position means Off
+      const int16_t offValue = degCFlag ? 9 : 49;
+
       if (hasRunFlag == 0) {
-        // Min runs from 50F (10C) up to 5F under Max. Max runs from 5F over Min up to 572F (300C).
-        float loF = (editPitIndex == 0) ? 50.0f : pitMin + 5.0f;
+        // Min runs from 50F (10C) up to 5F under Max. Max runs from 5F over Min (or 50F
+        // when Min is Off) up to 572F (300C).
+        float loF = (editPitIndex == 0) ? 50.0f : (isnan(pitMin) ? 50.0f : pitMin + 5.0f);
         float hiF = (editPitIndex == 0) ? pitMax - 5.0f : 572.0f;
-        float currentF = (editPitIndex == 0) ? pitMin : pitMax;
         int16_t lo = degCFlag ? (int16_t)ceilf((loF - 32.0f) * 5.0f / 9.0f) : (int16_t)ceilf(loF);
         int16_t hi = degCFlag ? (int16_t)floorf((hiF - 32.0f) * 5.0f / 9.0f) : (int16_t)floorf(hiF);
-        float currentDisplay = degCFlag ? convertDegFtoDegC(currentF) : currentF;
-        int16_t start = (int16_t)(currentDisplay + 0.5f);
-        encoder.newRange(lo, hi, constrain(start, lo, hi), false, currentEncoderState);
+        int16_t rangeLo = (editPitIndex == 0) ? offValue : lo;
+
+        int16_t start;
+        if (editPitIndex == 0 && isnan(pitMin)) {
+          start = offValue;
+        } else {
+          float currentF = (editPitIndex == 0) ? pitMin : pitMax;
+          float currentDisplay = degCFlag ? convertDegFtoDegC(currentF) : currentF;
+          start = (int16_t)(currentDisplay + 0.5f);
+        }
+
+        encoder.newRange(rangeLo, hi, constrain(start, rangeLo, hi), true, currentEncoderState);
         prevEncoderValue = currentEncoderState.currentValue;
         hasRunFlag = 1;
         lastDrawnValue = -1000;
       }
 
+      bool isOff = (editPitIndex == 0 && prevEncoderValue == offValue);
+
       if (prevEncoderValue != lastDrawnValue) {
-        lcd.showMeatTargetEdit(label, prevEncoderValue, degCFlag, false);
+        lcd.showLimitEdit(label, prevEncoderValue, degCFlag, isOff);
         lastDrawnValue = prevEncoderValue;
       }
 
       if (button.triggered(SINGLE_TAP)) {
-        float enteredF = degCFlag ? ((float)prevEncoderValue * 9.0f / 5.0f + 32.0f)
-                                  : (float)prevEncoderValue;
-        if (editPitIndex == 0) {
-          pitMin = enteredF;
+        if (isOff) {
+          pitMin = NAN;  // stored as NAN: Min Off, no low-temperature alert
+          Serial.println(F("PIT min -> Off (no low alert)"));
         } else {
-          pitMax = enteredF;
+          float enteredF = degCFlag ? ((float)prevEncoderValue * 9.0f / 5.0f + 32.0f)
+                                    : (float)prevEncoderValue;
+          if (editPitIndex == 0) {
+            pitMin = enteredF;
+          } else {
+            pitMax = enteredF;
+          }
+          Serial.print(F("PIT "));
+          Serial.print(editPitIndex == 0 ? F("min") : F("max"));
+          Serial.print(F(" -> "));
+          Serial.print(prevEncoderValue);
+          Serial.print(degCFlag ? F(" C (stored as ") : F(" F (stored as "));
+          Serial.print(enteredF, 1);
+          Serial.println(F(" F)"));
         }
-        Serial.print(F("PIT "));
-        Serial.print(editPitIndex == 0 ? F("min") : F("max"));
-        Serial.print(F(" -> "));
-        Serial.print(prevEncoderValue);
-        Serial.print(degCFlag ? F(" C (stored as ") : F(" F (stored as "));
-        Serial.print(enteredF, 1);
-        Serial.println(F(" F)"));
         smokerState = pitTempMenu;
         hasRunFlag = 0;
       }

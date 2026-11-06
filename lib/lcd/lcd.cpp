@@ -431,16 +431,49 @@ void CWG_LCD::noDisplay() {
   digitalWrite(PIN_DISP_BL, LOW);
 #endif
 }
+
+
+void CWG_LCD::showMeatTargetEdit(const char* label, int16_t value, bool degCFlag, bool belowSafe) {
+  clearScreen();
+
+  char header[20];
+  snprintf(header, sizeof(header), "%s TARGET", label);
+  drawUIFrame(header);
+
+  char valueStr[12];
+  snprintf(valueStr, sizeof(valueStr), "%d%c", value, degCFlag ? 'C' : 'F');
+
+  tft.setTextDatum(MC_DATUM);
+  tft.setTextColor(TFT_WHITE, TFT_BLACK);
+  tft.drawString(valueStr, 120, 100, 4);
+
+  if (belowSafe) {
+    tft.setTextColor(TFT_YELLOW, TFT_BLACK);
+    tft.drawString("BELOW SAFE MINIMUM", 120, 135, 2);
+    tft.drawString("USDA whole cuts: 145F", 120, 152, 2);
+    tft.drawString("(63C), 3 min rest", 120, 169, 2);
+  }
+
+  tft.setTextColor(TFT_LIGHTGREY, TFT_BLACK);
+  tft.drawString("Tap: save  Hold: back", 120, 200, 2);
+}
+
 void CWG_LCD::showBBQStatusScreen(bool degCFlag, float currentMeatTemp, const char* meatLabel,
-                                  float meatDoneTemp, float currentPitTemp, float pitTempTarget) {
+                                  float meatDoneTemp, float currentPitTemp, float pitMinTemp,
+                                  float pitMaxTemp) {
   clearScreen();
 
   const int cx = 120, cy = 120;
   const int pitRadius = 118, pitThickness = 14;
   const int meatRadius = 96, meatThickness = 14;
 
-  // Clamp to [0,1] so an over-target probe doesn't overflow the ring past full
-  float pitFraction = progressFraction(currentPitTemp, pitTempTarget);
+  // PIT ring fills across the band: from Min up to Max. With Min Off, it starts at 50F.
+  float pitLow = isnan(pitMinTemp) ? 50.0f : pitMinTemp;
+  float pitSpan = pitMaxTemp - pitLow;
+  float pitFraction = 0.0f;
+  if (pitSpan > 0 && !isnan(currentPitTemp)) {
+    pitFraction = constrain((currentPitTemp - pitLow) / pitSpan, 0.0f, 1.0f);
+  }
   float meatFraction = progressFraction(currentMeatTemp, meatDoneTemp);
 
   uint16_t pitAngle = (uint16_t)(360.0f * pitFraction);
@@ -492,28 +525,24 @@ void CWG_LCD::showBBQStatusScreen(bool degCFlag, float currentMeatTemp, const ch
   tft.drawString(meatStr, 120, 156, 4);
 }
 
-
-void CWG_LCD::showMeatTargetEdit(const char* label, int16_t value, bool degCFlag, bool belowSafe) {
+void CWG_LCD::showLimitEdit(const char* label, int16_t value, bool degCFlag, bool isOff) {
   clearScreen();
 
   char header[20];
-  snprintf(header, sizeof(header), "%s TARGET", label);
+  snprintf(header, sizeof(header), "%s", label);
   drawUIFrame(header);
 
   char valueStr[12];
-  snprintf(valueStr, sizeof(valueStr), "%d%c", value, degCFlag ? 'C' : 'F');
+  if (isOff) {
+    snprintf(valueStr, sizeof(valueStr), "Off");
+  } else {
+    snprintf(valueStr, sizeof(valueStr), "%d%c", value, degCFlag ? 'C' : 'F');
+  }
 
   tft.setTextDatum(MC_DATUM);
   tft.setTextColor(TFT_WHITE, TFT_BLACK);
-  tft.drawString(valueStr, 120, 100, 4);
-
-  if (belowSafe) {
-    tft.setTextColor(TFT_YELLOW, TFT_BLACK);
-    tft.drawString("BELOW SAFE MINIMUM", 120, 135, 2);
-    tft.drawString("USDA whole cuts: 145F", 120, 152, 2);
-    tft.drawString("(63C), 3 min rest", 120, 169, 2);
-  }
+  tft.drawString(valueStr, 120, 110, 4);
 
   tft.setTextColor(TFT_LIGHTGREY, TFT_BLACK);
-  tft.drawString("Tap: save  Hold: back", 120, 200, 2);
+  tft.drawString("Tap: save  Hold: back", 120, 160, 2);
 }

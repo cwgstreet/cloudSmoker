@@ -46,6 +46,10 @@ class CWG_LCD {
   void showSettingsMenu(int16_t prevEncoderValue);
   void showRailStatus(float ina226V, float storedV);
   void showEndCookConfirm();
+  void showBBQStatusScreen(bool degCFlag, float currentMeatTemp, const char* meatLabel,
+                           float meatDoneTemp, float currentPitTemp, float pitMinTemp,
+                           float pitMaxTemp);
+  void showLimitEdit(const char* label, int16_t value, bool degCFlag, bool isOff);
   void showMeatTargetEdit(const char* label, int16_t value, bool degCFlag, bool belowSafe);
   void showListMenu(const char* header, const char* const* labels, const char* const* details,
                     uint8_t count, uint8_t selected);
@@ -59,8 +63,6 @@ class CWG_LCD {
   void showSetMeatDoneTempMenu(int16_t prevEncoderValue, float meatDoneTemp, bool degCFlag);
   void showSetPitTempTargetMenu(int16_t prevEncoderValue, float pitTempTarget, bool degCFlag);
   void showSetTempUnitsMenu(int16_t prevEncoderValue, bool degCFlag);
-  void showBBQStatusScreen(bool degCFlag, float currentMeatTemp, const char* meatLabel,
-                           float meatDoneTemp, float currentPitTemp, float pitTempTarget);
 
   // Display controls for sleep/blanking modes
   void display();
