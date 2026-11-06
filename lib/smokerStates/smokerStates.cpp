@@ -61,7 +61,8 @@ entryStates_t smokerState;
 
 // External globals from main.cpp mapped with exact matching types
 extern float meatTarget[3];
-extern float pitTempTarget;
+extern float pitMax;
+extern float pitMin;
 extern float currentPitTemp;
 extern float currentMeat1Temp;
 extern float currentMeat2Temp;
@@ -124,69 +125,9 @@ static bool showCookOnNextSleep = false;
 static bool resumeUnverified = false;
 
 // Restores the stored cook into the running state and starts it.
-static void applyResume() {
-  float meatT[3], pitT, charge;
-  bool degC;
-  uint8_t flags;
-  if (!cookLoad(meatT, pitT, degC, charge, flags)) {
-    return;
-  }
-
-  for (uint8_t i = 0; i < 3; i++) {
-    meatTarget[i] = meatT[i];
-  }
-  pitTempTarget = pitT;
-  degCFlag = degC;
-  ina226.setChargeUsed_mAh(charge);
-
-  meat1DoneFlag = (flags & 1) != 0;
-  meat1SentFlag = (flags & 2) != 0;
-  meat2DoneFlag = (flags & 4) != 0;
-  meat2SentFlag = (flags & 8) != 0;
-  meat3DoneFlag = (flags & 16) != 0;
-  meat3SentFlag = (flags & 32) != 0;
-
-  startCookTime_ms = millis();
-  showCookOnNextSleep = true;
-  smokerState = getTemp;
-}
 
 // Called from setup() after the time sync. Returns true if an interrupted cook needs the
 // resume prompt. A stale cook (12 h or more) is closed here and is never prompted.
-bool cookApplyOnBoot() {
-  static const char* const bootNames[] = {"none", "resume prompt",
-                                          "resume prompt (time unverified)",
-                                          "finished (stale), starting at setup"};
-  CookBoot_t boot = cookBootCheck();
-  Serial.print(F("cook boot check: "));
-  Serial.println(bootNames[boot]);
-
-  if (boot == COOK_NONE) {
-    return false;
-  }
-
-  float meatT[3], pitT, charge;
-  bool degC;
-  uint8_t flags;
-  if (!cookLoad(meatT, pitT, degC, charge, flags)) {
-    return false;
-  }
-
-  // Targets always load: they are the setup values if the user restarts or the cook is stale
-  for (uint8_t i = 0; i < 3; i++) {
-    meatTarget[i] = meatT[i];
-  }
-  pitTempTarget = pitT;
-  degCFlag = degC;
-
-  if (boot == COOK_STALE) {
-    cookSaveEnd();
-    return false;
-  }
-
-  resumeUnverified = (boot == COOK_RESUME_UNVERIFIED);
-  return true;
-}
 
 constexpr int16_t CAL_MENU_COUNT = 5;  // PIT, MEAT1, MEAT2, MEAT3, BACK
 ProbeId calSelectedProbe = PROBE_PIT;  // probe currently being calibrated
@@ -387,6 +328,122 @@ static bool settleStep(float reading, float* window, uint8_t& count, float& out)
   return false;
 }
 
+// Stored PIT limits for the sub-menu editor: 0 = Min, 1 = Max
+static uint8_t editPitIndex = 0;
+
+// PIT band alert: one ntfy per excursion, sent only after PIT stays outside its band for 5 min
+static const unsigned long PIT_EXCURSION_MS = 5UL * 60UL * 1000UL;
+static unsigned long pitOutSinceMs = 0;  // 0 = PIT inside its band
+static bool pitAlertSent = false;
+static uint8_t pitAlertAttempts = 0;
+
+// Called once per getTemp pass. A missing PIT reading never counts as out of band.
+static void checkPitBand(float pitF, float minF, float maxF) {
+  bool outside = !isnan(pitF) && (pitF < minF || pitF > maxF);
+
+  if (!outside) {
+    if (pitOutSinceMs != 0) {
+      Serial.println(F("PIT back inside band, excursion timer cleared"));
+    }
+    pitOutSinceMs = 0;
+    pitAlertSent = false;
+    pitAlertAttempts = 0;
+    return;
+  }
+
+  if (pitOutSinceMs == 0) {
+    pitOutSinceMs = millis();
+    Serial.println(F("PIT outside band, 5 min timer started"));
+  }
+  if (pitAlertSent || pitAlertAttempts >= NTFY_MAX_ATTEMPTS) {
+    return;
+  }
+  if ((unsigned long)(millis() - pitOutSinceMs) < PIT_EXCURSION_MS) {
+    return;
+  }
+  if (WiFi.status() != WL_CONNECTED) {
+    return;  // offline cycles don't count as attempts
+  }
+
+  pitAlertAttempts++;
+  String msg = String("PIT out of range: ") + String(pitF, 0) + "F (band " + String(minF, 0) +
+               "-" + String(maxF, 0) + "F for 5 min)";
+  if (sendNtfyAlert(msg)) {
+    pitAlertSent = true;
+    Serial.println(F("PIT alert sent"));
+  } else {
+    Serial.print(F("PIT alert not sent, attempt "));
+    Serial.print(pitAlertAttempts);
+    Serial.print(F(" of "));
+    Serial.println(NTFY_MAX_ATTEMPTS);
+  }
+}
+
+// Restores the stored cook into the running state and starts it.
+static void applyResume() {
+  float meatT[3], pitMinT, pitMaxT, charge;
+  bool degC;
+  uint8_t flags;
+  if (!cookLoad(meatT, pitMinT, pitMaxT, degC, charge, flags)) {
+    return;
+  }
+
+  for (uint8_t i = 0; i < 3; i++) {
+    meatTarget[i] = meatT[i];
+  }
+  pitMin = pitMinT;
+  pitMax = pitMaxT;
+  degCFlag = degC;
+  ina226.setChargeUsed_mAh(charge);
+
+  meat1DoneFlag = (flags & 1) != 0;
+  meat1SentFlag = (flags & 2) != 0;
+  meat2DoneFlag = (flags & 4) != 0;
+  meat2SentFlag = (flags & 8) != 0;
+  meat3DoneFlag = (flags & 16) != 0;
+  meat3SentFlag = (flags & 32) != 0;
+
+  startCookTime_ms = millis();
+  showCookOnNextSleep = true;
+  smokerState = getTemp;
+}
+
+bool cookApplyOnBoot() {
+  static const char* const bootNames[] = {"none", "resume prompt",
+                                          "resume prompt (time unverified)",
+                                          "finished (stale), starting at setup"};
+  CookBoot_t boot = cookBootCheck();
+  Serial.print(F("cook boot check: "));
+  Serial.println(bootNames[boot]);
+
+  if (boot == COOK_NONE) {
+    return false;
+  }
+
+  float meatT[3], pitMinT, pitMaxT, charge;
+  bool degC;
+  uint8_t flags;
+  if (!cookLoad(meatT, pitMinT, pitMaxT, degC, charge, flags)) {
+    return false;
+  }
+
+  // Targets always load: they are the setup values if the user restarts or the cook is stale
+  for (uint8_t i = 0; i < 3; i++) {
+    meatTarget[i] = meatT[i];
+  }
+  pitMin = pitMinT;
+  pitMax = pitMaxT;
+  degCFlag = degC;
+
+  if (boot == COOK_STALE) {
+    cookSaveEnd();
+    return false;
+  }
+
+  resumeUnverified = (boot == COOK_RESUME_UNVERIFIED);
+  return true;
+}
+
 // Meat Temp menu: which probes are present, rebuilt each time the menu opens
 static const ProbeId meatProbeIds[3] = {PROBE_MEAT1, PROBE_MEAT2, PROBE_MEAT3};
 static const uint8_t MEAT_MENU_MAX = 4;       // up to three probes plus Back
@@ -430,7 +487,7 @@ void processState(CWG_LCD& lcd) {
   switch (smokerState) {
     case splashScreen: {
       if (enteringState) {  // only run once when entering this state
-        lcd.showSplashScreen(degCFlag, meatTarget[0], pitTempTarget);
+        lcd.showSplashScreen(degCFlag, meatTarget[0], pitMax);
       }
       if (encoder.moved()) {
         calPrintHelp();  // one-time command summary on first encoder move
@@ -476,8 +533,9 @@ void processState(CWG_LCD& lcd) {
         meat3AlertAttempts = 0;
 
         ina226.resetCharge();
-        cookSaveStart(meatTarget, pitTempTarget, degCFlag, ina226.getChargeUsed_mAh());
+        cookSaveStart(meatTarget, pitMin, pitMax, degCFlag, ina226.getChargeUsed_mAh());
 
+        pitOutSinceMs = 0; pitAlertSent = false; pitAlertAttempts = 0;
         constexpr uint8_t NTFY_MAX_ATTEMPTS = 10;  // alert send attempts per probe per cook
         uint8_t meat1AlertAttempts = 0;
         uint8_t meat2AlertAttempts = 0;
@@ -515,7 +573,7 @@ void processState(CWG_LCD& lcd) {
             hasRunFlag = 0;
             break;
           case MENU_PIT_TEMP:
-            smokerState = setPitTempTarget;
+            smokerState = pitTempMenu;
             hasRunFlag = 0;
             break;
           case MENU_UNITS:
@@ -539,83 +597,6 @@ void processState(CWG_LCD& lcd) {
 
       if (button.triggered(HOLD)) {
         smokerState = splashScreen;
-        hasRunFlag = 0;
-      }
-    } break;
-
-    case setPitTempTarget: {
-      static int16_t lastDrawnSelection = -1;
-      currentEncoderValue = encoder.getCount();
-
-      if (hasRunFlag == 0) {
-        encoder.newSettings(1, 2, 1, currentEncoderState);  // 1=Edit, 2=Back
-        currentEncoderValue = currentEncoderState.currentValue;
-        prevEncoderValue = currentEncoderValue;
-        hasRunFlag = 1;
-        lastDrawnSelection = -1;
-      }
-
-      if (prevEncoderValue != lastDrawnSelection) {
-        lcd.showSetPitTempTargetMenu(prevEncoderValue, pitTempTarget, degCFlag);
-        lastDrawnSelection = prevEncoderValue;
-      }
-
-      if (button.triggered(SINGLE_TAP)) {
-        if (prevEncoderValue == 1) {
-          hasRunFlag = 0;
-          bool adjustTempFlag = 1;
-          float temporaryTemperatureTarget;
-          int16_t lastDrawnAdjustValue = -1;
-
-          while (adjustTempFlag) {
-            if (hasRunFlag == 0) {
-              if (degCFlag) {
-                encoder.newSettings(100, 177, 107, currentEncoderState);
-              } else {
-                encoder.newSettings(212, 350, 225, currentEncoderState);
-              }
-              currentEncoderValue = currentEncoderState.currentValue;
-              prevEncoderValue = currentEncoderValue;
-              hasRunFlag = 1;
-              lastDrawnAdjustValue = -1;
-            }
-            bool meatTargetFlag = 0;
-            currentEncoderValue = encoder.getCount();
-            temporaryTemperatureTarget = prevEncoderValue;
-
-            yield();
-
-            if ((int16_t)temporaryTemperatureTarget != lastDrawnAdjustValue) {
-              lcd.showTemperatureTargetAdjustment(temporaryTemperatureTarget, meatTargetFlag);
-              lastDrawnAdjustValue = (int16_t)temporaryTemperatureTarget;
-            }
-
-            if (button.update()) {
-              if (button.triggered(SINGLE_TAP)) {
-                adjustTempFlag = 0;
-                pitTempTarget = temporaryTemperatureTarget;
-                hasRunFlag = 0;
-
-                Serial.print(F("New pitTempTarget value set -> new pitTempTarget = "));
-                Serial.println(pitTempTarget);
-
-                encoder.newSettings(1, 2, 1, currentEncoderState);
-                currentEncoderValue = currentEncoderState.currentValue;
-                prevEncoderValue = currentEncoderValue;
-                hasRunFlag = 1;
-                lastDrawnSelection = -1;
-              }
-            }
-          }
-        } else if (prevEncoderValue == 2) {
-          smokerState = changeSettings;
-          hasRunFlag = 0;
-        }
-        button.update();
-      }
-
-      if (button.triggered(HOLD)) {
-        smokerState = changeSettings;
         hasRunFlag = 0;
       }
     } break;
@@ -689,6 +670,7 @@ void processState(CWG_LCD& lcd) {
       checkProbeDone("MEAT3", currentMeat3Temp, meat3LastStatus, meat3DoneFlag, meat3SentFlag,
                      meat3AlertAttempts, meatTarget[2]);
       cookSaveFlags(packCookFlags());
+      checkPitBand(currentPitTemp, pitMin, pitMax);
 
 #ifdef DEBUG_ADC_Temps
       Serial.println();
@@ -721,7 +703,7 @@ void processState(CWG_LCD& lcd) {
       TIME_BLOCK("txTemp");
       Serial.println("entering txTemp case -> transmitting data");
       // TODO: Battery field is NAN until the INA226 bus voltage replaces the placeholder
-      sendThingSpeak(currentMeat1Temp, meatTarget[0], currentPitTemp, pitTempTarget, NAN);
+      sendThingSpeak(currentMeat1Temp, meatTarget[0], currentPitTemp, pitMax, NAN);
 
       Serial.println("leaving for Sleep case");
       smokerState = Sleep;
@@ -796,11 +778,11 @@ void processState(CWG_LCD& lcd) {
         previousDisplayMillis = millis();  // start the display timer on entry, not on last timeout
         lastDrawMs = millis();
         lcd.showBBQStatusScreen(degCFlag, meatTemp, meatLabel, meatTargetF, currentPitTemp,
-                                pitTempTarget);
+                                pitMax);
       } else if (!endConfirm && (unsigned long)(millis() - lastDrawMs) >= 1000) {
         lastDrawMs = millis();  // refresh once a second while the readings change
         lcd.showBBQStatusScreen(degCFlag, meatTemp, meatLabel, meatTargetF, currentPitTemp,
-                                pitTempTarget);
+                                pitMax);
       }
 
       // Hold asks to end the cook; a tap then ends it, and a second hold cancels
@@ -811,7 +793,7 @@ void processState(CWG_LCD& lcd) {
         } else {
           endConfirm = false;
           lcd.showBBQStatusScreen(degCFlag, meatTemp, meatLabel, meatTargetF, currentPitTemp,
-                                  pitTempTarget);
+                                  pitMax);
           lastDrawMs = millis();
         }
         previousDisplayMillis = millis();  // keep the screen up for a full display interval
@@ -923,6 +905,97 @@ void processState(CWG_LCD& lcd) {
 
       if (button.triggered(HOLD)) {
         smokerState = meatTempMenu;
+        hasRunFlag = 0;
+      }
+    } break;
+
+    case pitTempMenu: {
+      static int16_t lastDrawnSelection = -1;
+      static char pitDetail[2][16];
+      static const char* const pitLabels[3] = {"Min", "Max", "Back"};
+      static const char* pitDetails[3] = {pitDetail[0], pitDetail[1], ""};
+      currentEncoderValue = encoder.getCount();
+
+      if (hasRunFlag == 0) {
+        encoder.newRange(1, 3, 1, true, currentEncoderState);  // menus wrap
+        prevEncoderValue = currentEncoderState.currentValue;
+        hasRunFlag = 1;
+        lastDrawnSelection = -1;
+      }
+
+      if (prevEncoderValue != lastDrawnSelection) {
+        float minShown = degCFlag ? convertDegFtoDegC(pitMin) : pitMin;
+        float maxShown = degCFlag ? convertDegFtoDegC(pitMax) : pitMax;
+        char unit = degCFlag ? 'C' : 'F';
+        snprintf(pitDetail[0], sizeof(pitDetail[0]), "%.0f%c", minShown, unit);
+        snprintf(pitDetail[1], sizeof(pitDetail[1]), "%.0f%c", maxShown, unit);
+        lcd.showListMenu("PIT TEMP", pitLabels, pitDetails, 3, (uint8_t)prevEncoderValue);
+        lastDrawnSelection = prevEncoderValue;
+      }
+
+      if (button.triggered(SINGLE_TAP)) {
+        if (prevEncoderValue == 3) {  // Back
+          smokerState = changeSettings;
+          hasRunFlag = 0;
+        } else {
+          editPitIndex = (uint8_t)(prevEncoderValue - 1);  // 0 = Min, 1 = Max
+          smokerState = editPitLimit;
+          hasRunFlag = 0;
+        }
+      }
+
+      if (button.triggered(HOLD)) {
+        smokerState = changeSettings;
+        hasRunFlag = 0;
+      }
+    } break;
+
+    case editPitLimit: {
+      static int16_t lastDrawnValue = -1000;
+      currentEncoderValue = encoder.getCount();
+      const char* label = (editPitIndex == 0) ? "PIT MIN" : "PIT MAX";
+
+      if (hasRunFlag == 0) {
+        // Min runs from 50F (10C) up to 5F under Max. Max runs from 5F over Min up to 572F (300C).
+        float loF = (editPitIndex == 0) ? 50.0f : pitMin + 5.0f;
+        float hiF = (editPitIndex == 0) ? pitMax - 5.0f : 572.0f;
+        float currentF = (editPitIndex == 0) ? pitMin : pitMax;
+        int16_t lo = degCFlag ? (int16_t)ceilf((loF - 32.0f) * 5.0f / 9.0f) : (int16_t)ceilf(loF);
+        int16_t hi = degCFlag ? (int16_t)floorf((hiF - 32.0f) * 5.0f / 9.0f) : (int16_t)floorf(hiF);
+        float currentDisplay = degCFlag ? convertDegFtoDegC(currentF) : currentF;
+        int16_t start = (int16_t)(currentDisplay + 0.5f);
+        encoder.newRange(lo, hi, constrain(start, lo, hi), false, currentEncoderState);
+        prevEncoderValue = currentEncoderState.currentValue;
+        hasRunFlag = 1;
+        lastDrawnValue = -1000;
+      }
+
+      if (prevEncoderValue != lastDrawnValue) {
+        lcd.showMeatTargetEdit(label, prevEncoderValue, degCFlag, false);
+        lastDrawnValue = prevEncoderValue;
+      }
+
+      if (button.triggered(SINGLE_TAP)) {
+        float enteredF = degCFlag ? ((float)prevEncoderValue * 9.0f / 5.0f + 32.0f)
+                                  : (float)prevEncoderValue;
+        if (editPitIndex == 0) {
+          pitMin = enteredF;
+        } else {
+          pitMax = enteredF;
+        }
+        Serial.print(F("PIT "));
+        Serial.print(editPitIndex == 0 ? F("min") : F("max"));
+        Serial.print(F(" -> "));
+        Serial.print(prevEncoderValue);
+        Serial.print(degCFlag ? F(" C (stored as ") : F(" F (stored as "));
+        Serial.print(enteredF, 1);
+        Serial.println(F(" F)"));
+        smokerState = pitTempMenu;
+        hasRunFlag = 0;
+      }
+
+      if (button.triggered(HOLD)) {
+        smokerState = pitTempMenu;
         hasRunFlag = 0;
       }
     } break;

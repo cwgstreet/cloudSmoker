@@ -68,7 +68,8 @@ char bootResetReasonStr[24] = "";  // set once in setup(), shown on the splash s
 
 // Temperature variables- global; all temps stored in degF and converted to DegC on the fly
 float meatTarget[3] = {203, 203, 203};  // MEAT1..MEAT3 done targets, degF
-float pitTempTarget = 225;
+float pitMin = 225;  // PIT band in degF; alert after 5 min outside
+float pitMax = 250;
                                         // // Traditional low-and-slow cooking target temperature
 float currentPitTemp = 60;
 float currentMeat1Temp = 40;  // Initial baseline temperature
@@ -193,7 +194,7 @@ void setup() {
 
 #ifdef DEBUG_LCD
   // Optional: Call a primitive test string loop pattern if needed
-  lcd.showSplashScreen(degCFlag, meatTarget[0], pitTempTarget);
+  lcd.showSplashScreen(degCFlag, meatTarget[0], pitMax);
 #endif
 
 #ifdef DEBUG_PRESSTYPE

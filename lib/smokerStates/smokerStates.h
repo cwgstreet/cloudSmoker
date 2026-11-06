@@ -48,7 +48,9 @@ enum entryStates_t {
   railStatus,     // bench check: INA226 rail and stored rail voltage
   resumePrompt,   // interrupted cook found at boot: tap to resume, hold to restart
   meatTempMenu,   // list of present meat probes, then Back
-  editMeatTarget  // target editor for one meat probe, always entered in degF
+  editMeatTarget,  // target editor for one meat probe, always entered in degF
+  pitTempMenu,     // PIT Min, Max, Back
+  editPitLimit     // editor for PIT min or max
 };
 
 bool cookApplyOnBoot();

@@ -58,37 +58,7 @@ bool timeSyncWait(uint32_t timeoutMs) {
 
 bool cookStoreActive() { return activeCache; }
 
-void cookSaveStart(const float meatT[3], float pitTarget_F, bool degC, float charge_mAh) {
-  cookPrefs.putFloat("meat1T", meatT[0]);
-  cookPrefs.putFloat("meat2T", meatT[1]);
-  cookPrefs.putFloat("meat3T", meatT[2]);
-  cookPrefs.putFloat("pitT", pitTarget_F);
-  cookPrefs.putBool("degC", degC);
-  cookPrefs.putFloat("charge", charge_mAh);
-  cookPrefs.putUInt("lastSeen", clockValid() ? (uint32_t)time(nullptr) : 0);
-  cookPrefs.putUChar("flags", 0);
-  cookPrefs.putBool("active", true);  // written last, so a cut mid-write leaves no active cook
 
-  activeCache = true;
-  lastWrittenCharge = charge_mAh;
-  lastWrittenFlags = 0;
-  lastCheckpointMs = millis();
-  lastWriteMs = millis();
-}
-
-bool cookLoad(float meatT[3], float& pitTarget_F, bool& degC, float& charge_mAh, uint8_t& flags) {
-  if (!cookPrefs.isKey("meat1T")) {
-    return false;
-  }
-  meatT[0] = cookPrefs.getFloat("meat1T", 203.0f);
-  meatT[1] = cookPrefs.getFloat("meat2T", 203.0f);
-  meatT[2] = cookPrefs.getFloat("meat3T", 203.0f);
-  pitTarget_F = cookPrefs.getFloat("pitT", 225.0f);
-  degC = cookPrefs.getBool("degC", false);
-  charge_mAh = cookPrefs.getFloat("charge", 0.0f);
-  flags = cookPrefs.getUChar("flags", 0);
-  return true;
-}
 
 void cookSaveFlags(uint8_t flags) {
   if (!activeCache || flags == lastWrittenFlags) {
@@ -148,4 +118,39 @@ CookBoot_t cookBootCheck() {
     return COOK_STALE;
   }
   return COOK_RESUME;
+}
+void cookSaveStart(const float meatT[3], float pitMin_F, float pitMax_F, bool degC,
+                   float charge_mAh) {
+  cookPrefs.putFloat("meat1T", meatT[0]);
+  cookPrefs.putFloat("meat2T", meatT[1]);
+  cookPrefs.putFloat("meat3T", meatT[2]);
+  cookPrefs.putFloat("pitMin", pitMin_F);
+  cookPrefs.putFloat("pitMax", pitMax_F);
+  cookPrefs.putBool("degC", degC);
+  cookPrefs.putFloat("charge", charge_mAh);
+  cookPrefs.putUInt("lastSeen", clockValid() ? (uint32_t)time(nullptr) : 0);
+  cookPrefs.putUChar("flags", 0);
+  cookPrefs.putBool("active", true);  // written last, so a cut mid-write leaves no active cook
+
+  activeCache = true;
+  lastWrittenCharge = charge_mAh;
+  lastWrittenFlags = 0;
+  lastCheckpointMs = millis();
+  lastWriteMs = millis();
+}
+
+bool cookLoad(float meatT[3], float& pitMin_F, float& pitMax_F, bool& degC, float& charge_mAh,
+              uint8_t& flags) {
+  if (!cookPrefs.isKey("meat1T")) {
+    return false;
+  }
+  meatT[0] = cookPrefs.getFloat("meat1T", 203.0f);
+  meatT[1] = cookPrefs.getFloat("meat2T", 203.0f);
+  meatT[2] = cookPrefs.getFloat("meat3T", 203.0f);
+  pitMin_F = cookPrefs.getFloat("pitMin", 225.0f);
+  pitMax_F = cookPrefs.getFloat("pitMax", 250.0f);
+  degC = cookPrefs.getBool("degC", false);
+  charge_mAh = cookPrefs.getFloat("charge", 0.0f);
+  flags = cookPrefs.getUChar("flags", 0);
+  return true;
 }
