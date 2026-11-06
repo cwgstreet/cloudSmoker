@@ -482,7 +482,7 @@ static void buildMeatMenu() {
       meatMenuProbe[meatMenuCount] = i;
       snprintf(meatMenuLabel[meatMenuCount], sizeof(meatMenuLabel[0]), "MEAT%u", i + 1);
       float shown = degCFlag ? convertDegFtoDegC(meatTarget[i]) : meatTarget[i];
-      snprintf(meatMenuDetail[meatMenuCount], sizeof(meatMenuDetail[0]), "target %.0f%c", shown,
+      snprintf(meatMenuDetail[meatMenuCount], sizeof(meatMenuDetail[0]), "%.0f%c", shown,
                degCFlag ? 'C' : 'F');
       meatMenuCount++;
     }

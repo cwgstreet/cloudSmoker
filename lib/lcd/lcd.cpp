@@ -303,7 +303,8 @@ void CWG_LCD::showListMenu(const char* header, const char* const* labels,
   tft.drawString(labels[index - 1], 120, 110, 4);
 
   tft.setTextColor(TFT_LIGHTGREY, TFT_BLACK);
-  tft.drawString(details[index - 1], 120, 145, 2);
+  tft.setTextColor(TFT_YELLOW, TFT_BLACK);
+  tft.drawString(details[index - 1], 120, 150, 4);
 
   drawProgressDots(index, count);
 }
