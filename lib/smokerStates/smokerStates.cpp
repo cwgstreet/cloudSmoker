@@ -878,28 +878,39 @@ void processState(CWG_LCD& lcd) {
       static int16_t lastDrawnValue = -1000;
       currentEncoderValue = encoder.getCount();
 
+      const char* probeName = (editMeatIndex == 0) ? "MEAT1" : (editMeatIndex == 1) ? "MEAT2" : "MEAT3";
+
       if (hasRunFlag == 0) {
-        // Targets are always entered in degF, in both unit modes, over the meat range 122 to 220
-        int16_t start = (int16_t)(meatTarget[editMeatIndex] + 0.5f);
-        encoder.newRange(122, 220, constrain(start, (int16_t)122, (int16_t)220), false,
-                         currentEncoderState);
+        // The encoder counts in the display units. The limits are 50 to 105 C, which is 122 to
+        // 221 F, so both unit modes cover the same temperatures.
+        float currentF = meatTarget[editMeatIndex];
+        int16_t lo = degCFlag ? 50 : 122;
+        int16_t hi = degCFlag ? 105 : 220;
+        float currentDisplay = degCFlag ? convertDegFtoDegC(currentF) : currentF;
+        int16_t start = (int16_t)(currentDisplay + 0.5f);
+        encoder.newRange(lo, hi, constrain(start, lo, hi), false, currentEncoderState);
         prevEncoderValue = currentEncoderState.currentValue;
         hasRunFlag = 1;
         lastDrawnValue = -1000;
       }
 
       if (prevEncoderValue != lastDrawnValue) {
-        lcd.showTemperatureTargetAdjustment((float)prevEncoderValue, true);
+        lcd.showMeatTargetEdit(probeName, prevEncoderValue, degCFlag);
         lastDrawnValue = prevEncoderValue;
       }
 
       if (button.triggered(SINGLE_TAP)) {
-        meatTarget[editMeatIndex] = (float)prevEncoderValue;  // stored as degF
-        Serial.print(F("meat target set: MEAT"));
-        Serial.print(editMeatIndex + 1);
+        // Convert the entry to degF for storage. Everything else in the code uses degF.
+        float enteredF = degCFlag ? ((float)prevEncoderValue * 9.0f / 5.0f + 32.0f)
+                                  : (float)prevEncoderValue;
+        meatTarget[editMeatIndex] = enteredF;
+        Serial.print(F("meat target set: "));
+        Serial.print(probeName);
         Serial.print(F(" -> "));
-        Serial.print(meatTarget[editMeatIndex], 1);
-        Serial.println(F(" F"));
+        Serial.print(prevEncoderValue);
+        Serial.print(degCFlag ? F(" C (stored as ") : F(" F (stored as "));
+        Serial.print(enteredF, 1);
+        Serial.println(F(" F)"));
         smokerState = meatTempMenu;
         hasRunFlag = 0;
       }

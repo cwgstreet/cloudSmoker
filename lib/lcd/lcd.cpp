@@ -491,3 +491,21 @@ void CWG_LCD::showBBQStatusScreen(bool degCFlag, float currentMeatTemp, const ch
   tft.drawString(meatLabel, 120, 133, 2);  // MEAT1, MEAT2 or MEAT3, or "MEAT" if none
   tft.drawString(meatStr, 120, 156, 4);
 }
+
+void CWG_LCD::showMeatTargetEdit(const char* label, int16_t value, bool degCFlag) {
+  clearScreen();
+
+  char header[20];
+  snprintf(header, sizeof(header), "%s TARGET", label);
+  drawUIFrame(header);
+
+  char valueStr[12];
+  snprintf(valueStr, sizeof(valueStr), "%d%c", value, degCFlag ? 'C' : 'F');
+
+  tft.setTextDatum(MC_DATUM);
+  tft.setTextColor(TFT_WHITE, TFT_BLACK);
+  tft.drawString(valueStr, 120, 115, 4);
+
+  tft.setTextColor(TFT_LIGHTGREY, TFT_BLACK);
+  tft.drawString("Tap: save  Hold: back", 120, 160, 2);
+}
