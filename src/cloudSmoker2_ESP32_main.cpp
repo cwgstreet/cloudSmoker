@@ -194,7 +194,7 @@ void setup() {
 
 #ifdef DEBUG_LCD
   // Optional: Call a primitive test string loop pattern if needed
-  lcd.showSplashScreen(degCFlag, meatTarget[0], pitMax);
+  lcd.showSplashScreen(degCFlag, meatTarget[0], pitMin, pitMax);
 #endif
 
 #ifdef DEBUG_PRESSTYPE

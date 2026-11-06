@@ -47,39 +47,6 @@ void CWG_LCD::drawUIFrame(const char* headerText) {
 }
 
 // Ported splash screen displaying target metrics inside UI framework
-void CWG_LCD::showSplashScreen(bool degCFlag, float meatDoneTemp, float pitTempTarget) {
-  clearScreen();
-  drawUIFrame("cloudSmoker2");
-
-  char meatStr[12];
-  char pitStr[12];
-
-  // Convert values matching your legacy conversions
-  if (degCFlag) {
-    snprintf(meatStr, sizeof(meatStr), "Meat: %.0fC", convertDegFtoDegC(meatDoneTemp));
-    snprintf(pitStr, sizeof(pitStr), "Pit: %.0fC", convertDegFtoDegC(pitTempTarget));
-  } else {
-    snprintf(meatStr, sizeof(meatStr), "Meat: %.0fF", meatDoneTemp);
-    snprintf(pitStr, sizeof(pitStr), "Pit: %.0fF", pitTempTarget);
-  }
-
-  tft.setTextDatum(MC_DATUM);  // Middle-Center anchoring
-  tft.setTextColor(TFT_WHITE, TFT_BLACK);
-
-  tft.drawString("BBQ TARGETS", 120, 95, 2);
-  tft.setTextColor(TFT_CYAN, TFT_BLACK);
-  tft.drawString(meatStr, 120, 130, 4);  // Larger Font 4 for readability
-  tft.drawString(pitStr, 120, 165, 4);
-
-  tft.setTextColor(TFT_GREEN, TFT_BLACK);
-  tft.drawString("Turn Encoder", 120, 205, 2);
-
-  //! DEBUG CODE BLOCK - Temporary
-  tft.setTextColor(TFT_DARKGREY, TFT_BLACK);
-  tft.drawString(bootResetReasonStr, 120, 228,
-                 1);  // small font, clear of "Turn Encoder" above it
-                      //! end DEBUG block
-}
 
 // Handles alternating text lines dynamically inside the display circle center
 void CWG_LCD::printMenuLine(const char* c) {
@@ -404,7 +371,8 @@ void CWG_LCD::showSetTempUnitsMenu(int16_t prevEncoderValue, bool degCFlag) {
 
   tft.setTextDatum(MC_DATUM);
   tft.setTextColor(TFT_LIGHTGREY, TFT_BLACK);
-  tft.drawString(currentUnitStr, 120, 90, 2);
+  tft.setTextColor(TFT_YELLOW, TFT_BLACK);
+  tft.drawString(currentUnitStr, 120, 90, 4);
 
   tft.setTextColor(TFT_WHITE, TFT_BLACK);
   tft.drawString(label, 120, 130, 4);
@@ -546,4 +514,42 @@ void CWG_LCD::showLimitEdit(const char* label, int16_t value, bool degCFlag, boo
 
   tft.setTextColor(TFT_LIGHTGREY, TFT_BLACK);
   tft.drawString("Tap: save  Hold: back", 120, 160, 2);
+}
+
+void CWG_LCD::showSplashScreen(bool degCFlag, float meatTargetTemp, float pitMinTemp,
+                               float pitMaxTemp) {
+  clearScreen();
+  drawUIFrame("cloudSmoker2");
+
+  char meatStr[12];
+  char pitStr[24];
+  char unit = degCFlag ? 'C' : 'F';
+
+  float meatShown = degCFlag ? convertDegFtoDegC(meatTargetTemp) : meatTargetTemp;
+  float maxShown = degCFlag ? convertDegFtoDegC(pitMaxTemp) : pitMaxTemp;
+
+  snprintf(meatStr, sizeof(meatStr), "Meat: %.0f%c", meatShown, unit);
+  if (isnan(pitMinTemp)) {
+    snprintf(pitStr, sizeof(pitStr), "Pit: OFF / %.0f%c", maxShown, unit);
+  } else {
+    float minShown = degCFlag ? convertDegFtoDegC(pitMinTemp) : pitMinTemp;
+    snprintf(pitStr, sizeof(pitStr), "Pit: %.0f / %.0f%c", minShown, maxShown, unit);
+  }
+
+  tft.setTextDatum(MC_DATUM);  // Middle-Center anchoring
+  tft.setTextColor(TFT_WHITE, TFT_BLACK);
+
+  tft.drawString("BBQ TARGETS", 120, 95, 2);
+  tft.setTextColor(TFT_CYAN, TFT_BLACK);
+  tft.drawString(meatStr, 120, 130, 4);  // Larger Font 4 for readability
+  tft.drawString(pitStr, 120, 165, 4);
+
+  tft.setTextColor(TFT_GREEN, TFT_BLACK);
+  tft.drawString("Turn Encoder", 120, 205, 2);
+
+  //! DEBUG CODE BLOCK - Temporary
+  tft.setTextColor(TFT_DARKGREY, TFT_BLACK);
+  tft.drawString(bootResetReasonStr, 120, 228,
+                 1);  // small font, clear of "Turn Encoder" above it
+                      //! end DEBUG block
 }

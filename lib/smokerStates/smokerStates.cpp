@@ -397,6 +397,9 @@ static void checkPitBand(float pitF, float minF, float maxF) {
   }
 }
 
+// Set on resume: the splash shows restored targets until this time, then the cook starts
+static unsigned long resumeSplashEndMs = 0;  // 0 = no timed splash pending
+
 // Restores the stored cook into the running state and starts it.
 static void applyResume() {
   float meatT[3], pitMinT, pitMaxT, charge;
@@ -423,7 +426,8 @@ static void applyResume() {
 
   startCookTime_ms = millis();
   showCookOnNextSleep = true;
-  smokerState = getTemp;
+  resumeSplashEndMs = millis() + 3000;  // timed splash with restored targets
+  smokerState = splashScreen;
 }
 
 bool cookApplyOnBoot() {
@@ -506,8 +510,18 @@ void processState(CWG_LCD& lcd) {
   switch (smokerState) {
     case splashScreen: {
       if (enteringState) {  // only run once when entering this state
-        lcd.showSplashScreen(degCFlag, meatTarget[0], pitMax);
+        lcd.showSplashScreen(degCFlag, meatTarget[0], pitMin, pitMax);
       }
+
+      // After a resume, show the restored targets for a few seconds, then start the cook
+      if (resumeSplashEndMs != 0) {
+        if ((long)(millis() - resumeSplashEndMs) >= 0) {
+          resumeSplashEndMs = 0;
+          smokerState = getTemp;
+        }
+        break;
+      }
+
       if (encoder.moved()) {
         calPrintHelp();  // one-time command summary on first encoder move
         smokerState = launchPad;
