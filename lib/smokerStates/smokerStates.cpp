@@ -60,7 +60,7 @@ struct ScopeTimer {
 entryStates_t smokerState;
 
 // External globals from main.cpp mapped with exact matching types
-extern float meatDoneTemp;
+extern float meatTarget[3];
 extern float pitTempTarget;
 extern float currentPitTemp;
 extern float currentMeat1Temp;
@@ -101,6 +101,22 @@ static uint8_t packCookFlags() {
          (meat2SentFlag ? 8 : 0) | (meat3DoneFlag ? 16 : 0) | (meat3SentFlag ? 32 : 0);
 }
 
+// Picks the meat probe for the cook screen: the first of MEAT1, MEAT2, MEAT3 with data.
+static void pickCookMeat(float& temp, const char*& label, float& target) {
+  for (uint8_t i = 0; i < 3; i++) {
+    float t = (i == 0) ? currentMeat1Temp : (i == 1) ? currentMeat2Temp : currentMeat3Temp;
+    if (!isnan(t)) {
+      temp = t;
+      label = (i == 0) ? "MEAT1" : (i == 1) ? "MEAT2" : "MEAT3";
+      target = meatTarget[i];
+      return;
+    }
+  }
+  temp = NAN;
+  label = "MEAT";
+  target = meatTarget[0];
+}
+
 // Set on resume so the cook screen appears once the first readings are in
 static bool showCookOnNextSleep = false;
 
@@ -109,14 +125,16 @@ static bool resumeUnverified = false;
 
 // Restores the stored cook into the running state and starts it.
 static void applyResume() {
-  float meatT, pitT, charge;
+  float meatT[3], pitT, charge;
   bool degC;
   uint8_t flags;
   if (!cookLoad(meatT, pitT, degC, charge, flags)) {
     return;
   }
 
-  meatDoneTemp = meatT;
+  for (uint8_t i = 0; i < 3; i++) {
+    meatTarget[i] = meatT[i];
+  }
   pitTempTarget = pitT;
   degCFlag = degC;
   ina226.setChargeUsed_mAh(charge);
@@ -147,7 +165,7 @@ bool cookApplyOnBoot() {
     return false;
   }
 
-  float meatT, pitT, charge;
+  float meatT[3], pitT, charge;
   bool degC;
   uint8_t flags;
   if (!cookLoad(meatT, pitT, degC, charge, flags)) {
@@ -155,7 +173,9 @@ bool cookApplyOnBoot() {
   }
 
   // Targets always load: they are the setup values if the user restarts or the cook is stale
-  meatDoneTemp = meatT;
+  for (uint8_t i = 0; i < 3; i++) {
+    meatTarget[i] = meatT[i];
+  }
   pitTempTarget = pitT;
   degCFlag = degC;
 
@@ -247,8 +267,8 @@ bool sendThingSpeak(float meat1F, float meatTargetF, float pitF, float pitTarget
 // Reports done transitions for one probe and sends the alert once per cook.
 // lastStatus and doneFlag are references, so the helper updates each probe's own variables.
 void checkProbeDone(const char* name, float tempF, DoneStatus& lastStatus, bool& doneFlag,
-                    bool& sentFlag, uint8_t& attempts) {
-  DoneStatus status = probeDoneStatus(tempF, meatDoneTemp);
+                    bool& sentFlag, uint8_t& attempts, float targetF) {
+  DoneStatus status = probeDoneStatus(tempF, targetF);
 
   if (status != lastStatus) {
     Serial.print(name);
@@ -272,8 +292,8 @@ void checkProbeDone(const char* name, float tempF, DoneStatus& lastStatus, bool&
   // Alert: one send per cycle while online, up to NTFY_MAX_ATTEMPTS. Offline cycles don't count.
   if (doneFlag && !sentFlag && attempts < NTFY_MAX_ATTEMPTS && WiFi.status() == WL_CONNECTED) {
     attempts++;
-    String msg = String(name) + " reached " + String(tempF, 0) + "F (target " +
-                 String(meatDoneTemp, 0) + "F)";
+    String msg =
+        String(name) + " reached " + String(tempF, 0) + "F (target " + String(targetF, 0) + "F)";
     if (sendNtfyAlert(msg)) {
       sentFlag = true;
       Serial.print(name);
@@ -367,6 +387,36 @@ static bool settleStep(float reading, float* window, uint8_t& count, float& out)
   return false;
 }
 
+// Meat Temp menu: which probes are present, rebuilt each time the menu opens
+static const ProbeId meatProbeIds[3] = {PROBE_MEAT1, PROBE_MEAT2, PROBE_MEAT3};
+static const uint8_t MEAT_MENU_MAX = 4;       // up to three probes plus Back
+static uint8_t meatMenuProbe[MEAT_MENU_MAX];  // probe index per entry, 255 = Back
+static char meatMenuLabel[MEAT_MENU_MAX][8];
+static char meatMenuDetail[MEAT_MENU_MAX][16];
+static uint8_t meatMenuCount = 0;
+static uint8_t editMeatIndex = 0;
+
+// Takes a fresh reading of each meat jack and lists the ones with a probe. Targets are shown in
+// the display units, but are always stored in degF.
+static void buildMeatMenu() {
+  meatMenuCount = 0;
+  for (uint8_t i = 0; i < 3; i++) {
+    float t = rawProbeF(meatProbeIds[i]);
+    if (!isnan(t)) {
+      meatMenuProbe[meatMenuCount] = i;
+      snprintf(meatMenuLabel[meatMenuCount], sizeof(meatMenuLabel[0]), "MEAT%u", i + 1);
+      float shown = degCFlag ? convertDegFtoDegC(meatTarget[i]) : meatTarget[i];
+      snprintf(meatMenuDetail[meatMenuCount], sizeof(meatMenuDetail[0]), "target %.0f%c", shown,
+               degCFlag ? 'C' : 'F');
+      meatMenuCount++;
+    }
+  }
+  meatMenuProbe[meatMenuCount] = 255;  // Back
+  snprintf(meatMenuLabel[meatMenuCount], sizeof(meatMenuLabel[0]), "Back");
+  meatMenuDetail[meatMenuCount][0] = '\0';
+  meatMenuCount++;
+}
+
 void processState(CWG_LCD& lcd) {
   // Declare this at the top of the function to avoid switch-case initialization bypass errors
   int16_t currentEncoderValue;
@@ -380,7 +430,7 @@ void processState(CWG_LCD& lcd) {
   switch (smokerState) {
     case splashScreen: {
       if (enteringState) {  // only run once when entering this state
-        lcd.showSplashScreen(degCFlag, meatDoneTemp, pitTempTarget);
+        lcd.showSplashScreen(degCFlag, meatTarget[0], pitTempTarget);
       }
       if (encoder.moved()) {
         calPrintHelp();  // one-time command summary on first encoder move
@@ -426,7 +476,7 @@ void processState(CWG_LCD& lcd) {
         meat3AlertAttempts = 0;
 
         ina226.resetCharge();
-        cookSaveStart(meatDoneTemp, pitTempTarget, degCFlag, ina226.getChargeUsed_mAh());
+        cookSaveStart(meatTarget, pitTempTarget, degCFlag, ina226.getChargeUsed_mAh());
 
         constexpr uint8_t NTFY_MAX_ATTEMPTS = 10;  // alert send attempts per probe per cook
         uint8_t meat1AlertAttempts = 0;
@@ -461,7 +511,7 @@ void processState(CWG_LCD& lcd) {
       if (button.triggered(SINGLE_TAP)) {
         switch (prevEncoderValue) {
           case MENU_MEAT_TEMP:
-            smokerState = setMeatDoneTemp;
+            smokerState = meatTempMenu;
             hasRunFlag = 0;
             break;
           case MENU_PIT_TEMP:
@@ -489,83 +539,6 @@ void processState(CWG_LCD& lcd) {
 
       if (button.triggered(HOLD)) {
         smokerState = splashScreen;
-        hasRunFlag = 0;
-      }
-    } break;
-
-    case setMeatDoneTemp: {
-      static int16_t lastDrawnSelection = -1;
-      currentEncoderValue = encoder.getCount();
-
-      if (hasRunFlag == 0) {
-        encoder.newSettings(1, 2, 1, currentEncoderState);  // 1=Edit, 2=Back
-        currentEncoderValue = currentEncoderState.currentValue;
-        prevEncoderValue = currentEncoderValue;
-        hasRunFlag = 1;
-        lastDrawnSelection = -1;
-      }
-
-      if (prevEncoderValue != lastDrawnSelection) {
-        lcd.showSetMeatDoneTempMenu(prevEncoderValue, meatDoneTemp, degCFlag);
-        lastDrawnSelection = prevEncoderValue;
-      }
-
-      if (button.triggered(SINGLE_TAP)) {
-        if (prevEncoderValue == 1) {
-          hasRunFlag = 0;
-          bool adjustTempFlag = 1;
-          float temporaryTemperatureTarget;
-          int16_t lastDrawnAdjustValue = -1;
-
-          while (adjustTempFlag) {
-            if (hasRunFlag == 0) {
-              if (degCFlag) {
-                encoder.newSettings(90, 105, 95, currentEncoderState);
-              } else {
-                encoder.newSettings(122, 220, 203, currentEncoderState);
-              }
-              currentEncoderValue = currentEncoderState.currentValue;
-              prevEncoderValue = currentEncoderValue;
-              hasRunFlag = 1;
-              lastDrawnAdjustValue = -1;
-            }
-            bool meatTargetFlag = 1;
-            currentEncoderValue = encoder.getCount();
-            temporaryTemperatureTarget = prevEncoderValue;
-
-            yield();
-
-            if ((int16_t)temporaryTemperatureTarget != lastDrawnAdjustValue) {
-              lcd.showTemperatureTargetAdjustment(temporaryTemperatureTarget, meatTargetFlag);
-              lastDrawnAdjustValue = (int16_t)temporaryTemperatureTarget;
-            }
-
-            if (button.update()) {
-              if (button.triggered(SINGLE_TAP)) {
-                adjustTempFlag = 0;
-                meatDoneTemp = temporaryTemperatureTarget;
-                hasRunFlag = 0;
-
-                Serial.print(F("New meatDoneTemp value set -> new meatDoneTemp = "));
-                Serial.println(meatDoneTemp);
-
-                encoder.newSettings(1, 2, 1, currentEncoderState);
-                currentEncoderValue = currentEncoderState.currentValue;
-                prevEncoderValue = currentEncoderValue;
-                hasRunFlag = 1;
-                lastDrawnSelection = -1;  // force settings screen to redraw on return
-              }
-            }
-          }
-        } else if (prevEncoderValue == 2) {
-          smokerState = changeSettings;
-          hasRunFlag = 0;
-        }
-        button.update();
-      }
-
-      if (button.triggered(HOLD)) {
-        smokerState = changeSettings;  // up one level, not all the way to splashScreen
         hasRunFlag = 0;
       }
     } break;
@@ -710,11 +683,11 @@ void processState(CWG_LCD& lcd) {
                                 voltageMeat3_medianFiltered_V);
       // Done decisions for each meat probe
       checkProbeDone("MEAT1", currentMeat1Temp, meat1LastStatus, meat1DoneFlag, meat1SentFlag,
-                     meat1AlertAttempts);
+                     meat1AlertAttempts, meatTarget[0]);
       checkProbeDone("MEAT2", currentMeat2Temp, meat2LastStatus, meat2DoneFlag, meat2SentFlag,
-                     meat2AlertAttempts);
+                     meat2AlertAttempts, meatTarget[1]);
       checkProbeDone("MEAT3", currentMeat3Temp, meat3LastStatus, meat3DoneFlag, meat3SentFlag,
-                     meat3AlertAttempts);
+                     meat3AlertAttempts, meatTarget[2]);
       cookSaveFlags(packCookFlags());
 
 #ifdef DEBUG_ADC_Temps
@@ -748,7 +721,7 @@ void processState(CWG_LCD& lcd) {
       TIME_BLOCK("txTemp");
       Serial.println("entering txTemp case -> transmitting data");
       // TODO: Battery field is NAN until the INA226 bus voltage replaces the placeholder
-      sendThingSpeak(currentMeat1Temp, meatDoneTemp, currentPitTemp, pitTempTarget, NAN);
+      sendThingSpeak(currentMeat1Temp, meatTarget[0], currentPitTemp, pitTempTarget, NAN);
 
       Serial.println("leaving for Sleep case");
       smokerState = Sleep;
@@ -810,13 +783,23 @@ void processState(CWG_LCD& lcd) {
 
     case bbqStatus: {
       static bool endConfirm = false;
+      static unsigned long lastDrawMs = 0;
 
       lcd.display();
 
+      float meatTemp, meatTargetF;
+      const char* meatLabel;
+      pickCookMeat(meatTemp, meatLabel, meatTargetF);
+
       if (enteringState) {
-        endConfirm = false;                // re-entering always cancels a pending end
+        endConfirm = false;  // re-entering always cancels a pending end
         previousDisplayMillis = millis();  // start the display timer on entry, not on last timeout
-        lcd.showBBQStatusScreen(degCFlag, currentMeat1Temp, meatDoneTemp, currentPitTemp,
+        lastDrawMs = millis();
+        lcd.showBBQStatusScreen(degCFlag, meatTemp, meatLabel, meatTargetF, currentPitTemp,
+                                pitTempTarget);
+      } else if (!endConfirm && (unsigned long)(millis() - lastDrawMs) >= 1000) {
+        lastDrawMs = millis();  // refresh once a second while the readings change
+        lcd.showBBQStatusScreen(degCFlag, meatTemp, meatLabel, meatTargetF, currentPitTemp,
                                 pitTempTarget);
       }
 
@@ -827,15 +810,16 @@ void processState(CWG_LCD& lcd) {
           lcd.showEndCookConfirm();
         } else {
           endConfirm = false;
-          lcd.showBBQStatusScreen(degCFlag, currentMeat1Temp, meatDoneTemp, currentPitTemp,
+          lcd.showBBQStatusScreen(degCFlag, meatTemp, meatLabel, meatTargetF, currentPitTemp,
                                   pitTempTarget);
+          lastDrawMs = millis();
         }
         previousDisplayMillis = millis();  // keep the screen up for a full display interval
       } else if (endConfirm && button.triggered(SINGLE_TAP)) {
         endConfirm = false;
         cookSaveEnd();
         Serial.println(F("cook ended by user -> launch pad"));
-        // show the probe targets, then on encoder move, it will proceed to launchPad
+        // show the probe targets first, then an encoder move brings up the launch pad
         smokerState = splashScreen;
         hasRunFlag = 0;
         break;
@@ -845,6 +829,83 @@ void processState(CWG_LCD& lcd) {
       if ((unsigned long)(currentMillis - previousDisplayMillis) >= displayInterval) {
         previousDisplayMillis = millis();
         smokerState = Sleep;
+        hasRunFlag = 0;
+      }
+    } break;
+
+    case meatTempMenu: {
+      static int16_t lastDrawnSelection = -1;
+      currentEncoderValue = encoder.getCount();
+
+      if (hasRunFlag == 0) {
+        buildMeatMenu();
+        encoder.newRange(1, (int16_t)meatMenuCount, 1, true, currentEncoderState);  // menus wrap
+        prevEncoderValue = currentEncoderState.currentValue;
+        hasRunFlag = 1;
+        lastDrawnSelection = -1;
+      }
+
+      if (prevEncoderValue != lastDrawnSelection) {
+        const char* labels[MEAT_MENU_MAX];
+        const char* details[MEAT_MENU_MAX];
+        for (uint8_t i = 0; i < meatMenuCount; i++) {
+          labels[i] = meatMenuLabel[i];
+          details[i] = meatMenuDetail[i];
+        }
+        lcd.showListMenu("MEAT TEMP", labels, details, meatMenuCount, (uint8_t)prevEncoderValue);
+        lastDrawnSelection = prevEncoderValue;
+      }
+
+      if (button.triggered(SINGLE_TAP)) {
+        uint8_t entry = (uint8_t)prevEncoderValue - 1;
+        if (meatMenuProbe[entry] == 255) {  // Back
+          smokerState = changeSettings;
+          hasRunFlag = 0;
+        } else {
+          editMeatIndex = meatMenuProbe[entry];
+          smokerState = editMeatTarget;
+          hasRunFlag = 0;
+        }
+      }
+
+      if (button.triggered(HOLD)) {
+        smokerState = changeSettings;
+        hasRunFlag = 0;
+      }
+    } break;
+
+    case editMeatTarget: {
+      static int16_t lastDrawnValue = -1000;
+      currentEncoderValue = encoder.getCount();
+
+      if (hasRunFlag == 0) {
+        // Targets are always entered in degF, in both unit modes, over the meat range 122 to 220
+        int16_t start = (int16_t)(meatTarget[editMeatIndex] + 0.5f);
+        encoder.newRange(122, 220, constrain(start, (int16_t)122, (int16_t)220), false,
+                         currentEncoderState);
+        prevEncoderValue = currentEncoderState.currentValue;
+        hasRunFlag = 1;
+        lastDrawnValue = -1000;
+      }
+
+      if (prevEncoderValue != lastDrawnValue) {
+        lcd.showTemperatureTargetAdjustment((float)prevEncoderValue, true);
+        lastDrawnValue = prevEncoderValue;
+      }
+
+      if (button.triggered(SINGLE_TAP)) {
+        meatTarget[editMeatIndex] = (float)prevEncoderValue;  // stored as degF
+        Serial.print(F("meat target set: MEAT"));
+        Serial.print(editMeatIndex + 1);
+        Serial.print(F(" -> "));
+        Serial.print(meatTarget[editMeatIndex], 1);
+        Serial.println(F(" F"));
+        smokerState = meatTempMenu;
+        hasRunFlag = 0;
+      }
+
+      if (button.triggered(HOLD)) {
+        smokerState = meatTempMenu;
         hasRunFlag = 0;
       }
     } break;

@@ -289,6 +289,25 @@ void CWG_LCD::showEndCookConfirm() {
   tft.drawString("Hold: keep cooking", 120, 140, 2);
 }
 
+void CWG_LCD::showListMenu(const char* header, const char* const* labels,
+                           const char* const* details, uint8_t count, uint8_t selected) {
+  clearScreen();
+  drawUIFrame(header);
+  if (count == 0) {
+    return;
+  }
+  uint8_t index = constrain(selected, (uint8_t)1, count);
+
+  tft.setTextDatum(MC_DATUM);
+  tft.setTextColor(TFT_WHITE, TFT_BLACK);
+  tft.drawString(labels[index - 1], 120, 110, 4);
+
+  tft.setTextColor(TFT_LIGHTGREY, TFT_BLACK);
+  tft.drawString(details[index - 1], 120, 145, 2);
+
+  drawProgressDots(index, count);
+}
+
 void CWG_LCD::showResumePrompt(bool timeUnverified) {
   clearScreen();
   drawUIFrame("RESUME COOK?");
@@ -400,8 +419,20 @@ static float progressFraction(float temp, float target) {
   return constrain(temp / target, 0.0f, 1.0f);
 }
 
-void CWG_LCD::showBBQStatusScreen(bool degCFlag, float currentMeat1Temp, float meatDoneTemp,
-                                  float currentPitTemp, float pitTempTarget) {
+
+void CWG_LCD::display() {
+#ifdef PIN_DISP_BL
+  digitalWrite(PIN_DISP_BL, HIGH);
+#endif
+}
+
+void CWG_LCD::noDisplay() {
+#ifdef PIN_DISP_BL
+  digitalWrite(PIN_DISP_BL, LOW);
+#endif
+}
+void CWG_LCD::showBBQStatusScreen(bool degCFlag, float currentMeatTemp, const char* meatLabel,
+                                  float meatDoneTemp, float currentPitTemp, float pitTempTarget) {
   clearScreen();
 
   const int cx = 120, cy = 120;
@@ -410,7 +441,7 @@ void CWG_LCD::showBBQStatusScreen(bool degCFlag, float currentMeat1Temp, float m
 
   // Clamp to [0,1] so an over-target probe doesn't overflow the ring past full
   float pitFraction = progressFraction(currentPitTemp, pitTempTarget);
-  float meatFraction = progressFraction(currentMeat1Temp, meatDoneTemp);
+  float meatFraction = progressFraction(currentMeatTemp, meatDoneTemp);
 
   uint16_t pitAngle = (uint16_t)(360.0f * pitFraction);
   uint16_t meatAngle = (uint16_t)(360.0f * meatFraction);
@@ -431,10 +462,10 @@ void CWG_LCD::showBBQStatusScreen(bool degCFlag, float currentMeat1Temp, float m
                       TFT_BLACK, true);
   }
 
-  // Center digits
+  // Centre digits
   const char* unit = degCFlag ? "C" : "F";
   float pitDisplay = degCFlag ? convertDegFtoDegC(currentPitTemp) : currentPitTemp;
-  float meatDisplay = degCFlag ? convertDegFtoDegC(currentMeat1Temp) : currentMeat1Temp;
+  float meatDisplay = degCFlag ? convertDegFtoDegC(currentMeatTemp) : currentMeatTemp;
 
   char pitStr[16], meatStr[16];
   if (isnan(currentPitTemp)) {
@@ -442,11 +473,12 @@ void CWG_LCD::showBBQStatusScreen(bool degCFlag, float currentMeat1Temp, float m
   } else {
     snprintf(pitStr, sizeof(pitStr), "%.0f%s", pitDisplay, unit);
   }
-  if (isnan(currentMeat1Temp)) {
+  if (isnan(currentMeatTemp)) {
     snprintf(meatStr, sizeof(meatStr), "--%s", unit);  // no probe
   } else {
     snprintf(meatStr, sizeof(meatStr), "%.0f%s", meatDisplay, unit);
   }
+
   tft.setTextDatum(MC_DATUM);
 
   tft.setTextColor(TFT_ORANGE, TFT_BLACK);
@@ -456,18 +488,6 @@ void CWG_LCD::showBBQStatusScreen(bool degCFlag, float currentMeat1Temp, float m
   tft.drawFastHLine(70, 120, 100, TFT_DARKGREY);
 
   tft.setTextColor(TFT_CYAN, TFT_BLACK);
-  tft.drawString("MEAT", 120, 133, 2);
+  tft.drawString(meatLabel, 120, 133, 2);  // MEAT1, MEAT2 or MEAT3, or "MEAT" if none
   tft.drawString(meatStr, 120, 156, 4);
-}
-
-void CWG_LCD::display() {
-#ifdef PIN_DISP_BL
-  digitalWrite(PIN_DISP_BL, HIGH);
-#endif
-}
-
-void CWG_LCD::noDisplay() {
-#ifdef PIN_DISP_BL
-  digitalWrite(PIN_DISP_BL, LOW);
-#endif
 }

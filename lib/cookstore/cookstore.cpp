@@ -58,8 +58,10 @@ bool timeSyncWait(uint32_t timeoutMs) {
 
 bool cookStoreActive() { return activeCache; }
 
-void cookSaveStart(float meatTarget_F, float pitTarget_F, bool degC, float charge_mAh) {
-  cookPrefs.putFloat("meatT", meatTarget_F);
+void cookSaveStart(const float meatT[3], float pitTarget_F, bool degC, float charge_mAh) {
+  cookPrefs.putFloat("meat1T", meatT[0]);
+  cookPrefs.putFloat("meat2T", meatT[1]);
+  cookPrefs.putFloat("meat3T", meatT[2]);
   cookPrefs.putFloat("pitT", pitTarget_F);
   cookPrefs.putBool("degC", degC);
   cookPrefs.putFloat("charge", charge_mAh);
@@ -72,6 +74,20 @@ void cookSaveStart(float meatTarget_F, float pitTarget_F, bool degC, float charg
   lastWrittenFlags = 0;
   lastCheckpointMs = millis();
   lastWriteMs = millis();
+}
+
+bool cookLoad(float meatT[3], float& pitTarget_F, bool& degC, float& charge_mAh, uint8_t& flags) {
+  if (!cookPrefs.isKey("meat1T")) {
+    return false;
+  }
+  meatT[0] = cookPrefs.getFloat("meat1T", 203.0f);
+  meatT[1] = cookPrefs.getFloat("meat2T", 203.0f);
+  meatT[2] = cookPrefs.getFloat("meat3T", 203.0f);
+  pitTarget_F = cookPrefs.getFloat("pitT", 225.0f);
+  degC = cookPrefs.getBool("degC", false);
+  charge_mAh = cookPrefs.getFloat("charge", 0.0f);
+  flags = cookPrefs.getUChar("flags", 0);
+  return true;
 }
 
 void cookSaveFlags(uint8_t flags) {
@@ -114,19 +130,6 @@ void cookCheckpoint(float charge_mAh) {
 void cookSaveEnd() {
   cookPrefs.putBool("active", false);
   activeCache = false;
-}
-
-bool cookLoad(float& meatTarget_F, float& pitTarget_F, bool& degC, float& charge_mAh,
-              uint8_t& flags) {
-  if (!cookPrefs.isKey("meatT")) {
-    return false;
-  }
-  meatTarget_F = cookPrefs.getFloat("meatT", 203.0f);
-  pitTarget_F = cookPrefs.getFloat("pitT", 225.0f);
-  degC = cookPrefs.getBool("degC", false);
-  charge_mAh = cookPrefs.getFloat("charge", 0.0f);
-  flags = cookPrefs.getUChar("flags", 0);
-  return true;
 }
 
 CookBoot_t cookBootCheck() {

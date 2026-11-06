@@ -67,8 +67,9 @@ char bootResetReasonStr[24] = "";  // set once in setup(), shown on the splash s
 //? *******************************************************************
 
 // Temperature variables- global; all temps stored in degF and converted to DegC on the fly
-float meatDoneTemp = 203;   // Default brisket target internal temp
-float pitTempTarget = 225;  // Traditional low-and-slow cooking target temperature
+float meatTarget[3] = {203, 203, 203};  // MEAT1..MEAT3 done targets, degF
+float pitTempTarget = 225;
+                                        // // Traditional low-and-slow cooking target temperature
 float currentPitTemp = 60;
 float currentMeat1Temp = 40;  // Initial baseline temperature
 float currentMeat2Temp = 40;  // Initial baseline temperature
@@ -192,7 +193,7 @@ void setup() {
 
 #ifdef DEBUG_LCD
   // Optional: Call a primitive test string loop pattern if needed
-  lcd.showSplashScreen(degCFlag, meatDoneTemp, pitTempTarget);
+  lcd.showSplashScreen(degCFlag, meatTarget[0], pitTempTarget);
 #endif
 
 #ifdef DEBUG_PRESSTYPE

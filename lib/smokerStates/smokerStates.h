@@ -41,12 +41,14 @@ enum entryStates_t {
   txTemp,
   Sleep,
   bbqStatus,
-  calProbeMenu,  // choose which probe to calibrate, or reset it
-  calWaitIce,    // settling and capture at 0 degF
-  calWaitBoil,   // reference temperature entry and capture at boiling
-  calResult,     // show gain and offset, save or cancel
-  railStatus,    // bench check: INA226 rail and stored rail voltage
-  resumePrompt   // interrupted cook found at boot: tap to resume, hold to restart
+  calProbeMenu,   // choose which probe to calibrate, or reset it
+  calWaitIce,     // settling and capture at 0 degF
+  calWaitBoil,    // reference temperature entry and capture at boiling
+  calResult,      // show gain and offset, save or cancel
+  railStatus,     // bench check: INA226 rail and stored rail voltage
+  resumePrompt,   // interrupted cook found at boot: tap to resume, hold to restart
+  meatTempMenu,   // list of present meat probes, then Back
+  editMeatTarget  // target editor for one meat probe, always entered in degF
 };
 
 bool cookApplyOnBoot();

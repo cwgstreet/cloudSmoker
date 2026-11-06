@@ -30,7 +30,7 @@ bool clockValid();
 bool cookStoreActive();
 
 // Save a new cook at Start Cook. Clears the done and sent flags.
-void cookSaveStart(float meatTarget_F, float pitTarget_F, bool degC, float charge_mAh);
+void cookSaveStart(const float meatT[3], float pitTarget_F, bool degC, float charge_mAh);
 
 // Save the done and sent flags, packed into one byte. Writes only when they change.
 void cookSaveFlags(uint8_t flags);
@@ -43,8 +43,7 @@ void cookCheckpoint(float charge_mAh);
 void cookSaveEnd();
 
 // Read the stored cook. Returns false if none is stored.
-bool cookLoad(float& meatTarget_F, float& pitTarget_F, bool& degC, float& charge_mAh,
-              uint8_t& flags);
+bool cookLoad(float meatT[3], float& pitTarget_F, bool& degC, float& charge_mAh, uint8_t& flags);
 
 // Boot decision for an interrupted cook: resume, resume with unverified time, or finished (stale).
 CookBoot_t cookBootCheck();
