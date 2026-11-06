@@ -50,7 +50,9 @@ enum entryStates_t {
   meatTempMenu,   // list of present meat probes, then Back
   editMeatTarget,  // target editor for one meat probe, always entered in degF
   pitTempMenu,     // PIT Min, Max, Back
-  editPitLimit     // editor for PIT min or max
+  editPitLimit,
+  bankMenu,  // power bank settings: capacity and charge
+  editBank   // capacity or charge editor
 };
 
 bool cookApplyOnBoot();

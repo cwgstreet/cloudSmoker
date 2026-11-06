@@ -516,13 +516,85 @@ void CWG_LCD::showLimitEdit(const char* label, int16_t value, bool degCFlag, boo
   tft.drawString("Tap: save  Hold: back", 120, 160, 2);
 }
 
+
+
+
+// Name above its value, both centred on cx. Used by the overview and the zoom pages.
+static void drawNameValue(TFT_eSPI& t, int cx, int nameY, int valueY, const char* name,
+                          uint16_t colour, float temp, bool degCFlag) {
+  char unit = degCFlag ? 'C' : 'F';
+  char valStr[12];
+
+  t.setTextDatum(MC_DATUM);
+  t.setTextColor(colour, TFT_BLACK);
+  t.drawString(name, cx, nameY, 4);
+
+  if (isnan(temp)) {
+    snprintf(valStr, sizeof(valStr), "--%c", unit);
+  } else {
+    float shown = degCFlag ? convertDegFtoDegC(temp) : temp;
+    snprintf(valStr, sizeof(valStr), "%.0f%c", shown, unit);
+  }
+  t.setTextColor(TFT_WHITE, TFT_BLACK);
+  t.drawString(valStr, cx, valueY, 4);
+}
+
+// Four probes in a 2x2 grid under a COOK heading
+void CWG_LCD::showCookOverview(bool degCFlag, float pitTemp, float meat1Temp, float meat2Temp,
+                               float meat3Temp) {
+  clearScreen();
+  tft.setTextDatum(MC_DATUM);
+  tft.setTextColor(TFT_LIGHTGREY, TFT_BLACK);
+  tft.drawString("COOK", 120, 22, 2);
+  tft.drawFastHLine(40, 40, 160, TFT_DARKGREY);
+  tft.drawFastHLine(40, 124, 160, TFT_DARKGREY);
+  tft.drawFastVLine(120, 48, 152, TFT_DARKGREY);
+
+  drawNameValue(tft, 60, 72, 100, "PIT", TFT_ORANGE, pitTemp, degCFlag);
+  drawNameValue(tft, 180, 72, 100, "MEAT1", TFT_CYAN, meat1Temp, degCFlag);
+  drawNameValue(tft, 60, 150, 178, "MEAT2", TFT_GREEN, meat2Temp, degCFlag);
+  drawNameValue(tft, 180, 150, 178, "MEAT3", TFT_MAGENTA, meat3Temp, degCFlag);
+}
+
+
+// Dims an RGB565 colour to a percentage of its brightness, for the empty part of a ring
+static uint16_t dimColour(uint16_t c, int percent) {
+  int r = ((c >> 11) & 0x1F) * percent / 100;
+  int g = ((c >> 5) & 0x3F) * percent / 100;
+  int b = (c & 0x1F) * percent / 100;
+  return (uint16_t)((r << 11) | (g << 5) | b);
+}
+
+// One concentric ring: dim track in the probe's own colour, then the progress arc on top
+static void drawZoomRing(TFT_eSPI& t, int outer, int thick, uint16_t colour, float fraction) {
+  t.drawSmoothArc(120, 120, outer, outer - thick, 0, 360, dimColour(colour, 25), TFT_BLACK, true);
+  uint16_t angle = (uint16_t)(360.0f * constrain(fraction, 0.0f, 1.0f));
+  if (angle > 0) {
+    t.drawSmoothArc(120, 120, outer, outer - thick, 0, angle, colour, TFT_BLACK, true);
+  }
+}
+
+// Two probes stacked: top probe on the outer ring, bottom probe on the inner ring
+void CWG_LCD::showZoomPage(bool degCFlag, const char* topName, uint16_t topColour, float topTemp,
+                           float topFraction, const char* bottomName, uint16_t bottomColour,
+                           float bottomTemp, float bottomFraction) {
+  clearScreen();
+  drawZoomRing(tft, 118, 14, topColour, topFraction);       // outer ring: top probe
+  drawZoomRing(tft, 96, 14, bottomColour, bottomFraction);  // inner ring: bottom probe
+
+  drawNameValue(tft, 120, 66, 98, topName, topColour, topTemp, degCFlag);
+  tft.drawFastHLine(78, 120, 84, TFT_DARKGREY);
+  drawNameValue(tft, 120, 142, 170, bottomName, bottomColour, bottomTemp, degCFlag);
+}
+
 void CWG_LCD::showSplashScreen(bool degCFlag, float meatTargetTemp, float pitMinTemp,
-                               float pitMaxTemp) {
+                               float pitMaxTemp, float bankCapacity_mAh, int bankPct) {
   clearScreen();
   drawUIFrame("cloudSmoker2");
 
   char meatStr[12];
   char pitStr[24];
+  char bankStr[32];
   char unit = degCFlag ? 'C' : 'F';
 
   float meatShown = degCFlag ? convertDegFtoDegC(meatTargetTemp) : meatTargetTemp;
@@ -535,21 +607,33 @@ void CWG_LCD::showSplashScreen(bool degCFlag, float meatTargetTemp, float pitMin
     float minShown = degCFlag ? convertDegFtoDegC(pitMinTemp) : pitMinTemp;
     snprintf(pitStr, sizeof(pitStr), "Pit: %.0f / %.0f%c", minShown, maxShown, unit);
   }
+  snprintf(bankStr, sizeof(bankStr), "Bank %.0f mAh, %d%%", bankCapacity_mAh, bankPct);
 
-  tft.setTextDatum(MC_DATUM);  // Middle-Center anchoring
+  tft.setTextDatum(MC_DATUM);
   tft.setTextColor(TFT_WHITE, TFT_BLACK);
-
   tft.drawString("BBQ TARGETS", 120, 95, 2);
   tft.setTextColor(TFT_CYAN, TFT_BLACK);
-  tft.drawString(meatStr, 120, 130, 4);  // Larger Font 4 for readability
+  tft.drawString(meatStr, 120, 130, 4);
   tft.drawString(pitStr, 120, 165, 4);
-
+  tft.setTextColor(TFT_LIGHTGREY, TFT_BLACK);
+  tft.drawString(bankStr, 120, 190, 2);
   tft.setTextColor(TFT_GREEN, TFT_BLACK);
-  tft.drawString("Turn Encoder", 120, 205, 2);
+  tft.drawString("Turn Encoder", 120, 210, 2);
 
   //! DEBUG CODE BLOCK - Temporary
   tft.setTextColor(TFT_DARKGREY, TFT_BLACK);
-  tft.drawString(bootResetReasonStr, 120, 228,
-                 1);  // small font, clear of "Turn Encoder" above it
-                      //! end DEBUG block
+  tft.drawString(bootResetReasonStr, 120, 228, 1);
+  //! end DEBUG block
+}
+
+void CWG_LCD::showValueEdit(const char* header, const char* valueText) {
+  clearScreen();
+  drawUIFrame(header);
+
+  tft.setTextDatum(MC_DATUM);
+  tft.setTextColor(TFT_WHITE, TFT_BLACK);
+  tft.drawString(valueText, 120, 110, 4);
+
+  tft.setTextColor(TFT_LIGHTGREY, TFT_BLACK);
+  tft.drawString("Tap: save  Hold: back", 120, 160, 2);
 }

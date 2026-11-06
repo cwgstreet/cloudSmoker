@@ -22,8 +22,9 @@ enum SettingsMenu {
   MENU_UNITS = 3,
   MENU_CALIBRATION = 4,
   MENU_RAIL = 5,
-  MENU_BACK = 6,
-  MENU_COUNT = 6
+  MENU_BANK = 6,
+  MENU_BACK = 7,
+  MENU_COUNT = 7
 };
 
 class CWG_LCD {
@@ -36,7 +37,8 @@ class CWG_LCD {
   void drawUIFrame(const char* headerText);
 
   // Drop-in compatible functions for cloudSmoker state machine
-  void showSplashScreen(bool degCFlag, float meatTargetTemp, float pitMinTemp, float pitMaxTemp);
+  void showSplashScreen(bool degCFlag, float meatTargetTemp, float pitMinTemp, float pitMaxTemp, float bankCapacity_mAh, int bankPct);
+  void showValueEdit(const char* header, const char* valueText);
   void printMenuLine(const char* c);
   void printMenuLine_noArrow(const char* c);
   void showTemperatureTargetAdjustment(float temporaryTemperatureTarget, bool meatTargetFlag);
@@ -46,6 +48,9 @@ class CWG_LCD {
   void showSettingsMenu(int16_t prevEncoderValue);
   void showRailStatus(float ina226V, float storedV);
   void showEndCookConfirm();
+  void showCookOverview(bool degCFlag, float pitTemp, float meat1Temp, float meat2Temp, float meat3Temp);
+  void showZoomPage(bool degCFlag, const char* topName, uint16_t topColour, float topTemp, float topFraction, const char* bottomName, uint16_t bottomColour, float bottomTemp, float bottomFraction);
+  void showPageDots(int currentIndex, int totalItems) { drawProgressDots(currentIndex, totalItems); }
   void showBBQStatusScreen(bool degCFlag, float currentMeatTemp, const char* meatLabel,
                            float meatDoneTemp, float currentPitTemp, float pitMinTemp,
                            float pitMaxTemp);

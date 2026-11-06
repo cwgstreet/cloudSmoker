@@ -61,6 +61,12 @@ entryStates_t smokerState;
 
 // External globals from main.cpp mapped with exact matching types
 extern float meatTarget[3];
+
+// Power bank: a rough energy factor from a 3.7 V cell to the 5 V output
+static const float BANK_USABLE_FACTOR = 0.74f;
+float bankCapacity_mAh = 10000.0f;  // nominal capacity from the box, kept across cooks
+uint8_t bankStartPct = 100;         // charge when plugged in, reset to 100 for each new cook
+static uint8_t bankEditIndex = 0;   // 0 = capacity, 1 = charge
 extern float pitMax;
 extern float pitMin;
 extern float currentPitTemp;
@@ -345,6 +351,8 @@ static void resetCookSettingsToDefaults() {
   }
   pitMin = 225.0f;
   pitMax = 250.0f;
+  bankStartPct = 100;
+  bankChargeSave(100);
   Serial.println(F("settings reset to defaults for next cook"));
 }
 
@@ -434,6 +442,8 @@ bool cookApplyOnBoot() {
   static const char* const bootNames[] = {"none", "resume prompt",
                                           "resume prompt (time unverified)",
                                           "finished (stale), starting at setup"};
+  bankCapacity_mAh = bankCapacityLoad();  // capacity persists across cooks
+  bankStartPct = bankChargeLoad();
   CookBoot_t boot = cookBootCheck();
   Serial.print(F("cook boot check: "));
   Serial.println(bootNames[boot]);
@@ -497,6 +507,43 @@ static void buildMeatMenu() {
   meatMenuCount++;
 }
 
+
+// Fraction of the PIT band: 0 at Min (or 50F when Min is Off), 1 at Max
+static float pitFractionFor(float pitF) {
+  float low = isnan(pitMin) ? 50.0f : pitMin;
+  float span = pitMax - low;
+  if (isnan(pitF) || span <= 0.0f) {
+    return 0.0f;
+  }
+  return (pitF - low) / span;
+}
+
+// Fraction of a meat target: 0 at ambient, 1 at target
+static float meatFractionFor(float meatF, float targetF) {
+  if (isnan(meatF) || targetF <= 0.0f) {
+    return 0.0f;
+  }
+  return meatF / targetF;
+}
+
+
+
+// Draws one cook page: 0 = overview, 1 = PIT over MEAT1, 2 = MEAT2 over MEAT3
+static void drawCookPage(CWG_LCD& lcd, uint8_t page) {
+  if (page == 0) {
+    lcd.showCookOverview(degCFlag, currentPitTemp, currentMeat1Temp, currentMeat2Temp,
+                         currentMeat3Temp);
+  } else if (page == 1) {
+    lcd.showZoomPage(degCFlag, "PIT", TFT_ORANGE, currentPitTemp, pitFractionFor(currentPitTemp),
+                     "MEAT1", TFT_CYAN, currentMeat1Temp,
+                     meatFractionFor(currentMeat1Temp, meatTarget[0]));
+  } else {
+    lcd.showZoomPage(degCFlag, "MEAT2", TFT_GREEN, currentMeat2Temp,
+                     meatFractionFor(currentMeat2Temp, meatTarget[1]), "MEAT3", TFT_MAGENTA,
+                     currentMeat3Temp, meatFractionFor(currentMeat3Temp, meatTarget[2]));
+  }
+}
+
 void processState(CWG_LCD& lcd) {
   // Declare this at the top of the function to avoid switch-case initialization bypass errors
   int16_t currentEncoderValue;
@@ -510,7 +557,7 @@ void processState(CWG_LCD& lcd) {
   switch (smokerState) {
     case splashScreen: {
       if (enteringState) {  // only run once when entering this state
-        lcd.showSplashScreen(degCFlag, meatTarget[0], pitMin, pitMax);
+        lcd.showSplashScreen(degCFlag, meatTarget[0], pitMin, pitMax, bankCapacity_mAh, bankStartPct);
       }
 
       // After a resume, show the restored targets for a few seconds, then start the cook
@@ -567,6 +614,7 @@ void processState(CWG_LCD& lcd) {
 
         ina226.resetCharge();
         cookSaveStart(meatTarget, pitMin, pitMax, degCFlag, ina226.getChargeUsed_mAh());
+        cookSaveBank(bankCapacity_mAh * BANK_USABLE_FACTOR * bankStartPct / 100.0f);
 
         pitOutSinceMs = 0; pitAlertSent = false; pitAlertAttempts = 0;
         constexpr uint8_t NTFY_MAX_ATTEMPTS = 10;  // alert send attempts per probe per cook
@@ -800,23 +848,32 @@ void processState(CWG_LCD& lcd) {
     case bbqStatus: {
       static bool endConfirm = false;
       static unsigned long lastDrawMs = 0;
+      static int16_t lastPageValue = -1;
 
       lcd.display();
 
-      float meatTemp, meatTargetF;
-      const char* meatLabel;
-      pickCookMeat(meatTemp, meatLabel, meatTargetF);
-
       if (enteringState) {
         endConfirm = false;  // re-entering always cancels a pending end
+        encoder.newRange(1, 3, 1, true, currentEncoderState);  // three pages, wraps
+        prevEncoderValue = currentEncoderState.currentValue;
+        lastPageValue = -1;
         previousDisplayMillis = millis();  // start the display timer on entry, not on last timeout
-        lastDrawMs = millis();
-        lcd.showBBQStatusScreen(degCFlag, meatTemp, meatLabel, meatTargetF, currentPitTemp,
-                                pitMin, pitMax);
-      } else if (!endConfirm && (unsigned long)(millis() - lastDrawMs) >= 1000) {
-        lastDrawMs = millis();  // refresh once a second while the readings change
-        lcd.showBBQStatusScreen(degCFlag, meatTemp, meatLabel, meatTargetF, currentPitTemp,
-                                pitMin, pitMax);
+      }
+
+      if (!endConfirm) {
+        currentEncoderValue = encoder.getCount();
+        uint8_t page = (uint8_t)((prevEncoderValue - 1) % 3);  // 0 overview, 1 PIT/MEAT1, 2 MEAT2/MEAT3
+        bool pageChanged = (prevEncoderValue != lastPageValue);
+        bool refreshDue = false;  // readings only change in getTemp, so no timed redraw
+
+        if (pageChanged || refreshDue) {
+          lastPageValue = prevEncoderValue;
+          lastDrawMs = millis();
+          drawCookPage(lcd, page);
+        }
+        if (pageChanged && !enteringState) {
+          previousDisplayMillis = millis();  // turning a page keeps the screen up
+        }
       }
 
       // Hold asks to end the cook; a tap then ends it, and a second hold cancels
@@ -826,9 +883,8 @@ void processState(CWG_LCD& lcd) {
           lcd.showEndCookConfirm();
         } else {
           endConfirm = false;
-          lcd.showBBQStatusScreen(degCFlag, meatTemp, meatLabel, meatTargetF, currentPitTemp,
-                                  pitMin, pitMax);
-          lastDrawMs = millis();
+          lastPageValue = -1;  // force the current page to redraw
+          lastDrawMs = 0;
         }
         previousDisplayMillis = millis();  // keep the screen up for a full display interval
       } else if (endConfirm && button.triggered(SINGLE_TAP)) {
@@ -836,7 +892,6 @@ void processState(CWG_LCD& lcd) {
         cookSaveEnd();
         resetCookSettingsToDefaults();
         Serial.println(F("cook ended by user -> launch pad"));
-        // show the probe targets first, then an encoder move brings up the launch pad
         smokerState = splashScreen;
         hasRunFlag = 0;
         break;
@@ -1054,6 +1109,97 @@ void processState(CWG_LCD& lcd) {
 
       if (button.triggered(HOLD)) {
         smokerState = pitTempMenu;
+        hasRunFlag = 0;
+      }
+    } break;
+
+    case bankMenu: {
+      static int16_t lastDrawnSelection = -1;
+      static char bankDetail[2][16];
+      static const char* const bankLabels[3] = {"Capacity", "Charge", "Back"};
+      static const char* bankDetails[3] = {bankDetail[0], bankDetail[1], ""};
+      currentEncoderValue = encoder.getCount();
+
+      if (hasRunFlag == 0) {
+        encoder.newRange(1, 3, 1, true, currentEncoderState);  // menus wrap
+        prevEncoderValue = currentEncoderState.currentValue;
+        hasRunFlag = 1;
+        lastDrawnSelection = -1;
+      }
+
+      if (prevEncoderValue != lastDrawnSelection) {
+        snprintf(bankDetail[0], sizeof(bankDetail[0]), "%.0f mAh", bankCapacity_mAh);
+        snprintf(bankDetail[1], sizeof(bankDetail[1]), "%d%%", bankStartPct);
+        lcd.showListMenu("POWER BANK", bankLabels, bankDetails, 3, (uint8_t)prevEncoderValue);
+        lastDrawnSelection = prevEncoderValue;
+      }
+
+      if (button.triggered(SINGLE_TAP)) {
+        if (prevEncoderValue == 3) {  // Back
+          smokerState = changeSettings;
+          hasRunFlag = 0;
+        } else {
+          bankEditIndex = (uint8_t)(prevEncoderValue - 1);  // 0 = capacity, 1 = charge
+          smokerState = editBank;
+          hasRunFlag = 0;
+        }
+      }
+
+      if (button.triggered(HOLD)) {
+        smokerState = changeSettings;
+        hasRunFlag = 0;
+      }
+    } break;
+
+    case editBank: {
+      static int16_t lastDrawnValue = -1000;
+      currentEncoderValue = encoder.getCount();
+      bool isCapacity = (bankEditIndex == 0);
+
+      // Capacity: 500 mAh steps from 1000 to 30000. Charge: 10% steps from 10 to 100.
+      int16_t lo = isCapacity ? 2 : 1;
+      int16_t hi = isCapacity ? 60 : 10;
+
+      if (hasRunFlag == 0) {
+        int16_t start = isCapacity ? (int16_t)(bankCapacity_mAh / 500.0f + 0.5f)
+                                   : (int16_t)(bankStartPct / 10);
+        encoder.newRange(lo, hi, constrain(start, lo, hi), false, currentEncoderState);
+        prevEncoderValue = currentEncoderState.currentValue;
+        hasRunFlag = 1;
+        lastDrawnValue = -1000;
+      }
+
+      if (prevEncoderValue != lastDrawnValue) {
+        char text[16];
+        if (isCapacity) {
+          snprintf(text, sizeof(text), "%d mAh", prevEncoderValue * 500);
+        } else {
+          snprintf(text, sizeof(text), "%d%%", prevEncoderValue * 10);
+        }
+        lcd.showValueEdit(isCapacity ? "CAPACITY" : "CHARGE", text);
+        lastDrawnValue = prevEncoderValue;
+      }
+
+      if (button.triggered(SINGLE_TAP)) {
+        if (isCapacity) {
+          bankCapacity_mAh = prevEncoderValue * 500.0f;
+          bankCapacitySave(bankCapacity_mAh);
+          Serial.print(F("power bank capacity set -> "));
+          Serial.print(bankCapacity_mAh, 0);
+          Serial.println(F(" mAh"));
+        } else {
+          bankStartPct = (uint8_t)(prevEncoderValue * 10);
+          bankChargeSave(bankStartPct);
+          Serial.print(F("power bank charge set -> "));
+          Serial.print(bankStartPct);
+          Serial.println(F("%"));
+        }
+        smokerState = bankMenu;
+        hasRunFlag = 0;
+      }
+
+      if (button.triggered(HOLD)) {
+        smokerState = bankMenu;
         hasRunFlag = 0;
       }
     } break;

@@ -49,4 +49,12 @@ CookBoot_t cookBootCheck();
 void cookSaveStart(const float meatT[3], float pitMin_F, float pitMax_F, bool degC, float charge_mAh);
 bool cookLoad(float meatT[3], float& pitMin_F, float& pitMax_F, bool& degC, float& charge_mAh, uint8_t& flags);
 
+// Power bank: capacity is a device setting (kept across cooks); the usable base is stored per cook
+float bankCapacityLoad();
+void bankCapacitySave(float mAh);
+void cookSaveBank(float usable_mAh);
+float cookLoadBank();
+uint8_t bankChargeLoad();
+void bankChargeSave(uint8_t pct);
+
 #endif  // COOKSTORE_H

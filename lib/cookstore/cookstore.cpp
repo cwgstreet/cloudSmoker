@@ -154,3 +154,19 @@ bool cookLoad(float meatT[3], float& pitMin_F, float& pitMax_F, bool& degC, floa
   flags = cookPrefs.getUChar("flags", 0);
   return true;
 }
+
+// Capacity from the box, in mAh. Defaults to 10,000 until the user changes it.
+float bankCapacityLoad() { return cookPrefs.getFloat("bankCap", 10000.0f); }
+
+void bankCapacitySave(float mAh) { cookPrefs.putFloat("bankCap", mAh); }
+
+// Usable charge at the start of this cook, in mAh at 5 V
+void cookSaveBank(float usable_mAh) { cookPrefs.putFloat("bankBase", usable_mAh); }
+
+// Defaults to 10,000 mAh x 0.74 x 100% if nothing has been stored
+float cookLoadBank() { return cookPrefs.getFloat("bankBase", 7400.0f); }
+
+// Charge % of the power bank, kept until changed. Defaults to 100.
+uint8_t bankChargeLoad() { return cookPrefs.getUChar("bankPct", 100); }
+
+void bankChargeSave(uint8_t pct) { cookPrefs.putUChar("bankPct", pct); }
