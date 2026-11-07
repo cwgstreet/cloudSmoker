@@ -69,6 +69,8 @@ uint8_t bankStartPct = 100;         // charge when plugged in, reset to 100 for 
 static uint8_t bankEditIndex = 0;   // 0 = capacity, 1 = charge
 static float bankBaseMah = 0.0f;  // usable charge at the start of this cook, mAh at 5 V
 static uint32_t readingsSerial = 0;  // bumps after each getTemp, so the cook screen redraws on new readings
+static bool bankAlertSent = false;     // forecast alert sent this cook (saved as flag bit 6)
+static uint8_t bankAlertAttempts = 0;  // retry cap, as for the PIT alert
 extern float pitMax;
 extern float pitMin;
 extern float currentPitTemp;
@@ -107,7 +109,7 @@ bool meat3SentFlag = false;
 // bit 0 MEAT1 done, 1 MEAT1 sent, 2 MEAT2 done, 3 MEAT2 sent, 4 MEAT3 done, 5 MEAT3 sent
 static uint8_t packCookFlags() {
   return (meat1DoneFlag ? 1 : 0) | (meat1SentFlag ? 2 : 0) | (meat2DoneFlag ? 4 : 0) |
-         (meat2SentFlag ? 8 : 0) | (meat3DoneFlag ? 16 : 0) | (meat3SentFlag ? 32 : 0);
+         (meat2SentFlag ? 8 : 0) | (meat3DoneFlag ? 16 : 0) | (meat3SentFlag ? 32 : 0) | (bankAlertSent ? 64 : 0);
 }
 
 // Picks the meat probe for the cook screen: the first of MEAT1, MEAT2, MEAT3 with data.
@@ -410,6 +412,94 @@ static void checkPitBand(float pitF, float minF, float maxF) {
 // Set on resume: the splash shows restored targets until this time, then the cook starts
 static unsigned long resumeSplashEndMs = 0;  // 0 = no timed splash pending
 
+// Power bank forecast. The draw is averaged over the last 30 minutes, from a RAM history of
+// (time, charge) samples taken once per reading cycle.
+static const uint8_t RATE_SAMPLES = 40;
+static unsigned long rateMs[RATE_SAMPLES];
+static float rateMah[RATE_SAMPLES];
+static uint8_t rateHead = 0;
+static uint8_t rateCount = 0;
+
+// Clears the history and the alert state. Called at Start Cook, and on resume before the
+// saved alert flag is restored.
+static void resetBankForecast() {
+  rateHead = 0;
+  rateCount = 0;
+  bankAlertSent = false;
+  bankAlertAttempts = 0;
+}
+
+static void recordChargeSample() {
+  rateMs[rateHead] = millis();
+  rateMah[rateHead] = ina226.getChargeUsed_mAh();
+  rateHead = (rateHead + 1) % RATE_SAMPLES;
+  if (rateCount < RATE_SAMPLES) {
+    rateCount++;
+  }
+}
+
+// Average draw in mA over up to the last 30 minutes. Returns 0 until 5 minutes of data exist.
+static float averageDrawMa() {
+  if (rateCount < 2) {
+    return 0.0f;
+  }
+  uint8_t newest = (rateHead + RATE_SAMPLES - 1) % RATE_SAMPLES;
+  unsigned long nowMs = rateMs[newest];
+  uint8_t oldest = newest;
+  for (uint8_t k = 1; k < rateCount; k++) {
+    uint8_t idx = (newest + RATE_SAMPLES - k) % RATE_SAMPLES;
+    if ((unsigned long)(nowMs - rateMs[idx]) > 30UL * 60UL * 1000UL) {
+      break;
+    }
+    oldest = idx;
+  }
+  unsigned long spanMs = nowMs - rateMs[oldest];
+  if (spanMs < 5UL * 60UL * 1000UL) {
+    return 0.0f;
+  }
+  float mah = rateMah[newest] - rateMah[oldest];
+  return mah / ((float)spanMs / 3600000.0f);  // mAh per hour is mA
+}
+
+// Warns once per cook if the bank looks short for the 14 h planning target. Waits 10 minutes
+// into the cook so the average settles. Offline cycles don't count as attempts.
+static void checkBankForecast() {
+  const float PLANNING_HOURS = 14.0f;
+  if (bankAlertSent || bankAlertAttempts >= NTFY_MAX_ATTEMPTS || !cookStoreActive() ||
+      bankBaseMah <= 0.0f) {
+    return;
+  }
+  if ((unsigned long)(millis() - startCookTime_ms) < 10UL * 60UL * 1000UL) {
+    return;
+  }
+  float draw = averageDrawMa();
+  if (draw < 5.0f) {
+    return;
+  }
+  float remainingMah = bankBaseMah - ina226.getChargeUsed_mAh();
+  float hoursLeft = remainingMah / draw;
+  if (hoursLeft >= PLANNING_HOURS) {
+    return;
+  }
+  if (WiFi.status() != WL_CONNECTED) {
+    return;
+  }
+
+  bankAlertAttempts++;
+  String msg = "Power bank may not last a 14 h cook: estimated " + String(hoursLeft, 0) +
+               " h left at " + String(draw, 0) + " mA";
+  if (sendNtfyAlert(msg)) {
+    bankAlertSent = true;
+    cookSaveFlags(packCookFlags());  // saves the sent flag so a resume doesn't repeat it
+    Serial.println(F("bank forecast alert sent"));
+  } else {
+    Serial.print(F("bank forecast alert not sent, attempt "));
+    Serial.print(bankAlertAttempts);
+    Serial.print(F(" of "));
+    Serial.println(NTFY_MAX_ATTEMPTS);
+  }
+}
+
 // Restores the stored cook into the running state and starts it.
 static void applyResume() {
   float meatT[3], pitMinT, pitMaxT, charge;
@@ -434,6 +524,8 @@ static void applyResume() {
   meat2SentFlag = (flags & 8) != 0;
   meat3DoneFlag = (flags & 16) != 0;
   meat3SentFlag = (flags & 32) != 0;
+  resetBankForecast();                 // fresh history for the restored charge
+  bankAlertSent = (flags & 64) != 0;  // a resumed cook doesn't repeat its alert
 
   startCookTime_ms = millis();
   showCookOnNextSleep = true;
@@ -633,6 +725,7 @@ void processState(CWG_LCD& lcd) {
         cookSaveStart(meatTarget, pitMin, pitMax, degCFlag, ina226.getChargeUsed_mAh());
         cookSaveBank(bankCapacity_mAh * BANK_USABLE_FACTOR * bankStartPct / 100.0f);
         bankBaseMah = bankCapacity_mAh * BANK_USABLE_FACTOR * bankStartPct / 100.0f;
+        resetBankForecast();
 
         pitOutSinceMs = 0; pitAlertSent = false; pitAlertAttempts = 0;
         constexpr uint8_t NTFY_MAX_ATTEMPTS = 10;  // alert send attempts per probe per cook
@@ -775,6 +868,11 @@ void processState(CWG_LCD& lcd) {
       cookSaveFlags(packCookFlags());
       checkPitBand(currentPitTemp, pitMin, pitMax);
       readingsSerial++;
+      recordChargeSample();
+      checkBankForecast();
+#ifdef DEBUG_BANK_DIAG
+      Serial.print(F("bank diag: draw_mA=")); Serial.print(averageDrawMa(), 1); Serial.print(F(" rem_mAh=")); Serial.print(bankBaseMah - ina226.getChargeUsed_mAh(), 1); Serial.print(F(" samples=")); Serial.print(rateCount); Serial.print(F(" sent=")); Serial.print(bankAlertSent); Serial.print(F(" wifi=")); Serial.println(WiFi.status() == WL_CONNECTED);
+#endif
 
 #ifdef DEBUG_ADC_Temps
       Serial.println();
