@@ -571,44 +571,6 @@ void CWG_LCD::showZoomPage(bool degCFlag, const char* topName, uint16_t topColou
   drawNameValue(tft, 120, 142, 170, bottomName, bottomColour, bottomTemp, degCFlag);
 }
 
-void CWG_LCD::showSplashScreen(bool degCFlag, float meatTargetTemp, float pitMinTemp,
-                               float pitMaxTemp, float bankCapacity_mAh, int bankPct) {
-  clearScreen();
-  drawUIFrame("cloudSmoker2");
-
-  char meatStr[12];
-  char pitStr[24];
-  char bankStr[32];
-  char unit = degCFlag ? 'C' : 'F';
-
-  float meatShown = degCFlag ? convertDegFtoDegC(meatTargetTemp) : meatTargetTemp;
-  float maxShown = degCFlag ? convertDegFtoDegC(pitMaxTemp) : pitMaxTemp;
-
-  snprintf(meatStr, sizeof(meatStr), "Meat: %.0f%c", meatShown, unit);
-  if (isnan(pitMinTemp)) {
-    snprintf(pitStr, sizeof(pitStr), "Pit: OFF / %.0f%c", maxShown, unit);
-  } else {
-    float minShown = degCFlag ? convertDegFtoDegC(pitMinTemp) : pitMinTemp;
-    snprintf(pitStr, sizeof(pitStr), "Pit: %.0f / %.0f%c", minShown, maxShown, unit);
-  }
-  snprintf(bankStr, sizeof(bankStr), "Bank %.0f mAh, %d%%", bankCapacity_mAh, bankPct);
-
-  tft.setTextDatum(MC_DATUM);
-  tft.setTextColor(TFT_WHITE, TFT_BLACK);
-  tft.drawString("BBQ TARGETS", 120, 95, 2);
-  tft.setTextColor(TFT_CYAN, TFT_BLACK);
-  tft.drawString(meatStr, 120, 130, 4);
-  tft.drawString(pitStr, 120, 165, 4);
-  tft.setTextColor(TFT_LIGHTGREY, TFT_BLACK);
-  tft.drawString(bankStr, 120, 190, 2);
-  tft.setTextColor(TFT_GREEN, TFT_BLACK);
-  tft.drawString("Turn Encoder", 120, 210, 2);
-
-  //! DEBUG CODE BLOCK - Temporary
-  tft.setTextColor(TFT_DARKGREY, TFT_BLACK);
-  tft.drawString(bootResetReasonStr, 120, 228, 1);
-  //! end DEBUG block
-}
 
 void CWG_LCD::showValueEdit(const char* header, const char* valueText) {
   clearScreen();
@@ -662,4 +624,50 @@ void CWG_LCD::showCookHint() {
   tft.drawString("Press Hold", 120, 105, 4);
   tft.setTextColor(TFT_WHITE, TFT_BLACK);
   tft.drawString("for cook options", 120, 145, 2);
+}
+
+
+void CWG_LCD::showSplashScreen(bool degCFlag, float meatTargetTemp, float pitMinTemp,
+                               float pitMaxTemp, float bankCapacity_mAh, int bankPct) {
+  clearScreen();
+  drawUIFrame("cloudSmoker2");
+
+  char meatStr[20];
+  char pitStr[24];
+  char bankStr[32];
+  char unit = degCFlag ? 'C' : 'F';
+
+  float meatShown = degCFlag ? convertDegFtoDegC(meatTargetTemp) : meatTargetTemp;
+  float maxShown = degCFlag ? convertDegFtoDegC(pitMaxTemp) : pitMaxTemp;
+
+  snprintf(meatStr, sizeof(meatStr), "MEAT1: %.0f%c", meatShown, unit);
+  if (isnan(pitMinTemp)) {
+    snprintf(pitStr, sizeof(pitStr), "Pit: OFF / %.0f%c", maxShown, unit);
+  } else {
+    float minShown = degCFlag ? convertDegFtoDegC(pitMinTemp) : pitMinTemp;
+    snprintf(pitStr, sizeof(pitStr), "Pit: %.0f / %.0f%c", minShown, maxShown, unit);
+  }
+  snprintf(bankStr, sizeof(bankStr), "Bank %.0f mAh, %d%%", bankCapacity_mAh, bankPct);
+
+  tft.setTextDatum(MC_DATUM);
+
+  // Title near the top
+  tft.setTextColor(TFT_WHITE, TFT_BLACK);
+  tft.drawString("BBQ TARGETS", 120, 62, 2);
+
+  // MEAT1 and PIT centred vertically on the display (lines at 100 and 140, midpoint 120)
+  tft.setTextColor(TFT_CYAN, TFT_BLACK);
+  tft.drawString(meatStr, 120, 100, 4);
+  tft.drawString(pitStr, 120, 140, 4);
+
+  // Bank line and prompt, spaced below the centre block
+  tft.setTextColor(TFT_LIGHTGREY, TFT_BLACK);
+  tft.drawString(bankStr, 120, 176, 2);
+  tft.setTextColor(TFT_GREEN, TFT_BLACK);
+  tft.drawString("Turn Encoder", 120, 198, 2);
+
+  //! DEBUG CODE BLOCK - Temporary
+  tft.setTextColor(TFT_DARKGREY, TFT_BLACK);
+  tft.drawString(bootResetReasonStr, 120, 222, 1);
+  //! end DEBUG block
 }
