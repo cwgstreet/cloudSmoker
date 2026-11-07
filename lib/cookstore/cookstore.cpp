@@ -214,3 +214,26 @@ bool cookSetLastSeenAgeHours(float hours) {
   cookPrefs.putUInt("lastSeen", (uint32_t)target);
   return true;
 }
+
+// Cool-down state: danger-zone start time per probe (0 = none, 1 = started while time not synced)
+// and the alert bits. Saved only when a state changes.
+void cookSaveCooldown(const uint32_t dangerAt[3], uint16_t bits) {
+  if (!activeCache) {
+    return;
+  }
+  cookPrefs.putUInt("dng1", dangerAt[0]);
+  cookPrefs.putUInt("dng2", dangerAt[1]);
+  cookPrefs.putUInt("dng3", dangerAt[2]);
+  cookPrefs.putUShort("cool", bits);
+}
+
+bool cookLoadCooldown(uint32_t dangerAt[3], uint16_t& bits) {
+  if (!cookPrefs.isKey("cool")) {
+    return false;
+  }
+  dangerAt[0] = cookPrefs.getUInt("dng1", 0);
+  dangerAt[1] = cookPrefs.getUInt("dng2", 0);
+  dangerAt[2] = cookPrefs.getUInt("dng3", 0);
+  bits = cookPrefs.getUShort("cool", 0);
+  return true;
+}

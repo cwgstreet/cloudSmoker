@@ -503,6 +503,153 @@ static void checkBankForecast() {
   }
 }
 
+// Cool-down alerts for done meat probes. A probe is watched only after it has been above 150F
+// since its done alert, so a rare beef pull that never gets that hot gets no cool-down alerts.
+static const float COOL_WARN_F = 150.0f;    // approaching danger zone
+static const float COOL_DANGER_F = 140.0f;  // danger zone: the timer starts
+static const float COOL_CLEAR_F = 141.0f;   // back above this after danger = reheated
+#ifdef DEBUG_COOLDOWN_SHORT
+static const uint32_t DANGER_HOLD_MIN = 2;  // bench test only: 2 minutes instead of 2 hours
+#else
+static const uint32_t DANGER_HOLD_MIN = 120;
+#endif
+
+// Per-probe state. dangerAt: 0 = not in danger, 1 = started while time not synced, else epoch.
+// coolBits layout, for probe i = 0..2:
+//   bit i       armed (has been above 150F since done)
+//   bit 3+i     150F warning sent
+//   bit 6+i     140F danger alert sent
+//   bit 9+i     2-hour discard alert sent
+static uint32_t dangerAt[3] = {0, 0, 0};
+static uint16_t coolBits = 0;
+
+static void resetCooldown() {
+  for (uint8_t i = 0; i < 3; i++) {
+    dangerAt[i] = 0;
+  }
+  coolBits = 0;
+  cookSaveCooldown(dangerAt, coolBits);
+}
+
+static void formatTemp(float tF, char* out, size_t len) {
+  if (degCFlag) {
+    snprintf(out, len, "%.0fC", convertDegFtoDegC(tF));
+  } else {
+    snprintf(out, len, "%.0fF", tF);
+  }
+}
+
+static void checkCooldown() {
+  static const char* const names[3] = {"MEAT1", "MEAT2", "MEAT3"};
+  const float temps[3] = {currentMeat1Temp, currentMeat2Temp, currentMeat3Temp};
+  const bool done[3] = {meat1DoneFlag, meat2DoneFlag, meat3DoneFlag};
+  bool online = (WiFi.status() == WL_CONNECTED);
+  bool changed = false;
+  uint32_t nowS = clockValid() ? (uint32_t)time(nullptr) : 0;
+
+  for (uint8_t i = 0; i < 3; i++) {
+    if (!done[i] || isnan(temps[i])) {
+      continue;
+    }
+    float t = temps[i];
+    uint16_t armedBit = (uint16_t)(1u << i);
+    uint16_t warnBit = (uint16_t)(1u << (3 + i));
+    uint16_t dangerBit = (uint16_t)(1u << (6 + i));
+    uint16_t discardBit = (uint16_t)(1u << (9 + i));
+    char tStr[12], dStr[12];
+    formatTemp(t, tStr, sizeof(tStr));
+    formatTemp(COOL_DANGER_F, dStr, sizeof(dStr));
+
+    // Above 150F: arm the probe and re-arm the 150F warning for the next cool-down
+    if (t >= COOL_WARN_F) {
+      if (!(coolBits & armedBit)) {
+        coolBits |= armedBit;
+        changed = true;
+      }
+      if (coolBits & warnBit) {
+        coolBits &= (uint16_t)~warnBit;
+        changed = true;
+      }
+      continue;
+    }
+
+    if (!(coolBits & armedBit)) {
+      continue;  // never cooled from above 150F after done, so no cool-down alerts
+    }
+
+    // Reheated: back above 141F after the danger zone clears the timer and its alerts
+    if (dangerAt[i] != 0 && t >= COOL_CLEAR_F) {
+      dangerAt[i] = 0;
+      coolBits &= (uint16_t)~(dangerBit | discardBit);
+      changed = true;
+      Serial.print(F("cooldown: "));
+      Serial.print(names[i]);
+      Serial.println(F(" reheated above danger zone, timer cleared"));
+    }
+
+    // 150F: approaching danger zone, sent once per cool-down
+    if (!(coolBits & warnBit) && online) {
+      String msg = String(names[i]) + " at " + tStr +
+                   ": approaching danger zone. Act now: wrap, cool, then store or reheat.";
+      if (sendNtfyAlert(msg)) {
+        coolBits |= warnBit;
+        changed = true;
+        Serial.print(F("cooldown warning sent: "));
+        Serial.println(msg);
+      }
+    }
+
+    // Below 140F for the first time: start the timer
+    if (t < COOL_DANGER_F && dangerAt[i] == 0) {
+      dangerAt[i] = clockValid() ? nowS : 1;
+      changed = true;
+    }
+
+    if (dangerAt[i] == 0) {
+      continue;
+    }
+
+    bool timed = (dangerAt[i] > 1 && clockValid());
+    uint32_t elapsedMin = timed ? (nowS - dangerAt[i]) / 60 : 0;
+    uint32_t leftMin = (timed && elapsedMin < DANGER_HOLD_MIN) ? DANGER_HOLD_MIN - elapsedMin : 0;
+
+    // 140F: danger zone reached, one alert, with elapsed and remaining minutes
+    if (!(coolBits & dangerBit) && online) {
+      String msg;
+      if (timed) {
+        msg = String(names[i]) + " fell below " + dStr + " " + String(elapsedMin) +
+              " minutes ago. Store or reheat within " + String(leftMin) + " minutes.";
+      } else {
+        msg = String(names[i]) + " fell below " + dStr +
+              ". Time not synced: store or reheat now, discard if in doubt.";
+      }
+      if (sendNtfyAlert(msg)) {
+        coolBits |= dangerBit;
+        changed = true;
+        Serial.print(F("cooldown danger alert sent: "));
+        Serial.println(msg);
+      }
+    }
+
+    // Two hours below 140F: discard, sent once, only while still in the danger zone
+    if (timed && elapsedMin >= DANGER_HOLD_MIN && t < COOL_DANGER_F && !(coolBits & discardBit) &&
+        online) {
+      String msg = String(names[i]) + " has been below " + dStr +
+                   " for over 2 hours. USDA recommends discarding it due to food safety concerns.";
+      if (sendNtfyAlert(msg)) {
+        coolBits |= discardBit;
+        changed = true;
+        Serial.print(F("cooldown discard alert sent: "));
+        Serial.println(msg);
+      }
+    }
+  }
+
+  if (changed) {
+    cookSaveCooldown(dangerAt, coolBits);
+  }
+}
+
 // Restores the stored cook into the running state and starts it.
 static void applyResume() {
   float meatT[3], pitMinT, pitMaxT, charge;
@@ -520,6 +667,7 @@ static void applyResume() {
   degCFlag = degC;
   ina226.setChargeUsed_mAh(charge);
   bankBaseMah = cookLoadBank();
+  cookLoadCooldown(dangerAt, coolBits);
 
   meat1DoneFlag = (flags & 1) != 0;
   meat1SentFlag = (flags & 2) != 0;
@@ -734,6 +882,7 @@ void processState(CWG_LCD& lcd) {
         showCookOnNextSleep = true;  // first sleep after the cook starts shows the hint
         bankBaseMah = bankCapacity_mAh * BANK_USABLE_FACTOR * bankStartPct / 100.0f;
         resetBankForecast();
+        resetCooldown();
 
         pitOutSinceMs = 0; pitAlertSent = false; pitAlertAttempts = 0;
         constexpr uint8_t NTFY_MAX_ATTEMPTS = 10;  // alert send attempts per probe per cook
@@ -875,6 +1024,7 @@ void processState(CWG_LCD& lcd) {
                      meat3AlertAttempts, meatTarget[2]);
       cookSaveFlags(packCookFlags());
       checkPitBand(currentPitTemp, pitMin, pitMax);
+      checkCooldown();
       readingsSerial++;
       recordChargeSample();
       checkBankForecast();

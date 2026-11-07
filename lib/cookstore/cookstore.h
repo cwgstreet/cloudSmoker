@@ -60,4 +60,6 @@ void bankChargeSave(uint8_t pct);
 void cookForceCheckpoint(float charge_mAh);
 float cookLastSeenAgeHours();  // hours since lastSeen, or -1 if unknown
 bool cookSetLastSeenAgeHours(float hours);  // debug: move stored lastSeen back
+void cookSaveCooldown(const uint32_t dangerAt[3], uint16_t bits);
+bool cookLoadCooldown(uint32_t dangerAt[3], uint16_t& bits);
 #endif  // COOKSTORE_H
