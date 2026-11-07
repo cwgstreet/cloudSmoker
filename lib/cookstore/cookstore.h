@@ -57,4 +57,5 @@ float cookLoadBank();
 uint8_t bankChargeLoad();
 void bankChargeSave(uint8_t pct);
 
+void cookForceCheckpoint(float charge_mAh);
 #endif  // COOKSTORE_H

@@ -131,6 +131,8 @@ static void pickCookMeat(float& temp, const char*& label, float& target) {
 
 // Set on resume so the cook screen appears once the first readings are in
 static bool showCookOnNextSleep = false;
+static bool hintActive = false;       // cook hint screen is up
+static unsigned long hintEndMs = 0;   // when the hint screen comes down
 
 // Set at boot when the resume prompt is shown; it tells the prompt whether time is unverified
 static bool resumeUnverified = false;
@@ -639,6 +641,10 @@ static int bankRemainingPct() {
 
 // Draws one cook page: 0 = overview, 1 = PIT over MEAT1, 2 = MEAT2 over MEAT3
 static void drawCookPage(CWG_LCD& lcd, uint8_t page) {
+  if (page == 3) {
+    lcd.showCookHint();
+    return;
+  }
   if (page == 0) {
     lcd.showCookOverview(degCFlag, currentPitTemp, currentMeat1Temp, currentMeat2Temp,
                          currentMeat3Temp);
@@ -725,6 +731,7 @@ void processState(CWG_LCD& lcd) {
         ina226.resetCharge();
         cookSaveStart(meatTarget, pitMin, pitMax, degCFlag, ina226.getChargeUsed_mAh());
         cookSaveBank(bankCapacity_mAh * BANK_USABLE_FACTOR * bankStartPct / 100.0f);
+        showCookOnNextSleep = true;  // first sleep after the cook starts shows the hint
         bankBaseMah = bankCapacity_mAh * BANK_USABLE_FACTOR * bankStartPct / 100.0f;
         resetBankForecast();
 
@@ -931,13 +938,23 @@ void processState(CWG_LCD& lcd) {
     } break;
 
     case Sleep: {
-      // First sleep after a resume: show the cook screen now that the first readings are in
+      // Hint screen: shown for 3 seconds after a cook starts or resumes, then the cook screen
+      if (hintActive) {
+        if ((long)(millis() - hintEndMs) >= 0) {
+          hintActive = false;
+          smokerState = bbqStatus;
+          hasRunFlag = 1;
+        }
+        break;
+      }
+
       if (showCookOnNextSleep) {
         showCookOnNextSleep = false;
+        hintActive = true;
+        hintEndMs = millis() + 3000;
         lcd.display();
-        Serial.println("resumed cook: showing cook screen");
-        smokerState = bbqStatus;
-        hasRunFlag = 1;
+        lcd.showCookHint();
+        Serial.println("cook running: hold for cook options");
         break;
       }
 
@@ -974,7 +991,7 @@ void processState(CWG_LCD& lcd) {
       lcd.display();
 
       if (enteringState) {
-        encoder.newRange(1, 3, 1, true, currentEncoderState);  // three pages, wraps
+        encoder.newRange(1, 4, 1, true, currentEncoderState);  // four pages, wraps
         prevEncoderValue = currentEncoderState.currentValue;
         lastPageValue = -1;
         lastSerial = readingsSerial;
@@ -982,13 +999,13 @@ void processState(CWG_LCD& lcd) {
       }
 
       currentEncoderValue = encoder.getCount();
-      uint8_t page = (uint8_t)((prevEncoderValue - 1) % 3);  // 0 overview, 1 PIT/MEAT1, 2 MEAT2/MEAT3
+      uint8_t page = (uint8_t)((prevEncoderValue - 1) % 4);  // 0 overview, 1 PIT/MEAT1, 2 MEAT2/MEAT3
       bool pageChanged = (prevEncoderValue != lastPageValue);
       bool refreshDue = (readingsSerial != lastSerial);  // redraw only when readings change
       if (refreshDue) {
         lastSerial = readingsSerial;
       }
-      if (pageChanged || refreshDue) {
+      if (pageChanged || (refreshDue && page != 3)) {
         lastPageValue = prevEncoderValue;
         drawCookPage(lcd, page);
       }
@@ -1352,6 +1369,7 @@ void processState(CWG_LCD& lcd) {
             ina226.resetCharge();
             bankBaseMah = bankCapacity_mAh * BANK_USABLE_FACTOR * bankStartPct / 100.0f;
             cookSaveBank(bankBaseMah);
+            cookForceCheckpoint(ina226.getChargeUsed_mAh());  // save the reset count now
             resetBankForecast();
             bankEditFromCook = false;
             Serial.println(F("new bank: charge count reset, forecast re-armed"));

@@ -651,3 +651,15 @@ void CWG_LCD::showBankLine(int pct) {
   tft.setTextColor(TFT_LIGHTGREY, TFT_BLACK);
   tft.drawString(text, 120, 206, 2);
 }
+
+// Shown for three seconds when a cook starts or resumes, to say how to reach the cook options
+void CWG_LCD::showCookHint() {
+  clearScreen();
+  drawUIFrame("COOK RUNNING");
+
+  tft.setTextDatum(MC_DATUM);
+  tft.setTextColor(TFT_YELLOW, TFT_BLACK);
+  tft.drawString("Press Hold", 120, 105, 4);
+  tft.setTextColor(TFT_WHITE, TFT_BLACK);
+  tft.drawString("for cook options", 120, 145, 2);
+}

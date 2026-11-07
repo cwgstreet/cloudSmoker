@@ -39,6 +39,7 @@ class CWG_LCD {
   // Drop-in compatible functions for cloudSmoker state machine
   void showSplashScreen(bool degCFlag, float meatTargetTemp, float pitMinTemp, float pitMaxTemp, float bankCapacity_mAh, int bankPct);
   void showValueEdit(const char* header, const char* valueText);
+  void showCookHint();
   void printMenuLine(const char* c);
   void printMenuLine_noArrow(const char* c);
   void showTemperatureTargetAdjustment(float temporaryTemperatureTarget, bool meatTargetFlag);

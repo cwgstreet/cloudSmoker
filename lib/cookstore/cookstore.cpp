@@ -170,3 +170,17 @@ float cookLoadBank() { return cookPrefs.getFloat("bankBase", 7400.0f); }
 uint8_t bankChargeLoad() { return cookPrefs.getUChar("bankPct", 100); }
 
 void bankChargeSave(uint8_t pct) { cookPrefs.putUChar("bankPct", pct); }
+
+// Writes the charge count now, rather than at the next 5-minute checkpoint. Used after a bank reset.
+void cookForceCheckpoint(float charge_mAh) {
+  if (!activeCache) {
+    return;
+  }
+  cookPrefs.putFloat("charge", charge_mAh);
+  if (clockValid()) {
+    cookPrefs.putUInt("lastSeen", (uint32_t)time(nullptr));
+  }
+  lastWrittenCharge = charge_mAh;
+  lastWriteMs = millis();
+  lastCheckpointMs = millis();
+}
