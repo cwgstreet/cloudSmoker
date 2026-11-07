@@ -184,3 +184,33 @@ void cookForceCheckpoint(float charge_mAh) {
   lastWriteMs = millis();
   lastCheckpointMs = millis();
 }
+
+// Hours since the last saved timestamp. Returns -1 if the clock isn't set or no time was saved.
+float cookLastSeenAgeHours() {
+  if (!clockValid()) {
+    return -1.0f;
+  }
+  uint32_t lastSeen = cookPrefs.getUInt("lastSeen", 0);
+  if (lastSeen == 0) {
+    return -1.0f;
+  }
+  uint32_t now = (uint32_t)time(nullptr);
+  if (now < lastSeen) {
+    return 0.0f;
+  }
+  return (float)(now - lastSeen) / 3600.0f;
+}
+
+// Debug: moves the stored lastSeen back by the given hours, to test the 12 h stale rule.
+// Needs a stored cook and a valid clock. The next checkpoint rewrites lastSeen, so reset promptly.
+bool cookSetLastSeenAgeHours(float hours) {
+  if (!activeCache || !clockValid() || hours < 0.0f) {
+    return false;
+  }
+  int64_t target = (int64_t)time(nullptr) - (int64_t)(hours * 3600.0f);
+  if (target < 1) {
+    return false;
+  }
+  cookPrefs.putUInt("lastSeen", (uint32_t)target);
+  return true;
+}

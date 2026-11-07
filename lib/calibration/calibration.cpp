@@ -187,6 +187,8 @@ void calPrintHelp() {
 #ifdef DEBUG_COOK_CMDS
   Serial.println(F("  cookShow                        debug: show whether a cook is stored"));
   Serial.println(F("  cookEnd                         debug: clear the stored cook"));
+  Serial.println(F("  cookInfo                        debug: stored cook, charge and lastSeen age"));
+  Serial.println(F("  cookAge <hours>                 debug: move stored lastSeen back (stale test)"));
 #endif
   Serial.println(F("=============================================================="));
   Serial.println(F("Type a command and press Enter. The device echoes what you type."));
@@ -321,6 +323,60 @@ static void handleCommand(String cmd) {
   if (cmd == "cookEnd") {
     cookSaveEnd();  // clears the stored cook flag only; charge count and targets untouched
     Serial.println(F("stored cook cleared"));
+    return;
+  }
+#endif
+
+#ifdef DEBUG_COOK_CMDS
+  if (cmd == "cookInfo") {
+    float meatT[3], pitMinT, pitMaxT, charge;
+    bool degC;
+    uint8_t flags;
+    Serial.print(F("stored cook active: "));
+    Serial.println(cookStoreActive() ? F("yes") : F("no"));
+    if (cookLoad(meatT, pitMinT, pitMaxT, degC, charge, flags)) {
+      Serial.print(F("  charge stored: "));
+      Serial.print(charge, 1);
+      Serial.println(F(" mAh"));
+      Serial.print(F("  meat targets F: "));
+      Serial.print(meatT[0], 0);
+      Serial.print(F(" / "));
+      Serial.print(meatT[1], 0);
+      Serial.print(F(" / "));
+      Serial.println(meatT[2], 0);
+      Serial.print(F("  PIT min / max F: "));
+      if (isnan(pitMinT)) {
+        Serial.print(F("OFF"));
+      } else {
+        Serial.print(pitMinT, 0);
+      }
+      Serial.print(F(" / "));
+      Serial.println(pitMaxT, 0);
+    }
+    Serial.print(F("  clock valid: "));
+    Serial.println(clockValid() ? F("yes") : F("no"));
+    float ageH = cookLastSeenAgeHours();
+    Serial.print(F("  lastSeen age: "));
+    if (ageH < 0.0f) {
+      Serial.println(F("unknown (clock not set or cook started offline)"));
+    } else {
+      Serial.print(ageH, 2);
+      Serial.println(F(" h"));
+    }
+    return;
+  }
+#endif
+
+#ifdef DEBUG_COOK_CMDS
+  if (cmd.startsWith("cookAge ")) {
+    float hours = cmd.substring(8).toFloat();
+    if (cookSetLastSeenAgeHours(hours)) {
+      Serial.print(F("stored lastSeen moved back "));
+      Serial.print(hours, 2);
+      Serial.println(F(" h; reset the board now to test the stale rule"));
+    } else {
+      Serial.println(F("cookAge needs a stored cook and a valid clock"));
+    }
     return;
   }
 #endif

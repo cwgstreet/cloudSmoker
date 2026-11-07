@@ -58,4 +58,6 @@ uint8_t bankChargeLoad();
 void bankChargeSave(uint8_t pct);
 
 void cookForceCheckpoint(float charge_mAh);
+float cookLastSeenAgeHours();  // hours since lastSeen, or -1 if unknown
+bool cookSetLastSeenAgeHours(float hours);  // debug: move stored lastSeen back
 #endif  // COOKSTORE_H
