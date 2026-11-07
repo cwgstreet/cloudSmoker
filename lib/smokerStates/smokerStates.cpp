@@ -650,6 +650,59 @@ static void checkCooldown() {
   }
 }
 
+// Probe lost mid-cook: one alert after two readings with no data from a probe that had data
+// during this cook. Re-arms when the probe reads again. Index: 0 PIT, 1 MEAT1, 2 MEAT2, 3 MEAT3.
+static bool probeSeen[4] = {false, false, false, false};
+static uint8_t probeLostCount[4] = {0, 0, 0, 0};
+static bool probeLostAlerted[4] = {false, false, false, false};
+
+static void resetProbeLoss() {
+  for (uint8_t i = 0; i < 4; i++) {
+    probeSeen[i] = false;
+    probeLostCount[i] = 0;
+    probeLostAlerted[i] = false;
+  }
+}
+
+static void checkProbeLoss() {
+  static const char* const probeNames[4] = {"PIT", "MEAT1", "MEAT2", "MEAT3"};
+  const float temps[4] = {currentPitTemp, currentMeat1Temp, currentMeat2Temp, currentMeat3Temp};
+  bool online = (WiFi.status() == WL_CONNECTED);
+
+  for (uint8_t i = 0; i < 4; i++) {
+    if (!isnan(temps[i])) {
+      probeSeen[i] = true;
+      probeLostCount[i] = 0;
+      probeLostAlerted[i] = false;
+      continue;
+    }
+    if (!probeSeen[i]) {
+      continue;  // never connected during this cook, so nothing has been lost
+    }
+    if (probeLostCount[i] < 255) {
+      probeLostCount[i]++;
+    }
+    if (probeLostCount[i] >= 2 && !probeLostAlerted[i] && online) {
+      String msg = String(probeNames[i]) +
+                   " probe lost during cook: no reading for 2 checks. Check the probe and jack.";
+      if (sendNtfyAlert(msg)) {
+        probeLostAlerted[i] = true;
+        Serial.print(F("probe lost alert sent: "));
+        Serial.println(msg);
+      }
+    }
+  }
+}
+
+// Sent when the resume prompt appears after a restart with a cook in progress
+static void notifyRebootDuringCook() {
+  if (WiFi.status() != WL_CONNECTED) {
+    Serial.println(F("restart during cook: offline, no phone alert sent"));
+    return;
+  }
+  sendNtfyAlert(String("cloudSmoker2 restarted during a cook. Resume prompt is waiting on the device: tap to resume, hold to restart."));
+}
+
 // Restores the stored cook into the running state and starts it.
 static void applyResume() {
   float meatT[3], pitMinT, pitMaxT, charge;
@@ -882,6 +935,7 @@ void processState(CWG_LCD& lcd) {
         showCookOnNextSleep = true;  // first sleep after the cook starts shows the hint
         bankBaseMah = bankCapacity_mAh * BANK_USABLE_FACTOR * bankStartPct / 100.0f;
         resetBankForecast();
+        resetProbeLoss();
         resetCooldown();
 
         pitOutSinceMs = 0; pitAlertSent = false; pitAlertAttempts = 0;
@@ -1025,6 +1079,7 @@ void processState(CWG_LCD& lcd) {
       cookSaveFlags(packCookFlags());
       checkPitBand(currentPitTemp, pitMin, pitMax);
       checkCooldown();
+      checkProbeLoss();
       readingsSerial++;
       recordChargeSample();
       checkBankForecast();
@@ -1073,6 +1128,7 @@ void processState(CWG_LCD& lcd) {
     case resumePrompt: {
       if (enteringState) {
         lcd.showResumePrompt(resumeUnverified);
+        notifyRebootDuringCook();
       }
 
       if (button.triggered(SINGLE_TAP)) {
