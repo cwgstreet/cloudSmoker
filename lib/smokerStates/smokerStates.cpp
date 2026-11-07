@@ -67,6 +67,7 @@ static const float BANK_USABLE_FACTOR = 0.74f;
 float bankCapacity_mAh = 10000.0f;  // nominal capacity from the box, kept across cooks
 uint8_t bankStartPct = 100;         // charge when plugged in, reset to 100 for each new cook
 static uint8_t bankEditIndex = 0;   // 0 = capacity, 1 = charge
+static bool bankEditFromCook = false;  // true while the bank editor is run from the cook menu
 static float bankBaseMah = 0.0f;  // usable charge at the start of this cook, mAh at 5 V
 static uint32_t readingsSerial = 0;  // bumps after each getTemp, so the cook screen redraws on new readings
 static bool bankAlertSent = false;     // forecast alert sent this cook (saved as flag bit 6)
@@ -967,65 +968,86 @@ void processState(CWG_LCD& lcd) {
     } break;
 
     case bbqStatus: {
-      static bool endConfirm = false;
-      static unsigned long lastDrawMs = 0;
       static int16_t lastPageValue = -1;
+      static uint32_t lastSerial = 0;
 
       lcd.display();
 
       if (enteringState) {
-        endConfirm = false;  // re-entering always cancels a pending end
         encoder.newRange(1, 3, 1, true, currentEncoderState);  // three pages, wraps
         prevEncoderValue = currentEncoderState.currentValue;
         lastPageValue = -1;
+        lastSerial = readingsSerial;
         previousDisplayMillis = millis();  // start the display timer on entry, not on last timeout
       }
 
-      if (!endConfirm) {
-        currentEncoderValue = encoder.getCount();
-        uint8_t page = (uint8_t)((prevEncoderValue - 1) % 3);  // 0 overview, 1 PIT/MEAT1, 2 MEAT2/MEAT3
-        bool pageChanged = (prevEncoderValue != lastPageValue);
-        static uint32_t lastSerial = 0;
-        bool refreshDue = (readingsSerial != lastSerial);
-        if (refreshDue) {
-          lastSerial = readingsSerial;
-        }
-
-        if (pageChanged || refreshDue) {
-          lastPageValue = prevEncoderValue;
-          lastDrawMs = millis();
-          drawCookPage(lcd, page);
-        }
-        if (pageChanged && !enteringState) {
-          previousDisplayMillis = millis();  // turning a page keeps the screen up
-        }
+      currentEncoderValue = encoder.getCount();
+      uint8_t page = (uint8_t)((prevEncoderValue - 1) % 3);  // 0 overview, 1 PIT/MEAT1, 2 MEAT2/MEAT3
+      bool pageChanged = (prevEncoderValue != lastPageValue);
+      bool refreshDue = (readingsSerial != lastSerial);  // redraw only when readings change
+      if (refreshDue) {
+        lastSerial = readingsSerial;
+      }
+      if (pageChanged || refreshDue) {
+        lastPageValue = prevEncoderValue;
+        drawCookPage(lcd, page);
+      }
+      if (pageChanged && !enteringState) {
+        previousDisplayMillis = millis();  // turning a page keeps the screen up
       }
 
-      // Hold asks to end the cook; a tap then ends it, and a second hold cancels
+      // Hold opens the cook menu
       if (button.triggered(HOLD)) {
-        if (!endConfirm) {
-          endConfirm = true;
-          lcd.showEndCookConfirm();
-        } else {
-          endConfirm = false;
-          lastPageValue = -1;  // force the current page to redraw
-          lastDrawMs = 0;
-        }
-        previousDisplayMillis = millis();  // keep the screen up for a full display interval
-      } else if (endConfirm && button.triggered(SINGLE_TAP)) {
-        endConfirm = false;
-        cookSaveEnd();
-        resetCookSettingsToDefaults();
-        Serial.println(F("cook ended by user -> launch pad"));
-        smokerState = splashScreen;
+        smokerState = cookMenu;
         hasRunFlag = 0;
         break;
       }
 
-      unsigned long currentMillis = millis();
-      if ((unsigned long)(currentMillis - previousDisplayMillis) >= displayInterval) {
+      if ((unsigned long)(millis() - previousDisplayMillis) >= displayInterval) {
         previousDisplayMillis = millis();
         smokerState = Sleep;
+        hasRunFlag = 0;
+      }
+    } break;
+
+    case cookMenu: {
+      static int16_t lastDrawnSelection = -1;
+      static const char* const menuLabels[3] = {"End cook", "New bank", "Cancel"};
+      static const char* const menuDetails[3] = {"back to setup", "reset charge", "keep cooking"};
+      currentEncoderValue = encoder.getCount();
+
+      if (hasRunFlag == 0) {
+        encoder.newRange(1, 3, 1, true, currentEncoderState);  // menus wrap
+        prevEncoderValue = currentEncoderState.currentValue;
+        hasRunFlag = 1;
+        lastDrawnSelection = -1;
+      }
+
+      if (prevEncoderValue != lastDrawnSelection) {
+        lcd.showListMenu("COOK", menuLabels, menuDetails, 3, (uint8_t)prevEncoderValue);
+        lastDrawnSelection = prevEncoderValue;
+      }
+
+      if (button.triggered(SINGLE_TAP)) {
+        if (prevEncoderValue == 1) {  // End cook: clears the stored cook, back to setup
+          cookSaveEnd();
+          resetCookSettingsToDefaults();
+          Serial.println(F("cook ended by user -> setup"));
+          smokerState = splashScreen;
+          hasRunFlag = 0;
+        } else if (prevEncoderValue == 2) {  // New bank: capacity, then charge, then reset
+          bankEditFromCook = true;
+          bankEditIndex = 0;
+          smokerState = editBank;
+          hasRunFlag = 0;
+        } else {  // Cancel
+          smokerState = bbqStatus;
+          hasRunFlag = 0;
+        }
+      }
+
+      if (button.triggered(HOLD)) {
+        smokerState = bbqStatus;
         hasRunFlag = 0;
       }
     } break;
@@ -1319,12 +1341,32 @@ void processState(CWG_LCD& lcd) {
           Serial.print(bankStartPct);
           Serial.println(F("%"));
         }
-        smokerState = bankMenu;
-        hasRunFlag = 0;
+
+        if (bankEditFromCook) {
+          if (isCapacity) {
+            bankEditIndex = 1;  // next, ask for the charge of the new bank
+            smokerState = editBank;
+            hasRunFlag = 0;
+          } else {
+            // New bank in place: restart the count and forecast; targets and done flags stay
+            ina226.resetCharge();
+            bankBaseMah = bankCapacity_mAh * BANK_USABLE_FACTOR * bankStartPct / 100.0f;
+            cookSaveBank(bankBaseMah);
+            resetBankForecast();
+            bankEditFromCook = false;
+            Serial.println(F("new bank: charge count reset, forecast re-armed"));
+            smokerState = bbqStatus;
+            hasRunFlag = 0;
+          }
+        } else {
+          smokerState = bankMenu;
+          hasRunFlag = 0;
+        }
       }
 
       if (button.triggered(HOLD)) {
-        smokerState = bankMenu;
+        smokerState = bankEditFromCook ? bbqStatus : bankMenu;
+        bankEditFromCook = false;
         hasRunFlag = 0;
       }
     } break;

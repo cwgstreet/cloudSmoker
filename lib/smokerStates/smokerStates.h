@@ -52,7 +52,8 @@ enum entryStates_t {
   pitTempMenu,     // PIT Min, Max, Back
   editPitLimit,
   bankMenu,  // power bank settings: capacity and charge
-  editBank   // capacity or charge editor
+  editBank,  // capacity or charge editor
+  cookMenu   // hold on the cook screen: end cook, new bank, cancel
 };
 
 bool cookApplyOnBoot();
