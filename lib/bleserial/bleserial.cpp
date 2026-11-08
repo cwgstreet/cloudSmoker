@@ -1,6 +1,7 @@
 #include "bleserial.h"
 
 #include <NimBLEDevice.h>
+#include "secrets.h"
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
@@ -220,17 +221,20 @@ void bleSerialStart() {
     return;
   }
   NimBLEDevice::init("cloudSmoker2");
+  NimBLEDevice::setSecurityAuth(true, true, true);          // bonding, MITM protection, secure connections
+  NimBLEDevice::setSecurityIOCap(BLE_HS_IO_DISPLAY_ONLY);  // device side shows a code, phone types it
+  NimBLEDevice::setSecurityPasskey(BLE_SERIAL_PASSKEY);
 
   NimBLEServer* server = NimBLEDevice::createServer();
   server->setCallbacks(new ServerCallbacks());
 
   NimBLEService* svc = server->createService(NUS_SERVICE);
 
-  txChar = svc->createCharacteristic(NUS_TX, NIMBLE_PROPERTY::NOTIFY);
+  txChar = svc->createCharacteristic(NUS_TX, NIMBLE_PROPERTY::NOTIFY | NIMBLE_PROPERTY::READ_ENC);
   txChar->setCallbacks(new TxCallbacks());
 
   NimBLECharacteristic* rxChar =
-      svc->createCharacteristic(NUS_RX, NIMBLE_PROPERTY::WRITE | NIMBLE_PROPERTY::WRITE_NR);
+      svc->createCharacteristic(NUS_RX, NIMBLE_PROPERTY::WRITE | NIMBLE_PROPERTY::WRITE_NR | NIMBLE_PROPERTY::WRITE_ENC);
   rxChar->setCallbacks(new RxCallbacks());
 
   NimBLEAdvertising* adv = NimBLEDevice::getAdvertising();
