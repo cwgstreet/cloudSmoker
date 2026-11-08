@@ -584,22 +584,6 @@ void CWG_LCD::showValueEdit(const char* header, const char* valueText) {
   tft.drawString("Tap: save  Hold: back", 120, 160, 2);
 }
 
-void CWG_LCD::showSettingsMenu(int16_t prevEncoderValue) {
-  clearScreen();
-  drawUIFrame("SETTINGS");
-
-  // Index 0 unused: menu values are 1-based. One label per MENU_* entry, in order.
-  static const char* menuLabels[MENU_COUNT + 1] = {"", "Meat Temp", "Pit Temp", "Units",
-                                                   "Calibrate", "Rail", "Power Bank", "Back"};
-
-  int16_t index = constrain(prevEncoderValue, 1, (int16_t)MENU_COUNT);
-
-  tft.setTextDatum(MC_DATUM);
-  tft.setTextColor(TFT_WHITE, TFT_BLACK);
-  tft.drawString(menuLabels[index], 120, 120, 4);
-
-  drawProgressDots(index, MENU_COUNT);
-}
 
 // Remaining charge of the power bank as a percentage of its full usable capacity.
 // Drawn under the overview grid. A negative value hides the line.
@@ -670,4 +654,45 @@ void CWG_LCD::showSplashScreen(bool degCFlag, float meatTargetTemp, float pitMin
   tft.setTextColor(TFT_DARKGREY, TFT_BLACK);
   tft.drawString(bootResetReasonStr, 120, 222, 1);
   //! end DEBUG block
+}
+
+void CWG_LCD::showSettingsMenu(int16_t prevEncoderValue) {
+  clearScreen();
+  drawUIFrame("SETTINGS");
+
+  // Index 0 unused: menu values are 1-based. One label per MENU_* entry, in order.
+  static const char* menuLabels[MENU_COUNT + 1] = {"", "Meat Temp", "Pit Temp", "Units",
+                                                   "Calibrate", "Rail", "Power Bank",
+                                                   "BLE Serial", "Back"};
+
+  int16_t index = constrain(prevEncoderValue, 1, (int16_t)MENU_COUNT);
+
+  tft.setTextDatum(MC_DATUM);
+  tft.setTextColor(TFT_WHITE, TFT_BLACK);
+  tft.drawString(menuLabels[index], 120, 120, 4);
+
+  drawProgressDots(index, MENU_COUNT);
+}
+
+
+// BLE Serial on/off screen: value high, message split over two lines in a bright colour
+void CWG_LCD::showBleToggle(uint8_t selected) {
+  clearScreen();
+  drawUIFrame("BLE SERIAL");
+
+  bool on = (selected == 2);
+  tft.setTextDatum(MC_DATUM);
+  tft.setTextColor(TFT_WHITE, TFT_BLACK);
+  tft.drawString(on ? "On" : "Off", 120, 90, 4);
+
+  tft.setTextColor(TFT_YELLOW, TFT_BLACK);
+  if (on) {
+    tft.drawString("phone serial", 120, 132, 4);
+    tft.drawString("terminal", 120, 162, 4);
+  } else {
+    tft.drawString("saves", 120, 132, 4);
+    tft.drawString("battery", 120, 162, 4);
+  }
+
+  drawProgressDots(selected, 2);
 }

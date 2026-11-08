@@ -237,3 +237,8 @@ bool cookLoadCooldown(uint32_t dangerAt[3], uint16_t& bits) {
   bits = cookPrefs.getUShort("cool", 0);
   return true;
 }
+
+// BLE serial setting, kept across reboots. Defaults to on.
+bool bleSerialLoad() { return cookPrefs.getBool("bleOn", true); }
+
+void bleSerialSave(bool on) { cookPrefs.putBool("bleOn", on); }

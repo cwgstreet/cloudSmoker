@@ -105,6 +105,7 @@ void setup() {
   calInit();  // load per-probe calibration from NVS (non-volatile storage)
 
   cookStoreBegin();
+  bleSerialEnabled = bleSerialLoad();
 
   esp_reset_reason_t resetReason = esp_reset_reason();
   switch (resetReason) {

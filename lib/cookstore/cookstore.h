@@ -62,4 +62,6 @@ float cookLastSeenAgeHours();  // hours since lastSeen, or -1 if unknown
 bool cookSetLastSeenAgeHours(float hours);  // debug: move stored lastSeen back
 void cookSaveCooldown(const uint32_t dangerAt[3], uint16_t bits);
 bool cookLoadCooldown(uint32_t dangerAt[3], uint16_t& bits);
+bool bleSerialLoad();
+void bleSerialSave(bool on);
 #endif  // COOKSTORE_H

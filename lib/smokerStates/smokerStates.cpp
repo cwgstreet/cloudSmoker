@@ -67,6 +67,7 @@ static const float BANK_USABLE_FACTOR = 0.74f;
 float bankCapacity_mAh = 10000.0f;  // nominal capacity from the box, kept across cooks
 uint8_t bankStartPct = 100;         // charge when plugged in, reset to 100 for each new cook
 static uint8_t bankEditIndex = 0;   // 0 = capacity, 1 = charge
+bool bleSerialEnabled = true;  // BLE serial on or off, saved to NVS
 static bool bankEditFromCook = false;  // true while the bank editor is run from the cook menu
 static float bankBaseMah = 0.0f;  // usable charge at the start of this cook, mAh at 5 V
 static uint32_t readingsSerial = 0;  // bumps after each getTemp, so the cook screen redraws on new readings
@@ -995,6 +996,10 @@ void processState(CWG_LCD& lcd) {
             smokerState = bankMenu;
             hasRunFlag = 0;
             break;
+          case MENU_BLE:
+            smokerState = bleMenu;
+            hasRunFlag = 0;
+            break;
           case MENU_BACK:
             smokerState = launchPad;
             hasRunFlag = 0;
@@ -1271,6 +1276,38 @@ void processState(CWG_LCD& lcd) {
 
       if (button.triggered(HOLD)) {
         smokerState = bbqStatus;
+        hasRunFlag = 0;
+      }
+    } break;
+
+    case bleMenu: {
+      static int16_t lastDrawn = -1;
+      currentEncoderValue = encoder.getCount();
+
+      if (hasRunFlag == 0) {
+        encoder.newRange(1, 2, bleSerialEnabled ? 2 : 1, true, currentEncoderState);  // wraps
+        prevEncoderValue = currentEncoderState.currentValue;
+        hasRunFlag = 1;
+        lastDrawn = -1;
+      }
+
+      if (prevEncoderValue != lastDrawn) {
+        lcd.showBleToggle((uint8_t)prevEncoderValue);
+        lastDrawn = prevEncoderValue;
+      }
+
+      if (button.triggered(SINGLE_TAP)) {
+        bleSerialEnabled = (prevEncoderValue == 2);
+        bleSerialSave(bleSerialEnabled);
+        Serial.print(F("BLE serial set -> "));
+        Serial.println(bleSerialEnabled ? F("on (takes effect at next boot until BLE is built)")
+                                        : F("off"));
+        smokerState = changeSettings;
+        hasRunFlag = 0;
+      }
+
+      if (button.triggered(HOLD)) {
+        smokerState = changeSettings;
         hasRunFlag = 0;
       }
     } break;

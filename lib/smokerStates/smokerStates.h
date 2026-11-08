@@ -20,6 +20,7 @@
 #include <WConstants.h>
 #include <WProgram.h>
 #include <pins_arduino.h>
+extern bool bleSerialEnabled;
 #endif  // end if-block
 
 // UPGRADED: Conditional include to handle the network stack swap cleanly
@@ -27,6 +28,7 @@
 #include <WiFi.h>
 #else
 #include <ESP8266WiFi.h>
+extern bool bleSerialEnabled;
 #endif
 
 // Prepare case names for cloudSmoker State Machine switch-case stucture
@@ -53,7 +55,8 @@ enum entryStates_t {
   editPitLimit,
   bankMenu,  // power bank settings: capacity and charge
   editBank,  // capacity or charge editor
-  cookMenu   // hold on the cook screen: end cook, new bank, cancel
+  cookMenu,
+  bleMenu    // BLE serial on or off
 };
 
 bool cookApplyOnBoot();
@@ -75,4 +78,5 @@ extern long unsigned displayInterval;
 // process_state() prototype
 void processState(CWG_LCD& lcd);
 
+extern bool bleSerialEnabled;
 #endif  // end header guard

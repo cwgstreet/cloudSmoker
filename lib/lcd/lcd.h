@@ -23,8 +23,9 @@ enum SettingsMenu {
   MENU_CALIBRATION = 4,
   MENU_RAIL = 5,
   MENU_BANK = 6,
-  MENU_BACK = 7,
-  MENU_COUNT = 7
+  MENU_BLE = 7,
+  MENU_BACK = 8,
+  MENU_COUNT = 8
 };
 
 class CWG_LCD {
@@ -60,6 +61,7 @@ class CWG_LCD {
   void showMeatTargetEdit(const char* label, int16_t value, bool degCFlag, bool belowSafe);
   void showListMenu(const char* header, const char* const* labels, const char* const* details,
                     uint8_t count, uint8_t selected);
+  void showBleToggle(uint8_t selected);
   void showResumePrompt(bool timeUnverified);
   void showInitMessage(const char* line1, const char* line2);
   void showCalProbeMenu(int16_t prevEncoderValue);
