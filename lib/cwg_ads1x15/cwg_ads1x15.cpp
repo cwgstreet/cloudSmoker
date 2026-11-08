@@ -19,6 +19,7 @@
 // #define DEBUG 1
 
 // include 3rd party libraries
+#include "bleserial.h"
 #include <ADS1X15.h>  // ADS1x15 I2C ADC device functionality
 #include <Arduino.h>  // Arduino framework; not explicitly included in PlatformIO
 #include <Wire.h>     // i2C device communication
@@ -49,7 +50,7 @@ void CWG_ADS1115::initialise(uint8_t gainSetting, uint8_t modeSetting, uint8_t d
   ads1115.begin();
   deviceOk = ads1115.isConnected();  // remember the result for deviceFound()
   if (!deviceOk) {
-    Serial.print(F(" **ERROR** ADS1115 not connected! "));
+    Log.print(F(" **ERROR** ADS1115 not connected! "));
   }
   ads1115.setGain(gainSetting);          // 0 = +/-6.144V range, suits the 5 V bias
   ads1115.setMode(modeSetting);          // 1 = single shot
@@ -87,9 +88,9 @@ float CWG_ADS1115::getSensorValue_MedianFiltered_V(uint8_t pin, int windowSize) 
   float voltageFactor = getVoltageFactor_V();
 
 #if DEBUG
-  Serial.println();
-  Serial.print(F("voltageFactor = "));
-  Serial.println(voltageFactor, 10);
+  Log.println();
+  Log.print(F("voltageFactor = "));
+  Log.println(voltageFactor, 10);
 #endif
 
   // The previous call may have left a conversion running on its own pin.
@@ -110,15 +111,15 @@ float CWG_ADS1115::getSensorValue_MedianFiltered_V(uint8_t pin, int windowSize) 
       medianFilter.AddValue(valueADC_V[i]);
 
 #if DEBUG
-      Serial.print(F("\tIteration #"));
-      Serial.print(i);
-      Serial.print(F("\t"));
-      Serial.print(F("\tAnalog"));
-      Serial.print(pin);
-      Serial.print(F(": "));
-      Serial.print(ADCPinReading[i]);
-      Serial.print(F("\t"));
-      Serial.println(valueADC_V[i], 12);
+      Log.print(F("\tIteration #"));
+      Log.print(i);
+      Log.print(F("\t"));
+      Log.print(F("\tAnalog"));
+      Log.print(pin);
+      Log.print(F(": "));
+      Log.print(ADCPinReading[i]);
+      Log.print(F("\t"));
+      Log.println(valueADC_V[i], 12);
 #endif  // end DEBUG
 
       i += 1;  //  only increment loop when (ADC.isReady == true) or values skipped in loop
@@ -129,10 +130,10 @@ float CWG_ADS1115::getSensorValue_MedianFiltered_V(uint8_t pin, int windowSize) 
   float valueADC_medianFiltered_V = medianFilter.GetFiltered();
 
 #if DEBUG
-  Serial.print(F("\tMedian Filtered Analog"));
-  Serial.print(pin);
-  Serial.print(F(" = "));
-  Serial.println(valueADC_medianFiltered_V, 4);
+  Log.print(F("\tMedian Filtered Analog"));
+  Log.print(pin);
+  Log.print(F(" = "));
+  Log.println(valueADC_medianFiltered_V, 4);
 #endif  // end DEBUG
 
   return valueADC_medianFiltered_V;

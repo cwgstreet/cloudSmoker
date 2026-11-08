@@ -13,6 +13,7 @@
  *
  ** ************************************************************* */
 
+#include "bleserial.h"
 #include "cwg_ina226.h"
 
 #include <math.h>  // NAN
@@ -27,14 +28,14 @@ CWG_INA226 ina226(0x40);  // A0 and A1 tied to GND
 bool CWG_INA226::initialise(float maxCurrent_A, float shunt_ohm) {
   deviceOk = begin();  // needs Wire.begin() to have run first
   if (!deviceOk) {
-    Serial.println(F(" **ERROR** INA226 not connected! "));
+    Log.println(F(" **ERROR** INA226 not connected! "));
     return false;
   }
 
   int err = setMaxCurrentShunt(maxCurrent_A, shunt_ohm);
   if (err != INA226_ERR_NONE) {
-    Serial.print(F(" **ERROR** INA226 range rejected, code 0x"));
-    Serial.println(err, HEX);
+    Log.print(F(" **ERROR** INA226 range rejected, code 0x"));
+    Log.println(err, HEX);
     deviceOk = false;
     return false;
   }

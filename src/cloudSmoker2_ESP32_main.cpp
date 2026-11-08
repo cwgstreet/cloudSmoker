@@ -24,6 +24,7 @@
  */
 
 // external libraries:
+#include "bleserial.h"
 #include <ADS1X15.h>
 #include <Arduino.h>  // PlatformIO IDE requirement
 #include <Bounce2.h>
@@ -106,6 +107,7 @@ void setup() {
 
   cookStoreBegin();
   bleSerialEnabled = bleSerialLoad();
+  bleSerialApply(bleSerialEnabled);
 
   esp_reset_reason_t resetReason = esp_reset_reason();
   switch (resetReason) {
@@ -131,28 +133,28 @@ void setup() {
       snprintf(bootResetReasonStr, sizeof(bootResetReasonStr), "RST:OTHER(%d)", resetReason);
       break;
   }
-  Serial.print(F("Reset reason: "));
-  Serial.println(bootResetReasonStr);
+  Log.print(F("Reset reason: "));
+  Log.println(bootResetReasonStr);
 
   delay(1000);
-  Serial.println("\n--- cloudSmoker 2 System Booting (ESP32) ---");
+  Log.println("\n--- cloudSmoker 2 System Booting (ESP32) ---");
 
   // initialisations with debugging output to Serial Monitor
-  Serial.println("Calling lcd.begin()");  // debug
+  Log.println("Calling lcd.begin()");  // debug
   lcd.begin();
-  Serial.println("LCD Initialised");  // debug
+  Log.println("LCD Initialised");  // debug
   lcd.clearScreen();
 
-  Serial.println("Before Encoder Init");
+  Log.println("Before Encoder Init");
   encoder.initialise();
-  Serial.println("After Encoder Init");  // If this message is not seen, it's hung in initialise()
+  Log.println("After Encoder Init");  // If this message is not seen, it's hung in initialise()
 
   // Show in initialisation screen
   // Do this here so that the user sees while the WiFiManager portal is being configured
   lcd.showInitMessage("Connecting Wi-Fi", "Please wait");
 
   WifiManager_initialise();
-  Serial.println("WiFi setup finished, entering main loop");
+  Log.println("WiFi setup finished, entering main loop");
   if (WiFi.status() == WL_CONNECTED) {
     timeSyncWait(5000);  // settle the clock before deciding resume or stale
   }
@@ -177,16 +179,16 @@ void setup() {
   // initialise INA226 current/voltage monitor with calibration values for 5V rail and 100mA shunt
   ina226.initialise(0.79f, 0.1f);
 
-  Serial.print(F("INA226 found: "));
-  Serial.println(ina226.deviceFound() ? F("yes") : F("NO"));
-  Serial.print(F("INA226 maxCurrent = "));
-  Serial.print(ina226.getMaxCurrent(), 6);
-  Serial.print(F(" A, shunt = "));
-  Serial.print(ina226.getShunt(), 4);
-  Serial.println(F(" ohm"));
-  Serial.print(F("INA226 rail = "));
-  Serial.print(ina226.getRailV(), 4);
-  Serial.println(F(" V"));
+  Log.print(F("INA226 found: "));
+  Log.println(ina226.deviceFound() ? F("yes") : F("NO"));
+  Log.print(F("INA226 maxCurrent = "));
+  Log.print(ina226.getMaxCurrent(), 6);
+  Log.print(F(" A, shunt = "));
+  Log.print(ina226.getShunt(), 4);
+  Log.println(F(" ohm"));
+  Log.print(F("INA226 rail = "));
+  Log.print(ina226.getRailV(), 4);
+  Log.println(F(" V"));
 
   // Execution hooks for debug routines
 #ifdef DEBUG_SERIAL
@@ -217,6 +219,7 @@ void loop() {
   calPollSerial();
 
   ina226.updateCharge();  // coulomb counter for power bank SOC, once per second
+  bleSerialPump();  // BLE serial: send queued output to the phone
 
   cookCheckpoint(ina226.getChargeUsed_mAh());
 
@@ -226,7 +229,7 @@ void loop() {
   if (millis() - lastMemCheck > 5000) {
     lastMemCheck = millis();
     // UPGRADED: Replaced old AVR <MemoryFree.h> call with native ESP32 Heap APIs
-    Serial.printf("[SYSTEM MEMORY] Free Heap: %d Bytes\n", ESP.getFreeHeap());
+    Log.printf("[SYSTEM MEMORY] Free Heap: %d Bytes\n", ESP.getFreeHeap());
   }
 #endif
 }

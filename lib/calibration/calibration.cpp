@@ -38,6 +38,7 @@
  *
  ** ************************************************************* */
 
+#include "bleserial.h"
 #include "calibration.h"
 
 #include <Preferences.h>  // ESP32 NVS key/value storage, part of the Arduino core
@@ -160,39 +161,39 @@ bool calSetRailV(float volts) {
 static void printCal(ProbeId id) {
   char name[8];
   snprintf(name, sizeof(name), "%-6s", probeNames[id]);  // left-justified, 6 characters
-  Serial.print(name);
-  Serial.print(F("  gain = "));
-  Serial.print(calTable[id].gain, 6);
-  Serial.print(F("  offset = "));
-  Serial.println(calTable[id].offset, 4);
+  Log.print(name);
+  Log.print(F("  gain = "));
+  Log.print(calTable[id].gain, 6);
+  Log.print(F("  offset = "));
+  Log.println(calTable[id].offset, 4);
 }
 
 // Prints the serial command summary. Called once when the device leaves the splash screen,
 // and whenever the user types "help".
 void calPrintHelp() {
-  Serial.println();
-  Serial.println(F("================ cloudSmoker2 serial commands ================"));
-  Serial.println(F("  help                            show this list"));
-  Serial.println(F("  calShow                         show rail voltage and all probe factors"));
-  Serial.println(F("  calReset                        reset all probes to gain 1.0, offset 0.0"));
-  Serial.println(F("  calReset <probe>                reset one probe, e.g.  calReset MEAT1"));
-  Serial.println(
+  Log.println();
+  Log.println(F("================ cloudSmoker2 serial commands ================"));
+  Log.println(F("  help                            show this list"));
+  Log.println(F("  calShow                         show rail voltage and all probe factors"));
+  Log.println(F("  calReset                        reset all probes to gain 1.0, offset 0.0"));
+  Log.println(F("  calReset <probe>                reset one probe, e.g.  calReset MEAT1"));
+  Log.println(
       F("  cal <probe> <gain> <offset>     set one probe, e.g.  cal MEAT1 1.0526 -5.47"));
-  Serial.println(F("                                  probes: PIT, MEAT1, MEAT2, MEAT3"));
-  Serial.println(F("                                  gain 0.9 to 1.1, offset -9 to +9 degF"));
-  Serial.println(F("  railV <volts>                   set measured +5 V rail, e.g.  railV 5.09"));
-  Serial.println(F("                                  range 4.5 to 5.5 V"));
-  Serial.println(F("  charge                          show charge drawn from the power bank"));
-  Serial.println(F("  chargeReset                     restart the charge count at 0"));
+  Log.println(F("                                  probes: PIT, MEAT1, MEAT2, MEAT3"));
+  Log.println(F("                                  gain 0.9 to 1.1, offset -9 to +9 degF"));
+  Log.println(F("  railV <volts>                   set measured +5 V rail, e.g.  railV 5.09"));
+  Log.println(F("                                  range 4.5 to 5.5 V"));
+  Log.println(F("  charge                          show charge drawn from the power bank"));
+  Log.println(F("  chargeReset                     restart the charge count at 0"));
 #ifdef DEBUG_COOK_CMDS
-  Serial.println(F("  cookShow                        debug: show whether a cook is stored"));
-  Serial.println(F("  cookEnd                         debug: clear the stored cook"));
-  Serial.println(F("  cookInfo                        debug: stored cook, charge and lastSeen age"));
-  Serial.println(F("  cookAge <hours>                 debug: move stored lastSeen back (stale test)"));
+  Log.println(F("  cookShow                        debug: show whether a cook is stored"));
+  Log.println(F("  cookEnd                         debug: clear the stored cook"));
+  Log.println(F("  cookInfo                        debug: stored cook, charge and lastSeen age"));
+  Log.println(F("  cookAge <hours>                 debug: move stored lastSeen back (stale test)"));
 #endif
-  Serial.println(F("=============================================================="));
-  Serial.println(F("Type a command and press Enter. The device echoes what you type."));
-  Serial.println();
+  Log.println(F("=============================================================="));
+  Log.println(F("Type a command and press Enter. The device echoes what you type."));
+  Log.println();
 }
 
 // Parses one complete command line. Commands are case-sensitive except the probe name:
@@ -210,11 +211,11 @@ static void handleCommand(String cmd) {
   }
 
   if (cmd == "calShow") {
-    Serial.print(F("RAIL  = "));
-    Serial.print(calRailV(), 4);  // value used by the temperature calculations
-    Serial.print(F(" V used   stored = "));
-    Serial.print(railVolts, 4);  // fallback value set with railV
-    Serial.println(F(" V"));
+    Log.print(F("RAIL  = "));
+    Log.print(calRailV(), 4);  // value used by the temperature calculations
+    Log.print(F(" V used   stored = "));
+    Log.print(railVolts, 4);  // fallback value set with railV
+    Log.println(F(" V"));
     for (uint8_t i = 0; i < PROBE_COUNT; i++) {
       printCal((ProbeId)i);
     }
@@ -225,7 +226,7 @@ static void handleCommand(String cmd) {
     for (uint8_t i = 0; i < PROBE_COUNT; i++) {
       calReset((ProbeId)i);
     }
-    Serial.println(F("calibration reset to identity (gain 1, offset 0)"));
+    Log.println(F("calibration reset to identity (gain 1, offset 0)"));
     return;
   }
 
@@ -239,11 +240,11 @@ static void handleCommand(String cmd) {
       }
     }
     if (id == PROBE_COUNT) {
-      Serial.println(F("unknown probe: use PIT, MEAT1, MEAT2 or MEAT3"));
+      Log.println(F("unknown probe: use PIT, MEAT1, MEAT2 or MEAT3"));
       return;
     }
     calReset(id);
-    Serial.print(F("reset: "));
+    Log.print(F("reset: "));
     printCal(id);
     return;
   }
@@ -251,11 +252,11 @@ static void handleCommand(String cmd) {
   if (cmd.startsWith("railV ")) {
     float v = cmd.substring(6).toFloat();  // 0.0 for unparseable text, which fails the limits
     if (calSetRailV(v)) {
-      Serial.print(F("rail saved: "));
-      Serial.print(railVolts, 4);
-      Serial.println(F(" V"));
+      Log.print(F("rail saved: "));
+      Log.print(railVolts, 4);
+      Log.println(F(" V"));
     } else {
-      Serial.println(F("rejected: rail must be 4.5 to 5.5 V"));
+      Log.println(F("rejected: rail must be 4.5 to 5.5 V"));
     }
     return;
   }
@@ -265,14 +266,14 @@ static void handleCommand(String cmd) {
     String rest = cmd.substring(4);
     int sp1 = rest.indexOf(' ');
     if (sp1 < 0) {
-      Serial.println(F("usage: cal <probe> <gain> <offset>"));
+      Log.println(F("usage: cal <probe> <gain> <offset>"));
       return;
     }
     String name = rest.substring(0, sp1);
     String vals = rest.substring(sp1 + 1);
     int sp2 = vals.indexOf(' ');
     if (sp2 < 0) {
-      Serial.println(F("usage: cal <probe> <gain> <offset>"));
+      Log.println(F("usage: cal <probe> <gain> <offset>"));
       return;
     }
     // toFloat() returns 0.0 for text it can't parse. That's safe here, because 0 is
@@ -288,41 +289,41 @@ static void handleCommand(String cmd) {
       }
     }
     if (id == PROBE_COUNT) {
-      Serial.println(F("unknown probe: use PIT, MEAT1, MEAT2 or MEAT3"));
+      Log.println(F("unknown probe: use PIT, MEAT1, MEAT2 or MEAT3"));
       return;
     }
     if (calSet(id, g, o)) {
-      Serial.print(F("saved: "));
+      Log.print(F("saved: "));
       printCal(id);
     } else {
-      Serial.println(F("rejected: gain must be 0.9 to 1.1, offset -9 to +9 degF"));
+      Log.println(F("rejected: gain must be 0.9 to 1.1, offset -9 to +9 degF"));
     }
     return;
   }
 
   if (cmd == "charge") {
-    Serial.print(F("charge used = "));
-    Serial.print(ina226.getChargeUsed_mAh(), 2);
-    Serial.println(F(" mAh at 5 V"));
+    Log.print(F("charge used = "));
+    Log.print(ina226.getChargeUsed_mAh(), 2);
+    Log.println(F(" mAh at 5 V"));
     return;
   }
 
   if (cmd == "chargeReset") {
     ina226.resetCharge();
-    Serial.println(F("charge count reset to 0"));
+    Log.println(F("charge count reset to 0"));
     return;
   }
 
 #ifdef DEBUG_COOK_CMDS
   if (cmd == "cookShow") {
-    Serial.print(F("stored cook active: "));
-    Serial.println(cookStoreActive() ? F("yes") : F("no"));
+    Log.print(F("stored cook active: "));
+    Log.println(cookStoreActive() ? F("yes") : F("no"));
     return;
   }
 
   if (cmd == "cookEnd") {
     cookSaveEnd();  // clears the stored cook flag only; charge count and targets untouched
-    Serial.println(F("stored cook cleared"));
+    Log.println(F("stored cook cleared"));
     return;
   }
 #endif
@@ -332,36 +333,36 @@ static void handleCommand(String cmd) {
     float meatT[3], pitMinT, pitMaxT, charge;
     bool degC;
     uint8_t flags;
-    Serial.print(F("stored cook active: "));
-    Serial.println(cookStoreActive() ? F("yes") : F("no"));
+    Log.print(F("stored cook active: "));
+    Log.println(cookStoreActive() ? F("yes") : F("no"));
     if (cookLoad(meatT, pitMinT, pitMaxT, degC, charge, flags)) {
-      Serial.print(F("  charge stored: "));
-      Serial.print(charge, 1);
-      Serial.println(F(" mAh"));
-      Serial.print(F("  meat targets F: "));
-      Serial.print(meatT[0], 0);
-      Serial.print(F(" / "));
-      Serial.print(meatT[1], 0);
-      Serial.print(F(" / "));
-      Serial.println(meatT[2], 0);
-      Serial.print(F("  PIT min / max F: "));
+      Log.print(F("  charge stored: "));
+      Log.print(charge, 1);
+      Log.println(F(" mAh"));
+      Log.print(F("  meat targets F: "));
+      Log.print(meatT[0], 0);
+      Log.print(F(" / "));
+      Log.print(meatT[1], 0);
+      Log.print(F(" / "));
+      Log.println(meatT[2], 0);
+      Log.print(F("  PIT min / max F: "));
       if (isnan(pitMinT)) {
-        Serial.print(F("OFF"));
+        Log.print(F("OFF"));
       } else {
-        Serial.print(pitMinT, 0);
+        Log.print(pitMinT, 0);
       }
-      Serial.print(F(" / "));
-      Serial.println(pitMaxT, 0);
+      Log.print(F(" / "));
+      Log.println(pitMaxT, 0);
     }
-    Serial.print(F("  clock valid: "));
-    Serial.println(clockValid() ? F("yes") : F("no"));
+    Log.print(F("  clock valid: "));
+    Log.println(clockValid() ? F("yes") : F("no"));
     float ageH = cookLastSeenAgeHours();
-    Serial.print(F("  lastSeen age: "));
+    Log.print(F("  lastSeen age: "));
     if (ageH < 0.0f) {
-      Serial.println(F("unknown (clock not set or cook started offline)"));
+      Log.println(F("unknown (clock not set or cook started offline)"));
     } else {
-      Serial.print(ageH, 2);
-      Serial.println(F(" h"));
+      Log.print(ageH, 2);
+      Log.println(F(" h"));
     }
     return;
   }
@@ -371,17 +372,17 @@ static void handleCommand(String cmd) {
   if (cmd.startsWith("cookAge ")) {
     float hours = cmd.substring(8).toFloat();
     if (cookSetLastSeenAgeHours(hours)) {
-      Serial.print(F("stored lastSeen moved back "));
-      Serial.print(hours, 2);
-      Serial.println(F(" h; reset the board now to test the stale rule"));
+      Log.print(F("stored lastSeen moved back "));
+      Log.print(hours, 2);
+      Log.println(F(" h; reset the board now to test the stale rule"));
     } else {
-      Serial.println(F("cookAge needs a stored cook and a valid clock"));
+      Log.println(F("cookAge needs a stored cook and a valid clock"));
     }
     return;
   }
 #endif
 
-  Serial.println(F("unknown command. Type help for the command list."));
+  Log.println(F("unknown command. Type help for the command list."));
 }
 
 // Called once per loop(). Reads any waiting serial characters and builds a line until
@@ -392,7 +393,7 @@ void calPollSerial() {
   while (Serial.available()) {
     char c = Serial.read();
     if (c == '\n' || c == '\r') {
-      Serial.println();         // move to a new line after the typed command
+      Log.println();         // move to a new line after the typed command
       if (line.length() > 0) {  // ignore the blank line from "\r\n" endings
         handleCommand(line);
         line = "";

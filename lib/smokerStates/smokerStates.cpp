@@ -13,6 +13,7 @@
 // #define DEBUG_ADC_Temps 1  // uncomment to debug ADC1015 ADC readings
 
 // include 3rd party libraries
+#include "bleserial.h"
 #include <Arduino.h>
 #include <NewEncoder.h>
 #include <Wire.h>  // i2C device communication
@@ -48,7 +49,7 @@ struct ScopeTimer {
   const char* name;
   unsigned long startUs;
   ScopeTimer(const char* n) : name(n), startUs(micros()) {}
-  ~ScopeTimer() { Serial.printf("[TIMING] %s took %lu us\n", name, micros() - startUs); }
+  ~ScopeTimer() { Log.printf("[TIMING] %s took %lu us\n", name, micros() - startUs); }
 };
 #define TIME_BLOCK(name) ScopeTimer timeBlock_(name)
 #else
@@ -174,8 +175,8 @@ bool sendNtfyAlert(const String& message) {
   http.setTimeout(5000);
   int code = http.POST(message);
   http.end();
-  Serial.print(F("ntfy HTTP code: "));
-  Serial.println(code);
+  Log.print(F("ntfy HTTP code: "));
+  Log.println(code);
   return code == 200;
 }
 
@@ -212,10 +213,10 @@ bool sendThingSpeak(float meat1F, float meatTargetF, float pitF, float pitTarget
 
   // ThingSpeak returns the entry number on success, or 0 if it rejected the update
   long entryId = response.toInt();
-  Serial.print(F("ThingSpeak HTTP "));
-  Serial.print(code);
-  Serial.print(F(" entry "));
-  Serial.println(entryId);
+  Log.print(F("ThingSpeak HTTP "));
+  Log.print(code);
+  Log.print(F(" entry "));
+  Log.println(entryId);
   return code == 200 && entryId > 0;
 }
 
@@ -226,22 +227,22 @@ void checkProbeDone(const char* name, float tempF, DoneStatus& lastStatus, bool&
   DoneStatus status = probeDoneStatus(tempF, targetF);
 
   if (status != lastStatus) {
-    Serial.print(name);
-    Serial.print(F(" done status -> "));
+    Log.print(name);
+    Log.print(F(" done status -> "));
     if (status == DONE) {
-      Serial.println(F("DONE"));
+      Log.println(F("DONE"));
     } else if (status == NOT_DONE) {
-      Serial.println(F("NOT DONE"));
+      Log.println(F("NOT DONE"));
     } else {
-      Serial.println(F("NO DATA - Check Probe"));
+      Log.println(F("NO DATA - Check Probe"));
     }
     lastStatus = status;
   }
 
   if (status == DONE && !doneFlag) {
     doneFlag = true;
-    Serial.print(name);
-    Serial.println(F(" DONE flag set: alert due (first time this cook)"));
+    Log.print(name);
+    Log.println(F(" DONE flag set: alert due (first time this cook)"));
   }
 
   // Alert: one send per cycle while online, up to NTFY_MAX_ATTEMPTS. Offline cycles don't count.
@@ -251,17 +252,17 @@ void checkProbeDone(const char* name, float tempF, DoneStatus& lastStatus, bool&
         String(name) + " reached " + String(tempF, 0) + "F (target " + String(targetF, 0) + "F)";
     if (sendNtfyAlert(msg)) {
       sentFlag = true;
-      Serial.print(name);
-      Serial.println(F(" alert sent"));
+      Log.print(name);
+      Log.println(F(" alert sent"));
     } else {
-      Serial.print(name);
-      Serial.print(F(" alert not sent, attempt "));
-      Serial.print(attempts);
-      Serial.print(F(" of "));
-      Serial.println(NTFY_MAX_ATTEMPTS);
+      Log.print(name);
+      Log.print(F(" alert not sent, attempt "));
+      Log.print(attempts);
+      Log.print(F(" of "));
+      Log.println(NTFY_MAX_ATTEMPTS);
       if (attempts >= NTFY_MAX_ATTEMPTS) {
-        Serial.print(name);
-        Serial.println(F(" retry limit reached, no further attempts this cook"));
+        Log.print(name);
+        Log.println(F(" retry limit reached, no further attempts this cook"));
       }
     }
   }
@@ -300,10 +301,10 @@ static float rawProbeF(ProbeId id) {
       return NAN;
   }
 
-  Serial.print(F("raw "));
-  Serial.print(calNames[id]);
-  Serial.print(F(" V = "));
-  Serial.println(v, 4);
+  Log.print(F("raw "));
+  Log.print(calNames[id]);
+  Log.print(F(" V = "));
+  Log.println(v, 4);
 
   return sh->getTempFahrenheit(calRailV(), v);
 }
@@ -361,7 +362,7 @@ static void resetCookSettingsToDefaults() {
   pitMax = 250.0f;
   bankStartPct = 100;
   bankChargeSave(100);
-  Serial.println(F("settings reset to defaults for next cook"));
+  Log.println(F("settings reset to defaults for next cook"));
 }
 
 
@@ -375,7 +376,7 @@ static void checkPitBand(float pitF, float minF, float maxF) {
 
   if (!outside) {
     if (pitOutSinceMs != 0) {
-      Serial.println(F("PIT back inside band, excursion timer cleared"));
+      Log.println(F("PIT back inside band, excursion timer cleared"));
     }
     pitOutSinceMs = 0;
     pitAlertSent = false;
@@ -385,7 +386,7 @@ static void checkPitBand(float pitF, float minF, float maxF) {
 
   if (pitOutSinceMs == 0) {
     pitOutSinceMs = millis();
-    Serial.println(F("PIT outside band, 5 min timer started"));
+    Log.println(F("PIT outside band, 5 min timer started"));
   }
   if (pitAlertSent || pitAlertAttempts >= NTFY_MAX_ATTEMPTS) {
     return;
@@ -404,12 +405,12 @@ static void checkPitBand(float pitF, float minF, float maxF) {
                " for 5 min)";
   if (sendNtfyAlert(msg)) {
     pitAlertSent = true;
-    Serial.println(F("PIT alert sent"));
+    Log.println(F("PIT alert sent"));
   } else {
-    Serial.print(F("PIT alert not sent, attempt "));
-    Serial.print(pitAlertAttempts);
-    Serial.print(F(" of "));
-    Serial.println(NTFY_MAX_ATTEMPTS);
+    Log.print(F("PIT alert not sent, attempt "));
+    Log.print(pitAlertAttempts);
+    Log.print(F(" of "));
+    Log.println(NTFY_MAX_ATTEMPTS);
   }
 }
 
@@ -495,12 +496,12 @@ static void checkBankForecast() {
   if (sendNtfyAlert(msg)) {
     bankAlertSent = true;
     cookSaveFlags(packCookFlags());  // saves the sent flag so a resume doesn't repeat it
-    Serial.println(F("bank forecast alert sent"));
+    Log.println(F("bank forecast alert sent"));
   } else {
-    Serial.print(F("bank forecast alert not sent, attempt "));
-    Serial.print(bankAlertAttempts);
-    Serial.print(F(" of "));
-    Serial.println(NTFY_MAX_ATTEMPTS);
+    Log.print(F("bank forecast alert not sent, attempt "));
+    Log.print(bankAlertAttempts);
+    Log.print(F(" of "));
+    Log.println(NTFY_MAX_ATTEMPTS);
   }
 }
 
@@ -583,9 +584,9 @@ static void checkCooldown() {
       dangerAt[i] = 0;
       coolBits &= (uint16_t)~(dangerBit | discardBit);
       changed = true;
-      Serial.print(F("cooldown: "));
-      Serial.print(names[i]);
-      Serial.println(F(" reheated above danger zone, timer cleared"));
+      Log.print(F("cooldown: "));
+      Log.print(names[i]);
+      Log.println(F(" reheated above danger zone, timer cleared"));
     }
 
     // 150F: approaching danger zone, sent once per cool-down
@@ -595,8 +596,8 @@ static void checkCooldown() {
       if (sendNtfyAlert(msg)) {
         coolBits |= warnBit;
         changed = true;
-        Serial.print(F("cooldown warning sent: "));
-        Serial.println(msg);
+        Log.print(F("cooldown warning sent: "));
+        Log.println(msg);
       }
     }
 
@@ -627,8 +628,8 @@ static void checkCooldown() {
       if (sendNtfyAlert(msg)) {
         coolBits |= dangerBit;
         changed = true;
-        Serial.print(F("cooldown danger alert sent: "));
-        Serial.println(msg);
+        Log.print(F("cooldown danger alert sent: "));
+        Log.println(msg);
       }
     }
 
@@ -640,8 +641,8 @@ static void checkCooldown() {
       if (sendNtfyAlert(msg)) {
         coolBits |= discardBit;
         changed = true;
-        Serial.print(F("cooldown discard alert sent: "));
-        Serial.println(msg);
+        Log.print(F("cooldown discard alert sent: "));
+        Log.println(msg);
       }
     }
   }
@@ -688,8 +689,8 @@ static void checkProbeLoss() {
                    " probe lost during cook: no reading for 2 checks. Check the probe and jack.";
       if (sendNtfyAlert(msg)) {
         probeLostAlerted[i] = true;
-        Serial.print(F("probe lost alert sent: "));
-        Serial.println(msg);
+        Log.print(F("probe lost alert sent: "));
+        Log.println(msg);
       }
     }
   }
@@ -698,7 +699,7 @@ static void checkProbeLoss() {
 // Sent when the resume prompt appears after a restart with a cook in progress
 static void notifyRebootDuringCook() {
   if (WiFi.status() != WL_CONNECTED) {
-    Serial.println(F("restart during cook: offline, no phone alert sent"));
+    Log.println(F("restart during cook: offline, no phone alert sent"));
     return;
   }
   sendNtfyAlert(String("cloudSmoker2 restarted during a cook. Resume prompt is waiting on the device: tap to resume, hold to restart."));
@@ -745,8 +746,8 @@ bool cookApplyOnBoot() {
   bankCapacity_mAh = bankCapacityLoad();  // capacity persists across cooks
   bankStartPct = bankChargeLoad();
   CookBoot_t boot = cookBootCheck();
-  Serial.print(F("cook boot check: "));
-  Serial.println(bootNames[boot]);
+  Log.print(F("cook boot check: "));
+  Log.println(bootNames[boot]);
 
   if (boot == COOK_NONE) {
     return false;
@@ -895,7 +896,7 @@ void processState(CWG_LCD& lcd) {
 
     case launchPad: {
       if (hasRunFlag == 0) {
-        Serial.println(
+        Log.println(
             F("Run Once! (launchPad::hasRunFlag == 0); Changing Encoder Settings - setTempUnits "
               "0,1,0"));
         encoder.newSettings(0, 1, 1, currentEncoderState);
@@ -915,7 +916,7 @@ void processState(CWG_LCD& lcd) {
       }
       if (button.triggered(SINGLE_TAP)) {
         yield();
-        Serial.println("\n-------------------Start Cook Now-----------------");
+        Log.println("\n-------------------Start Cook Now-----------------");
 
         // New cook: clear per-probe done state so each probe alerts once for this cook
         meat1DoneFlag = false;
@@ -1033,7 +1034,7 @@ void processState(CWG_LCD& lcd) {
       if (button.triggered(SINGLE_TAP)) {
         if (prevEncoderValue == 1) {
           degCFlag = !degCFlag;
-          Serial.println(degCFlag ? F("degC Flag set - Temperature units now in degC!")
+          Log.println(degCFlag ? F("degC Flag set - Temperature units now in degC!")
                                   : F("degF Flag set - Temperature units now in degF!"));
           lastDrawnSelection = -1;  // force redraw so "Current: degX" updates immediately
         } else if (prevEncoderValue == 2) {
@@ -1051,8 +1052,8 @@ void processState(CWG_LCD& lcd) {
     case getTemp: {
       TIME_BLOCK("getTemp");
       // TIME_BLOCK only active when DEBUG_TIMING is defined, otherwise expands to nothing
-      Serial.print("getTemp Case -> startCookTime_ms =");
-      Serial.println(startCookTime_ms);
+      Log.print("getTemp Case -> startCookTime_ms =");
+      Log.println(startCookTime_ms);
 
       // TEMPORARY: bias supply reference is a fixed 5.0 V until the INA226 bus voltage replaces
       // it
@@ -1089,31 +1090,31 @@ void processState(CWG_LCD& lcd) {
       recordChargeSample();
       checkBankForecast();
 #ifdef DEBUG_BANK_DIAG
-      Serial.print(F("bank diag: draw_mA=")); Serial.print(averageDrawMa(), 1); Serial.print(F(" rem_mAh=")); Serial.print(bankBaseMah - ina226.getChargeUsed_mAh(), 1); Serial.print(F(" samples=")); Serial.print(rateCount); Serial.print(F(" sent=")); Serial.print(bankAlertSent); Serial.print(F(" wifi=")); Serial.println(WiFi.status() == WL_CONNECTED);
+      Log.print(F("bank diag: draw_mA=")); Log.print(averageDrawMa(), 1); Log.print(F(" rem_mAh=")); Log.print(bankBaseMah - ina226.getChargeUsed_mAh(), 1); Log.print(F(" samples=")); Log.print(rateCount); Log.print(F(" sent=")); Log.print(bankAlertSent); Log.print(F(" wifi=")); Log.println(WiFi.status() == WL_CONNECTED);
 #endif
 
 #ifdef DEBUG_ADC_Temps
-      Serial.println();
-      Serial.println(
+      Log.println();
+      Log.println(
           F("REF_V\t|\tPIT_V\t|\tPIT_F\t|\tMEAT1_V\t|\tMEAT1_F\t|\tMEAT2_V\t|\tMEAT2_F\t|\tMEAT3_"
             "V\t|\tMEAT3_F"));
-      Serial.print(voltageVCC_medianFiltered_V, 4);
-      Serial.print(F("\t|\t"));
-      Serial.print(voltagePit_medianFiltered_V, 4);
-      Serial.print(F("\t|\t"));
-      Serial.print(currentPitTemp);
-      Serial.print(F("\t|\t"));
-      Serial.print(voltageMeat1_medianFiltered_V, 4);
-      Serial.print(F("\t|\t"));
-      Serial.print(currentMeat1Temp);
-      Serial.print(F("\t|\t"));
-      Serial.print(voltageMeat2_medianFiltered_V, 4);
-      Serial.print(F("\t|\t"));
-      Serial.print(currentMeat2Temp);
-      Serial.print(F("\t|\t"));
-      Serial.print(voltageMeat3_medianFiltered_V, 4);
-      Serial.print(F("\t|\t"));
-      Serial.println(currentMeat3Temp);
+      Log.print(voltageVCC_medianFiltered_V, 4);
+      Log.print(F("\t|\t"));
+      Log.print(voltagePit_medianFiltered_V, 4);
+      Log.print(F("\t|\t"));
+      Log.print(currentPitTemp);
+      Log.print(F("\t|\t"));
+      Log.print(voltageMeat1_medianFiltered_V, 4);
+      Log.print(F("\t|\t"));
+      Log.print(currentMeat1Temp);
+      Log.print(F("\t|\t"));
+      Log.print(voltageMeat2_medianFiltered_V, 4);
+      Log.print(F("\t|\t"));
+      Log.print(currentMeat2Temp);
+      Log.print(F("\t|\t"));
+      Log.print(voltageMeat3_medianFiltered_V, 4);
+      Log.print(F("\t|\t"));
+      Log.println(currentMeat3Temp);
 #endif
 
       smokerState = txTemp;
@@ -1121,11 +1122,11 @@ void processState(CWG_LCD& lcd) {
 
     case txTemp: {
       TIME_BLOCK("txTemp");
-      Serial.println("entering txTemp case -> transmitting data");
+      Log.println("entering txTemp case -> transmitting data");
       // TODO: Battery field is NAN until the INA226 bus voltage replaces the placeholder
       sendThingSpeak(currentMeat1Temp, meatTarget[0], currentPitTemp, pitMax, NAN);
 
-      Serial.println("leaving for Sleep case");
+      Log.println("leaving for Sleep case");
       smokerState = Sleep;
       hasRunFlag = 0;  // Sleep only runs its timer when hasRunFlag is 0
     } break;
@@ -1142,7 +1143,7 @@ void processState(CWG_LCD& lcd) {
       } else if (button.triggered(HOLD)) {
         cookSaveEnd();
         resetCookSettingsToDefaults();  // a restarted cook always starts from defaults
-        Serial.println(F("cook restarted by user -> setup"));
+        Log.println(F("cook restarted by user -> setup"));
         smokerState = splashScreen;
         hasRunFlag = 0;
       }
@@ -1165,7 +1166,7 @@ void processState(CWG_LCD& lcd) {
         hintEndMs = millis() + 3000;
         lcd.display();
         lcd.showCookHint();
-        Serial.println("cook running: hold for cook options");
+        Log.println("cook running: hold for cook options");
         break;
       }
 
@@ -1173,10 +1174,10 @@ void processState(CWG_LCD& lcd) {
       if (encoder.moved() || button.triggered(SINGLE_TAP) || button.triggered(DOUBLE_TAP) ||
           button.triggered(HOLD)) {
         lcd.display();
-        Serial.println("Sleep state, input -> waking up");
+        Log.println("Sleep state, input -> waking up");
         smokerState = bbqStatus;
         hasRunFlag = 1;
-        Serial.println("leaving for bbqStatus state");
+        Log.println("leaving for bbqStatus state");
       }
 
       if (hasRunFlag == 0) {
@@ -1188,7 +1189,7 @@ void processState(CWG_LCD& lcd) {
           previousMillis = millis();
           smokerState = getTemp;
           hasRunFlag = 1;
-          Serial.println(
+          Log.println(
               "sleep transmit duration interval reached. smokerState = getTemp, reset hasRunFlag "
               "=1 ");
         }
@@ -1260,7 +1261,7 @@ void processState(CWG_LCD& lcd) {
         if (prevEncoderValue == 1) {  // End cook: clears the stored cook, back to setup
           cookSaveEnd();
           resetCookSettingsToDefaults();
-          Serial.println(F("cook ended by user -> setup"));
+          Log.println(F("cook ended by user -> setup"));
           smokerState = splashScreen;
           hasRunFlag = 0;
         } else if (prevEncoderValue == 2) {  // New bank: capacity, then charge, then reset
@@ -1299,8 +1300,9 @@ void processState(CWG_LCD& lcd) {
       if (button.triggered(SINGLE_TAP)) {
         bleSerialEnabled = (prevEncoderValue == 2);
         bleSerialSave(bleSerialEnabled);
-        Serial.print(F("BLE serial set -> "));
-        Serial.println(bleSerialEnabled ? F("on (takes effect at next boot until BLE is built)")
+        bleSerialApply(bleSerialEnabled);
+        Log.print(F("BLE serial set -> "));
+        Log.println(bleSerialEnabled ? F("on")
                                         : F("off"));
         smokerState = changeSettings;
         hasRunFlag = 0;
@@ -1384,17 +1386,17 @@ void processState(CWG_LCD& lcd) {
 
       if (button.triggered(SINGLE_TAP)) {
         meatTarget[editMeatIndex] = enteredF;  // stored as degF
-        Serial.print(F("meat target set: "));
-        Serial.print(probeName);
-        Serial.print(F(" -> "));
-        Serial.print(prevEncoderValue);
-        Serial.print(degCFlag ? F(" C (stored as ") : F(" F (stored as "));
-        Serial.print(enteredF, 1);
-        Serial.println(F(" F)"));
+        Log.print(F("meat target set: "));
+        Log.print(probeName);
+        Log.print(F(" -> "));
+        Log.print(prevEncoderValue);
+        Log.print(degCFlag ? F(" C (stored as ") : F(" F (stored as "));
+        Log.print(enteredF, 1);
+        Log.println(F(" F)"));
         if (belowSafe) {
-          Serial.print(F("WARNING: "));
-          Serial.print(probeName);
-          Serial.println(F(" target below USDA 145F minimum for whole cuts"));
+          Log.print(F("WARNING: "));
+          Log.print(probeName);
+          Log.println(F(" target below USDA 145F minimum for whole cuts"));
         }
         smokerState = meatTempMenu;
         hasRunFlag = 0;
@@ -1493,7 +1495,7 @@ void processState(CWG_LCD& lcd) {
       if (button.triggered(SINGLE_TAP)) {
         if (isOff) {
           pitMin = NAN;  // stored as NAN: Min Off, no low-temperature alert
-          Serial.println(F("PIT min -> Off (no low alert)"));
+          Log.println(F("PIT min -> Off (no low alert)"));
         } else {
           float enteredF = degCFlag ? ((float)prevEncoderValue * 9.0f / 5.0f + 32.0f)
                                     : (float)prevEncoderValue;
@@ -1502,13 +1504,13 @@ void processState(CWG_LCD& lcd) {
           } else {
             pitMax = enteredF;
           }
-          Serial.print(F("PIT "));
-          Serial.print(editPitIndex == 0 ? F("min") : F("max"));
-          Serial.print(F(" -> "));
-          Serial.print(prevEncoderValue);
-          Serial.print(degCFlag ? F(" C (stored as ") : F(" F (stored as "));
-          Serial.print(enteredF, 1);
-          Serial.println(F(" F)"));
+          Log.print(F("PIT "));
+          Log.print(editPitIndex == 0 ? F("min") : F("max"));
+          Log.print(F(" -> "));
+          Log.print(prevEncoderValue);
+          Log.print(degCFlag ? F(" C (stored as ") : F(" F (stored as "));
+          Log.print(enteredF, 1);
+          Log.println(F(" F)"));
         }
         smokerState = pitTempMenu;
         hasRunFlag = 0;
@@ -1591,15 +1593,15 @@ void processState(CWG_LCD& lcd) {
         if (isCapacity) {
           bankCapacity_mAh = prevEncoderValue * 500.0f;
           bankCapacitySave(bankCapacity_mAh);
-          Serial.print(F("power bank capacity set -> "));
-          Serial.print(bankCapacity_mAh, 0);
-          Serial.println(F(" mAh"));
+          Log.print(F("power bank capacity set -> "));
+          Log.print(bankCapacity_mAh, 0);
+          Log.println(F(" mAh"));
         } else {
           bankStartPct = (uint8_t)(prevEncoderValue * 10);
           bankChargeSave(bankStartPct);
-          Serial.print(F("power bank charge set -> "));
-          Serial.print(bankStartPct);
-          Serial.println(F("%"));
+          Log.print(F("power bank charge set -> "));
+          Log.print(bankStartPct);
+          Log.println(F("%"));
         }
 
         if (bankEditFromCook) {
@@ -1615,7 +1617,7 @@ void processState(CWG_LCD& lcd) {
             cookForceCheckpoint(ina226.getChargeUsed_mAh());  // save the reset count now
             resetBankForecast();
             bankEditFromCook = false;
-            Serial.println(F("new bank: charge count reset, forecast re-armed"));
+            Log.println(F("new bank: charge count reset, forecast re-armed"));
             smokerState = bbqStatus;
             hasRunFlag = 0;
           }
@@ -1682,8 +1684,8 @@ void processState(CWG_LCD& lcd) {
       if (button.triggered(DOUBLE_TAP) && prevEncoderValue != CAL_MENU_COUNT) {
         ProbeId id = (ProbeId)(prevEncoderValue - 1);
         calReset(id);
-        Serial.print(F("calibration reset for "));
-        Serial.println(calNames[id]);
+        Log.print(F("calibration reset for "));
+        Log.println(calNames[id]);
         lastDrawnSelection = -1;  // redraw the menu
       }
 
@@ -1755,11 +1757,11 @@ void processState(CWG_LCD& lcd) {
               if (hi - lo < 0.5f) {
                 calIceReading_F = sum / 10.0f;  // average of the settled window
                 captured = true;
-                Serial.print(F("ice point captured for "));
-                Serial.print(calNames[calSelectedProbe]);
-                Serial.print(F(": "));
-                Serial.print(calIceReading_F, 2);
-                Serial.println(F(" degF"));
+                Log.print(F("ice point captured for "));
+                Log.print(calNames[calSelectedProbe]);
+                Log.print(F(": "));
+                Log.print(calIceReading_F, 2);
+                Log.println(F(" degF"));
               }
             }
           }
@@ -1833,8 +1835,8 @@ void processState(CWG_LCD& lcd) {
         }
         if (button.triggered(SINGLE_TAP)) {
           calBoilRef_F = prevEncoderValue;
-          Serial.print(F("boil reference set to "));
-          Serial.println(calBoilRef_F);
+          Log.print(F("boil reference set to "));
+          Log.println(calBoilRef_F);
           capturing = true;
           boilCount = 0;
           boilStart = millis();
@@ -1852,11 +1854,11 @@ void processState(CWG_LCD& lcd) {
             boilLast = rawProbeF(calSelectedProbe);
             if (settleStep(boilLast, boilWindow, boilCount, calBoilReading_F)) {
               boilDone = true;
-              Serial.print(F("boil point captured for "));
-              Serial.print(calNames[calSelectedProbe]);
-              Serial.print(F(": "));
-              Serial.print(calBoilReading_F, 2);
-              Serial.println(F(" degF"));
+              Log.print(F("boil point captured for "));
+              Log.print(calNames[calSelectedProbe]);
+              Log.print(F(": "));
+              Log.print(calBoilReading_F, 2);
+              Log.println(F(" degF"));
             }
             drawNeeded = true;
           }
@@ -1931,8 +1933,8 @@ void processState(CWG_LCD& lcd) {
 
       if (valid && !rejected && button.triggered(SINGLE_TAP)) {
         if (calSet(calSelectedProbe, gainCalc, offsetCalc)) {
-          Serial.print(F("calibration saved for "));
-          Serial.println(calNames[calSelectedProbe]);
+          Log.print(F("calibration saved for "));
+          Log.println(calNames[calSelectedProbe]);
           smokerState = calProbeMenu;
           hasRunFlag = 0;
         } else {

@@ -68,6 +68,7 @@
 // debugging
 // #define DEBUG 1
 
+#include "bleserial.h"
 #include "cwg_steinhartHart.h"
 
 #include <math.h>
@@ -97,22 +98,22 @@ double SteinhartHart::steinhartHart(double _Rth_ohm) {
   double log_r3 = log_r * log_r * log_r;
 
 #if DEBUG
-  Serial.println();
-  Serial.println(F("\t ------- steinhartHart() -----------"));
-  Serial.print(_a, 20);
-  Serial.print("\t");
-  Serial.print(_b, 20);
-  Serial.print("\t");
-  Serial.print(_c, 20);
-  Serial.print("\t");
-  Serial.print(F("\t _biasResistance = "));
-  Serial.print(_biasResistance);
-  Serial.print(F("\t _Rth_ohm = "));
-  Serial.print(_Rth_ohm, 8);
-  Serial.print(F("\t Log_r = "));
-  Serial.print(log_r, 8);
-  Serial.print(F("\t log_r3 ="));
-  Serial.println(log_r3, 8);
+  Log.println();
+  Log.println(F("\t ------- steinhartHart() -----------"));
+  Log.print(_a, 20);
+  Log.print("\t");
+  Log.print(_b, 20);
+  Log.print("\t");
+  Log.print(_c, 20);
+  Log.print("\t");
+  Log.print(F("\t _biasResistance = "));
+  Log.print(_biasResistance);
+  Log.print(F("\t _Rth_ohm = "));
+  Log.print(_Rth_ohm, 8);
+  Log.print(F("\t Log_r = "));
+  Log.print(log_r, 8);
+  Log.print(F("\t log_r3 ="));
+  Log.println(log_r3, 8);
 #endif  // end DEBUG
 
   return 1.0 / (_a + _b * log_r +
@@ -139,8 +140,8 @@ double SteinhartHart::getTempKelvin(double ADCmeasuredVCC_volts,
   double fraction = _Vadc / _Vsupply;
   if (fraction < ADC_PROBE_MIN_FRACTION || fraction > ADC_PROBE_MAX_FRACTION) {
 #if DEBUG
-    Serial.print(F("\t probe out of range, fraction = "));
-    Serial.println(fraction, 6);
+    Log.print(F("\t probe out of range, fraction = "));
+    Log.println(fraction, 6);
 #endif
     _Rth_ohm = NAN;
     return NAN;  // no probe: do not convert this to a temperature
@@ -154,23 +155,23 @@ double SteinhartHart::getTempKelvin(double ADCmeasuredVCC_volts,
   if ((_Vadc - _Vsupply) != 0.0) {
     _Rth_ohm = -1 * ((_Vadc * _biasResistance) / (_Vadc - _Vsupply));
 #if DEBUG
-    Serial.println();
-    Serial.println(F("\t ------- getTempKelvin() -----------"));
-    Serial.print(F("\t _Vadc = "));
-    Serial.print(_Vadc, 8);
-    Serial.print(F("\t"));
-    Serial.print(F("\t _Vsupply = "));
-    Serial.print(_Vsupply, 8);
-    // Serial.print(F("\t ADCmeasuredVCC_v = "));
-    // Serial.print(ADCmeasuredVCC_volts);
-    Serial.print(F("\t _biasResistance = "));
-    Serial.print(_biasResistance);
-    Serial.print(F("\t _Rth_ohm ="));
-    Serial.println(_Rth_ohm);
+    Log.println();
+    Log.println(F("\t ------- getTempKelvin() -----------"));
+    Log.print(F("\t _Vadc = "));
+    Log.print(_Vadc, 8);
+    Log.print(F("\t"));
+    Log.print(F("\t _Vsupply = "));
+    Log.print(_Vsupply, 8);
+    // Log.print(F("\t ADCmeasuredVCC_v = "));
+    // Log.print(ADCmeasuredVCC_volts);
+    Log.print(F("\t _biasResistance = "));
+    Log.print(_biasResistance);
+    Log.print(F("\t _Rth_ohm ="));
+    Log.println(_Rth_ohm);
 #endif  // end DEBUG
   } else {
     _Rth_ohm = NAN;  // no valid divider reading: do not reuse a stale resistance
-    Serial.println(
+    Log.println(
         F("** _Rth_ohm calculation Divide by Zero error! Problem: _Vadc - _Vsupply = zero!"));
   }
 

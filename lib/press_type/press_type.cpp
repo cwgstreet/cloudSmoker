@@ -18,6 +18,7 @@
 // monitor
 // #define DEBUG 1
 
+#include "bleserial.h"
 #include "press_type.h"
 
 #include <Arduino.h>
@@ -47,27 +48,27 @@ void onButtonEvent(const EventInfo& info) {
     case SINGLE_TAP:
       pressEventCode = SHORT_PRESS;  // pressEventCode == 1
 #if DEBUG
-      Serial.println();
-      Serial.print(F("Short Press!  pressEventCode = "));
-      Serial.println(pressEventCode);
+      Log.println();
+      Log.print(F("Short Press!  pressEventCode = "));
+      Log.println(pressEventCode);
 #endif  // end DEBUG
       break;
 
     case DOUBLE_TAP:
       pressEventCode = DOUBLE_PRESS;  // pressEventCode == 2
 #if DEBUG
-      Serial.println();
-      Serial.print(F("Double Tap Press!  pressEventCode = "));
-      Serial.println(pressEventCode);
+      Log.println();
+      Log.print(F("Double Tap Press!  pressEventCode = "));
+      Log.println(pressEventCode);
 #endif  // end DEBUG
       break;
 
     case HOLD:
       pressEventCode = LONG_PRESS;  // pressEventCode == 3
 #if DEBUG
-      Serial.println();
-      Serial.print(F("Long Press!  pressEventCode = "));
-      Serial.println(pressEventCode);
+      Log.println();
+      Log.print(F("Long Press!  pressEventCode = "));
+      Log.println(pressEventCode);
 #endif  // end DEBUG
       break;
 
@@ -82,25 +83,25 @@ void Press_Type::begin(int _pin) {
 
 #if DEBUG  // Debug scaffolding - set in main.cpp to #define DEBUG 1 to enable debug output to
            // serial monitor
-  Serial.println("   ");  // blank line for visual space
-  Serial.println("     Yabl Test follows");
-  Serial.println("==============================");
-  Serial.println();
+  Log.println("   ");  // blank line for visual space
+  Log.println("     Yabl Test follows");
+  Log.println("==============================");
+  Log.println();
 #endif  // DEBUG
 }
 
 void Press_Type::functionTest() {
   if (pressEventCode == 1) {
-    Serial.print("*** Short Press! pressEventCode = ");
-    Serial.println(pressEventCode);
+    Log.print("*** Short Press! pressEventCode = ");
+    Log.println(pressEventCode);
   }
   if (pressEventCode == 2) {
-    Serial.print("*** Long Press! pressEventCode = ");
-    Serial.println(pressEventCode);
+    Log.print("*** Long Press! pressEventCode = ");
+    Log.println(pressEventCode);
   }
   if (pressEventCode == 3) {
-    Serial.print("*** Double Press! pressEventCode = ");
-    Serial.println(pressEventCode);
+    Log.print("*** Double Press! pressEventCode = ");
+    Log.println(pressEventCode);
   }
 }
 

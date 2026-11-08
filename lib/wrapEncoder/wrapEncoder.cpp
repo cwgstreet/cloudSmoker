@@ -11,6 +11,7 @@
  *
  ** ************************************************************ */
 
+#include "bleserial.h"
 #include "wrapEncoder.h"
 
 #include <Arduino.h>
@@ -58,9 +59,9 @@ bool WrapEncoder::newRange(int16_t newMin, int16_t newMax, int16_t newCurrent, b
 
 void WrapEncoder::initialise() {
   // delay(500);   //can remove if blocking - for aesthetics
-  Serial.println(F("Starting"));
+  Log.println(F("Starting"));
   if (!encoder.begin()) {
-    Serial.println(
+    Log.println(
         F("WrapEncoder::initialise -> Encoder Failed to Start. Check pin assignments and available "
           "interrupts. Aborting."));
     while (1) {
@@ -69,10 +70,10 @@ void WrapEncoder::initialise() {
   } else {
     encoder.getState(currentEncoderState);
     prevEncoderValue = currentEncoderState.currentValue;
-    Serial.print(
+    Log.print(
         F("WrapEncoder::initialise -> Encoder Successfully Started at value (prevEncoderValue = "
           "currentEncoderState.currentValue) = "));
-    Serial.println(prevEncoderValue);
+    Log.println(prevEncoderValue);
   }
 }
 
@@ -82,11 +83,11 @@ int16_t WrapEncoder::getCount() {
   if (encoder.getState(currentEncoderState)) {
     currentEncoderValue = currentEncoderState.currentValue;
     if (currentEncoderValue != prevEncoderValue) {
-      Serial.println();
-      Serial.print(F("WrapEncoder::getCount() Encoder: currentEncoderValue = "));
-      Serial.print(currentEncoderValue);
-      Serial.print(F(" / prevEncoderValue = "));
-      Serial.println(prevEncoderValue);
+      Log.println();
+      Log.print(F("WrapEncoder::getCount() Encoder: currentEncoderValue = "));
+      Log.print(currentEncoderValue);
+      Log.print(F(" / prevEncoderValue = "));
+      Log.println(prevEncoderValue);
 
       prevEncoderValue = currentEncoderValue;
       return currentEncoderValue;
@@ -102,11 +103,11 @@ bool WrapEncoder::moved() {
   if (encoder.getState(currentEncoderState)) {  // checks for state change (movement)
     currentEncoderValue = currentEncoderState.currentValue;
     // debug statements:
-    Serial.println();
-    Serial.print(F("WrapEncoder::moved() -> prevEncoderValue: "));  // debug
-    Serial.print(prevEncoderValue);
-    Serial.print(F(" / currentEncoderValue = currentEncoderState.currentValue: "));  // debug
-    Serial.println(currentEncoderValue);
+    Log.println();
+    Log.print(F("WrapEncoder::moved() -> prevEncoderValue: "));  // debug
+    Log.print(prevEncoderValue);
+    Log.print(F(" / currentEncoderValue = currentEncoderState.currentValue: "));  // debug
+    Log.println(currentEncoderValue);
     // end debug statements:
   }
   currentEncoderValue = currentEncoderState.currentValue;
@@ -114,14 +115,14 @@ bool WrapEncoder::moved() {
   if (currentEncoderValue != prevEncoderValue) {
     prevEncoderValue = currentEncoderValue;
     // debug statements:
-    Serial.println();
-    Serial.println(
+    Log.println();
+    Log.println(
         F("   **WrapEncoder::moved() => Encoder Moved!  if (currentEncoderValue != "
           "prevEncoderValue)"));                                            // debug
-    Serial.print(F("exiting WrapEncoder::moved() -> prevEncoderValue: "));  // debug
-    Serial.print(prevEncoderValue);
-    Serial.print(F(" / currentEncoderValue: "));  // debug
-    Serial.println(currentEncoderValue);
+    Log.print(F("exiting WrapEncoder::moved() -> prevEncoderValue: "));  // debug
+    Log.print(prevEncoderValue);
+    Log.print(F(" / currentEncoderValue: "));  // debug
+    Log.println(currentEncoderValue);
     // end debug statements:
     return 1;  // true if encoder value changes
   } else {

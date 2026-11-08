@@ -1,0 +1,136 @@
+; PlatformIO Project Configuration File
+;
+;   Build options: build flags, source filter
+;   Upload options: custom upload port, speed and extra flags
+;   Library options: dependencies, extra library storages
+;   Advanced options: extra scripting
+;
+; Please visit documentation for the other options and examples
+; https://docs.platformio.org/page/projectconf.html
+
+[platformio]
+default_envs = cloudsmoker2
+
+[env]
+framework = arduino
+monitor_speed = 115200
+monitor_filters = esp32_exception_decoder
+board_build.filesystem = littlefs
+check_skip_packages = yes
+lib_deps = 
+	https://github.com/tzapu/WiFiManager
+	thomasfredericks/Bounce2@^2.70
+	https://github.com/gfvalvo/NewEncoder
+	yergin/YetAnotherButtonLibrary@^0.1.1
+	robtillaart/ADS1X15@^0.3.5
+	bodmer/TFT_eSPI @ ^2.5.31
+	mathworks/ThingSpeak
+build_flags = 
+	-I include
+
+[env:breadboard]
+platform = espressif32
+board = firebeetle32
+upload_port = /dev/ttyUSB*
+monitor_port = /dev/ttyUSB*
+monitor_speed = 115200
+board_build.partitions = min_spiffs.csv
+build_flags = 
+	${env.build_flags}
+	-D ENV_BREADBOARD
+	-D USE_ADS1015
+	-D PIN_I2C_SDA=21
+	-D PIN_I2C_SCL=22
+	-D PIN_ENC_CLK=5
+	-D PIN_ENC_DT=2
+	-D PIN_ENC_SW=0
+	-D PIN_SPI_MOSI=23
+	-D PIN_SPI_SCK=18
+	-D PIN_DISP_CS=10
+	-D PIN_DISP_DC=13
+	-D PIN_BOOT_DISP_RST=27
+	-D PIN_DISP_BL=9
+	-D USER_SETUP_LOADED=1
+	-D GC9A01_DRIVER=1
+	-D TFT_MOSI=PIN_SPI_MOSI
+	-D TFT_SCLK=PIN_SPI_SCK
+	-D TFT_CS=PIN_DISP_CS
+	-D TFT_DC=PIN_DISP_DC
+	-D TFT_RST=PIN_BOOT_DISP_RST
+	-D TFT_BL=PIN_DISP_BL
+	-D LOAD_GLCD=1
+	-D LOAD_FONT2=1
+	-D LOAD_FONT4=1
+	-D SPI_FREQUENCY=27000000
+lib_deps =
+    https://github.com/tzapu/WiFiManager
+    thomasfredericks/Bounce2@^2.70
+    https://github.com/gfvalvo/NewEncoder
+    yergin/YetAnotherButtonLibrary@^0.1.1
+    robtillaart/ADS1X15@^0.3.5
+    robtillaart/INA226@^0.6.6
+    bodmer/TFT_eSPI @ ^2.5.31
+    mathworks/ThingSpeak
+
+[env:cloudsmoker2]
+platform = espressif32
+board = esp32-c3-devkitm-1
+lib_deps =
+    ${env.lib_deps}
+    h2zero/NimBLE-Arduino@^2.5.1
+board_build.partitions = min_spiffs.csv
+extra_scripts = pre:patch_tft_c3.py
+build_flags = 
+	${env.build_flags}
+	-D DEBUG_ADC_Temps
+	-D DEBUG_COOK_CMDS   ;comment out for Production; bench commands for debugging Cook Commands
+	;-D DEBUG_BANK_DIAG   ; comment out for Production; bench commands for debugging Power Bank
+	-D DEBUG_COOLDOWN_SHORT ; comment out for Production; changes hold limit to 2 mins for debugging (normally 2 hrs)
+	-D ENV_PCB
+	-D USE_ADS1115
+	-D ARDUINO_USB_MODE=1
+	-D ARDUINO_USB_CDC_ON_BOOT=1
+	-D PIN_I2C_SDA=0
+	-D PIN_I2C_SCL=1
+	-D PIN_ENC_DT=2
+	-D PIN_ENC_CLK=3
+	-D PIN_DISP_DC=4
+	-D PIN_DISP_BL=5
+	-D PIN_SPI_SCK=6
+	-D PIN_SPI_MOSI=7
+	-D PIN_DISP_CS=8
+	-D PIN_BOOT_DISP_RST=9
+	-D PIN_ENC_SW=10
+	-D USER_SETUP_LOADED=1
+	-D GC9A01_DRIVER=1
+	-D TFT_MOSI=PIN_SPI_MOSI
+	-D TFT_SCLK=PIN_SPI_SCK
+	-D TFT_CS=PIN_DISP_CS
+	-D TFT_DC=PIN_DISP_DC
+	-D TFT_RST=PIN_BOOT_DISP_RST
+	-D TFT_BL=PIN_DISP_BL
+	-D LOAD_GLCD=1
+	-D LOAD_FONT2=1
+	-D LOAD_FONT4=1
+	-D SPI_FREQUENCY=27000000
+lib_deps =
+    https://github.com/tzapu/WiFiManager
+    thomasfredericks/Bounce2@^2.70
+    https://github.com/gfvalvo/NewEncoder
+    yergin/YetAnotherButtonLibrary@^0.1.1
+    robtillaart/ADS1X15@^0.3.5
+    robtillaart/INA226@^0.6.6
+    bodmer/TFT_eSPI @ ^2.5.31
+    mathworks/ThingSpeak
+
+[env:native]
+platform = native
+lib_deps =
+    https://github.com/tzapu/WiFiManager
+    thomasfredericks/Bounce2@^2.70
+    https://github.com/gfvalvo/NewEncoder
+    yergin/YetAnotherButtonLibrary@^0.1.1
+    robtillaart/ADS1X15@^0.3.5
+    robtillaart/INA226@^0.6.6
+    bodmer/TFT_eSPI @ ^2.5.31
+    mathworks/ThingSpeak
