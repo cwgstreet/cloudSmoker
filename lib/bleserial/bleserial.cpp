@@ -5,12 +5,15 @@
 #include <stdio.h>
 #include <string.h>
 
+// Defined in calibration.cpp: runs one command line exactly as the USB port does
+void calRunCommand(const String& cmd);
+
 // ---------- Output ring buffer, shared by the USB tee and the BLE pump ----------
 static const size_t RING_SIZE = 2048;
 static uint8_t ring[RING_SIZE];
-static size_t ringHead = 0;   // next write position
-static size_t ringTail = 0;   // next read position
-static size_t ringCount = 0;  // bytes stored
+static size_t ringHead = 0;
+static size_t ringTail = 0;
+static size_t ringCount = 0;
 static uint32_t droppedBytes = 0;
 static bool teeOn = false;
 static portMUX_TYPE ringMux = portMUX_INITIALIZER_UNLOCKED;
@@ -100,7 +103,7 @@ uint32_t BleTee::takeDropped() {
   return d;
 }
 
-// ---------- BLE link: Nordic UART Service, one piece in flight at a time ----------
+// ---------- BLE link: Nordic UART Service ----------
 static const char* NUS_SERVICE = "6E400001-B5A3-F393-E0A9-E50E24DCCA9E";
 static const char* NUS_RX      = "6E400002-B5A3-F393-E0A9-E50E24DCCA9E";
 static const char* NUS_TX      = "6E400003-B5A3-F393-E0A9-E50E24DCCA9E";
@@ -116,6 +119,51 @@ static uint32_t inFlightSinceMs = 0;
 static uint8_t pending[PIECE_BYTES];
 static size_t pendingLen = 0;
 
+// ---------- Phone input: bytes collected into lines, lines held for loop() ----------
+static const size_t LINE_BYTES = 120;
+static const size_t INBOX_SLOTS = 4;
+static char lineBuf[LINE_BYTES];
+static size_t lineLen = 0;
+static uint32_t lastRxMs = 0;  // when phone bytes last arrived
+static char inbox[INBOX_SLOTS][LINE_BYTES];
+static size_t inboxCount = 0;
+static uint32_t inboxDropped = 0;
+static portMUX_TYPE inboxMux = portMUX_INITIALIZER_UNLOCKED;
+
+static void inboxPush(const char* s, size_t n) {
+  portENTER_CRITICAL(&inboxMux);
+  if (inboxCount < INBOX_SLOTS) {
+    memcpy(inbox[inboxCount], s, n);
+    inbox[inboxCount][n] = '\0';
+    inboxCount++;
+  } else {
+    inboxDropped++;  // inbox full: the line is refused and counted
+  }
+  portEXIT_CRITICAL(&inboxMux);
+}
+
+static bool inboxPop(char* out) {
+  bool got = false;
+  portENTER_CRITICAL(&inboxMux);
+  if (inboxCount > 0) {
+    memcpy(out, inbox[0], LINE_BYTES);
+    for (size_t i = 1; i < inboxCount; i++) {
+      memcpy(inbox[i - 1], inbox[i], LINE_BYTES);
+    }
+    inboxCount--;
+    got = true;
+  }
+  portEXIT_CRITICAL(&inboxMux);
+  return got;
+}
+
+static void inboxClear() {
+  portENTER_CRITICAL(&inboxMux);
+  inboxCount = 0;
+  portEXIT_CRITICAL(&inboxMux);
+  lineLen = 0;
+}
+
 class TxCallbacks : public NimBLECharacteristicCallbacks {
   void onStatus(NimBLECharacteristic* c, int code) override {
     if (code == 0) {
@@ -127,7 +175,21 @@ class TxCallbacks : public NimBLECharacteristicCallbacks {
 
 class RxCallbacks : public NimBLECharacteristicCallbacks {
   void onWrite(NimBLECharacteristic* c, NimBLEConnInfo& info) override {
-    // Phone input is handled in the next step
+    if (!Log.enabled()) {
+      return;
+    }
+    std::string in = c->getValue();
+    lastRxMs = millis();
+    for (char ch : in) {
+      if (ch == '\r' || ch == '\n') {
+        if (lineLen > 0) {
+          inboxPush(lineBuf, lineLen);
+          lineLen = 0;
+        }
+      } else if (lineLen < LINE_BYTES - 1) {
+        lineBuf[lineLen++] = ch;  // longer lines are truncated, not overrun
+      }
+    }
   }
 };
 
@@ -145,6 +207,7 @@ class ServerCallbacks : public NimBLEServerCallbacks {
     if (linkCount == 0) {
       inFlight = false;
       pendingLen = 0;
+      inboxClear();
     }
     if (Log.enabled()) {
       NimBLEDevice::startAdvertising();
@@ -182,11 +245,25 @@ void bleSerialApply(bool on) {
     bleSerialStart();
     NimBLEDevice::startAdvertising();
   } else if (bleInited) {
-    NimBLEDevice::getAdvertising()->stop();  // no new connections; an existing one ends when the phone does
+    NimBLEDevice::getAdvertising()->stop();
+    inboxClear();
   }
 }
 
 void bleSerialPump() {
+  // Phone commands: run one completed line per loop pass, echoed so the phone sees what ran
+  if (lineLen > 0 && (uint32_t)(millis() - lastRxMs) > 300) {
+    inboxPush(lineBuf, lineLen);
+    lineLen = 0;
+  }
+  char line[LINE_BYTES];
+  if (Log.enabled() && inboxPop(line)) {
+    Log.print(F("phone> "));
+    Log.println(line);
+    calRunCommand(String(line));
+  }
+
+  // Output: send the next piece of the ring to the phone
   if (!bleInited || txChar == nullptr || linkCount == 0 || !Log.enabled()) {
     return;
   }

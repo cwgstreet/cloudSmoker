@@ -411,3 +411,7 @@ void calPollSerial() {
     }
   }
 }
+// Runs one command line from any source (USB or BLE), exactly as the USB port does
+void calRunCommand(const String& cmd) {
+  handleCommand(cmd);
+}
