@@ -639,23 +639,6 @@ void CWG_LCD::showSplashScreen(bool degCFlag, float meatTargetTemp, float pitMin
 
 // BLE Serial on/off screen: value high, message split over two lines in a bright colour
 
-void CWG_LCD::showSettingsMenu(int16_t prevEncoderValue) {
-  clearScreen();
-  drawUIFrame("SETTINGS");
-
-  // Index 0 unused: menu values are 1-based. One label per MENU_* entry, in order.
-  static const char* menuLabels[MENU_COUNT + 1] = {"", "Meat Temp", "Pit Temp", "Units",
-                                                   "Calibrate", "Rail", "Power Bank",
-                                                   "BLE Serial", "Connectivity", "Back"};
-
-  int16_t index = constrain(prevEncoderValue, 1, (int16_t)MENU_COUNT);
-
-  tft.setTextDatum(MC_DATUM);
-  tft.setTextColor(TFT_WHITE, TFT_BLACK);
-  tft.drawString(menuLabels[index], 120, 120, 4);
-
-  drawProgressDots(index, MENU_COUNT);
-}
 
 // Setup portal screen: join the setup network, open its page, then finish with Hold
 void CWG_LCD::showPortalScreen() {
@@ -734,4 +717,35 @@ void CWG_LCD::showBleToggle(uint8_t selected, uint32_t passkey) {
   tft.drawString("Hold: back", 120, 196, 2);
 
   drawProgressDots(selected, 2);
+}
+
+// Settings menu. A label containing '|' is drawn on two lines, split at the bar.
+void CWG_LCD::showSettingsMenu(int16_t prevEncoderValue) {
+  clearScreen();
+  drawUIFrame("SETTINGS");
+
+  // Index 0 unused: menu values are 1-based. One label per MENU_* entry, in order.
+  static const char* menuLabels[MENU_COUNT + 1] = {"", "Meat Temp|Target", "Pit Temp|Target", "Units",
+                                                   "Calibrate|Probes", "Rail|Voltage", "Power Bank",
+                                                   "BLE Serial", "Connectivity", "Back"};
+
+  int16_t index = constrain(prevEncoderValue, 1, (int16_t)MENU_COUNT);
+
+  tft.setTextDatum(MC_DATUM);
+  tft.setTextColor(TFT_WHITE, TFT_BLACK);
+
+  const char* label = menuLabels[index];
+  const char* bar = strchr(label, '|');
+  if (bar != nullptr) {
+    char first[24];
+    size_t n = (size_t)(bar - label);
+    memcpy(first, label, n);
+    first[n] = '\0';
+    tft.drawString(first, 120, 104, 4);
+    tft.drawString(bar + 1, 120, 136, 4);
+  } else {
+    tft.drawString(label, 120, 120, 4);
+  }
+
+  drawProgressDots(index, MENU_COUNT);
 }
