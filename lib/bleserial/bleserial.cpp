@@ -269,6 +269,7 @@ void bleSerialApply(bool on) {
 
 
 void bleSerialPump() {
+#ifdef DEBUG_BLE_STATUS
   static uint32_t statusMs = 0;
   if ((uint32_t)(millis() - statusMs) > 2000) {
     statusMs = millis();
@@ -280,6 +281,7 @@ void bleSerialPump() {
                   NimBLEDevice::getNumBonds(), (unsigned)nst.free_entries,
                   NimBLEDevice::getAddress().toString().c_str());
   }
+#endif  // DEBUG_BLE_STATUS
   if (linkCount > 0 && !encChecked && connectedAtMs != 0 && (uint32_t)(millis() - connectedAtMs) > 2000) {
     encChecked = true;
     NimBLEConnInfo peer = NimBLEDevice::getServer()->getPeerInfo(0);
