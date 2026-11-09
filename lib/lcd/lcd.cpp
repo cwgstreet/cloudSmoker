@@ -677,31 +677,6 @@ void CWG_LCD::showPortalScreen() {
 }
 
 // BLE Serial on/off screen: value high, message in two lines, pairing code at the bottom
-void CWG_LCD::showBleToggle(uint8_t selected, uint32_t passkey) {
-  clearScreen();
-  drawUIFrame("BLE SERIAL");
-
-  bool on = (selected == 2);
-  tft.setTextDatum(MC_DATUM);
-  tft.setTextColor(TFT_WHITE, TFT_BLACK);
-  tft.drawString(on ? "On" : "Off", 120, 90, 4);
-
-  tft.setTextColor(TFT_YELLOW, TFT_BLACK);
-  if (on) {
-    tft.drawString("phone serial", 120, 132, 4);
-    tft.drawString("terminal", 120, 162, 4);
-  } else {
-    tft.drawString("saves", 120, 132, 4);
-    tft.drawString("battery", 120, 162, 4);
-  }
-
-  char code[16];
-  snprintf(code, sizeof(code), "pair code %06lu", (unsigned long)passkey);
-  tft.setTextColor(TFT_LIGHTGREY, TFT_BLACK);
-  tft.drawString(code, 120, 196, 2);
-
-  drawProgressDots(selected, 2);
-}
 
 // Rail status: INA226 reading large, with a small label, and the stored value below
 void CWG_LCD::showRailStatus(float ina226V, float storedV) {
@@ -729,4 +704,34 @@ void CWG_LCD::showRailStatus(float ina226V, float storedV) {
 
   tft.setTextColor(TFT_LIGHTGREY, TFT_BLACK);
   tft.drawString("Hold: return", 120, 186, 2);
+}
+
+// BLE Serial on/off screen: value high, message in two lines, pairing code and exit hint below
+void CWG_LCD::showBleToggle(uint8_t selected, uint32_t passkey) {
+  clearScreen();
+  drawUIFrame("BLE SERIAL");
+
+  bool on = (selected == 2);
+  tft.setTextDatum(MC_DATUM);
+  tft.setTextColor(TFT_WHITE, TFT_BLACK);
+  tft.drawString(on ? "On" : "Off", 120, 80, 4);
+
+  tft.setTextColor(TFT_YELLOW, TFT_BLACK);
+  if (on) {
+    tft.drawString("phone serial", 120, 114, 4);
+    tft.drawString("terminal", 120, 144, 4);
+  } else {
+    tft.drawString("saves", 120, 114, 4);
+    tft.drawString("battery", 120, 144, 4);
+  }
+
+  char code[16];
+  snprintf(code, sizeof(code), "pair code %06lu", (unsigned long)passkey);
+  tft.setTextColor(TFT_LIGHTGREY, TFT_BLACK);
+  tft.drawString(code, 120, 172, 2);
+
+  tft.setTextColor(TFT_WHITE, TFT_BLACK);
+  tft.drawString("Hold: back", 120, 196, 2);
+
+  drawProgressDots(selected, 2);
 }
