@@ -10,6 +10,8 @@
  ** ************************************************************* */
 
 //! >>>>> template commented out to prevent multiple variable definition <<<<<
+//!   Uncomment the #ifndef, #define and #endif lines in the actual secrets.h file, but leave them
+//!   commented out in this template file
 
 // #ifndef SECRETS_TEMPLATE_H
 // #define SECRETS_TEMPLATE_H
@@ -53,4 +55,11 @@ const char* const NTFY_TOPIC = "YOUR_NTFY_TOPIC_HERE";
    Anyone who discovers the topic name could potentially subscribe to your notifications
      or send messages to it. */
 
-#endif  // end header guard
+// ******************************************************
+//?  BLE serial pairing code (six digits). Shown on the phone when pairing.
+// *******************************************************/
+const uint32_t BLE_SERIAL_PASSKEY = ######;
+// Replace with your own six-digit BLE serial pairing code
+
+// #endif  // end header guard; uncomment this out in the actual secrets.h file, but leave commented
+// out in this template file
