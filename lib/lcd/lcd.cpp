@@ -656,6 +656,10 @@ void CWG_LCD::showSplashScreen(bool degCFlag, float meatTargetTemp, float pitMin
   //! end DEBUG block
 }
 
+
+
+// BLE Serial on/off screen: value high, message split over two lines in a bright colour
+
 void CWG_LCD::showSettingsMenu(int16_t prevEncoderValue) {
   clearScreen();
   drawUIFrame("SETTINGS");
@@ -663,7 +667,7 @@ void CWG_LCD::showSettingsMenu(int16_t prevEncoderValue) {
   // Index 0 unused: menu values are 1-based. One label per MENU_* entry, in order.
   static const char* menuLabels[MENU_COUNT + 1] = {"", "Meat Temp", "Pit Temp", "Units",
                                                    "Calibrate", "Rail", "Power Bank",
-                                                   "BLE Serial", "Back"};
+                                                   "BLE Serial", "Connectivity", "Back"};
 
   int16_t index = constrain(prevEncoderValue, 1, (int16_t)MENU_COUNT);
 
@@ -674,9 +678,27 @@ void CWG_LCD::showSettingsMenu(int16_t prevEncoderValue) {
   drawProgressDots(index, MENU_COUNT);
 }
 
+// Setup portal screen: join the setup network, open its page, then finish with Hold
+void CWG_LCD::showPortalScreen() {
+  clearScreen();
+  drawUIFrame("CONNECTIVITY");
 
-// BLE Serial on/off screen: value high, message split over two lines in a bright colour
-void CWG_LCD::showBleToggle(uint8_t selected) {
+  tft.setTextDatum(MC_DATUM);
+  tft.setTextColor(TFT_WHITE, TFT_BLACK);
+  tft.drawString("Join Wi-Fi:", 120, 90, 4);
+
+  tft.setTextColor(TFT_YELLOW, TFT_BLACK);
+  tft.drawString("cloudSmoker_setup_AP", 120, 122, 2);
+
+  tft.setTextColor(TFT_WHITE, TFT_BLACK);
+  tft.drawString("then tap Configure WiFi", 120, 148, 2);
+
+  tft.setTextColor(TFT_LIGHTGREY, TFT_BLACK);
+  tft.drawString("Hold: finish", 120, 180, 2);
+}
+
+// BLE Serial on/off screen: value high, message in two lines, pairing code at the bottom
+void CWG_LCD::showBleToggle(uint8_t selected, uint32_t passkey) {
   clearScreen();
   drawUIFrame("BLE SERIAL");
 
@@ -693,6 +715,11 @@ void CWG_LCD::showBleToggle(uint8_t selected) {
     tft.drawString("saves", 120, 132, 4);
     tft.drawString("battery", 120, 162, 4);
   }
+
+  char code[16];
+  snprintf(code, sizeof(code), "pair code %06lu", (unsigned long)passkey);
+  tft.setTextColor(TFT_LIGHTGREY, TFT_BLACK);
+  tft.drawString(code, 120, 196, 2);
 
   drawProgressDots(selected, 2);
 }

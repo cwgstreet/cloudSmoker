@@ -39,6 +39,7 @@
 #include "cookstore.h"
 #include "cwg_ads1x15.h"  // ADS1x15 I2C ADC functionality
 #include "cwg_ina226.h"
+#include "devconfig.h"
 #include "cwg_steinhartHart.h"
 #include "cwg_wifi.hpp"
 #include "lcd.h"          // UPGRADED: with new TFT_eSPI adapter class framework
@@ -106,6 +107,7 @@ void setup() {
   calInit();  // load per-probe calibration from NVS (non-volatile storage)
 
   cookStoreBegin();
+  devConfigBegin();
   bleSerialEnabled = bleSerialLoad();
   bleSerialApply(bleSerialEnabled);
 

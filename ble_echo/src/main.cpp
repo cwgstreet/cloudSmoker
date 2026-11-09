@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <NimBLEDevice.h>
+#include "nvs.h"
 #include <deque>
 #include <string>
 
@@ -124,22 +125,28 @@ void setup() {
   Serial.println(F("BLE echo test starting"));
 
   NimBLEDevice::init("cloudSmoker2-test");
+  NimBLEDevice::setSecurityAuth(true, true, true);
+  NimBLEDevice::setSecurityIOCap(BLE_HS_IO_DISPLAY_ONLY);
+  NimBLEDevice::setSecurityPasskey(378300);
+  NimBLEDevice::setSecurityInitKey(BLE_SM_PAIR_KEY_DIST_ENC | BLE_SM_PAIR_KEY_DIST_ID | BLE_SM_PAIR_KEY_DIST_SIGN);
+  NimBLEDevice::setSecurityRespKey(BLE_SM_PAIR_KEY_DIST_ENC | BLE_SM_PAIR_KEY_DIST_ID | BLE_SM_PAIR_KEY_DIST_SIGN);
 
   NimBLEServer* server = NimBLEDevice::createServer();
   server->setCallbacks(new ServerCallbacks());
 
   NimBLEService* svc = server->createService(NUS_SERVICE);
 
-  txChar = svc->createCharacteristic(NUS_TX, NIMBLE_PROPERTY::NOTIFY);
+  txChar = svc->createCharacteristic(NUS_TX, NIMBLE_PROPERTY::NOTIFY | NIMBLE_PROPERTY::READ_ENC);
   txChar->setCallbacks(new TxCallbacks());
 
   NimBLECharacteristic* rxChar =
-      svc->createCharacteristic(NUS_RX, NIMBLE_PROPERTY::WRITE | NIMBLE_PROPERTY::WRITE_NR);
+      svc->createCharacteristic(NUS_RX, NIMBLE_PROPERTY::WRITE | NIMBLE_PROPERTY::WRITE_NR | NIMBLE_PROPERTY::WRITE_ENC);
   rxChar->setCallbacks(new RxCallbacks());
 
   NimBLEAdvertising* adv = NimBLEDevice::getAdvertising();
   adv->addServiceUUID(NUS_SERVICE);
   adv->start();
+  { nvs_stats_t st; nvs_get_stats(NULL, &st); Serial.printf("NVS used %u, free %u\n", (unsigned)st.used_entries, (unsigned)st.free_entries); }
 
   Serial.println(F("advertising as cloudSmoker2-test"));
 }

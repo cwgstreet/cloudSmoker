@@ -56,7 +56,8 @@ enum entryStates_t {
   bankMenu,  // power bank settings: capacity and charge
   editBank,  // capacity or charge editor
   cookMenu,
-  bleMenu    // BLE serial on or off
+  bleMenu,
+  setupPortal  // Connectivity: setup portal open, Hold to finish
 };
 
 bool cookApplyOnBoot();

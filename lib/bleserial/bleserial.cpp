@@ -1,7 +1,9 @@
 #include "bleserial.h"
 
 #include <NimBLEDevice.h>
-#include "secrets.h"
+
+#include "nvs.h"
+#include "devconfig.h"
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
@@ -176,6 +178,7 @@ class TxCallbacks : public NimBLECharacteristicCallbacks {
 
 class RxCallbacks : public NimBLECharacteristicCallbacks {
   void onWrite(NimBLECharacteristic* c, NimBLEConnInfo& info) override {
+    Serial.print(F("BLE rx write, bytes: ")); Serial.println(c->getValue().size());
     if (!Log.enabled()) {
       return;
     }
@@ -194,14 +197,18 @@ class RxCallbacks : public NimBLECharacteristicCallbacks {
   }
 };
 
+static uint32_t connectedAtMs = 0;  // time of the last connection, for the 2 s check
+static bool encChecked = false;
+
 class ServerCallbacks : public NimBLEServerCallbacks {
   void onConnect(NimBLEServer* server, NimBLEConnInfo& info) override {
     linkCount++;
-    if (linkCount < 2) {
-      NimBLEDevice::startAdvertising();  // stay discoverable for a second app
-    }
+    connectedAtMs = millis();
+    encChecked = false;
+    Serial.print(F("BLE connected, encrypted: ")); Serial.print(info.isEncrypted()); Serial.print(F(", bonded: ")); Serial.println(info.isBonded());
   }
   void onDisconnect(NimBLEServer* server, NimBLEConnInfo& info, int reason) override {
+    Serial.print(F("BLE disconnected, reason ")); Serial.println(reason);
     if (linkCount > 0) {
       linkCount--;
     }
@@ -221,9 +228,15 @@ void bleSerialStart() {
     return;
   }
   NimBLEDevice::init("cloudSmoker2");
+  { nvs_stats_t st; nvs_get_stats(NULL, &st);
+    Serial.printf("NVS used %u, free %u, of %u entries\n", (unsigned)st.used_entries, (unsigned)st.free_entries, (unsigned)st.total_entries);
+    Serial.printf("BLE stored bonds: %d\n", (int)NimBLEDevice::getNumBonds()); }
   NimBLEDevice::setSecurityAuth(true, true, true);          // bonding, MITM protection, secure connections
   NimBLEDevice::setSecurityIOCap(BLE_HS_IO_DISPLAY_ONLY);  // device side shows a code, phone types it
-  NimBLEDevice::setSecurityPasskey(BLE_SERIAL_PASSKEY);
+  NimBLEDevice::setSecurityPasskey(devBlePasskey());
+  Serial.print(F("BLE passkey given to stack: ")); Serial.println(devBlePasskey());
+  NimBLEDevice::setSecurityInitKey(BLE_SM_PAIR_KEY_DIST_ENC | BLE_SM_PAIR_KEY_DIST_ID | BLE_SM_PAIR_KEY_DIST_SIGN);
+  NimBLEDevice::setSecurityRespKey(BLE_SM_PAIR_KEY_DIST_ENC | BLE_SM_PAIR_KEY_DIST_ID | BLE_SM_PAIR_KEY_DIST_SIGN);
 
   NimBLEServer* server = NimBLEDevice::createServer();
   server->setCallbacks(new ServerCallbacks());
@@ -254,7 +267,25 @@ void bleSerialApply(bool on) {
   }
 }
 
+
 void bleSerialPump() {
+  static uint32_t statusMs = 0;
+  if ((uint32_t)(millis() - statusMs) > 2000) {
+    statusMs = millis();
+    nvs_stats_t nst;
+    nvs_get_stats(NULL, &nst);
+    Serial.printf("pump: line=%u inbox=%u since_rx=%lu passkey=%06lu bonds=%d free_nvs=%u addr=%s\n",
+                  (unsigned)lineLen, (unsigned)inboxCount,
+                  (unsigned long)(millis() - lastRxMs), (unsigned long)devBlePasskey(),
+                  NimBLEDevice::getNumBonds(), (unsigned)nst.free_entries,
+                  NimBLEDevice::getAddress().toString().c_str());
+  }
+  if (linkCount > 0 && !encChecked && connectedAtMs != 0 && (uint32_t)(millis() - connectedAtMs) > 2000) {
+    encChecked = true;
+    NimBLEConnInfo peer = NimBLEDevice::getServer()->getPeerInfo(0);
+    Serial.print(F("BLE link after 2 s, encrypted: ")); Serial.print(peer.isEncrypted());
+    Serial.print(F(", bonds stored: ")); Serial.println(NimBLEDevice::getNumBonds());
+  }
   // Phone commands: run one completed line per loop pass, echoed so the phone sees what ran
   if (lineLen > 0 && (uint32_t)(millis() - lastRxMs) > 300) {
     inboxPush(lineBuf, lineLen);
@@ -268,7 +299,8 @@ void bleSerialPump() {
   }
 
   // Output: send the next piece of the ring to the phone
-  if (!bleInited || txChar == nullptr || linkCount == 0 || !Log.enabled()) {
+  if (!bleInited || txChar == nullptr || linkCount == 0 || !Log.enabled() ||
+      (uint32_t)(millis() - connectedAtMs) < 5000) {  // hold output for 5 s after connect: pairing runs first
     return;
   }
 

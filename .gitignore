@@ -65,3 +65,4 @@ grabcad/
 
  Ignore FreeCAD backup
 *.FCBak
+*.bak*

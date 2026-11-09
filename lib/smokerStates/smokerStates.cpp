@@ -21,13 +21,18 @@
 // include local libraries
 #include "calibration.h"
 #include "cookstore.h"
+#include "devconfig.h"
+void WifiManager_initialise(bool openPortalNow);
+bool portalIsOpen();
+void portalOpen();
+bool portalPump();
+void portalClose();
 #include "cwg_ads1x15.h"        // ADS1x15 I2C ADC device functionality
 #include "cwg_ina226.h"         // INA226 rail voltage and coulomb counting
 #include "cwg_steinhartHart.h"  // Thermistor steinhart hart temperature calcs
 #include "helper_functions.h"
 #include "lcd.h"
 #include "press_type.h"
-#include "secrets.h"  // Ensure this file exists in your 'include/' or 'src/' directory
 #include "smokerStates.h"
 #include "wrapEncoder.h"
 
@@ -40,7 +45,6 @@
 #include <WiFiClientSecure.h>
 
 // include APIs for ntfy.sh notifications
-#include "secrets.h"
 
 // Debug timing: prints how long a state's block took when the case block exits.
 // With DEBUG_TIMING undefined, TIME_BLOCK() expands to nothing.
@@ -167,10 +171,13 @@ DoneStatus probeDoneStatus(float tempF, float targetF) {
 
 // Sends one message to the ntfy topic over HTTPS. Returns true only on HTTP 200.
 bool sendNtfyAlert(const String& message) {
+  if (devNtfyTopic().length() == 0) {
+    return false;  // phone alerts off
+  }
   WiFiClientSecure client;
   client.setInsecure();  // HTTPS encryption without certificate check (accepted risk)
   HTTPClient http;
-  String url = String("https://ntfy.sh/") + NTFY_TOPIC;
+  String url = String("https://ntfy.sh/") + devNtfyTopic();
   http.begin(client, url);
   http.setTimeout(5000);
   int code = http.POST(message);
@@ -190,11 +197,14 @@ void appendThingSpeakField(String& body, int field, float value) {
 
 // Sends one update to ThingSpeak over HTTPS. Returns true only if ThingSpeak accepts it.
 bool sendThingSpeak(float meat1F, float meatTargetF, float pitF, float pitTargetF, float batteryV) {
+  if (devThingSpeakKey().length() == 0) {
+    return false;  // cloud logging off
+  }
   if (WiFi.status() != WL_CONNECTED) {
     return false;
   }
 
-  String body = String("api_key=") + THNGSPK_WRITE_API_KEY;
+  String body = String("api_key=") + devThingSpeakKey();
   appendThingSpeakField(body, 1, meat1F);
   appendThingSpeakField(body, 2, meatTargetF);
   appendThingSpeakField(body, 3, pitF);
@@ -301,10 +311,6 @@ static float rawProbeF(ProbeId id) {
       return NAN;
   }
 
-  Log.print(F("raw "));
-  Log.print(calNames[id]);
-  Log.print(F(" V = "));
-  Log.println(v, 4);
 
   return sh->getTempFahrenheit(calRailV(), v);
 }
@@ -1001,6 +1007,10 @@ void processState(CWG_LCD& lcd) {
             smokerState = bleMenu;
             hasRunFlag = 0;
             break;
+          case MENU_SETUP:
+            smokerState = setupPortal;
+            hasRunFlag = 0;
+            break;
           case MENU_BACK:
             smokerState = launchPad;
             hasRunFlag = 0;
@@ -1293,7 +1303,7 @@ void processState(CWG_LCD& lcd) {
       }
 
       if (prevEncoderValue != lastDrawn) {
-        lcd.showBleToggle((uint8_t)prevEncoderValue);
+        lcd.showBleToggle((uint8_t)prevEncoderValue, devBlePasskey());
         lastDrawn = prevEncoderValue;
       }
 
@@ -1630,6 +1640,22 @@ void processState(CWG_LCD& lcd) {
       if (button.triggered(HOLD)) {
         smokerState = bankEditFromCook ? bbqStatus : bankMenu;
         bankEditFromCook = false;
+        hasRunFlag = 0;
+      }
+    } break;
+
+    case setupPortal: {
+      if (hasRunFlag == 0) {
+        portalOpen();
+        lcd.display();
+        lcd.showPortalScreen();
+        hasRunFlag = 1;
+      }
+
+      // Stays open for three minutes, or until Hold. Submitting the form saves at once.
+      if (!portalPump() || button.triggered(HOLD)) {
+        portalClose();
+        smokerState = changeSettings;
         hasRunFlag = 0;
       }
     } break;

@@ -39,7 +39,6 @@ const char* const WIFI_PASSWORD = "YOUR_WIFI_PASSWORD";
 // *******************************************************/
 const unsigned long THNGSPK_CHANNEL_ID = CHANNEL_ID_NUMBER;
 // Replace with Thingspeak Channel ID
-const char* const THNGSPK_WRITE_API_KEY = "APIKEY";
 // Replace with Thingspeak Write API Key
 
 // TODO include Read API Key for potential future use:
@@ -49,7 +48,6 @@ const char* const THNGSPK_WRITE_API_KEY = "APIKEY";
 // ******************************************************
 //? ntfy.sh Connection Parameters
 // *******************************************************/
-const char* const NTFY_TOPIC = "YOUR_NTFY_TOPIC_HERE";
 /* Replace with your ntfy.sh topic key - generate a long, random
     topic name rather than using your project name or another easily guessed string.
    Anyone who discovers the topic name could potentially subscribe to your notifications

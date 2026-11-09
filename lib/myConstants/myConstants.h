@@ -62,7 +62,6 @@ constexpr double ADC_PROBE_MIN_FRACTION = 0.01;  // about 0.05 V on a 5 V rail
 constexpr double ADC_PROBE_MAX_FRACTION = 0.99;  // about 4.95 V on a 5 V rail
 
 //! TEMPORARY: fixed bias-supply reference to 5V until the INA226 bus-voltage reading replaces it
-constexpr double ADC_biasSupplyInterim_V = 5.0;
 
 // *******************************************************
 //   Thermistor Hardware setup
