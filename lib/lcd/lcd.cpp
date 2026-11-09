@@ -206,27 +206,6 @@ void CWG_LCD::showCalResult(const char* probeName, float gain, float offset, boo
   tft.drawString(hint, 120, 175, 2);
 }
 
-void CWG_LCD::showRailStatus(float ina226V, float storedV) {
-  clearScreen();
-  drawUIFrame("RAIL VOLTAGE");
-
-  char buf[32];
-  tft.setTextDatum(MC_DATUM);
-
-  tft.setTextColor(TFT_WHITE, TFT_BLACK);
-  if (isnan(ina226V)) {
-    snprintf(buf, sizeof(buf), "INA226: no device");
-  } else {
-    snprintf(buf, sizeof(buf), "INA226 %.3f V", ina226V);
-  }
-  tft.drawString(buf, 120, 100, 2);
-
-  tft.setTextColor(TFT_LIGHTGREY, TFT_BLACK);
-  snprintf(buf, sizeof(buf), "used %.3f V", storedV);
-  tft.drawString(buf, 120, 130, 2);
-
-  tft.drawString("Hold: return", 120, 175, 2);
-}
 
 void CWG_LCD::showEndCookConfirm() {
   clearScreen();
@@ -722,4 +701,32 @@ void CWG_LCD::showBleToggle(uint8_t selected, uint32_t passkey) {
   tft.drawString(code, 120, 196, 2);
 
   drawProgressDots(selected, 2);
+}
+
+// Rail status: INA226 reading large, with a small label, and the stored value below
+void CWG_LCD::showRailStatus(float ina226V, float storedV) {
+  clearScreen();
+  drawUIFrame("RAIL VOLTAGE");
+
+  char buf[32];
+  tft.setTextDatum(MC_DATUM);
+
+  tft.setTextColor(TFT_CYAN, TFT_BLACK);
+  tft.drawString("INA226", 120, 90, 2);
+
+  if (isnan(ina226V)) {
+    tft.setTextColor(TFT_RED, TFT_BLACK);
+    tft.drawString("no device", 120, 122, 4);
+  } else {
+    tft.setTextColor(TFT_YELLOW, TFT_BLACK);
+    snprintf(buf, sizeof(buf), "%.3f V", ina226V);
+    tft.drawString(buf, 120, 122, 4);
+  }
+
+  tft.setTextColor(TFT_WHITE, TFT_BLACK);
+  snprintf(buf, sizeof(buf), "used %.2f V", storedV);
+  tft.drawString(buf, 120, 160, 2);
+
+  tft.setTextColor(TFT_LIGHTGREY, TFT_BLACK);
+  tft.drawString("Hold: return", 120, 186, 2);
 }
