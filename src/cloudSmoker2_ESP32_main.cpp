@@ -24,7 +24,6 @@
  */
 
 // external libraries:
-#include "bleserial.h"
 #include <ADS1X15.h>
 #include <Arduino.h>  // PlatformIO IDE requirement
 #include <Bounce2.h>
@@ -34,14 +33,16 @@
 #include <WiFiManager.h>
 #include <Wire.h>  // Master I2C bus management
 
+#include "bleserial.h"
+
 // internal (user) libraries:
 #include "calibration.h"  // per-probe two-point calibration (gain and offset) constants
 #include "cookstore.h"
 #include "cwg_ads1x15.h"  // ADS1x15 I2C ADC functionality
 #include "cwg_ina226.h"
-#include "devconfig.h"
 #include "cwg_steinhartHart.h"
 #include "cwg_wifi.hpp"
+#include "devconfig.h"
 #include "lcd.h"          // UPGRADED: with new TFT_eSPI adapter class framework
 #include "myConstants.h"  // All pin mappings and constants
 #include "peripherals.h"
@@ -70,9 +71,9 @@ char bootResetReasonStr[24] = "";  // set once in setup(), shown on the splash s
 
 // Temperature variables- global; all temps stored in degF and converted to DegC on the fly
 float meatTarget[3] = {203, 203, 203};  // MEAT1..MEAT3 done targets, degF
-float pitMin = 225;  // PIT band in degF; alert after 5 min outside
+float pitMin = 225;                     // PIT band in degF; alert after 5 min outside
 float pitMax = 250;
-                                        // // Traditional low-and-slow cooking target temperature
+// // Traditional low-and-slow cooking target temperature
 float currentPitTemp = 60;
 float currentMeat1Temp = 40;  // Initial baseline temperature
 float currentMeat2Temp = 40;  // Initial baseline temperature
@@ -100,6 +101,10 @@ int16_t prevEncoderValue;
 
 // Instantiate your global hardware instances explicitly
 CWG_LCD lcd;
+
+#ifdef DEBUG_NVS_STATS
+void printNvsStats();
+#endif
 
 void setup() {
   Serial.begin(SERIAL_MONITOR_SPEED);
@@ -205,6 +210,12 @@ void setup() {
 #ifdef DEBUG_PRESSTYPE
   button.functionTest();
 #endif
+
+#ifdef DEBUG_NVS_STATS
+  printNvsStats();
+  cookPrefs.putUInt("nvsTest", millis());  // remove after single test as one-off write to NVS
+  printNvsStats();                         // remove after single test as one-off write to NVS
+#endif
 }
 
 void loop() {
@@ -221,7 +232,7 @@ void loop() {
   calPollSerial();
 
   ina226.updateCharge();  // coulomb counter for power bank SOC, once per second
-  bleSerialPump();  // BLE serial: send queued output to the phone
+  bleSerialPump();        // BLE serial: send queued output to the phone
 
   cookCheckpoint(ina226.getChargeUsed_mAh());
 

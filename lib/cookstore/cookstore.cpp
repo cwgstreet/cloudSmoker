@@ -1,3 +1,6 @@
+#ifdef DEBUG_NVS_STATS
+void printNvsStats();
+#endif
 /* ***************************************************************
  * cookstore.cpp - library to manage cook state persistence and time sync
  *       1) Cook state persistence (NVS namespace "cook") and time sync.
@@ -95,6 +98,9 @@ void cookCheckpoint(float charge_mAh) {
   }
   lastWrittenCharge = charge_mAh;
   lastWriteMs = millis();
+#ifdef DEBUG_NVS_STATS
+  printNvsStats();
+#endif
 }
 
 void cookSaveEnd() {
