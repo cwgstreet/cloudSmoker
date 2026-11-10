@@ -63,6 +63,9 @@ repomix.config.json
 Image2Lcd/
 grabcad/
 
- Ignore FreeCAD backup
+# Ignore FreeCAD backup
 *.FCBak
 *.bak*
+
+# Ignore log files
+*.log
