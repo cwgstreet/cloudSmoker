@@ -196,39 +196,6 @@ void appendThingSpeakField(String& body, int field, float value) {
 }
 
 // Sends one update to ThingSpeak over HTTPS. Returns true only if ThingSpeak accepts it.
-bool sendThingSpeak(float meat1F, float meatTargetF, float pitF, float pitTargetF, float batteryV) {
-  if (devThingSpeakKey().length() == 0) {
-    return false;  // cloud logging off
-  }
-  if (WiFi.status() != WL_CONNECTED) {
-    return false;
-  }
-
-  String body = String("api_key=") + devThingSpeakKey();
-  appendThingSpeakField(body, 1, meat1F);
-  appendThingSpeakField(body, 2, meatTargetF);
-  appendThingSpeakField(body, 3, pitF);
-  appendThingSpeakField(body, 4, pitTargetF);
-  appendThingSpeakField(body, 5, batteryV);
-
-  WiFiClientSecure client;
-  client.setInsecure();
-  HTTPClient http;
-  http.begin(client, "https://api.thingspeak.com/update");
-  http.addHeader("Content-Type", "application/x-www-form-urlencoded");
-  http.setTimeout(5000);
-  int code = http.POST(body);
-  String response = http.getString();
-  http.end();
-
-  // ThingSpeak returns the entry number on success, or 0 if it rejected the update
-  long entryId = response.toInt();
-  Log.print(F("ThingSpeak HTTP "));
-  Log.print(code);
-  Log.print(F(" entry "));
-  Log.println(entryId);
-  return code == 200 && entryId > 0;
-}
 
 // Reports done transitions for one probe and sends the alert once per cook.
 // lastStatus and doneFlag are references, so the helper updates each probe's own variables.
@@ -869,6 +836,44 @@ static void drawCookPage(CWG_LCD& lcd, uint8_t page) {
   }
 }
 
+// ThingSpeak single-channel map (8 fields). Blank values are skipped by appendThingSpeakField.
+//   1 MEAT1 temp   2 MEAT1 target   3 MEAT2 temp   4 MEAT3 temp
+//   5 PIT temp     6 PIT min (blank when Min is Off)   7 PIT max   8 power bank %
+bool sendThingSpeak(float meat1F, float meat1TargetF, float meat2F, float meat3F, float pitF,
+                    float pitMinF, float pitMaxF, float bankPct) {
+  if (WiFi.status() != WL_CONNECTED || devThingSpeakKey().length() == 0) {
+    return false;  // cloud logging off, or not connected
+  }
+
+  String body = String("api_key=") + devThingSpeakKey();
+  appendThingSpeakField(body, 1, meat1F);
+  appendThingSpeakField(body, 2, meat1TargetF);
+  appendThingSpeakField(body, 3, meat2F);
+  appendThingSpeakField(body, 4, meat3F);
+  appendThingSpeakField(body, 5, pitF);
+  appendThingSpeakField(body, 6, pitMinF);
+  appendThingSpeakField(body, 7, pitMaxF);
+  appendThingSpeakField(body, 8, bankPct);
+
+  WiFiClientSecure client;
+  client.setInsecure();
+  HTTPClient http;
+  http.begin(client, "https://api.thingspeak.com/update");
+  http.addHeader("Content-Type", "application/x-www-form-urlencoded");
+  http.setTimeout(5000);
+  int code = http.POST(body);
+  String response = http.getString();
+  http.end();
+
+  // ThingSpeak returns the entry number on success, or 0 if it rejected the update
+  long entryId = response.toInt();
+  Serial.print(F("ThingSpeak HTTP "));
+  Serial.print(code);
+  Serial.print(F(" entry "));
+  Serial.println(entryId);
+  return code == 200 && entryId > 0;
+}
+
 void processState(CWG_LCD& lcd) {
   // Declare this at the top of the function to avoid switch-case initialization bypass errors
   int16_t currentEncoderValue;
@@ -1134,7 +1139,7 @@ void processState(CWG_LCD& lcd) {
       TIME_BLOCK("txTemp");
       Log.println("entering txTemp case -> transmitting data");
       // TODO: Battery field is NAN until the INA226 bus voltage replaces the placeholder
-      sendThingSpeak(currentMeat1Temp, meatTarget[0], currentPitTemp, pitMax, NAN);
+      sendThingSpeak(currentMeat1Temp, meatTarget[0], currentMeat2Temp, currentMeat3Temp, currentPitTemp, pitMin, pitMax, bankRemainingPct() < 0 ? NAN : (float)bankRemainingPct());
 
       Log.println("leaving for Sleep case");
       smokerState = Sleep;
