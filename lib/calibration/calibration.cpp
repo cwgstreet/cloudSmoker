@@ -38,15 +38,15 @@
  *
  ** ************************************************************* */
 
-#include "bleserial.h"
 #include "calibration.h"
 
 #include <Preferences.h>  // ESP32 NVS key/value storage, part of the Arduino core
 #include <math.h>         // isnan(), isfinite()
 
+#include "bleserial.h"
 #include "cookstore.h"   // stored cook state, for the cookShow and cookEnd bench commands
 #include "cwg_ina226.h"  // live +5 V rail reading, used by calRailV()
-#include "devconfig.h"  // devBlePasskey()
+#include "devconfig.h"   // devBlePasskey()
 
 // Display names, used in both the NVS keys and the serial commands
 static const char* const probeNames[PROBE_COUNT] = {"PIT", "MEAT1", "MEAT2", "MEAT3"};
@@ -178,15 +178,13 @@ void calPrintHelp() {
   Log.println(F("  calShow                         show rail voltage and all probe factors"));
   Log.println(F("  calReset                        reset all probes to gain 1.0, offset 0.0"));
   Log.println(F("  calReset <probe>                reset one probe, e.g.  calReset MEAT1"));
-  Log.println(
-      F("  cal <probe> <gain> <offset>     set one probe, e.g.  cal MEAT1 1.0526 -5.47"));
+  Log.println(F("  cal <probe> <gain> <offset>     set one probe, e.g.  cal MEAT1 1.0526 -5.47"));
   Log.println(F("                                  probes: PIT, MEAT1, MEAT2, MEAT3"));
   Log.println(F("                                  gain 0.9 to 1.1, offset -9 to +9 degF"));
   Log.println(F("  railV <volts>                   set measured +5 V rail, e.g.  railV 5.09"));
   Log.println(F("                                  range 4.5 to 5.5 V"));
   Log.println(F("  charge                          show charge drawn from the power bank"));
   Log.println(F("  chargeReset                     restart the charge count at 0"));
-  Log.println(F("  passkey                         show the BLE pair code"));
   Log.println(F("  passkey                         show the BLE pair code"));
 #ifdef DEBUG_COOK_CMDS
   Log.println(F("  cookShow                        debug: show whether a cook is stored"));
@@ -401,7 +399,7 @@ void calPollSerial() {
   while (Serial.available()) {
     char c = Serial.read();
     if (c == '\n' || c == '\r') {
-      Log.println();         // move to a new line after the typed command
+      Log.println();            // move to a new line after the typed command
       if (line.length() > 0) {  // ignore the blank line from "\r\n" endings
         handleCommand(line);
         line = "";
@@ -420,6 +418,4 @@ void calPollSerial() {
   }
 }
 // Runs one command line from any source (USB or BLE), exactly as the USB port does
-void calRunCommand(const String& cmd) {
-  handleCommand(cmd);
-}
+void calRunCommand(const String& cmd) { handleCommand(cmd); }
