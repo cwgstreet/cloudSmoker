@@ -43,6 +43,7 @@ void portalClose();
 #include <HTTPClient.h>
 #include <WiFi.h>
 #include <WiFiClientSecure.h>
+#include "ota.h"
 
 // include APIs for ntfy.sh notifications
 
@@ -704,6 +705,7 @@ static void applyResume() {
   meat3DoneFlag = (flags & 16) != 0;
   meat3SentFlag = (flags & 32) != 0;
   resetBankForecast();                 // fresh history for the restored charge
+  otaStop();                    // no OTA while a restored cook is running
   bankAlertSent = (flags & 64) != 0;  // a resumed cook doesn't repeat its alert
 
   startCookTime_ms = millis();

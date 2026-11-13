@@ -6,11 +6,16 @@
 // Per-device settings entered by the user, kept in NVS (namespace "cfg").
 // Blank ntfy topic or ThingSpeak key means that feature is off.
 
-void devConfigBegin();                      // open the store; create the random ntfy topic on first boot
-String devNtfyTopic();                      // empty = phone alerts off
-String devThingSpeakKey();                  // empty = cloud logging off
+void devConfigBegin();      // open the store; create the random ntfy topic on first boot
+String devNtfyTopic();      // empty = phone alerts off
+String devThingSpeakKey();  // empty = cloud logging off
 void devSetNtfyTopic(const String& topic);
 void devSetThingSpeakKey(const String& key);
-uint32_t devBlePasskey();                   // six-digit random code, created on first use
+uint32_t devBlePasskey();  // six-digit random code, created on first use
 
+String devOtaPassword();  // created on first use, never empty
+
+#ifdef DEBUG_OTA
+void devOtaPasswordClear();
+#endif
 #endif  // DEVCONFIG_H

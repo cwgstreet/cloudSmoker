@@ -45,6 +45,7 @@
 #include "devconfig.h"
 #include "lcd.h"          // UPGRADED: with new TFT_eSPI adapter class framework
 #include "myConstants.h"  // All pin mappings and constants
+#include "ota.h"          // OTA (Over-the-Air) firmware update functionality
 #include "peripherals.h"
 #include "press_type.h"    // Wrapper library abstracting Yabl / Bounce2 routines
 #include "smokerStates.h"  // cloudSmoker state machine functionality
@@ -160,10 +161,20 @@ void setup() {
   // Do this here so that the user sees while the WiFiManager portal is being configured
   lcd.showInitMessage("Connecting Wi-Fi", "Please wait");
 
+#ifndef DEBUG_BLE_NO_WIFI
   WifiManager_initialise();
+#endif
   Log.println("WiFi setup finished, entering main loop");
   if (WiFi.status() == WL_CONNECTED) {
     timeSyncWait(5000);  // settle the clock before deciding resume or stale
+  }
+
+  // initialise OTA (Over-the-Air) firmware update service
+  if (!cookStoreActive()) {
+    String otaPw = devOtaPassword();
+#ifndef DEBUG_BLE_NO_WIFI
+    otaBegin("cloudsmoker2", otaPw.c_str());
+#endif
   }
 
   // Initialise button press context tracking
@@ -213,8 +224,6 @@ void setup() {
 
 #ifdef DEBUG_NVS_STATS
   printNvsStats();
-  cookPrefs.putUInt("nvsTest", millis());  // remove after single test as one-off write to NVS
-  printNvsStats();                         // remove after single test as one-off write to NVS
 #endif
 }
 

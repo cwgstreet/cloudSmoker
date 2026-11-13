@@ -207,6 +207,12 @@ class ServerCallbacks : public NimBLEServerCallbacks {
     encChecked = false;
     Serial.print(F("BLE connected, encrypted: ")); Serial.print(info.isEncrypted()); Serial.print(F(", bonded: ")); Serial.println(info.isBonded());
   }
+#ifdef DEBUG_BLE_STATUS
+  void onAuthenticationComplete(NimBLEConnInfo& info) override {
+    Serial.print(F("BLE auth complete, encrypted: ")); Serial.print(info.isEncrypted());
+    Serial.print(F(", bonded: ")); Serial.println(info.isBonded());
+  }
+#endif
   void onDisconnect(NimBLEServer* server, NimBLEConnInfo& info, int reason) override {
     Serial.print(F("BLE disconnected, reason ")); Serial.println(reason);
     if (linkCount > 0) {
@@ -228,13 +234,17 @@ void bleSerialStart() {
     return;
   }
   NimBLEDevice::init("cloudSmoker2");
+#ifdef DEBUG_NVS_STATS
   { nvs_stats_t st; nvs_get_stats(NULL, &st);
     Serial.printf("NVS used %u, free %u, of %u entries\n", (unsigned)st.used_entries, (unsigned)st.free_entries, (unsigned)st.total_entries);
     Serial.printf("BLE stored bonds: %d\n", (int)NimBLEDevice::getNumBonds()); }
+#endif
   NimBLEDevice::setSecurityAuth(true, true, true);          // bonding, MITM protection, secure connections
   NimBLEDevice::setSecurityIOCap(BLE_HS_IO_DISPLAY_ONLY);  // device side shows a code, phone types it
   NimBLEDevice::setSecurityPasskey(devBlePasskey());
+#ifdef DEBUG_BLE_STATUS
   Serial.print(F("BLE passkey given to stack: ")); Serial.println(devBlePasskey());
+#endif
   NimBLEDevice::setSecurityInitKey(BLE_SM_PAIR_KEY_DIST_ENC | BLE_SM_PAIR_KEY_DIST_ID | BLE_SM_PAIR_KEY_DIST_SIGN);
   NimBLEDevice::setSecurityRespKey(BLE_SM_PAIR_KEY_DIST_ENC | BLE_SM_PAIR_KEY_DIST_ID | BLE_SM_PAIR_KEY_DIST_SIGN);
 

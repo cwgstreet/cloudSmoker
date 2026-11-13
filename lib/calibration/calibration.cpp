@@ -46,6 +46,7 @@
 
 #include "cookstore.h"   // stored cook state, for the cookShow and cookEnd bench commands
 #include "cwg_ina226.h"  // live +5 V rail reading, used by calRailV()
+#include "devconfig.h"  // devBlePasskey()
 
 // Display names, used in both the NVS keys and the serial commands
 static const char* const probeNames[PROBE_COUNT] = {"PIT", "MEAT1", "MEAT2", "MEAT3"};
@@ -185,6 +186,8 @@ void calPrintHelp() {
   Log.println(F("                                  range 4.5 to 5.5 V"));
   Log.println(F("  charge                          show charge drawn from the power bank"));
   Log.println(F("  chargeReset                     restart the charge count at 0"));
+  Log.println(F("  passkey                         show the BLE pair code"));
+  Log.println(F("  passkey                         show the BLE pair code"));
 #ifdef DEBUG_COOK_CMDS
   Log.println(F("  cookShow                        debug: show whether a cook is stored"));
   Log.println(F("  cookEnd                         debug: clear the stored cook"));
@@ -207,6 +210,11 @@ static void handleCommand(String cmd) {
 
   if (cmd == "help") {
     calPrintHelp();
+    return;
+  }
+
+  if (cmd == "passkey") {
+    Log.printf("pair code %06lu\n", (unsigned long)devBlePasskey());
     return;
   }
 
