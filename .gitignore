@@ -69,3 +69,6 @@ grabcad/
 
 # Ignore log files
 *.log
+# Build output captured for debugging
+build_*.txt
+*.backup
