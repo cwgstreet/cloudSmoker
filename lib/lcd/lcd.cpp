@@ -570,7 +570,7 @@ void CWG_LCD::showBankLine(int pct) {
   if (pct < 0) {
     return;
   }
-  char text[16];
+  char text[20];
   snprintf(text, sizeof(text), "Bank %d%%", pct);
   tft.setTextDatum(MC_DATUM);
   tft.setTextColor(TFT_LIGHTGREY, TFT_BLACK);
@@ -708,7 +708,7 @@ void CWG_LCD::showBleToggle(uint8_t selected, uint32_t passkey) {
     tft.drawString("battery", 120, 144, 4);
   }
 
-  char code[16];
+  char code[20];
   snprintf(code, sizeof(code), "pair code %06lu", (unsigned long)passkey);
   tft.setTextColor(TFT_LIGHTGREY, TFT_BLACK);
   tft.drawString(code, 120, 172, 2);
