@@ -168,7 +168,10 @@ void setup() {
   }
 
   // initialise OTA (Over-the-Air) firmware update service
-  otaBegin("cloudsmoker2", "");  // password to come from NVS, see step 4
+  if (!cookStoreActive()) {
+    String otaPw = devOtaPassword();
+    otaBegin("cloudsmoker2", otaPw.c_str());
+  }
 
   // Initialise button press context tracking
   button.begin(BUTTON_PIN);
@@ -217,8 +220,6 @@ void setup() {
 
 #ifdef DEBUG_NVS_STATS
   printNvsStats();
-  cookPrefs.putUInt("nvsTest", millis());  // remove after single test as one-off write to NVS
-  printNvsStats();                         // remove after single test as one-off write to NVS
 #endif
 }
 
