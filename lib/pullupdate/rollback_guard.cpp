@@ -9,6 +9,7 @@
 
 #include <Arduino.h>
 #include "esp_ota_ops.h"
+#include "firmware_version.h"
 
 namespace {
 
@@ -26,6 +27,7 @@ extern "C" bool verifyRollbackLater() { return true; }
 void rollbackGuardBegin(bool bleStarted) {
   gBleStarted = bleStarted;
   gStartMs = millis();
+  Serial.printf("firmware %s (version %d)\n", FIRMWARE_VERSION_NAME, FIRMWARE_VERSION);
 }
 
 void rollbackGuardLoop() {
