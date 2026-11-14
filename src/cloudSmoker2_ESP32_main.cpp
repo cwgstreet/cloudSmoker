@@ -43,6 +43,7 @@
 #include "cwg_steinhartHart.h"
 #include "cwg_wifi.hpp"
 #include "devconfig.h"
+#include "rollback_guard.h"
 #include "lcd.h"          // UPGRADED: with new TFT_eSPI adapter class framework
 #include "myConstants.h"  // All pin mappings and constants
 #include "ota.h"          // OTA (Over-the-Air) firmware update functionality
@@ -221,9 +222,12 @@ void setup() {
 #ifdef DEBUG_NVS_STATS
   printNvsStats();
 #endif
+  // Rollback guard: BLE off counts as healthy; only a failed start while on counts as not
+  rollbackGuardBegin(!bleSerialEnabled || bleSerialIsRunning());
 }
 
 void loop() {
+  rollbackGuardLoop();
   // Keep processor threads stable on underlying FreeRTOS environments
   yield();
 

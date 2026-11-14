@@ -27,4 +27,5 @@ void bleSerialStart();          // first-time init; safe to call repeatedly
 void bleSerialApply(bool on);   // turn the link on or off now
 void bleSerialPump();          // call from loop(): sends queued output
 
+bool bleSerialIsRunning();  // true once bleSerialStart() has brought BLE up
 #endif  // BLESERIAL_H

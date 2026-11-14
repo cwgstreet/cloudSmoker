@@ -343,3 +343,6 @@ void bleSerialPump() {
     inFlight = false;  // stays pending and is tried again on the next loop
   }
 }
+
+// True once bleSerialStart() has brought the BLE stack up.
+bool bleSerialIsRunning() { return bleInited; }
