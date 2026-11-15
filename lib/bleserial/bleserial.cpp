@@ -229,11 +229,25 @@ class ServerCallbacks : public NimBLEServerCallbacks {
   }
 };
 
+#ifdef DEBUG_BLE_STATUS
+// Debug only: prints the stack's own result for each encryption event
+static int bleDebugGap(ble_gap_event* event, void* arg) {
+  if (event->type == BLE_GAP_EVENT_ENC_CHANGE) {
+    Serial.printf("GAP enc_change status=%d conn=%u\n", event->enc_change.status,
+                  event->enc_change.conn_handle);
+  }
+  return 0;
+}
+#endif
+
 void bleSerialStart() {
   if (bleInited) {
     return;
   }
   NimBLEDevice::init("cloudSmoker2");
+#ifdef DEBUG_BLE_STATUS
+  NimBLEDevice::setCustomGapHandler(bleDebugGap);
+#endif
 #ifdef DEBUG_NVS_STATS
   { nvs_stats_t st; nvs_get_stats(NULL, &st);
     Serial.printf("NVS used %u, free %u, of %u entries\n", (unsigned)st.used_entries, (unsigned)st.free_entries, (unsigned)st.total_entries);

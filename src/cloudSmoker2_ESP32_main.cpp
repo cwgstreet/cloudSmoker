@@ -112,6 +112,10 @@ void printNvsStats();
 void setup() {
   Serial.begin(SERIAL_MONITOR_SPEED);
 
+#ifdef DEBUG_BLE_STATUS
+  delay(3000);  // debug only: gives the USB monitor time to reattach after a reset
+#endif
+
   calInit();  // load per-probe calibration from NVS (non-volatile storage)
 
   cookStoreBegin();
