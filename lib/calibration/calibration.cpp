@@ -45,6 +45,9 @@
 
 #include "bleserial.h"
 #include "cookstore.h"   // stored cook state, for the cookShow and cookEnd bench commands
+#ifdef DEBUG_COOK_CMDS
+#include "update_test.h"  // bench commands: signed update dry run, gate test and install
+#endif
 #include "cwg_ina226.h"  // live +5 V rail reading, used by calRailV()
 #include "devconfig.h"   // devBlePasskey()
 
@@ -321,6 +324,21 @@ static void handleCommand(String cmd) {
   }
 
 #ifdef DEBUG_COOK_CMDS
+  if (cmd == "updatetest") {
+    // Dry run: verifies the signed chain and the image, then discards it. Nothing is staged.
+    bool ok = runBenchUpdate("cloudSmoker2-test-100", false);
+    Log.println(ok ? F("updatetest: ok (dry run, nothing staged)") : F("updatetest: FAILED, see the lines above"));
+  }
+  if (cmd == "updatecommit") {
+    // Gate test: a version 100 release with commit=true must be refused as not newer.
+    bool ok = runBenchUpdate("cloudSmoker2-test-100", true);
+    Log.println(ok ? F("updatecommit: UNEXPECTED ok") : F("updatecommit: refused, as expected"));
+  }
+  if (cmd == "updateinstall") {
+    // Real install of release 101 for the next boot. Reset the board by hand afterwards.
+    bool ok = runBenchUpdate("cloudSmoker2-test-101", true);
+    Log.println(ok ? F("updateinstall: staged, press reset to boot 1.1") : F("updateinstall: FAILED, see the lines above"));
+  }
   if (cmd == "cookShow") {
     Log.print(F("stored cook active: "));
     Log.println(cookStoreActive() ? F("yes") : F("no"));
