@@ -25,8 +25,9 @@ enum SettingsMenu {
   MENU_BANK = 6,
   MENU_BLE = 7,
   MENU_SETUP = 8,
-  MENU_BACK = 9,
-  MENU_COUNT = 9
+  MENU_UPDATE = 9,
+  MENU_BACK = 10,
+  MENU_COUNT = 10
 };
 
 class CWG_LCD {

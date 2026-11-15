@@ -727,7 +727,7 @@ void CWG_LCD::showSettingsMenu(int16_t prevEncoderValue) {
   // Index 0 unused: menu values are 1-based. One label per MENU_* entry, in order.
   static const char* menuLabels[MENU_COUNT + 1] = {"", "Meat Temp|Target", "Pit Temp|Target", "Units",
                                                    "Calibrate|Probes", "Rail|Voltage", "Power Bank",
-                                                   "BLE Serial", "Connectivity", "Back"};
+                                                   "BLE Serial", "Connectivity", "Check|Update", "Back"};
 
   int16_t index = constrain(prevEncoderValue, 1, (int16_t)MENU_COUNT);
 

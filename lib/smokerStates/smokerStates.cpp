@@ -13,6 +13,7 @@
 // #define DEBUG_ADC_Temps 1  // uncomment to debug ADC1015 ADC readings
 
 // include 3rd party libraries
+#include "update_check.h"
 #include "bleserial.h"
 #include <Arduino.h>
 #include <NewEncoder.h>
@@ -1018,6 +1019,21 @@ void processState(CWG_LCD& lcd) {
             smokerState = setupPortal;
             hasRunFlag = 0;
             break;
+          case MENU_UPDATE: {
+            lcd.showInitMessage("Checking update", "Please wait");
+            UpdateStatus st = runUpdateCheck();
+            if (st == UPDATE_UP_TO_DATE) lcd.showInitMessage("Up to date", "");
+            else if (st == UPDATE_STAGED) lcd.showInitMessage("Update staged", "Restarting");
+            else if (st == UPDATE_COOK_ACTIVE) lcd.showInitMessage("Cook running", "Update later");
+            else if (st == UPDATE_NO_WIFI) lcd.showInitMessage("No Wi-Fi", "Try again");
+            else if (st == UPDATE_NO_CLOCK) lcd.showInitMessage("Clock not set", "Try again");
+            else lcd.showInitMessage("Update failed", "See serial log");
+            delay(st == UPDATE_STAGED ? 1500 : 2000);
+            if (st == UPDATE_STAGED) ESP.restart();
+            smokerState = changeSettings;
+            hasRunFlag = 0;
+            break;
+          }
           case MENU_BACK:
             smokerState = launchPad;
             hasRunFlag = 0;

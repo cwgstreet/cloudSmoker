@@ -44,6 +44,7 @@
 #include "cwg_wifi.hpp"
 #include "devconfig.h"
 #include "rollback_guard.h"
+#include "update_check.h"
 #include "lcd.h"          // UPGRADED: with new TFT_eSPI adapter class framework
 #include "myConstants.h"  // All pin mappings and constants
 #include "ota.h"          // OTA (Over-the-Air) firmware update functionality
@@ -166,6 +167,12 @@ void setup() {
   Log.println("WiFi setup finished, entering main loop");
   if (WiFi.status() == WL_CONNECTED) {
     timeSyncWait(5000);  // settle the clock before deciding resume or stale
+  }
+
+  // Boot-time update check. Does nothing if Wi-Fi or the clock isn't ready, or a cook is stored.
+  if (WiFi.status() == WL_CONNECTED) {
+    lcd.showInitMessage("Checking update", "Please wait");
+    updateCheckAtBoot();
   }
 
   // initialise OTA (Over-the-Air) firmware update service
