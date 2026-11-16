@@ -76,11 +76,11 @@
 // debugging
 // #define DEBUG 1
 
-#include "bleserial.h"
 #include "cwg_steinhartHart.h"
 
 #include <math.h>
 
+#include "bleserial.h"
 #include "cwg_ads1x15.h"
 #include "myConstants.h"  // all constants together in one file
 
