@@ -16,8 +16,18 @@
 
 #include <ArduinoOTA.h>
 
+// static flag: true from a successful otaBegin() until otaStop()
 static bool running = false;
 
+// --------------------------
+//  otaBegin() function purpose: starts the ArduinoOTA service so firmware can be uploaded
+//    over Wi-Fi. Does nothing if the service is already running.
+//  arguments:
+//    hostname: name the board advertises on the network (cloudsmoker2)
+//    password: upload password. Must not be empty
+//! refuses to start, and prints a message, if the password is null or empty
+//? called at boot, only when no cook is stored (see main setup)
+// --------------------------
 void otaBegin(const char* hostname, const char* password) {
   if (running) {
     return;
@@ -42,12 +52,22 @@ void otaBegin(const char* hostname, const char* password) {
   Serial.printf("OTA: ready as %s\n", hostname);
 }
 
+// --------------------------
+//  otaLoop() function purpose: lets ArduinoOTA handle any pending upload
+//  arguments: none
+//? must run on every pass of loop(). Does nothing when OTA is not running
+// --------------------------
 void otaLoop() {
   if (running) {
     ArduinoOTA.handle();
   }
 }
 
+// --------------------------
+//  otaStop() function purpose: stops the ArduinoOTA service
+//  arguments: none
+//? does nothing if OTA is not running
+// --------------------------
 void otaStop() {
   if (!running) {
     return;
@@ -57,4 +77,9 @@ void otaStop() {
   Serial.println(F("OTA: stopped"));
 }
 
+// --------------------------
+//  otaRunning() function purpose: reports whether the OTA service is running
+//  arguments: none
+//  returns: true while running, false otherwise
+// --------------------------
 bool otaRunning() { return running; }
