@@ -57,7 +57,8 @@ enum entryStates_t {
   editBank,  // capacity or charge editor
   cookMenu,
   bleMenu,
-  setupPortal  // Connectivity: setup portal open, Hold to finish
+  setupPortal,  // Connectivity: setup portal open, Hold to finish
+  updateCheck   // Check Update: runs the check, shows the result, tap or Hold to return
 };
 
 bool cookApplyOnBoot();
