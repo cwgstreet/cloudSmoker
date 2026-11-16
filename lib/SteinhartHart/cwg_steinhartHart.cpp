@@ -1,12 +1,18 @@
 /* ***************************************************************
- * cwg_steinhartHart.cpp - Library calculates temperature from NTC thermistor using SteinHart-Hart
- * equation Ver 1
+ * cwg_steinhartHart.cpp - implementation of the library that calculates temperature from an
+ *   NTC thermistor using the Steinhart-Hart equation
  *
- *  C W Greenstreet, cloudSmoker2, 1Jul26
+ *   C W Greenstreet, cloudSmoker2, 16Nov2026
  *   Licence: GPLv3 (Licensed under the GNU GPLv3: Free to use and modify, but any public
- *   distribution must also share the full source code under this same license.
+ *     distribution must also share the full source code under this same license.)
  *
- * key changes:  modified open-source code to be more generic and permit interface to ADS1x14
+ *   Built on (see Attribution below):
+ *     1) SteinhartHart library by Andreas Tacke (fiende), GPL v2 or any later version
+ *        https://github.com/fiendie/SteinhartHart
+ *        What I changed: see Key changes below
+ *
+ * -----------------------------------------------------------------------------
+ * Key changes:  modified open-source code to be more generic and permit interface to ADS1x14
  * external ADCs all defaults from cloudSmoker Project (https://github.com/cwgstreet/cloudSmoker)
  *
  *    Note that original library has error in temperature compensation for self-heating using
@@ -16,9 +22,12 @@
  * https://www.thinksrs.com/downloads/programs/therm%20calc/ntccalibrator/ntccalculator.html
  *
  * -----------------------------------------------------------------------------
- * Modified from SteinhartHart.h - Library for interacting with NTC thermistors
+ * Attribution: modified from SteinhartHart.cpp - Library for interacting with NTC thermistors
  *   Author: Andreas Tacke (fiende)
  *   Ref: https://github.com/fiendie/SteinhartHart
+ *
+ *   This version is distributed under GPLv3, which the upstream "or any later version"
+ *   wording allows. The upstream licence notice is kept in full below.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,8 +42,7 @@
  * You should have received a copy of the GNU General Public License along
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
- *  * -----------------------------------------------------------------------------
- */
+ * *************************************************************** */
 
 // *******************************************************
 //   Hardware setup
