@@ -82,8 +82,7 @@ static int fetchSmallFile(const String &url, uint8_t *buf, size_t maxLen) {
   return got == (size_t)len ? len : -1;
 }
 
-UpdateStatus runUpdateCheck() {
-  Serial.printf("update check: tag %s\n", UPDATE_TAG);
+UpdateStatus runUpdateChain(const String &manifestUrl, const String &sigUrl, bool commit) {
   if (cookStoreActive()) {
     Serial.printf("update check: skipped, a cook is stored\n");
     return UPDATE_COOK_ACTIVE;
@@ -99,9 +98,9 @@ UpdateStatus runUpdateCheck() {
 
   static uint8_t manifest[1025];
   static uint8_t sig[128];
-  int mLen = fetchSmallFile(kManifestUrl, manifest, sizeof(manifest) - 1);
+  int mLen = fetchSmallFile(manifestUrl, manifest, sizeof(manifest) - 1);
   if (mLen < 0) return UPDATE_FAILED;
-  int sLen = fetchSmallFile(kSigUrl, sig, sizeof(sig));
+  int sLen = fetchSmallFile(sigUrl, sig, sizeof(sig));
   if (sLen < 0) return UPDATE_FAILED;
 
   if (!verifyManifestSignature(manifest, mLen, sig, sLen, RELEASE_PUBKEY_PEM)) {
@@ -113,8 +112,10 @@ UpdateStatus runUpdateCheck() {
     log_e("update check: manifest parse failed");
     return UPDATE_FAILED;
   }
-  if (f.version <= (uint32_t)FIRMWARE_VERSION) {
-    Serial.printf("update check: up to date (board %d, release %u)\n", FIRMWARE_VERSION, (unsigned)f.version);
+  Serial.printf("update check: board %d, release %u\n", FIRMWARE_VERSION, (unsigned)f.version);
+
+  if (commit && f.version <= (uint32_t)FIRMWARE_VERSION) {
+    Serial.printf("update check: up to date\n");
     return UPDATE_UP_TO_DATE;
   }
 
@@ -129,12 +130,21 @@ UpdateStatus runUpdateCheck() {
   }
   WiFiClientSecure dl;
   dl.setCACert(caPem());
-  if (!downloadImageToUpdate(dl, target, f.imageSize, f.imageSha256, true)) {
+  if (!downloadImageToUpdate(dl, target, f.imageSize, f.imageSha256, commit)) {
     log_e("update check: download failed, nothing staged");
     return UPDATE_FAILED;
   }
+  if (!commit) {
+    Serial.printf("update check: dry run verified, nothing staged\n");
+    return UPDATE_VERIFIED;
+  }
   Serial.printf("update check: release %u staged\n", (unsigned)f.version);
   return UPDATE_STAGED;
+}
+
+UpdateStatus runUpdateCheck() {
+  Serial.printf("update check: tag %s\n", UPDATE_TAG);
+  return runUpdateChain(kManifestUrl, kSigUrl, true);
 }
 
 void updateCheckAtBoot() {
