@@ -1,3 +1,17 @@
+/* ***************************************************************
+ * ota.cpp - implementation of the ArduinoOTA wrapper declared in ota.h
+ *
+ *   C W Greenstreet, cloudSmoker2, 16Nov2026
+ *   Licence: GPLv3 (Licensed under the GNU GPLv3: Free to use and modify, but any public
+ *     distribution must also share the full source code under this same license.)
+ *
+ *   Built on:
+ *     ArduinoOTA, part of the Arduino-ESP32 core (Espressif Systems). This file
+ *     calls its functions and does not copy its code.
+ *
+ *   Written with AI assistance (Claude). Under review by the author.
+ * *************************************************************** */
+
 #include "ota.h"
 #include <ArduinoOTA.h>
 
