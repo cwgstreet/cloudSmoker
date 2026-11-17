@@ -5,6 +5,7 @@
  * Licence: GPLv3 (Licensed under the GNU GPLv3: Free to use and modify, but any public
  * distribution must also share the full source code under this same licence.)
  *
+ *   Written with AI assistance (Claude). Under review by the author.
  *************************************************************** */
 
 #ifndef MANIFEST_PARSER_H

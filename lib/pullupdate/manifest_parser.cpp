@@ -6,6 +6,8 @@
  *
  * The signature is checked on the raw bytes before this runs. The parser
  * accepts only the exact format and refuses anything else.
+ *
+ *   Written with AI assistance (Claude). Under review by the author.
  *************************************************************** */
 
 #include "manifest_parser.h"

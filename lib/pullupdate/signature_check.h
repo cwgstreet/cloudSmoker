@@ -3,6 +3,8 @@
  *
  * C W Greenstreet, cloudSmoker2, 14Nov26
  * Licence: GPLv3 (see manifest_parser.h)
+ *
+ *   Written with AI assistance (Claude). Under review by the author.
  *************************************************************** */
 
 #ifndef SIGNATURE_CHECK_H

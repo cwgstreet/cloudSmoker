@@ -1,3 +1,13 @@
+/* ***************************************************************
+ * update_test.cpp - bench wrappers around the update chain (built only with DEBUG_COOK_CMDS)
+ *
+ *   C W Greenstreet, cloudSmoker2, 17Nov2026
+ *   Licence: GPLv3 (Licensed under the GNU GPLv3: Free to use and modify, but any public
+ *     distribution must also share the full source code under this same license.)
+ *
+ *   Written with AI assistance (Claude). Under review by the author.
+ * *************************************************************** */
+
 #ifdef DEBUG_COOK_CMDS
 #include "update_test.h"
 #include "update_check.h"

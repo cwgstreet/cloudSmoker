@@ -1,3 +1,17 @@
+/* ***************************************************************
+ * redirect_check.cpp - implementation of the redirect check declared in redirect_check.h
+ *
+ *   C W Greenstreet, cloudSmoker2, 17Nov2026
+ *   Licence: GPLv3 (Licensed under the GNU GPLv3: Free to use and modify, but any public
+ *     distribution must also share the full source code under this same license.)
+ *
+ *   Built on:
+ *     Arduino-ESP32 core (Espressif Systems): HTTPClient and WiFiClientSecure.
+ *     This file calls their functions and does not copy their code.
+ *
+ *   Written with AI assistance (Claude). Under review by the author.
+ * *************************************************************** */
+
 #include "redirect_check.h"
 #include <HTTPClient.h>
 
