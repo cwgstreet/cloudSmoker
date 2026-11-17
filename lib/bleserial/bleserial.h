@@ -1,3 +1,13 @@
+/* ***************************************************************
+ * bleserial.h - Bluetooth LE serial link: sends log output to a phone and takes its commands
+ *
+ *   C W Greenstreet, cloudSmoker2, 17Nov2026
+ *   Licence: GPLv3 (Licensed under the GNU GPLv3: Free to use and modify, but any public
+ *     distribution must also share the full source code under this same license.)
+ *
+ *   Written with AI assistance (Claude). Under review by the author.
+ * *************************************************************** */
+
 #ifndef BLESERIAL_H
 #define BLESERIAL_H
 

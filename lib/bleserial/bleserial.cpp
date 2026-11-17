@@ -1,3 +1,17 @@
+/* ***************************************************************
+ * bleserial.cpp - implementation of the BLE serial link declared in bleserial.h
+ *
+ *   C W Greenstreet, cloudSmoker2, 17Nov2026
+ *   Licence: GPLv3 (Licensed under the GNU GPLv3: Free to use and modify, but any public
+ *     distribution must also share the full source code under this same license.)
+ *
+ *   Built on:
+ *     NimBLE-Arduino by h2zero (https://github.com/h2zero/NimBLE-Arduino): BLE stack.
+ *     Arduino-ESP32 core (Espressif Systems): NVS API (nvs.h).
+ *
+ *   Written with AI assistance (Claude). Under review by the author.
+ * *************************************************************** */
+
 #include "bleserial.h"
 
 #include <NimBLEDevice.h>
