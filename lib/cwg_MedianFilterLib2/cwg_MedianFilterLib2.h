@@ -1,9 +1,11 @@
 /* *************************************************************
- * cwg_MedianFilterLib2.cpp - Wrapper Library to determine button press type
- *   press_types:  short press, long press and double press
+ * cwg_MedianFilterLib2.h - median filter template (MedianFilter2<T>)
+ *   Returns the median of the last N values added. Used to smooth noisy ADC readings
+ *   (see cwg_ads1x15.cpp). Window size is set at construction; a size of 3 uses a
+ *   faster path.
  *
- *  C W Greenstreet, Ver2, 25Oct2026
- *    GPLv3 Licence
+ *   C W Greenstreet, cloudSmoker2, 25Oct2026
+ *   Licence (this file): GPLv3. Upstream code: Apache Licence 2.0 (notice below).
  *
  *   Forked from
  *    1) warhog / medianFilterLib2, licenced under Apache Licence 2.0
@@ -13,8 +15,10 @@
  *         reference:
  * https://github-com.translate.goog/luisllamasbinaburo/Arduino-MedianFilter?_x_tr_sl=auto&_x_tr_tl=en&_x_tr_hl=en
  *
- *   The library below fixes a memory leak bug which has been submitted back as a pull request
- *     ref: https://github.com/warhog/Arduino-MedianFilter/pull/1
+ *   Changes: adds a destructor that frees the buffer, fixing a memory leak. The fix went to
+ *     warhog as a pull request (https://github.com/warhog/Arduino-MedianFilter/pull/1), which
+ *     got no response. A pull request to the original author, Luis Llamas, could not be merged
+ *     because of changes in warhog's fork, but he acknowledged the leak and made his own fix.
  * ************************************************************* */
 
 /***************************************************
@@ -33,8 +37,8 @@ implied. See the License for the specific language governing permissions and lim
 License
  ****************************************************/
 
-#ifndef _MedianFilter2Lib_h
-#define _MedianFilter2Lib_h
+#ifndef MEDIAN_FILTER2_LIB_H
+#define MEDIAN_FILTER2_LIB_H
 
 #if defined(ARDUINO) && ARDUINO >= 100
 #include <Arduino.h>
@@ -182,4 +186,4 @@ T MedianFilter2<T>::median3(T a, T b, T c) {
   return (a <= b) ? a : b;
 }
 
-#endif
+#endif  // MEDIAN_FILTER2_LIB_H
