@@ -13,11 +13,12 @@
 // #define DEBUG_ADC_Temps 1  // uncomment to debug ADS1115 ADC readings
 
 // include 3rd party libraries
-#include "update_check.h"
-#include "bleserial.h"
 #include <Arduino.h>
 #include <NewEncoder.h>
 #include <Wire.h>  // i2C device communication
+
+#include "bleserial.h"
+#include "update_check.h"
 
 // include local libraries
 #include "calibration.h"
@@ -73,13 +74,14 @@ extern float meatTarget[3];
 
 // Power bank: a rough energy factor from a 3.7 V cell to the 5 V output
 static const float BANK_USABLE_FACTOR = 0.74f;
-float bankCapacity_mAh = 10000.0f;  // nominal capacity from the box, kept across cooks
-uint8_t bankStartPct = 100;         // charge when plugged in, reset to 100 for each new cook
-static uint8_t bankEditIndex = 0;   // 0 = capacity, 1 = charge
-bool bleSerialEnabled = true;  // BLE serial on or off, saved to NVS
+float bankCapacity_mAh = 10000.0f;     // nominal capacity from the box, kept across cooks
+uint8_t bankStartPct = 100;            // charge when plugged in, reset to 100 for each new cook
+static uint8_t bankEditIndex = 0;      // 0 = capacity, 1 = charge
+bool bleSerialEnabled = true;          // BLE serial on or off, saved to NVS
 static bool bankEditFromCook = false;  // true while the bank editor is run from the cook menu
-static float bankBaseMah = 0.0f;  // usable charge at the start of this cook, mAh at 5 V
-static uint32_t readingsSerial = 0;  // bumps after each getTemp, so the cook screen redraws on new readings
+static float bankBaseMah = 0.0f;       // usable charge at the start of this cook, mAh at 5 V
+static uint32_t readingsSerial =
+    0;  // bumps after each getTemp, so the cook screen redraws on new readings
 static bool bankAlertSent = false;     // forecast alert sent this cook (saved as flag bit 6)
 static uint8_t bankAlertAttempts = 0;  // retry cap, as for the PIT alert
 extern float pitMax;
@@ -119,7 +121,8 @@ bool meat3SentFlag = false;
 // bit 0 MEAT1 done, 1 MEAT1 sent, 2 MEAT2 done, 3 MEAT2 sent, 4 MEAT3 done, 5 MEAT3 sent
 static uint8_t packCookFlags() {
   return (meat1DoneFlag ? 1 : 0) | (meat1SentFlag ? 2 : 0) | (meat2DoneFlag ? 4 : 0) |
-         (meat2SentFlag ? 8 : 0) | (meat3DoneFlag ? 16 : 0) | (meat3SentFlag ? 32 : 0) | (bankAlertSent ? 64 : 0);
+         (meat2SentFlag ? 8 : 0) | (meat3DoneFlag ? 16 : 0) | (meat3SentFlag ? 32 : 0) |
+         (bankAlertSent ? 64 : 0);
 }
 
 // Picks the meat probe for the cook screen: the first of MEAT1, MEAT2, MEAT3 with data.
@@ -140,13 +143,11 @@ static void pickCookMeat(float& temp, const char*& label, float& target) {
 
 // Set on resume so the cook screen appears once the first readings are in
 static bool showCookOnNextSleep = false;
-static bool hintActive = false;       // cook hint screen is up
-static unsigned long hintEndMs = 0;   // when the hint screen comes down
+static bool hintActive = false;      // cook hint screen is up
+static unsigned long hintEndMs = 0;  // when the hint screen comes down
 
 // Set at boot when the resume prompt is shown; it tells the prompt whether time is unverified
 static bool resumeUnverified = false;
-
-
 
 // Called from setup() after the time sync. Returns true if an interrupted cook needs the
 // resume prompt. A stale cook (12 h or more) is closed here and is never prompted.
@@ -281,7 +282,6 @@ static float rawProbeF(ProbeId id) {
       return NAN;
   }
 
-
   return sh->getTempFahrenheit(calRailV(), v);
 }
 
@@ -341,8 +341,6 @@ static void resetCookSettingsToDefaults() {
   Log.println(F("settings reset to defaults for next cook"));
 }
 
-
-
 // Called once per getTemp pass. A missing PIT reading never counts as out of band.
 // A Min of NAN means Min is Off: only the Max limit applies.
 static void checkPitBand(float pitF, float minF, float maxF) {
@@ -377,8 +375,7 @@ static void checkPitBand(float pitF, float minF, float maxF) {
   pitAlertAttempts++;
   String band = isnan(minF) ? String("below ") + String(maxF, 0) + "F"
                             : String(minF, 0) + "-" + String(maxF, 0) + "F";
-  String msg = String("PIT out of range: ") + String(pitF, 0) + "F (band " + band +
-               " for 5 min)";
+  String msg = String("PIT out of range: ") + String(pitF, 0) + "F (band " + band + " for 5 min)";
   if (sendNtfyAlert(msg)) {
     pitAlertSent = true;
     Log.println(F("PIT alert sent"));
@@ -678,7 +675,9 @@ static void notifyRebootDuringCook() {
     Log.println(F("restart during cook: offline, no phone alert sent"));
     return;
   }
-  sendNtfyAlert(String("cloudSmoker2 restarted during a cook. Resume prompt is waiting on the device: tap to resume, hold to restart."));
+  sendNtfyAlert(
+      String("cloudSmoker2 restarted during a cook. Resume prompt is waiting on the device: tap to "
+             "resume, hold to restart."));
 }
 
 // Restores the stored cook into the running state and starts it.
@@ -706,9 +705,9 @@ static void applyResume() {
   meat2SentFlag = (flags & 8) != 0;
   meat3DoneFlag = (flags & 16) != 0;
   meat3SentFlag = (flags & 32) != 0;
-  resetBankForecast();                 // fresh history for the restored charge
+  resetBankForecast();  // fresh history for the restored charge
 #ifdef ENABLE_OTA
-  otaStop();                    // no OTA while a restored cook is running
+  otaStop();  // no OTA while a restored cook is running
 #endif
   bankAlertSent = (flags & 64) != 0;  // a resumed cook doesn't repeat its alert
 
@@ -787,7 +786,6 @@ static void buildMeatMenu() {
   meatMenuCount++;
 }
 
-
 // Fraction of the PIT band: 0 at Min (or 50F when Min is Off), 1 at Max
 static float pitFractionFor(float pitF) {
   float low = isnan(pitMin) ? 50.0f : pitMin;
@@ -805,9 +803,6 @@ static float meatFractionFor(float meatF, float targetF) {
   }
   return meatF / targetF;
 }
-
-
-
 
 // Remaining power bank charge as a percentage of its full usable capacity (capacity x 0.74).
 // A cook started at 50% reads 50% at the start, and 25% after half of that is used.
@@ -893,7 +888,8 @@ void processState(CWG_LCD& lcd) {
   switch (smokerState) {
     case splashScreen: {
       if (enteringState) {  // only run once when entering this state
-        lcd.showSplashScreen(degCFlag, meatTarget[0], pitMin, pitMax, bankCapacity_mAh, bankStartPct);
+        lcd.showSplashScreen(degCFlag, meatTarget[0], pitMin, pitMax, bankCapacity_mAh,
+                             bankStartPct);
       }
 
       // After a resume, show the restored targets for a few seconds, then start the cook
@@ -957,7 +953,9 @@ void processState(CWG_LCD& lcd) {
         resetProbeLoss();
         resetCooldown();
 
-        pitOutSinceMs = 0; pitAlertSent = false; pitAlertAttempts = 0;
+        pitOutSinceMs = 0;
+        pitAlertSent = false;
+        pitAlertAttempts = 0;
         constexpr uint8_t NTFY_MAX_ATTEMPTS = 10;  // alert send attempts per probe per cook
         uint8_t meat1AlertAttempts = 0;
         uint8_t meat2AlertAttempts = 0;
@@ -974,7 +972,8 @@ void processState(CWG_LCD& lcd) {
 
     case changeSettings: {
       static int16_t lastDrawnSelection = -1;
-      encoder.getCount();
+      encoder.getCount();  // Do not remove the getCount() calls. They update prevEncoderValue,
+                           // which moved() depends on, so removing them would change behaviour.
 
       if (hasRunFlag == 0) {
         encoder.newRange(1, MENU_COUNT, 1, true, currentEncoderState);  // menus always wrap
@@ -1060,7 +1059,7 @@ void processState(CWG_LCD& lcd) {
         if (prevEncoderValue == 1) {
           degCFlag = !degCFlag;
           Log.println(degCFlag ? F("degC Flag set - Temperature units now in degC!")
-                                  : F("degF Flag set - Temperature units now in degF!"));
+                               : F("degF Flag set - Temperature units now in degF!"));
           lastDrawnSelection = -1;  // force redraw so "Current: degX" updates immediately
         } else if (prevEncoderValue == 2) {
           smokerState = changeSettings;
@@ -1080,7 +1079,8 @@ void processState(CWG_LCD& lcd) {
       Log.print("getTemp Case -> startCookTime_ms =");
       Log.println(startCookTime_ms);
 
-      // +5 V rail for the Steinhart-Hart calculation: live INA226 reading, or the stored railV value
+      // +5 V rail for the Steinhart-Hart calculation: live INA226 reading, or the stored railV
+      // value
       double railV_V = calRailV();
 
       voltagePit_medianFiltered_V = ads1115.getSensorValue_MedianFiltered_V(ADC_pitPin, 11);
@@ -1090,14 +1090,10 @@ void processState(CWG_LCD& lcd) {
 
       yield();
 
-      currentPitTemp =
-          probeF(sh_pitProbe, PROBE_PIT, railV_V, voltagePit_medianFiltered_V);
-      currentMeat1Temp = probeF(sh_meat1Probe, PROBE_MEAT1, railV_V,
-                                voltageMeat1_medianFiltered_V);
-      currentMeat2Temp = probeF(sh_meat2Probe, PROBE_MEAT2, railV_V,
-                                voltageMeat2_medianFiltered_V);
-      currentMeat3Temp = probeF(sh_meat3Probe, PROBE_MEAT3, railV_V,
-                                voltageMeat3_medianFiltered_V);
+      currentPitTemp = probeF(sh_pitProbe, PROBE_PIT, railV_V, voltagePit_medianFiltered_V);
+      currentMeat1Temp = probeF(sh_meat1Probe, PROBE_MEAT1, railV_V, voltageMeat1_medianFiltered_V);
+      currentMeat2Temp = probeF(sh_meat2Probe, PROBE_MEAT2, railV_V, voltageMeat2_medianFiltered_V);
+      currentMeat3Temp = probeF(sh_meat3Probe, PROBE_MEAT3, railV_V, voltageMeat3_medianFiltered_V);
       // Done decisions for each meat probe
       checkProbeDone("MEAT1", currentMeat1Temp, meat1LastStatus, meat1DoneFlag, meat1SentFlag,
                      meat1AlertAttempts, meatTarget[0]);
@@ -1113,7 +1109,16 @@ void processState(CWG_LCD& lcd) {
       recordChargeSample();
       checkBankForecast();
 #ifdef DEBUG_BANK_DIAG
-      Log.print(F("bank diag: draw_mA=")); Log.print(averageDrawMa(), 1); Log.print(F(" rem_mAh=")); Log.print(bankBaseMah - ina226.getChargeUsed_mAh(), 1); Log.print(F(" samples=")); Log.print(rateCount); Log.print(F(" sent=")); Log.print(bankAlertSent); Log.print(F(" wifi=")); Log.println(WiFi.status() == WL_CONNECTED);
+      Log.print(F("bank diag: draw_mA="));
+      Log.print(averageDrawMa(), 1);
+      Log.print(F(" rem_mAh="));
+      Log.print(bankBaseMah - ina226.getChargeUsed_mAh(), 1);
+      Log.print(F(" samples="));
+      Log.print(rateCount);
+      Log.print(F(" sent="));
+      Log.print(bankAlertSent);
+      Log.print(F(" wifi="));
+      Log.println(WiFi.status() == WL_CONNECTED);
 #endif
 
 #ifdef DEBUG_ADC_Temps
@@ -1147,7 +1152,9 @@ void processState(CWG_LCD& lcd) {
       TIME_BLOCK("txTemp");
       Log.println("entering txTemp case -> transmitting data");
       // TODO: Battery field is NAN until the INA226 bus voltage replaces the placeholder
-      sendThingSpeak(currentMeat1Temp, meatTarget[0], currentMeat2Temp, currentMeat3Temp, currentPitTemp, pitMin, pitMax, bankRemainingPct() < 0 ? NAN : (float)bankRemainingPct());
+      sendThingSpeak(currentMeat1Temp, meatTarget[0], currentMeat2Temp, currentMeat3Temp,
+                     currentPitTemp, pitMin, pitMax,
+                     bankRemainingPct() < 0 ? NAN : (float)bankRemainingPct());
 
       Log.println("leaving for Sleep case");
       smokerState = Sleep;
@@ -1233,8 +1240,9 @@ void processState(CWG_LCD& lcd) {
         previousDisplayMillis = millis();  // start the display timer on entry, not on last timeout
       }
 
-      encoder.getCount();
-      uint8_t page = (uint8_t)((prevEncoderValue - 1) % 4);  // 0 overview, 1 PIT/MEAT1, 2 MEAT2/MEAT3
+      encoder.getCount();  // Do not remove the getCount() calls.
+      uint8_t page =
+          (uint8_t)((prevEncoderValue - 1) % 4);  // 0 overview, 1 PIT/MEAT1, 2 MEAT2/MEAT3
       bool pageChanged = (prevEncoderValue != lastPageValue);
       bool refreshDue = (readingsSerial != lastSerial);  // redraw only when readings change
       if (refreshDue) {
@@ -1266,7 +1274,7 @@ void processState(CWG_LCD& lcd) {
       static int16_t lastDrawnSelection = -1;
       static const char* const menuLabels[3] = {"End cook", "New bank", "Cancel"};
       static const char* const menuDetails[3] = {"back to setup", "reset charge", "keep cooking"};
-      encoder.getCount();
+      encoder.getCount();  // Do not remove the getCount() calls.
 
       if (hasRunFlag == 0) {
         encoder.newRange(1, 3, 1, true, currentEncoderState);  // menus wrap
@@ -1306,7 +1314,7 @@ void processState(CWG_LCD& lcd) {
 
     case bleMenu: {
       static int16_t lastDrawn = -1;
-      encoder.getCount();
+      encoder.getCount();  // Do not remove the getCount() calls.
 
       if (hasRunFlag == 0) {
         encoder.newRange(1, 2, bleSerialEnabled ? 2 : 1, true, currentEncoderState);  // wraps
@@ -1325,8 +1333,7 @@ void processState(CWG_LCD& lcd) {
         bleSerialSave(bleSerialEnabled);
         bleSerialApply(bleSerialEnabled);
         Log.print(F("BLE serial set -> "));
-        Log.println(bleSerialEnabled ? F("on")
-                                        : F("off"));
+        Log.println(bleSerialEnabled ? F("on") : F("off"));
         smokerState = changeSettings;
         hasRunFlag = 0;
       }
@@ -1339,7 +1346,7 @@ void processState(CWG_LCD& lcd) {
 
     case meatTempMenu: {
       static int16_t lastDrawnSelection = -1;
-      encoder.getCount();
+      encoder.getCount();  // Do not remove the getCount() calls.
 
       if (hasRunFlag == 0) {
         buildMeatMenu();
@@ -1380,9 +1387,11 @@ void processState(CWG_LCD& lcd) {
 
     case editMeatTarget: {
       static int16_t lastDrawnValue = -1000;
-      encoder.getCount();
+      encoder.getCount();  // Do not remove the getCount() calls.
 
-      const char* probeName = (editMeatIndex == 0) ? "MEAT1" : (editMeatIndex == 1) ? "MEAT2" : "MEAT3";
+      const char* probeName = (editMeatIndex == 0)   ? "MEAT1"
+                              : (editMeatIndex == 1) ? "MEAT2"
+                                                     : "MEAT3";
 
       if (hasRunFlag == 0) {
         // The encoder counts in the display units. Limits: 46 to 104 C, or 115 to 220 F.
@@ -1398,8 +1407,8 @@ void processState(CWG_LCD& lcd) {
       }
 
       // Work out the value in degF once, for the safety check and for storage
-      float enteredF = degCFlag ? ((float)prevEncoderValue * 9.0f / 5.0f + 32.0f)
-                                : (float)prevEncoderValue;
+      float enteredF =
+          degCFlag ? ((float)prevEncoderValue * 9.0f / 5.0f + 32.0f) : (float)prevEncoderValue;
       bool belowSafe = enteredF < 145.0f;  // USDA minimum for whole cuts of beef, pork, lamb
 
       if (prevEncoderValue != lastDrawnValue) {
@@ -1436,7 +1445,7 @@ void processState(CWG_LCD& lcd) {
       static char pitDetail[2][16];
       static const char* const pitLabels[3] = {"Min", "Max", "Back"};
       static const char* pitDetails[3] = {pitDetail[0], pitDetail[1], ""};
-      encoder.getCount();
+      encoder.getCount();  // Do not remove the getCount() calls.
 
       if (hasRunFlag == 0) {
         encoder.newRange(1, 3, 1, true, currentEncoderState);  // menus wrap
@@ -1478,7 +1487,7 @@ void processState(CWG_LCD& lcd) {
 
     case editPitLimit: {
       static int16_t lastDrawnValue = -1000;
-      encoder.getCount();
+      encoder.getCount();  // Do not remove the getCount() calls.
       const char* label = (editPitIndex == 0) ? "PIT MIN" : "PIT MAX";
 
       // Min has one extra position below its lowest value: that position means Off
@@ -1520,8 +1529,8 @@ void processState(CWG_LCD& lcd) {
           pitMin = NAN;  // stored as NAN: Min Off, no low-temperature alert
           Log.println(F("PIT min -> Off (no low alert)"));
         } else {
-          float enteredF = degCFlag ? ((float)prevEncoderValue * 9.0f / 5.0f + 32.0f)
-                                    : (float)prevEncoderValue;
+          float enteredF =
+              degCFlag ? ((float)prevEncoderValue * 9.0f / 5.0f + 32.0f) : (float)prevEncoderValue;
           if (editPitIndex == 0) {
             pitMin = enteredF;
           } else {
@@ -1550,7 +1559,7 @@ void processState(CWG_LCD& lcd) {
       static char bankDetail[2][16];
       static const char* const bankLabels[3] = {"Capacity", "Charge", "Back"};
       static const char* bankDetails[3] = {bankDetail[0], bankDetail[1], ""};
-      encoder.getCount();
+      encoder.getCount();  // Do not remove the getCount() calls.
 
       if (hasRunFlag == 0) {
         encoder.newRange(1, 3, 1, true, currentEncoderState);  // menus wrap
@@ -1585,7 +1594,7 @@ void processState(CWG_LCD& lcd) {
 
     case editBank: {
       static int16_t lastDrawnValue = -1000;
-      encoder.getCount();
+      encoder.getCount();  // Do not remove the getCount() calls.
       bool isCapacity = (bankEditIndex == 0);
 
       // Capacity: 500 mAh steps from 1000 to 30000. Charge: 10% steps from 10 to 100.
@@ -1593,8 +1602,8 @@ void processState(CWG_LCD& lcd) {
       int16_t hi = isCapacity ? 60 : 10;
 
       if (hasRunFlag == 0) {
-        int16_t start = isCapacity ? (int16_t)(bankCapacity_mAh / 500.0f + 0.5f)
-                                   : (int16_t)(bankStartPct / 10);
+        int16_t start =
+            isCapacity ? (int16_t)(bankCapacity_mAh / 500.0f + 0.5f) : (int16_t)(bankStartPct / 10);
         encoder.newRange(lo, hi, constrain(start, lo, hi), false, currentEncoderState);
         prevEncoderValue = currentEncoderState.currentValue;
         hasRunFlag = 1;
@@ -1727,7 +1736,7 @@ void processState(CWG_LCD& lcd) {
     } break;
     case calProbeMenu: {
       static int16_t lastDrawnSelection = -1;
-      encoder.getCount();
+      encoder.getCount();  // Do not remove the getCount() calls.
 
       if (hasRunFlag == 0) {
         encoder.newRange(1, CAL_MENU_COUNT, 1, true, currentEncoderState);  // hard stops
@@ -1898,7 +1907,7 @@ void processState(CWG_LCD& lcd) {
 
       if (!capturing) {
         // Setting the reference: the encoder moves the value, the button starts capture
-        encoder.getCount();
+        encoder.getCount();  // Do not remove the getCount() calls.
         if (prevEncoderValue != lastDrawnRef) {
           lcd.showCalCapture("BOIL REFERENCE", "Set boil temp", prevEncoderValue, true,
                              "Press when in boil");
