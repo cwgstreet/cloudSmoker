@@ -34,7 +34,7 @@ extern int16_t prevEncoderValue;
 // NewEncoder library, which this class extends:
 *****************/
 
-// KY40 Rotary Encoder - encoder CW / CCW counts
+// EC11 Rotary Encoder (cloudSmoker2) - encoder CW / CCW counts
 #include <NewEncoder.h>
 
 /*****************
