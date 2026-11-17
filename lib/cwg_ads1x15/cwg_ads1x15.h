@@ -1,16 +1,20 @@
 /* ***************************************************************
  * cwg_ads1x15.h - library to extend ads1x15 library functionality
- *   includes
+ *   Adds initialise(), a voltage factor, a median-filtered reading and deviceFound()
+ *   to the RobTillaart ADS1X15 class, for the ADS1115 ADC.
+ *
+ *   C W Greenstreet, cloudSmoker2, 25Oct2026
+ *   Licence (this file): GPLv3
+ *
+ *   Built on:
  *    1) RobTillaart/ADS1X15 library, licenced under MIT Licence
  *         reference:  https://github.com/RobTillaart/ADS1X15
- *    2) Luis Llamas/Arduino-MedianFilter, licenced under Apache Licence 2.0
+ *    2) Median filter: cwg_MedianFilterLib2, derived from Luis Llamas/Arduino-MedianFilter,
+ *         licenced under Apache Licence 2.0
  *         reference:
  * https://github-com.translate.goog/luisllamasbinaburo/Arduino-MedianFilter?_x_tr_sl=auto&_x_tr_tl=en&_x_tr_hl=en
- *
- *  C W Greenstreet, Ver2, 25Oct2026
- *    GPLv3 Licence
- *
- ** ************************************************************* */
+ *    3) Gain table: taken from the Adafruit ADS1x15 library
+ * ************************************************************* */
 
 #ifndef CWG_ADS1x15_H
 #define CWG_ADS1x15_H
@@ -30,7 +34,7 @@
 
 /******************************************************
 // Class definition:
-//   CWG_ADS1115 is child (derrived) class of public library ADS1x15::ADS1115
+//   CWG_ADS1115 is child (derived) class of public library ADS1x15::ADS1115
 ******************************************************/
 
 class CWG_ADS1115 : public ADS1115 {
@@ -59,14 +63,12 @@ extern CWG_ADS1115 ads1115;
 //  ADS1X15 ADCs do not take an external reference voltage but rely on an internal full scale
 //   voltage (fsv) that is a function of the PGA gain setting - see table below
 //
-//  Also note that AD1015 is notionally 12 bit but only for full scale differential measurements
-//     with the one bit used for sign (neg / positive)
-//   When single shot, the ADS1115 ADC is effectively 11 bit (2^11 = 2048 measurements)
-//  For example, using default 2/3x gain, 6.144V fsv / 2048 measurements = 0.003 or 3mV LSB
+//  The ADS1015 is a 12-bit ADC. The ADS1115 is a 16-bit ADC, so at the default
+//   2/3x gain: 6.144V full scale / 32768 counts = 0.1875mV LSB
 // -------------------------
 // PGA gain settings, max Voltage and LSB (least significant bit)
 //   taken from Adafruit ADS1x15 library, where bit = LSB
-//                                                                ADS1115  ADS1115
+//                                                                ADS1015  ADS1115
 //                                                                -------  -------
 // ads.setGain(GAIN_TWOTHIRDS);  // 2/3x gain +/- 6.144V  1 bit = 3mV      0.1875mV (default)
 // ads.setGain(GAIN_ONE);        // 1x gain   +/- 4.096V  1 bit = 2mV      0.125mV
