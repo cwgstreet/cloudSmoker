@@ -47,7 +47,9 @@
 #include "update_check.h"
 #include "lcd.h"          // UPGRADED: with new TFT_eSPI adapter class framework
 #include "myConstants.h"  // All pin mappings and constants
+#ifdef ENABLE_OTA
 #include "ota.h"          // OTA (Over-the-Air) firmware update functionality
+#endif
 #include "peripherals.h"
 #include "press_type.h"    // Wrapper library abstracting Yabl / Bounce2 routines
 #include "smokerStates.h"  // cloudSmoker state machine functionality
@@ -179,11 +181,13 @@ void setup() {
     updateCheckAtBoot();
   }
 
+#ifdef ENABLE_OTA
   // initialise OTA (Over-the-Air) firmware update service
   if (!cookStoreActive()) {
     String otaPw = devOtaPassword();
     otaBegin("cloudsmoker2", otaPw.c_str());
   }
+#endif
 
   // Initialise button press context tracking
   button.begin(BUTTON_PIN);
@@ -242,8 +246,10 @@ void loop() {
   // Keep processor threads stable on underlying FreeRTOS environments
   yield();
 
+#ifdef ENABLE_OTA
   // Handle OTA (Over-the-Air) firmware update service
   otaLoop();
+#endif
 
   // Check hardware input triggers
   button.update();
