@@ -18,7 +18,7 @@
  *   EC11 Rotary Encoder Module with Push Button
  *   ADS1115 - 12 bit ADC; I2C addressable
  *   Maverick brand ET-732/733 (Semitec 105GT-2 NTC thermistor) temperature probes;
- *     R25 = 1 MOhm, Beta = 4608K
+ *     R25 = 1 MOhm, Beta = 4608K (R25/R85, 25 to 85 C)
  *   Ref: https://github.com/cwgstreet/cloudSmoker/wiki/V2-Parts-List
  * ************************************************************************************
  */
