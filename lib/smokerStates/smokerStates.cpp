@@ -10,7 +10,7 @@
  *
  ** ************************************************************* */
 
-// #define DEBUG_ADC_Temps 1  // uncomment to debug ADC1015 ADC readings
+// #define DEBUG_ADC_Temps 1  // uncomment to debug ADS1115 ADC readings
 
 // include 3rd party libraries
 #include "update_check.h"
