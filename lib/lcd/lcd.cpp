@@ -66,30 +66,6 @@ void CWG_LCD::printMenuLine(const char* c) {
   menuPrintLine = (menuPrintLine == 0) ? 1 : 0;
 }
 
-// Identical track logic without custom markers
-void CWG_LCD::printMenuLine_noArrow(const char* c) { printMenuLine(c); }
-
-// Dedicated menu rendering for tweaking parameters on the fly
-void CWG_LCD::showTemperatureTargetAdjustment(float temporaryTemperatureTarget,
-                                              bool meatTargetFlag) {
-  clearScreen();
-  if (meatTargetFlag) {
-    drawUIFrame("SET MEAT TARGET");
-  } else {
-    drawUIFrame("SET PIT TARGET");
-  }
-
-  char tempBuffer[16];
-  snprintf(tempBuffer, sizeof(tempBuffer), "%.0f Value", temporaryTemperatureTarget);
-
-  tft.setTextDatum(MC_DATUM);
-  tft.setTextColor(TFT_RED, TFT_BLACK);
-  tft.drawString(tempBuffer, 120, 120, 4);
-
-  tft.setTextColor(TFT_LIGHTGREY, TFT_BLACK);
-  tft.drawString("Click to Save", 120, 180, 2);
-}
-
 // ====================================================================
 // Implementation of New UI Screen Stubs
 // ====================================================================
@@ -207,18 +183,6 @@ void CWG_LCD::showCalResult(const char* probeName, float gain, float offset, boo
 }
 
 
-void CWG_LCD::showEndCookConfirm() {
-  clearScreen();
-  drawUIFrame("END COOK?");
-
-  tft.setTextDatum(MC_DATUM);
-  tft.setTextColor(TFT_WHITE, TFT_BLACK);
-  tft.drawString("Tap: end cook", 120, 110, 2);
-
-  tft.setTextColor(TFT_LIGHTGREY, TFT_BLACK);
-  tft.drawString("Hold: keep cooking", 120, 140, 2);
-}
-
 void CWG_LCD::showListMenu(const char* header, const char* const* labels,
                            const char* const* details, uint8_t count, uint8_t selected) {
   clearScreen();
@@ -269,57 +233,6 @@ void CWG_LCD::showInitMessage(const char* line1, const char* line2) {
 
   tft.setTextColor(TFT_LIGHTGREY, TFT_BLACK);
   tft.drawString(line2, 120, 135, 2);
-}
-
-void CWG_LCD::showSetMeatDoneTempMenu(int16_t prevEncoderValue, float meatDoneTemp, bool degCFlag) {
-  clearScreen();
-  drawUIFrame("MEAT TARGET");
-
-  char currentValueStr[20];
-  if (degCFlag) {
-    snprintf(currentValueStr, sizeof(currentValueStr), "Current: %.0fC",
-             convertDegFtoDegC(meatDoneTemp));
-  } else {
-    snprintf(currentValueStr, sizeof(currentValueStr), "Current: %.0fF", meatDoneTemp);
-  }
-
-  int16_t index = constrain(prevEncoderValue, 1, 2);
-  const char* label = (index == 1) ? "Edit" : "Back";
-
-  tft.setTextDatum(MC_DATUM);
-  tft.setTextColor(TFT_LIGHTGREY, TFT_BLACK);
-  tft.drawString(currentValueStr, 120, 90, 2);
-
-  tft.setTextColor(TFT_WHITE, TFT_BLACK);
-  tft.drawString(label, 120, 130, 4);
-
-  drawProgressDots(index, 2);
-}
-
-void CWG_LCD::showSetPitTempTargetMenu(int16_t prevEncoderValue, float pitTempTarget,
-                                       bool degCFlag) {
-  clearScreen();
-  drawUIFrame("PIT TARGET");
-
-  char currentValueStr[20];
-  if (degCFlag) {
-    snprintf(currentValueStr, sizeof(currentValueStr), "Current: %.0fC",
-             convertDegFtoDegC(pitTempTarget));
-  } else {
-    snprintf(currentValueStr, sizeof(currentValueStr), "Current: %.0fF", pitTempTarget);
-  }
-
-  int16_t index = constrain(prevEncoderValue, 1, 2);
-  const char* label = (index == 1) ? "Edit" : "Back";
-
-  tft.setTextDatum(MC_DATUM);
-  tft.setTextColor(TFT_LIGHTGREY, TFT_BLACK);
-  tft.drawString(currentValueStr, 120, 90, 2);
-
-  tft.setTextColor(TFT_WHITE, TFT_BLACK);
-  tft.drawString(label, 120, 130, 4);
-
-  drawProgressDots(index, 2);
 }
 
 void CWG_LCD::showSetTempUnitsMenu(int16_t prevEncoderValue, bool degCFlag) {
@@ -388,73 +301,6 @@ void CWG_LCD::showMeatTargetEdit(const char* label, int16_t value, bool degCFlag
 
   tft.setTextColor(TFT_LIGHTGREY, TFT_BLACK);
   tft.drawString("Tap: save  Hold: back", 120, 200, 2);
-}
-
-void CWG_LCD::showBBQStatusScreen(bool degCFlag, float currentMeatTemp, const char* meatLabel,
-                                  float meatDoneTemp, float currentPitTemp, float pitMinTemp,
-                                  float pitMaxTemp) {
-  clearScreen();
-
-  const int cx = 120, cy = 120;
-  const int pitRadius = 118, pitThickness = 14;
-  const int meatRadius = 96, meatThickness = 14;
-
-  // PIT ring fills across the band: from Min up to Max. With Min Off, it starts at 50F.
-  float pitLow = isnan(pitMinTemp) ? 50.0f : pitMinTemp;
-  float pitSpan = pitMaxTemp - pitLow;
-  float pitFraction = 0.0f;
-  if (pitSpan > 0 && !isnan(currentPitTemp)) {
-    pitFraction = constrain((currentPitTemp - pitLow) / pitSpan, 0.0f, 1.0f);
-  }
-  float meatFraction = progressFraction(currentMeatTemp, meatDoneTemp);
-
-  uint16_t pitAngle = (uint16_t)(360.0f * pitFraction);
-  uint16_t meatAngle = (uint16_t)(360.0f * meatFraction);
-
-  // Dim background "track" rings (full circle) drawn first
-  tft.drawSmoothArc(cx, cy, pitRadius, pitRadius - pitThickness, 0, 360, TFT_DARKGREY, TFT_BLACK,
-                    true);
-  tft.drawSmoothArc(cx, cy, meatRadius, meatRadius - meatThickness, 0, 360, TFT_DARKGREY, TFT_BLACK,
-                    true);
-
-  // Progress arcs drawn on top, clockwise from 12 o'clock
-  if (pitAngle > 0) {
-    tft.drawSmoothArc(cx, cy, pitRadius, pitRadius - pitThickness, 0, pitAngle, TFT_ORANGE,
-                      TFT_BLACK, true);
-  }
-  if (meatAngle > 0) {
-    tft.drawSmoothArc(cx, cy, meatRadius, meatRadius - meatThickness, 0, meatAngle, TFT_CYAN,
-                      TFT_BLACK, true);
-  }
-
-  // Centre digits
-  const char* unit = degCFlag ? "C" : "F";
-  float pitDisplay = degCFlag ? convertDegFtoDegC(currentPitTemp) : currentPitTemp;
-  float meatDisplay = degCFlag ? convertDegFtoDegC(currentMeatTemp) : currentMeatTemp;
-
-  char pitStr[16], meatStr[16];
-  if (isnan(currentPitTemp)) {
-    snprintf(pitStr, sizeof(pitStr), "--%s", unit);  // no probe
-  } else {
-    snprintf(pitStr, sizeof(pitStr), "%.0f%s", pitDisplay, unit);
-  }
-  if (isnan(currentMeatTemp)) {
-    snprintf(meatStr, sizeof(meatStr), "--%s", unit);  // no probe
-  } else {
-    snprintf(meatStr, sizeof(meatStr), "%.0f%s", meatDisplay, unit);
-  }
-
-  tft.setTextDatum(MC_DATUM);
-
-  tft.setTextColor(TFT_ORANGE, TFT_BLACK);
-  tft.drawString("PIT", 120, 85, 2);
-  tft.drawString(pitStr, 120, 108, 4);
-
-  tft.drawFastHLine(70, 120, 100, TFT_DARKGREY);
-
-  tft.setTextColor(TFT_CYAN, TFT_BLACK);
-  tft.drawString(meatLabel, 120, 133, 2);  // MEAT1, MEAT2 or MEAT3, or "MEAT" if none
-  tft.drawString(meatStr, 120, 156, 4);
 }
 
 void CWG_LCD::showLimitEdit(const char* label, int16_t value, bool degCFlag, bool isOff) {

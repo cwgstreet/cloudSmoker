@@ -44,21 +44,15 @@ class CWG_LCD {
   void showValueEdit(const char* header, const char* valueText);
   void showCookHint();
   void printMenuLine(const char* c);
-  void printMenuLine_noArrow(const char* c);
-  void showTemperatureTargetAdjustment(float temporaryTemperatureTarget, bool meatTargetFlag);
 
   // New navigation & screen layouts called by smokerStates.cpp
   void showLaunchPad();
   void showSettingsMenu(int16_t prevEncoderValue);
   void showRailStatus(float ina226V, float storedV);
-  void showEndCookConfirm();
   void showPortalScreen();
   void showCookOverview(bool degCFlag, float pitTemp, float meat1Temp, float meat2Temp, float meat3Temp);
   void showBankLine(int pct);
   void showZoomPage(bool degCFlag, const char* topName, uint16_t topColour, float topTemp, float topFraction, const char* bottomName, uint16_t bottomColour, float bottomTemp, float bottomFraction);
-  void showBBQStatusScreen(bool degCFlag, float currentMeatTemp, const char* meatLabel,
-                           float meatDoneTemp, float currentPitTemp, float pitMinTemp,
-                           float pitMaxTemp);
   void showLimitEdit(const char* label, int16_t value, bool degCFlag, bool isOff);
   void showMeatTargetEdit(const char* label, int16_t value, bool degCFlag, bool belowSafe);
   void showListMenu(const char* header, const char* const* labels, const char* const* details,
@@ -71,8 +65,6 @@ class CWG_LCD {
                       const char* hint);
   void showCalResult(const char* probeName, float gain, float offset, bool showValues,
                      const char* note, const char* hint);
-  void showSetMeatDoneTempMenu(int16_t prevEncoderValue, float meatDoneTemp, bool degCFlag);
-  void showSetPitTempTargetMenu(int16_t prevEncoderValue, float pitTempTarget, bool degCFlag);
   void showSetTempUnitsMenu(int16_t prevEncoderValue, bool degCFlag);
 
   // Display controls for sleep/blanking modes
