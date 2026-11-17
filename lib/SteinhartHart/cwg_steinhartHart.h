@@ -118,7 +118,6 @@ extern SteinhartHart sh_meat3Probe;  // meat thermometer, MEAT3 (AIN3)
 // make external voltage reading variables declared elsewhere visible in this library
 extern double voltageMeat1_medianFiltered_V;
 extern double voltagePit_medianFiltered_V;
-extern double voltageVCC_medianFiltered_V;
 extern double voltageMeat2_medianFiltered_V;
 extern double voltageMeat3_medianFiltered_V;
 
