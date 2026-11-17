@@ -2,21 +2,24 @@
  *   cloudSmoker2_ESP32_main
  *   V2.ESP32   (Ported from NodeMCU ESP8266 to Firebeetle ESP32 V4)
  *
- *  C W Greenstreet, cloudSmoker2, 1Jul26
- *     Licence: GPLv3 (Licensed under the GNU GPLv3: Free to use and modify, but any public
- *     distribution must also share the full source code under this same license.
+ *   C W Greenstreet, cloudSmoker2, 17Nov2026
+ *   Licence (this file): GPLv3
  *
- *   Purpose:  cloudSmoker Barbecue Temperature Monitor (Upgraded with 1.28" TFT Display)
+ *   Origin: cloudSmoker1 main program (ESP8266, two probe channels, KY-040 encoder),
+ *   C W Greenstreet. Extended for cloudSmoker2 (ESP32, four probe channels, TFT display,
+ *   EC11 encoder) with AI assistance (Claude). Under review by the author.
  *
- *    Project Repository:  https://github.com/cwgstreet/cloudSmoker
- *    Project Wiki:        https://github.com/cwgstreet/cloudSmoker/wiki
+ *   Purpose:  cloudSmoker Barbecue Temperature Monitor (upgraded with 1.28" TFT display)
  *
- *   cloudSmoker2 (Ver2) Code intended to work with the following hardware:
+ *   Project Repository:  https://github.com/cwgstreet/cloudSmoker
+ *   Project Wiki:        https://github.com/cwgstreet/cloudSmoker/wiki
+ *
+ *   cloudSmoker2 hardware:
  *   --------------------------------------------------------
  *   ESP32-C3 (Firebeetle32 V4)
- *   1.28" GC9A01 Round TFT Display (via TFT_eSPI)
+ *   1.28" GC9A01 round TFT display (via TFT_eSPI)
  *   EC11 Rotary Encoder Module with Push Button
- *   ADS1115 - 12 bit ADC; I2C addressable
+ *   ADS1115 - 16 bit ADC; I2C addressable
  *   Maverick brand ET-732/733 (Semitec 105GT-2 NTC thermistor) temperature probes;
  *     R25 = 1 MOhm, Beta = 4608K (R25/R85, 25 to 85 C)
  *   Ref: https://github.com/cwgstreet/cloudSmoker/wiki/V2-Parts-List
