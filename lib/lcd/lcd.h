@@ -56,7 +56,6 @@ class CWG_LCD {
   void showCookOverview(bool degCFlag, float pitTemp, float meat1Temp, float meat2Temp, float meat3Temp);
   void showBankLine(int pct);
   void showZoomPage(bool degCFlag, const char* topName, uint16_t topColour, float topTemp, float topFraction, const char* bottomName, uint16_t bottomColour, float bottomTemp, float bottomFraction);
-  void showPageDots(int currentIndex, int totalItems) { drawProgressDots(currentIndex, totalItems); }
   void showBBQStatusScreen(bool degCFlag, float currentMeatTemp, const char* meatLabel,
                            float meatDoneTemp, float currentPitTemp, float pitMinTemp,
                            float pitMaxTemp);
@@ -81,7 +80,6 @@ class CWG_LCD {
   void noDisplay();
 
   // Legacy helper to prevent compilation errors if called elsewhere
-  void setCursor(uint8_t col, uint8_t row) { /* Handled automatically by UI layers */ }
 
  private:
   TFT_eSPI tft;
