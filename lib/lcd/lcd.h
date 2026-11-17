@@ -1,12 +1,12 @@
 /* ***************************************************************
- * lcd.h - library containing display functions for cloudSmoker2 project
- * - Ported to TFT_eSPI for 1.28" GC9A01 Round Display
+ * lcd.h - display functions for the cloudSmoker2 project
+ *   Origin: cloudSmoker1 display code for a 16x2 LCD (C W Greenstreet).
+ *   Extended for the 1.28" GC9A01 round TFT display (TFT_eSPI) with AI assistance (Claude),
+ *   following the original code structure. Under review by the author.
  *
- * * C W Greenstreet, cloudSmoker2, 1Jul26
- * Licence: GPLv3 (Licensed under the GNU GPLv3: Free to use and modify, but any public
- * distribution must also share the full source code under this same license.
- *
- * * ************************************************************* */
+ *   C W Greenstreet, cloudSmoker2, 1Jul26
+ *   Licence (this file): GPLv3
+ * ************************************************************* */
 
 #ifndef LCD_H
 #define LCD_H
@@ -86,7 +86,7 @@ class CWG_LCD {
  private:
   TFT_eSPI tft;
   uint8_t menuPrintLine;  // Keeps track of line tracking (0 or 1) from legacy cloudSmoker1 code
-  void drawProgressDots(int currentIndex, int totalItems);  // currentIndex is 1-basedprivate:
+  void drawProgressDots(int currentIndex, int totalItems);  // currentIndex is 1-based
 };
 
 #endif  // LCD_H
