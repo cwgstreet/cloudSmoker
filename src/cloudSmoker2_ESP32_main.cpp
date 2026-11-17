@@ -7,7 +7,6 @@
  *     distribution must also share the full source code under this same license.
  *
  *   Purpose:  cloudSmoker Barbecue Temperature Monitor (Upgraded with 1.28" TFT Display)
- *               using breadboard as a programming test jig
  *
  *    Project Repository:  https://github.com/cwgstreet/cloudSmoker
  *    Project Wiki:        https://github.com/cwgstreet/cloudSmoker/wiki
@@ -18,7 +17,8 @@
  *   1.28" GC9A01 Round TFT Display (via TFT_eSPI)
  *   EC11 Rotary Encoder Module with Push Button
  *   ADS1115 - 12 bit ADC; I2C addressable
- *   Maverick brand ET-723/733 (NPN thermistor) temperature probes; R25 = 10K ohm, Beta = 3950K
+ *   Maverick brand ET-732/733 (Semitec 105GT-2 NTC thermistor) temperature probes;
+ *     R25 = 1 MOhm, Beta = 4608K
  *   Ref: https://github.com/cwgstreet/cloudSmoker/wiki/V2-Parts-List
  * ************************************************************************************
  */
@@ -48,7 +48,7 @@
 #include "lcd.h"          // UPGRADED: with new TFT_eSPI adapter class framework
 #include "myConstants.h"  // All pin mappings and constants
 #ifdef ENABLE_OTA
-#include "ota.h"          // OTA (Over-the-Air) firmware update functionality
+#include "ota.h"          // ArduinoOTA: Wi-Fi upload from a computer (bench and OTA builds only)
 #endif
 #include "peripherals.h"
 #include "press_type.h"    // Wrapper library abstracting Yabl / Bounce2 routines
@@ -182,7 +182,7 @@ void setup() {
   }
 
 #ifdef ENABLE_OTA
-  // initialise OTA (Over-the-Air) firmware update service
+  // start the ArduinoOTA Wi-Fi upload service (bench and OTA builds only)
   if (!cookStoreActive()) {
     String otaPw = devOtaPassword();
     otaBegin("cloudsmoker2", otaPw.c_str());
@@ -247,7 +247,7 @@ void loop() {
   yield();
 
 #ifdef ENABLE_OTA
-  // Handle OTA (Over-the-Air) firmware update service
+  // handle any pending ArduinoOTA Wi-Fi upload (bench and OTA builds only)
   otaLoop();
 #endif
 

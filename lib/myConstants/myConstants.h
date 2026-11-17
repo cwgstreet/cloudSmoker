@@ -26,7 +26,7 @@
 //! Pin set-up mapping moved to platformio.ini build_flags
 //
 //? Allows different build environments to be set up for different hardware configurations
-//?   (e.g. ESP32 vs ESP8266, or different pinouts for different breadboard layouts)
+//?   (e.g. ESP32 vs ESP8266, or different pinouts for different hardware builds)
 // ---------------------------------------------------------
 //? Note to self:  constexp better than const for variable values that should be known at compile
 //?    time -> more memory efficient.  Also better than simple #define
@@ -72,7 +72,7 @@ constexpr double ADC_PROBE_MAX_FRACTION = 0.99;  // about 4.95 V on a 5 V rail
 //   +V_IN o-----|____|----+----|__/__|----o GND
 //  (~5 V)                 |      /
 //                Rbias    | Rthermistor
-//       (120E3 ohm  0.1%) |  (10E6 ohm R25)
+//       (120E3 ohm  0.1%) |  (1E6 ohm R25)
 //                         |
 //        ADC PIN          |
 //         (A0) o----------+
@@ -82,7 +82,7 @@ constexpr double ADC_PROBE_MAX_FRACTION = 0.99;  // about 4.95 V on a 5 V rail
 /// Per cloudSmoker2 redesign, single bias resistor value shared by all thermistor
 //    channels (pit + meat), ref: schematic PR1-PR4: 120k, 0.1% thin-film.
 //    cloudSmoker1 used separate bias resistors per probe type (meat=75k ohm, pit=9.1k ohm);
-//    cloudSmoker2 consolidated to single shared value. Same 120k used on the breadboard test rig.
+//    cloudSmoker2 consolidated to single shared value.
 //
 //! These are 0.1% precision resistors - use the nominal value as-is. A typical DMM's
 //!   own measurement accuracy (~0.5-1%) is worse than the resistor's guaranteed tolerance,
