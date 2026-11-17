@@ -2,11 +2,10 @@
  * peripherals.h - library containing functions to test and use
  *   cloudSmoker2 hardware serial monitor and LCD peripherals
  *
- *  C W Greenstreet, cloudSmoker2, 1Jul26
- * Licence: GPLv3 (Licensed under the GNU GPLv3: Free to use and modify, but any public
- *   distribution must also share the full source code under this same license.
- *
- ** ************************************************************* */
+ *   C W Greenstreet, cloudSmoker2, 17Nov2026
+ *   Licence: GPLv3 (Licensed under the GNU GPLv3: Free to use and modify, but any public
+ *     distribution must also share the full source code under this same license.)
+ * *************************************************************** */
 
 #ifndef PERIPHERALS_H
 #define PERIPHERALS_H
