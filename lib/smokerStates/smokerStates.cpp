@@ -974,7 +974,7 @@ void processState(CWG_LCD& lcd) {
 
     case changeSettings: {
       static int16_t lastDrawnSelection = -1;
-      currentEncoderValue = encoder.getCount();
+      encoder.getCount();
 
       if (hasRunFlag == 0) {
         encoder.newRange(1, MENU_COUNT, 1, true, currentEncoderState);  // menus always wrap
@@ -1041,7 +1041,7 @@ void processState(CWG_LCD& lcd) {
 
     case setTempUnits: {
       static int16_t lastDrawnSelection = -1;
-      currentEncoderValue = encoder.getCount();
+      encoder.getCount();
 
       if (hasRunFlag == 0) {
         encoder.newSettings(1, 2, 1, currentEncoderState);  // 1=Toggle, 2=Back
@@ -1233,7 +1233,7 @@ void processState(CWG_LCD& lcd) {
         previousDisplayMillis = millis();  // start the display timer on entry, not on last timeout
       }
 
-      currentEncoderValue = encoder.getCount();
+      encoder.getCount();
       uint8_t page = (uint8_t)((prevEncoderValue - 1) % 4);  // 0 overview, 1 PIT/MEAT1, 2 MEAT2/MEAT3
       bool pageChanged = (prevEncoderValue != lastPageValue);
       bool refreshDue = (readingsSerial != lastSerial);  // redraw only when readings change
@@ -1266,7 +1266,7 @@ void processState(CWG_LCD& lcd) {
       static int16_t lastDrawnSelection = -1;
       static const char* const menuLabels[3] = {"End cook", "New bank", "Cancel"};
       static const char* const menuDetails[3] = {"back to setup", "reset charge", "keep cooking"};
-      currentEncoderValue = encoder.getCount();
+      encoder.getCount();
 
       if (hasRunFlag == 0) {
         encoder.newRange(1, 3, 1, true, currentEncoderState);  // menus wrap
@@ -1306,7 +1306,7 @@ void processState(CWG_LCD& lcd) {
 
     case bleMenu: {
       static int16_t lastDrawn = -1;
-      currentEncoderValue = encoder.getCount();
+      encoder.getCount();
 
       if (hasRunFlag == 0) {
         encoder.newRange(1, 2, bleSerialEnabled ? 2 : 1, true, currentEncoderState);  // wraps
@@ -1339,7 +1339,7 @@ void processState(CWG_LCD& lcd) {
 
     case meatTempMenu: {
       static int16_t lastDrawnSelection = -1;
-      currentEncoderValue = encoder.getCount();
+      encoder.getCount();
 
       if (hasRunFlag == 0) {
         buildMeatMenu();
@@ -1380,7 +1380,7 @@ void processState(CWG_LCD& lcd) {
 
     case editMeatTarget: {
       static int16_t lastDrawnValue = -1000;
-      currentEncoderValue = encoder.getCount();
+      encoder.getCount();
 
       const char* probeName = (editMeatIndex == 0) ? "MEAT1" : (editMeatIndex == 1) ? "MEAT2" : "MEAT3";
 
@@ -1436,7 +1436,7 @@ void processState(CWG_LCD& lcd) {
       static char pitDetail[2][16];
       static const char* const pitLabels[3] = {"Min", "Max", "Back"};
       static const char* pitDetails[3] = {pitDetail[0], pitDetail[1], ""};
-      currentEncoderValue = encoder.getCount();
+      encoder.getCount();
 
       if (hasRunFlag == 0) {
         encoder.newRange(1, 3, 1, true, currentEncoderState);  // menus wrap
@@ -1478,7 +1478,7 @@ void processState(CWG_LCD& lcd) {
 
     case editPitLimit: {
       static int16_t lastDrawnValue = -1000;
-      currentEncoderValue = encoder.getCount();
+      encoder.getCount();
       const char* label = (editPitIndex == 0) ? "PIT MIN" : "PIT MAX";
 
       // Min has one extra position below its lowest value: that position means Off
@@ -1550,7 +1550,7 @@ void processState(CWG_LCD& lcd) {
       static char bankDetail[2][16];
       static const char* const bankLabels[3] = {"Capacity", "Charge", "Back"};
       static const char* bankDetails[3] = {bankDetail[0], bankDetail[1], ""};
-      currentEncoderValue = encoder.getCount();
+      encoder.getCount();
 
       if (hasRunFlag == 0) {
         encoder.newRange(1, 3, 1, true, currentEncoderState);  // menus wrap
@@ -1585,7 +1585,7 @@ void processState(CWG_LCD& lcd) {
 
     case editBank: {
       static int16_t lastDrawnValue = -1000;
-      currentEncoderValue = encoder.getCount();
+      encoder.getCount();
       bool isCapacity = (bankEditIndex == 0);
 
       // Capacity: 500 mAh steps from 1000 to 30000. Charge: 10% steps from 10 to 100.
@@ -1727,7 +1727,7 @@ void processState(CWG_LCD& lcd) {
     } break;
     case calProbeMenu: {
       static int16_t lastDrawnSelection = -1;
-      currentEncoderValue = encoder.getCount();
+      encoder.getCount();
 
       if (hasRunFlag == 0) {
         encoder.newRange(1, CAL_MENU_COUNT, 1, true, currentEncoderState);  // hard stops
@@ -1898,7 +1898,7 @@ void processState(CWG_LCD& lcd) {
 
       if (!capturing) {
         // Setting the reference: the encoder moves the value, the button starts capture
-        currentEncoderValue = encoder.getCount();
+        encoder.getCount();
         if (prevEncoderValue != lastDrawnRef) {
           lcd.showCalCapture("BOIL REFERENCE", "Set boil temp", prevEncoderValue, true,
                              "Press when in boil");
