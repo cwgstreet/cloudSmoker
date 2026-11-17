@@ -76,10 +76,3 @@ void otaStop() {
   running = false;
   Serial.println(F("OTA: stopped"));
 }
-
-// --------------------------
-//  otaRunning() function purpose: reports whether the OTA service is running
-//  arguments: none
-//  returns: true while running, false otherwise
-// --------------------------
-bool otaRunning() { return running; }

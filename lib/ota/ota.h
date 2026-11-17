@@ -27,6 +27,3 @@ void otaLoop();
 // Stops the OTA service. Called when a stored cook is restored at boot.
 //! open decision: no call yet when a new cook starts
 void otaStop();
-
-// Returns true while the OTA service is running.
-bool otaRunning();
