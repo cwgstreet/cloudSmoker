@@ -4,7 +4,7 @@
  *   Extended for the 1.28" GC9A01 round TFT display (TFT_eSPI) with AI assistance (Claude),
  *   following the original code structure. Under review by the author.
  *
- *   C W Greenstreet, cloudSmoker2, 1Jul26
+ *   C W Greenstreet, cloudSmoker2, 17Nov2026
  *   Licence (this file): GPLv3
  * ************************************************************* */
 

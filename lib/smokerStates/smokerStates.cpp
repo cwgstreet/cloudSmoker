@@ -4,7 +4,7 @@
  * See cloudSmoker State Machine diagram
  *  https://github.com/cwgstreet/cloudSmoker/wiki/V2-SM_structure
  *
- * C W Greenstreet, cloudSmoker2, 1Jul26
+ * C W Greenstreet, cloudSmoker2, 17Nov2026
  * Licence: GPLv3 (Licensed under the GNU GPLv3: Free to use and modify, but any public
  * distribution must also share the full source code under this same license.
  *
