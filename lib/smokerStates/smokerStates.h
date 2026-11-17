@@ -1,39 +1,25 @@
 /* ***************************************************************
- * smokerStates.h - cloudSmoker state machine implementation routines
+ * smokerStates.h - cloudSmoker state machine: state names and shared globals
+ *   The states of the cloudSmoker state machine. Implementation is in smokerStates.cpp.
  *
- * See
- * https://github.com/cwgstreet/cloudSmoker/blob/470cf69b76abfa9f5d605230191536e27d5985e3/Images/CloudSmoker%20state%20diagram2.jpg
- * for cloudSmoker1 State Machine diagram (to be updated for cloudSmoker2)
+ *   Origin: cloudSmoker1 (ESP8266) state machine, C W Greenstreet.
+ *     State diagram (cloudSmoker1, to be updated for cloudSmoker2):
+ *     https://github.com/cwgstreet/cloudSmoker/blob/470cf69b76abfa9f5d605230191536e27d5985e3/Images/CloudSmoker%20state%20diagram2.jpg
+ *   Extended for cloudSmoker2 with AI assistance (Claude). Under review by the author.
  *
- * C W Greenstreet, cloudSmoker2, 1Jul26
- * Licence: GPLv3 (Licensed under the GNU GPLv3: Free to use and modify, but any public
- * distribution must also share the full source code under this same licence.)
- *
- *************************************************************** */
+ *   C W Greenstreet, cloudSmoker2, 17Nov2026
+ *   Licence (this file): GPLv3
+ * ************************************************************* */
 
 #ifndef SMOKER_STATES_H
 #define SMOKER_STATES_H
 
-#if ARDUINO >= 100  // this if-else block manages depreciated versions of Arduino IDE
 #include <Arduino.h>
-#else
-#include <WConstants.h>
-#include <WProgram.h>
-#include <pins_arduino.h>
-extern bool bleSerialEnabled;
-#endif  // end if-block
-
-// UPGRADED: Conditional include to handle the network stack swap cleanly
-#ifdef ESP32
 #include <WiFi.h>
-#else
-#include <ESP8266WiFi.h>
-extern bool bleSerialEnabled;
-#endif
 
-// Prepare case names for cloudSmoker State Machine switch-case stucture
+// Prepare case names for cloudSmoker State Machine switch-case structure
 enum entryStates_t {
-  splashScreen = 1,  // set enum 1 to 10 rather than default 0 for first element
+  splashScreen = 1,  // start at 1 rather than the default 0
   launchPad,
   changeSettings,
   setMeatDoneTemp,
@@ -63,7 +49,7 @@ enum entryStates_t {
 
 bool cookApplyOnBoot();
 
-// smokerState type defined in implementation smokerState.cpp, hence extern keyword
+// smokerState variable defined in smokerStates.cpp, hence the extern keyword
 extern entryStates_t smokerState;
 
 // globals, defined in main
@@ -72,12 +58,15 @@ extern long unsigned previousMillis;
 extern long unsigned transmitInterval;
 extern long unsigned previousDisplayMillis;
 extern long unsigned displayInterval;
+extern bool hasRunFlag;  // defined in main
 
 /******************************************************
 // Helper function prototype:
 *******************************************************/
 
-// process_state() prototype
+class CWG_LCD;  // full definition in lcd.h
+
+// processState() prototype
 void processState(CWG_LCD& lcd);
 
 extern bool bleSerialEnabled;

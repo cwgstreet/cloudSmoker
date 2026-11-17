@@ -72,7 +72,4 @@ class WrapEncoder : public NewEncoder {
 extern WrapEncoder encoder;
 extern WrapEncoder::EncoderState currentEncoderState;
 
-// globals - defined in src/cloudSmoker2_ESP32_main.cpp
-extern bool hasRunFlag;
-
 #endif  // end header guard
