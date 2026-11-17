@@ -1,22 +1,23 @@
 /* ***************************************************************
  * cwg_ina226.h - library to extend ina226 library functionality
- *   includes
+ *   Purpose of INA226 in this project:
+ *    a) 5 V rail measurement for Steinhart-Hart temperature calculations
+ *    b) coulomb counting for power-bank battery charge used
+ *
+ *   C W Greenstreet, cloudSmoker2, 4Nov2026
+ *   Licence (this file): GPLv3
+ *
+ *   Built on:
  *    1) RobTillaart/INA226 library, licenced under MIT Licence
  *         reference:  https://github.com/RobTillaart/INA226
  *
- *  Purpose of INA226 is
- *    a) 5V rail measurement for Steinhart-Hart temperature calculations, and b) coulomb counting
- * for battery charge used b) coulomb counting for power bank battery charge used
- *
- *  C W Greenstreet, Ver2, 4Nov2026
- *    GPLv3 Licence
- *
- ** ************************************************************* */
+ *   Written with AI assistance (Claude). Under review by the author.
+ * ************************************************************* */
 
 #ifndef CWG_INA226_H
 #define CWG_INA226_H
 
-#include <INA226.h>  // Tillaart INA226 library, MIT licence
+#include <INA226.h>  // RobTillaart INA226 library, MIT licence
 #include <Wire.h>
 
 // INA226 wrapper for the +5 V rail measurement and power-bank coulomb counting.
