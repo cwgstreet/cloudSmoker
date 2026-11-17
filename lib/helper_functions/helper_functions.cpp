@@ -1,12 +1,11 @@
 /* ***************************************************************
- * peripherals.h - library containing functions to test and use
- *   cloudSmoker hardware peripherals: LCD (TFT in Ver2) and Serial Monitor
+ * helper_functions.cpp - implementation of helper_functions.h
  *
- *    C W Greenstreet, cloudSmoker2, 1Jul26
- *     Licence: GPLv3 (Licensed under the GNU GPLv3: Free to use and modify, but any public 
- *           distribution must also share the full source code under this same license.
+ *   C W Greenstreet, cloudSmoker2, 17Nov2026
+ *   Licence (this file): GPLv3
  *
- ** ************************************************************ */
+ *   Written with AI assistance (Claude). Under review by the author.
+ * ************************************************************* */
 
 // include 3rd party libraries
 #include <Arduino.h>
@@ -31,7 +30,7 @@ float convertDegFtoDegC(float tempDegF) {
 
 // get elapsed time from start of Cook in milliseconds
 long unsigned getElapsedCookTime_ms() {
-    return startCookTime_ms - millis();
+    return millis() - startCookTime_ms;
 }
 
 
