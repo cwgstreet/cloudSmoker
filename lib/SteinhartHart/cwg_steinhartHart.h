@@ -1,33 +1,32 @@
 /* ***************************************************************
- * cwg_steinhartHart.h - library calculates temperature from an NTC thermistor using the
- *   Steinhart-Hart equation
+ * cwg_steinhartHart.h - library calculates temperature from an NTC thermistor
+ *   using the Steinhart-Hart equation
  *
  *   C W Greenstreet, cloudSmoker2, 16Nov2026
- *   Licence: GPLv3 (Licensed under the GNU GPLv3: Free to use and modify, but any public
- *     distribution must also share the full source code under this same license.)
+ *   Licence (this file): GPLv3. The upstream notice (GPL v2 or any later
+ *   version) is kept in full below.
  *
- *   Built on (see Attribution below):
- *     1) SteinhartHart library by Andreas Tacke (fiende), GPL v2 or any later version
- *        https://github.com/fiendie/SteinhartHart
- *        What I changed: see Key changes below
+ *   Origin:
+ *    1) SteinhartHart library by Andreas Tacke (fiende), GPL v2 or any later version
+ *         https://github.com/fiendie/SteinhartHart
+ *    2) cloudSmoker1 (two probe channels), modified by C W Greenstreet. Key changes:
+ *         made the code more generic and added an interface to external ADS1x14 ADCs.
+ *         Defaults come from the cloudSmoker project
+ *         (https://github.com/cwgstreet/cloudSmoker).
+ *         The upstream library has an error in the self-heating temperature
+ *         compensation (k-factor); see https://github.com/fiendie/SteinhartHart/issues/3
+ *    3) cloudSmoker2 (four probe channels): extended with AI assistance (Claude).
+ *         Under review by the author.
  *
- * -----------------------------------------------------------------------------
- * Key changes:  modified open-source code to be more generic and permit interface to ADS1x14
- * external ADCs all defaults from cloudSmoker Project (https://github.com/cwgstreet/cloudSmoker)
+ *   Thermistor datasheet (Maverick ET-732/733 probes, Semitec 105GT-2 NTC,
+ *   R25 = 1M ohm):
+ *     https://github.com/cwgstreet/cloudSmoker/blob/main/Hardware/Thermistor%20datasheet/Maverick%20ET-732%20-%20733%20(Semitec%20105GT-2%20Thermistor)%20datasheet.pdf
  *
- *    Note that original library has error in temperature compensation for self-heating using
- * k-factor see https://github.com/fiendie/SteinhartHart/issues/3
+ *   Tool to get Steinhart-Hart coefficients:
+ *     https://www.thinksrs.com/downloads/programs/therm%20calc/ntccalibrator/ntccalculator.html
  *
- *  Tool to get SHH coefficients:
- * https://www.thinksrs.com/downloads/programs/therm%20calc/ntccalibrator/ntccalculator.html
- *
- * -----------------------------------------------------------------------------
- * Attribution: modified from SteinhartHart.h - Library for interacting with NTC thermistors
- *   Author: Andreas Tacke (fiende)
- *   Ref: https://github.com/fiendie/SteinhartHart
- *
- *   This version is distributed under GPLv3, which the upstream "or any later version"
- *   wording allows. The upstream licence notice is kept in full below.
+ *   This version is distributed under GPLv3, which the upstream 'or any later
+ *   version' wording allows.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -71,7 +70,7 @@
 #include <pins_arduino.h>
 #endif  // end if-block
 
-#include <inttypes.h>  // stabdardised library of integer types
+#include <inttypes.h>  // standardised library of integer types
 
 #include "myConstants.h"
 
@@ -82,7 +81,7 @@ class SteinhartHart {
    *
    * Only the bias resistor value has to be specified in the constructor.
    * If no other parameters are given default values will be used based
-   *   on a Maverick-723 temperature probe and cloudSmoker project design parameters
+   *   on a Maverick ET-732/733 probe (Semitec 105GT-2 NTC, R25 = 1M ohm) and cloudSmoker project design parameters
    */
 
   SteinhartHart(double biasResistorValue_ohm, double a = 0.0006308217444, double b = 0.000183627837,
