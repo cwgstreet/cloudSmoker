@@ -9,6 +9,7 @@
 #include "manifest_parser.h"
 #include "redirect_check.h"
 #include "release_keys.h"
+#include "release_source.h"
 #include "signature_check.h"
 
 // Release tag to check. Official builds use the stable tag. A test build can override it by
@@ -17,9 +18,9 @@
 #define UPDATE_TAG "cloudSmoker2-stable"
 #endif
 static const String kManifestUrl =
-    String("https://github.com/cwgstreet/cloudSmoker/releases/download/") + UPDATE_TAG + "/manifest.txt";
+    String(RELEASE_URL_PREFIX) + UPDATE_TAG + "/manifest.txt";
 static const String kSigUrl =
-    String("https://github.com/cwgstreet/cloudSmoker/releases/download/") + UPDATE_TAG + "/manifest.sig";
+    String(RELEASE_URL_PREFIX) + UPDATE_TAG + "/manifest.sig";
 
 // The clients keep this pointer until the handshake, so it must outlive every request.
 static String gCaPem;

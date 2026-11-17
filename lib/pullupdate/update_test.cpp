@@ -1,6 +1,7 @@
 #ifdef DEBUG_COOK_CMDS
 #include "update_test.h"
 #include "update_check.h"
+#include "release_source.h"
 
 // Thin wrapper over the shared chain. True only if the chain staged or verified the image.
 bool runUpdateTest(const String &manifestUrl, const String &sigUrl, bool commit) {
@@ -9,7 +10,7 @@ bool runUpdateTest(const String &manifestUrl, const String &sigUrl, bool commit)
 }
 
 bool runBenchUpdate(const char *tag, bool commit) {
-  String base = String("https://github.com/cwgstreet/cloudSmoker/releases/download/") + tag;
+  String base = String(RELEASE_URL_PREFIX) + tag;
   return runUpdateTest(base + "/manifest.txt", base + "/manifest.sig", commit);
 }
 #endif

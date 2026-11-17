@@ -9,6 +9,7 @@
  *************************************************************** */
 
 #include "manifest_parser.h"
+#include "release_source.h"
 
 #include <cstring>
 
@@ -23,7 +24,6 @@ const char* const kKeys[kFieldCount] = {
     "schema", "product", "board", "version", "version_name",
     "image_name", "image_size", "image_sha256", "image_url", "key_id"};
 
-const char kUrlPrefix[] = "https://github.com/cwgstreet/cloudSmoker/releases/download/";
 
 bool isDigit(char c) { return c >= '0' && c <= '9'; }
 bool isLowerHex(char c) { return isDigit(c) || (c >= 'a' && c <= 'f'); }
@@ -101,8 +101,8 @@ bool handleLine(const char* line, size_t lineLen, size_t field,
       return valueLen == 64 && allOf(value, valueLen, isLowerHex) &&
              copyValue(f.imageSha256, sizeof(f.imageSha256), value, valueLen);
     case 8: {  // image_url
-      size_t prefixLen = sizeof(kUrlPrefix) - 1;
-      return valueLen > prefixLen && memcmp(value, kUrlPrefix, prefixLen) == 0 &&
+      size_t prefixLen = sizeof(RELEASE_URL_PREFIX) - 1;
+      return valueLen > prefixLen && memcmp(value, RELEASE_URL_PREFIX, prefixLen) == 0 &&
              copyValue(f.imageUrl, sizeof(f.imageUrl), value, valueLen);
     }
     case 9:  // key_id
