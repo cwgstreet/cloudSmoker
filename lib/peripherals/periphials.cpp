@@ -1,12 +1,11 @@
 /* ***************************************************************
- * peripherals.h - library containing functions to test and use
+ * periphials.cpp - library containing functions to test and use
  *   cloudSmoker hardware peripherals: LCD and Serial Monitor
  *
- *  C W Greenstreet, cloudSmoker2, 1Jul26
- * Licence: GPLv3 (Licensed under the GNU GPLv3: Free to use and modify, but any public
- *   distribution must also share the full source code under this same license.
- *
- ** ************************************************************ */
+ *   C W Greenstreet, cloudSmoker2, 17Nov2026
+ *   Licence: GPLv3 (Licensed under the GNU GPLv3: Free to use and modify, but any public
+ *     distribution must also share the full source code under this same license.)
+ * *************************************************************** */
 
 // include 3rd party libraries
 #include "bleserial.h"
