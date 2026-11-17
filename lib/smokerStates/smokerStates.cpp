@@ -96,7 +96,6 @@ extern double voltagePit_medianFiltered_V;
 extern double voltageMeat1_medianFiltered_V;
 extern double voltageMeat2_medianFiltered_V;
 extern double voltageMeat3_medianFiltered_V;
-extern float batteryVoltage_v;
 
 // Done decision for one probe. NaN (no probe) is checked first, so it can never
 //    mistakenly become DONE.
@@ -1081,10 +1080,8 @@ void processState(CWG_LCD& lcd) {
       Log.print("getTemp Case -> startCookTime_ms =");
       Log.println(startCookTime_ms);
 
-      // TEMPORARY: bias supply reference is a fixed 5.0 V until the INA226 bus voltage replaces
-      // it
-      double voltageVCC_medianFiltered_V = calRailV();
-      batteryVoltage_v = voltageVCC_medianFiltered_V;  // placeholder: not a measurement yet
+      // +5 V rail for the Steinhart-Hart calculation: live INA226 reading, or the stored railV value
+      double railV_V = calRailV();
 
       voltagePit_medianFiltered_V = ads1115.getSensorValue_MedianFiltered_V(ADC_pitPin, 11);
       voltageMeat1_medianFiltered_V = ads1115.getSensorValue_MedianFiltered_V(ADC_meat1Pin, 11);
@@ -1094,12 +1091,12 @@ void processState(CWG_LCD& lcd) {
       yield();
 
       currentPitTemp =
-          probeF(sh_pitProbe, PROBE_PIT, voltageVCC_medianFiltered_V, voltagePit_medianFiltered_V);
-      currentMeat1Temp = probeF(sh_meat1Probe, PROBE_MEAT1, voltageVCC_medianFiltered_V,
+          probeF(sh_pitProbe, PROBE_PIT, railV_V, voltagePit_medianFiltered_V);
+      currentMeat1Temp = probeF(sh_meat1Probe, PROBE_MEAT1, railV_V,
                                 voltageMeat1_medianFiltered_V);
-      currentMeat2Temp = probeF(sh_meat2Probe, PROBE_MEAT2, voltageVCC_medianFiltered_V,
+      currentMeat2Temp = probeF(sh_meat2Probe, PROBE_MEAT2, railV_V,
                                 voltageMeat2_medianFiltered_V);
-      currentMeat3Temp = probeF(sh_meat3Probe, PROBE_MEAT3, voltageVCC_medianFiltered_V,
+      currentMeat3Temp = probeF(sh_meat3Probe, PROBE_MEAT3, railV_V,
                                 voltageMeat3_medianFiltered_V);
       // Done decisions for each meat probe
       checkProbeDone("MEAT1", currentMeat1Temp, meat1LastStatus, meat1DoneFlag, meat1SentFlag,
@@ -1124,7 +1121,7 @@ void processState(CWG_LCD& lcd) {
       Log.println(
           F("REF_V\t|\tPIT_V\t|\tPIT_F\t|\tMEAT1_V\t|\tMEAT1_F\t|\tMEAT2_V\t|\tMEAT2_F\t|\tMEAT3_"
             "V\t|\tMEAT3_F"));
-      Log.print(voltageVCC_medianFiltered_V, 4);
+      Log.print(railV_V, 4);
       Log.print(F("\t|\t"));
       Log.print(voltagePit_medianFiltered_V, 4);
       Log.print(F("\t|\t"));

@@ -90,7 +90,6 @@ bool degCFlag = 0;            // Temperature unit flag: 1 for Centigrade, 0 for 
 
 // Analog telemetry globals
 float voltageFactor = 0;
-float batteryVoltage_v;
 double voltagePit_medianFiltered_V;
 double voltageMeat1_medianFiltered_V;
 double voltageMeat2_medianFiltered_V;
