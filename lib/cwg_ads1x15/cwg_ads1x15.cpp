@@ -6,7 +6,7 @@
  *    2) Luis Llamas/Arduino-MedianFilter, licenced under Apache Licence 2.0
  *         reference:
  * https://github-com.translate.goog/luisllamasbinaburo/Arduino-MedianFilter?_x_tr_sl=auto&_x_tr_tl=en&_x_tr_hl=en
- *          Note: my code on based on warhog fork, MedianFilterLib2
+ *          Note: this code is based on the warhog fork, MedianFilterLib2
  * https://github.com/warhog/Arduino-MedianFilter
  *
  *  C W Greenstreet, Ver2, 25Oct2026
