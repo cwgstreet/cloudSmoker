@@ -4,7 +4,7 @@
  *   (see cwg_ads1x15.cpp). Window size is set at construction; a size of 3 uses a
  *   faster path.
  *
- *   C W Greenstreet, cloudSmoker2, 25Oct2026
+ *   C W Greenstreet, cloudSmoker2, 17Nov2026
  *   Licence (this file): GPLv3. Upstream code: Apache Licence 2.0 (notice below).
  *
  *   Forked from
@@ -13,7 +13,7 @@
  *         which itself was a fork of:
  *    2) Luis Llamas/Arduino-MedianFilter, licenced under Apache Licence 2.0
  *         reference:
- * https://github-com.translate.goog/luisllamasbinaburo/Arduino-MedianFilter?_x_tr_sl=auto&_x_tr_tl=en&_x_tr_hl=en
+ * https://github.com/luisllamasbinaburo/Arduino-MedianFilter
  *
  *   Changes: adds a destructor that frees the buffer, fixing a memory leak. The fix went to
  *     warhog as a pull request (https://github.com/warhog/Arduino-MedianFilter/pull/1), which
