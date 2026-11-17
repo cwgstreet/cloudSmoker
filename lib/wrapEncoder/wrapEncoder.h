@@ -1,15 +1,21 @@
 /* ***************************************************************
- * wrapEncoder.h - library extending newEncoder Library functionality
- *   creates encoder object with min / max values that "wrap"
+ * wrapEncoder.h - rotary encoder class extending the NewEncoder library
+ *   Creates an encoder object with a minimum and maximum value. The value wraps from
+ *   the maximum back to the minimum (and the reverse) by default. newRange() can turn
+ *   wrapping off, giving hard stops at the limits.
  *
- *   based on newEncoder example sketch
- *     https://github.com/gfvalvo/NewEncoder/blob/master/examples/CustomEncoder/CustomEncoder.ino
+ *   C W Greenstreet, cloudSmoker2, 17Nov2026
+ *   Licence (this file): GPLv3 (Licensed under the GNU GPLv3: Free to use and modify, but any
+ *     public distribution must also share the full source code under this same license.)
  *
- *  C W Greenstreet, cloudSmoker2, 1Jul26
- *   Licence: GPLv3 (Licensed under the GNU GPLv3: Free to use and modify, but any public
- *   distribution must also share the full source code under this same license.
- *
- ** ************************************************************ */
+ *   Built on:
+ *     NewEncoder by gfvalvo, https://github.com/gfvalvo/NewEncoder
+ *     The upstream repository does not state a licence. Its borrowed PJRC files
+ *     (direct_pin_read.h, interrupt_pins.h) carry PJRC.COM, LLC - Paul Stoffregen copyright.
+ *     Concepts inspired by buxtronix, http://www.buxtronix.net/2011/10/rotary-encoders-done-properly.html
+ *     Design reference: CustomEncoder example sketch, https://github.com/gfvalvo/NewEncoder/blob/master/examples/CustomEncoder/CustomEncoder.ino
+ *     (no code copied from the example)
+ * *************************************************************** */
 
 #ifndef WRAP_ENCODER_H
 #define WRAP_ENCODER_H
@@ -23,10 +29,9 @@
 #endif  // end if-block
 
 extern int16_t prevEncoderValue;
-// extern int16_t currentEncoderValue;
 
 /*****************
-// Libraries required for periphial function tests:
+// NewEncoder library, which this class extends:
 *****************/
 
 // KY40 Rotary Encoder - encoder CW / CCW counts
@@ -34,7 +39,7 @@ extern int16_t prevEncoderValue;
 
 /*****************
 // Class definition:
-//   WrapEncoder is child (derrived) class of public library NewEncoder
+//   WrapEncoder is child (derived) class of public library NewEncoder
 //   Value wraps from max to min (and back) by default. newRange() can turn wrapping off,
 //   giving hard stops at the limits.
 *****************/
@@ -42,9 +47,9 @@ extern int16_t prevEncoderValue;
 class WrapEncoder : public NewEncoder {
  public:
   WrapEncoder() : NewEncoder() {}
-  WrapEncoder(uint8_t aPin, uint8_t bPin, int16_t minValue, int16_t maxValue, int16_t initalValue,
+  WrapEncoder(uint8_t aPin, uint8_t bPin, int16_t minValue, int16_t maxValue, int16_t initialValue,
               uint8_t type = FULL_PULSE)
-      : NewEncoder(aPin, bPin, minValue, maxValue, initalValue, type) {}
+      : NewEncoder(aPin, bPin, minValue, maxValue, initialValue, type) {}
   virtual ~WrapEncoder() {}
 
   void initialise();
@@ -67,9 +72,7 @@ class WrapEncoder : public NewEncoder {
 extern WrapEncoder encoder;
 extern WrapEncoder::EncoderState currentEncoderState;
 
-// globals - must define in main
+// globals - defined in src/cloudSmoker2_ESP32_main.cpp
 extern bool hasRunFlag;
-extern const int ENCODER_DT;
-extern const int ENCODER_CLK;
 
 #endif  // end header guard
