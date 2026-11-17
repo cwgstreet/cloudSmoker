@@ -19,6 +19,7 @@
  *     warhog as a pull request (https://github.com/warhog/Arduino-MedianFilter/pull/1), which
  *     got no response. A pull request to the original author, Luis Llamas, could not be merged
  *     because of changes in warhog's fork, but he acknowledged the leak and made his own fix.
+ *     Destructor code: Steve Polus, see pull request #1.
  * ************************************************************* */
 
 /***************************************************
@@ -54,6 +55,9 @@ class MedianFilter2 {
   MedianFilter2<T>(const size_t windowSize);
 
   ~MedianFilter2<T>();  // prototype the destructor - fix memory leak
+  // copying would free the same buffer twice; disallow it
+  MedianFilter2(const MedianFilter2&) = delete;
+  MedianFilter2& operator=(const MedianFilter2&) = delete;
 
   T AddValue(T item);
   T GetFiltered() const;
@@ -87,6 +91,10 @@ template <typename T>
 MedianFilter2<T>::MedianFilter2(const size_t windowSize) {
   _windowSize = windowSize;
   _buffer = new node[windowSize];
+  for (size_t n = 0; n < windowSize; n++) {
+    _buffer[n].next = nullptr;  // new node[] leaves next indeterminate; set before any read
+    _buffer[n].value = T();
+  }
   _iterator = _buffer;
 
   _smaller = {nullptr, _stopper};
