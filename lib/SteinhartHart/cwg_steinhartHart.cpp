@@ -100,9 +100,9 @@ SteinhartHart sh_meat3Probe(BIAS_RESISTOR_Ohm);  // meat thermometer, MEAT3
 //  thermistor
 //      and bias resistor values using the Steinhart-Hart polynomial relationship
 // --------------------------
-double SteinhartHart::steinhartHart(double _Rth_ohm) {
+double SteinhartHart::steinhartHart(double rThermistor_ohm) {
   double log_r =
-      log(_Rth_ohm);  // note: math.h log operation is log(base e) or ln, not log(base 10)
+      log(rThermistor_ohm);  // note: math.h log operation is log(base e) or ln, not log(base 10)
   double log_r3 = log_r * log_r * log_r;
 
 #if DEBUG
@@ -116,8 +116,8 @@ double SteinhartHart::steinhartHart(double _Rth_ohm) {
   Log.print("\t");
   Log.print(F("\t _biasResistance = "));
   Log.print(_biasResistance);
-  Log.print(F("\t _Rth_ohm = "));
-  Log.print(_Rth_ohm, 8);
+  Log.print(F("\t rThermistor_ohm = "));
+  Log.print(rThermistor_ohm, 8);
   Log.print(F("\t Log_r = "));
   Log.print(log_r, 8);
   Log.print(F("\t log_r3 ="));
@@ -136,22 +136,22 @@ double SteinhartHart::steinhartHart(double _Rth_ohm) {
 
 double SteinhartHart::getTempKelvin(double ADCmeasuredVCC_volts,
                                     double ADCmeasuredThermistor_volts) {
-  _Vadc = ADCmeasuredThermistor_volts;
-  _Vsupply = ADCmeasuredVCC_volts;
+  _vAdc_V = ADCmeasuredThermistor_volts;
+  _vSupply_V = ADCmeasuredVCC_volts;
 
   // validity check: reject readings outside the usable divider range
   //   near 0 (unplugged, shorted or noise) or near Vcc (open circuit): no probe
-  if (_Vsupply <= 0.0) {
-    _Rth_ohm = NAN;
+  if (_vSupply_V <= 0.0) {
+    _rThermistor_ohm = NAN;
     return NAN;
   }
-  double fraction = _Vadc / _Vsupply;
+  double fraction = _vAdc_V / _vSupply_V;
   if (fraction < ADC_PROBE_MIN_FRACTION || fraction > ADC_PROBE_MAX_FRACTION) {
 #if DEBUG
     Log.print(F("\t probe out of range, fraction = "));
     Log.println(fraction, 6);
 #endif
-    _Rth_ohm = NAN;
+    _rThermistor_ohm = NAN;
     return NAN;  // no probe: do not convert this to a temperature
   }
 
@@ -160,30 +160,30 @@ double SteinhartHart::getTempKelvin(double ADCmeasuredVCC_volts,
   //?  rearrange voltage divider equation to solve for Thermistor Resistance, Rth
   //?   Rth = -1 * (Vo * Rb)/(Vo - Vcc)   -> don't miss the negative sign!
   //?      Alternatively Rth = Vo ·Rb / (Vcc − Vo)
-  if ((_Vadc - _Vsupply) != 0.0) {
-    _Rth_ohm = -1 * ((_Vadc * _biasResistance) / (_Vadc - _Vsupply));
+  if ((_vAdc_V - _vSupply_V) != 0.0) {
+    _rThermistor_ohm = -1 * ((_vAdc_V * _biasResistance) / (_vAdc_V - _vSupply_V));
 #if DEBUG
     Log.println();
     Log.println(F("\t ------- getTempKelvin() -----------"));
-    Log.print(F("\t _Vadc = "));
-    Log.print(_Vadc, 8);
+    Log.print(F("\t _vAdc_V = "));
+    Log.print(_vAdc_V, 8);
     Log.print(F("\t"));
-    Log.print(F("\t _Vsupply = "));
-    Log.print(_Vsupply, 8);
+    Log.print(F("\t _vSupply_V = "));
+    Log.print(_vSupply_V, 8);
     // Log.print(F("\t ADCmeasuredVCC_v = "));
     // Log.print(ADCmeasuredVCC_volts);
     Log.print(F("\t _biasResistance = "));
     Log.print(_biasResistance);
-    Log.print(F("\t _Rth_ohm ="));
-    Log.println(_Rth_ohm);
+    Log.print(F("\t _rThermistor_ohm ="));
+    Log.println(_rThermistor_ohm);
 #endif  // end DEBUG
   } else {
-    _Rth_ohm = NAN;  // no valid divider reading: do not reuse a stale resistance
+    _rThermistor_ohm = NAN;  // no valid divider reading: do not reuse a stale resistance
     Log.println(
-        F("** _Rth_ohm calculation Divide by Zero error! Problem: _Vadc - _Vsupply = zero!"));
+        F("** _rThermistor_ohm calculation Divide by Zero error! Problem: _vAdc_V - _vSupply_V = zero!"));
   }
 
-  return steinhartHart(_Rth_ohm);
+  return steinhartHart(_rThermistor_ohm);
 }
 
 double SteinhartHart::getTempCelsius(double ADCmeasuredVCC_volts,

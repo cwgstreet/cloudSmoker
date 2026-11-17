@@ -95,13 +95,13 @@ class SteinhartHart {
 
  private:
   // private member function
-  double steinhartHart(double _Rth_ohm);
+  double steinhartHart(double rThermistor_ohm);
 
   //  Thermistor voltage divider variables
   double _biasResistance;  //  bias resistor value
-  double _Vadc;            //  probe voltage measured by ADC (typically median filtered)
-  double _Vsupply;         //  supply voltage to voltage divider
-  double _Rth_ohm;         //  NTC thermistor resistance
+  double _vAdc_V;            //  probe voltage measured by ADC (typically median filtered)
+  double _vSupply_V;         //  supply voltage to voltage divider
+  double _rThermistor_ohm;         //  NTC thermistor resistance
 
   // Manufacturing constants
   double _a;
