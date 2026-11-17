@@ -1,10 +1,11 @@
 /* ***************************************************************
- * helper_functions.h - library containing genral use helper functions
+ * helper_functions.h - general-use helper functions for cloudSmoker2
  *
- *  C W Greenstreet, Ver2, 25Oct2026
- *    GPLv3 Licence
+ *   C W Greenstreet, cloudSmoker2, 25Oct2026
+ *   Licence (this file): GPLv3
  *
- ** ************************************************************* */
+ *   Written with AI assistance (Claude). Under review by the author.
+ * ************************************************************* */
 
 #ifndef HELPER_FUNCTIONS_H
 #define HELPER_FUNCTIONS_H
@@ -24,6 +25,5 @@ extern long unsigned startCookTime_ms;
 *******************************************************/
 float convertDegFtoDegC(float tempDegF);
 long unsigned getElapsedCookTime_ms();
-float getCountMS(float tempMS);
 
 #endif  // end header guard
