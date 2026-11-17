@@ -1,18 +1,17 @@
-/* *************************************************************
- * press_type.h - Header for Wrapper Library to determine button press type
+/* ***************************************************************
+ * press_type.h - wrapper library that determines button press type
  *   press_types:  short press, long press and double press
  *
- * C W Greenstreet, cloudSmoker2, 1Jul26
- * Licence: GPLv3 (Licensed under the GNU GPLv3: Free to use and modify, but any public
- * distribution must also share the full source code under this same license.
+ *   C W Greenstreet, cloudSmoker2, 17Nov2026
+ *   Licence: GPLv3 (Licensed under the GNU GPLv3: Free to use and modify, but any public
+ *     distribution must also share the full source code under this same license.)
  *
- * This wrapper library encapsulates and integrates selected features from
- *    1) Yabl (Yet another button library for Arduino)
- *           https://github.com/yergin/Yabl
- *    2) Bounce2 (debouncng library)
- *           https://github.com/thomasfredericks/Bounce2
- *
- * ************************************************************ */
+ *   Built on (both third-party libraries are MIT Licence):
+ *     1) Yabl, Yet another button library for Arduino
+ *           Copyright (c) 2017 Gino Bollaert. https://github.com/yergin/Yabl
+ *     2) Bounce2, debouncing library
+ *           Copyright (c) 2013 thomasfredericks. https://github.com/thomasfredericks/Bounce2
+ * *************************************************************** */
 
 #ifndef PRESS_TYPE_H
 #define PRESS_TYPE_H
