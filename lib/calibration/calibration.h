@@ -1,12 +1,13 @@
 /* ***************************************************************
  * calibration.h - library to manage calibration coefficients of thermistor probes
  *
- *  Ref: https://github.com/cwgstreet/cloudSmoker/wiki/Calibration
+ *   Ref: https://github.com/cwgstreet/cloudSmoker/wiki/Calibration
  *
- *  C W Greenstreet, Ver1, 31Oct2026
- *    GPLv3 Licence
+ *   C W Greenstreet, cloudSmoker2, 31Oct2026
+ *   Licence (this file): GPLv3
  *
- ** ************************************************************* */
+ *   Written with AI assistance (Claude). Under review by the author.
+ * ************************************************************* */
 
 #ifndef CALIBRATION_H
 #define CALIBRATION_H
