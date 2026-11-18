@@ -204,6 +204,26 @@ void calPrintHelp() {
   Log.println();
 }
 
+// Confirmation for dangerous setters: the command is held until the user types yes.
+static String pendingCmd;
+static unsigned long pendingAtMs = 0;
+static bool confirmedRun = false;
+static const unsigned long CONFIRM_TIMEOUT_MS = 30000;
+
+static bool isDangerousCmd(const String& cmd) {
+  return cmd == "calReset" || cmd.startsWith("calReset ") ||
+         cmd.startsWith("cal ") || cmd.startsWith("railV ") ||
+         cmd == "chargeReset";
+}
+
+// One line per command, saying what it actually changes.
+static String warningFor(const String& cmd) {
+  if (cmd.startsWith("cal ")) return "Replace this probe's calibration? Changes every reading from it.";
+  if (cmd.startsWith("railV ")) return "Change the 5 V rail reference? Changes every temperature reading.";
+  if (cmd == "chargeReset") return "Reset the charge count to 0? The battery estimate restarts.";
+  return "Reset calibration to defaults? Readings stay, but lose their correction.";
+}
+
 // Parses one complete command line. Commands are case-sensitive except the probe name:
 //   cal <probe> <gain> <offset>   e.g.  cal PIT 1.0526 -2.105
 //   calReset                      return all four probes to identity
@@ -211,6 +231,47 @@ void calPrintHelp() {
 //   railV <volts>                 e.g.  railV 5.09
 //   calShow                       print the rail and all four probes
 static void handleCommand(String cmd) {
+  cmd.trim();  // first, so stray spaces or CR cannot skip the checks
+  if (cmd == "yes") {
+    if (pendingCmd.length() == 0) {
+      Log.println(F("nothing to confirm"));
+      return;
+    }
+    if (millis() - pendingAtMs > CONFIRM_TIMEOUT_MS) {
+      pendingCmd = "";
+      Log.println(F("confirmation expired: send the command again"));
+      return;
+    }
+    String run = pendingCmd;
+    pendingCmd = "";
+    confirmedRun = true;
+    handleCommand(run);
+    confirmedRun = false;
+    return;
+  }
+
+  // An explicit no (or cancel) drops the pending change at once.
+  if (cmd == "no" || cmd == "cancel") {
+    if (pendingCmd.length() > 0) {
+      pendingCmd = "";
+      Log.println(F("cancelled: nothing changed"));
+    } else {
+      Log.println(F("nothing to cancel"));
+    }
+    return;
+  }
+
+  // Any other command also cancels a pending change.
+  pendingCmd = "";
+  if (isDangerousCmd(cmd) && !confirmedRun) {
+    pendingCmd = cmd;
+    pendingAtMs = millis();
+    Log.print(F("Warning!  "));
+    Log.println(warningFor(cmd));
+    Log.println(F("Expert use only. Type yes to apply, or no to cancel."));
+    return;
+  }
+
   cmd.trim();
 
   if (cmd == "help") {
@@ -422,7 +483,16 @@ static void handleCommand(String cmd) {
 // Called once per loop(). Reads any waiting serial characters and builds a line until
 // the end-of-line character arrives. Lines are capped at 80 characters, so a runaway
 // input can't grow the buffer without limit.
+// Drops a held change once its window closes, and says so.
+static void expirePending() {
+  if (pendingCmd.length() > 0 && millis() - pendingAtMs > CONFIRM_TIMEOUT_MS) {
+    pendingCmd = "";
+    Log.println(F("confirmation timed out: nothing changed"));
+  }
+}
+
 void calPollSerial() {
+  expirePending();
   static String line;  // persists between calls, so a line can arrive in pieces
   while (Serial.available()) {
     char c = Serial.read();
