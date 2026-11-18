@@ -189,10 +189,11 @@ void calPrintHelp() {
   Log.println(F("                                  range 4.5 to 5.5 V"));
   Log.println(F("  charge                          show charge drawn from the power bank"));
   Log.println(F("  chargeReset                     restart the charge count at 0"));
+  Log.println(F("                                  needs yes: cal, calReset, railV, chargeReset"));
   Log.println(F("  passkey                         show the BLE pair code"));
   Log.println(F("  cookShow                        show whether a cook is stored"));
   Log.println(F("  cookInfo                        show the stored cook, charge and checkpoint age"));
-  Log.println(F("  yes                             apply the held change"));
+  Log.println(F("  yes                             apply a change held for confirmation"));
   Log.println(F("  no or cancel                    drop the held change"));
 #ifdef DEBUG_COOK_CMDS
 #ifdef DEBUG_OTA
@@ -200,6 +201,9 @@ void calPrintHelp() {
 #endif
   Log.println(F("  cookEnd                         debug: clear the stored cook"));
   Log.println(F("  cookAge <hours>                 debug: move stored lastSeen back (stale test)"));
+  Log.println(F("  updatetest                      debug: signed update dry run, nothing staged"));
+  Log.println(F("  updatecommit                    debug: gate test, must be refused as not newer"));
+  Log.println(F("  updateinstall                   debug: stage release 101 for the next boot"));
 #endif
   Log.println(F("=============================================================="));
   Log.println(F("Type a command and press Enter. The device echoes what you type."));
