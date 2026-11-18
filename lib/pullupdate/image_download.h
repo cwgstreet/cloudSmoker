@@ -5,7 +5,7 @@
  *   Licence: GPLv3 (Licensed under the GNU GPLv3: Free to use and modify, but any public
  *     distribution must also share the full source code under this same license.)
  *
- *   Written with AI assistance (Claude). Under review by the author.
+ *   Written with AI assistance (Claude) with review by the author.
  * *************************************************************** */
 
 #pragma once
@@ -17,5 +17,5 @@
 // bootable. On false the running image is untouched. The caller sets the pinned roots
 // on `client` first, and reboots only after true, with no cook stored.
 // commit=false is a dry run: verified, then discarded, no reboot.
-bool downloadImageToUpdate(WiFiClientSecure &client, const String &signedUrl,
-                           uint32_t expectedSize, const char *expectedHex, bool commit);
+bool downloadImageToUpdate(WiFiClientSecure& client, const String& signedUrl, uint32_t expectedSize,
+                           const char* expectedHex, bool commit);

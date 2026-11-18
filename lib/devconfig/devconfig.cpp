@@ -9,9 +9,8 @@
  *     Arduino-ESP32 core (Espressif Systems): Preferences (NVS) and esp_random().
  *     This file calls their functions and does not copy their code.
  *
- *   Written with AI assistance (Claude). Under review by the author.
+ *   Written with AI assistance (Claude) with review by the author.
  * *************************************************************** */
-
 
 #include "devconfig.h"
 
@@ -73,7 +72,5 @@ String devOtaPasswordGet() { return cfg.getString("otapw", ""); }
 
 #ifdef DEBUG_OTA
 // One-off: removes the stored OTA password. devOtaPassword() creates a new one when next called.
-void devOtaPasswordClear() {
-  cfg.remove("otapw");
-}
+void devOtaPasswordClear() { cfg.remove("otapw"); }
 #endif

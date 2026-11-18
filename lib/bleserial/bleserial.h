@@ -5,7 +5,7 @@
  *   Licence: GPLv3 (Licensed under the GNU GPLv3: Free to use and modify, but any public
  *     distribution must also share the full source code under this same license.)
  *
- *   Written with AI assistance (Claude). Under review by the author.
+ *   Written with AI assistance (Claude) with review by the author.
  * *************************************************************** */
 
 #ifndef BLESERIAL_H

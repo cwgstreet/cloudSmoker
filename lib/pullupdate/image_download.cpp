@@ -9,21 +9,23 @@
  *     Arduino-ESP32 core (Espressif Systems): Update, HTTPClient and WiFiClientSecure.
  *     This file calls their functions and does not copy their code.
  *
- *   Written with AI assistance (Claude). Under review by the author.
+ *   Written with AI assistance (Claude) with review by the author.
  * *************************************************************** */
 
 #include "image_download.h"
+
 #include <HTTPClient.h>
 #include <Update.h>
 #include <stdio.h>
 #include <string.h>
+
 #include "mbedtls/sha256.h"
 
 static const size_t kChunkSize = 1024;
 static const uint32_t kStallTimeoutMs = 15000;
 
-bool downloadImageToUpdate(WiFiClientSecure &client, const String &signedUrl,
-                           uint32_t expectedSize, const char *expectedHex, bool commit) {
+bool downloadImageToUpdate(WiFiClientSecure& client, const String& signedUrl, uint32_t expectedSize,
+                           const char* expectedHex, bool commit) {
   if (strlen(expectedHex) != 64) {
     log_e("download: expected hash is not 64 characters");
     return false;
@@ -57,7 +59,7 @@ bool downloadImageToUpdate(WiFiClientSecure &client, const String &signedUrl,
   mbedtls_sha256_init(&ctx);
   mbedtls_sha256_starts_ret(&ctx, 0);  // 0 selects SHA-256 rather than SHA-224
 
-  WiFiClient *stream = http.getStreamPtr();
+  WiFiClient* stream = http.getStreamPtr();
   uint8_t buf[kChunkSize];
   uint32_t total = 0;
   uint32_t lastData = millis();

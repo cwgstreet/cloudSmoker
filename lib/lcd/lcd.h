@@ -2,7 +2,7 @@
  * lcd.h - display functions for the cloudSmoker2 project
  *   Origin: cloudSmoker1 display code for a 16x2 LCD (C W Greenstreet).
  *   Extended for the 1.28" GC9A01 round TFT display (TFT_eSPI) with AI assistance (Claude),
- *   following the original code structure. Under review by the author.
+ *   following the original code structure with review by the author.
  *
  *   C W Greenstreet, cloudSmoker2, 17Nov2026
  *   Licence (this file): GPLv3
@@ -40,7 +40,8 @@ class CWG_LCD {
   void drawUIFrame(const char* headerText);
 
   // Drop-in compatible functions for cloudSmoker state machine
-  void showSplashScreen(bool degCFlag, float meatTargetTemp, float pitMinTemp, float pitMaxTemp, float bankCapacity_mAh, int bankPct);
+  void showSplashScreen(bool degCFlag, float meatTargetTemp, float pitMinTemp, float pitMaxTemp,
+                        float bankCapacity_mAh, int bankPct);
   void showValueEdit(const char* header, const char* valueText);
   void showCookHint();
   void printMenuLine(const char* c);
@@ -50,9 +51,12 @@ class CWG_LCD {
   void showSettingsMenu(int16_t prevEncoderValue);
   void showRailStatus(float ina226V, float storedV);
   void showPortalScreen();
-  void showCookOverview(bool degCFlag, float pitTemp, float meat1Temp, float meat2Temp, float meat3Temp);
+  void showCookOverview(bool degCFlag, float pitTemp, float meat1Temp, float meat2Temp,
+                        float meat3Temp);
   void showBankLine(int pct);
-  void showZoomPage(bool degCFlag, const char* topName, uint16_t topColour, float topTemp, float topFraction, const char* bottomName, uint16_t bottomColour, float bottomTemp, float bottomFraction);
+  void showZoomPage(bool degCFlag, const char* topName, uint16_t topColour, float topTemp,
+                    float topFraction, const char* bottomName, uint16_t bottomColour,
+                    float bottomTemp, float bottomFraction);
   void showLimitEdit(const char* label, int16_t value, bool degCFlag, bool isOff);
   void showMeatTargetEdit(const char* label, int16_t value, bool degCFlag, bool belowSafe);
   void showListMenu(const char* header, const char* const* labels, const char* const* details,

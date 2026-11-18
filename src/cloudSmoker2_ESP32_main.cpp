@@ -7,7 +7,7 @@
  *
  *   Origin: cloudSmoker1 main program (ESP8266, two probe channels, KY-040 encoder),
  *   C W Greenstreet. Extended for cloudSmoker2 (ESP32, four probe channels, TFT display,
- *   EC11 encoder) with AI assistance (Claude). Under review by the author.
+ *   EC11 encoder) with AI assistance (Claude) with review by the author.
  *
  *   Purpose:  cloudSmoker Barbecue Temperature Monitor (upgraded with 1.28" TFT display)
  *

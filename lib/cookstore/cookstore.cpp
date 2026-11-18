@@ -9,7 +9,7 @@
  *     Arduino-ESP32 core (Espressif Systems): Preferences (NVS), time.h and SNTP support.
  *     This file calls their functions and does not copy their code.
  *
- *   Written with AI assistance (Claude). Under review by the author.
+ *   Written with AI assistance (Claude) with review by the author.
  * *************************************************************** */
 
 #ifdef DEBUG_NVS_STATS
@@ -74,8 +74,6 @@ bool timeSyncWait(uint32_t timeoutMs) {
 }
 
 bool cookStoreActive() { return activeCache; }
-
-
 
 void cookSaveFlags(uint8_t flags) {
   if (!activeCache || flags == lastWrittenFlags) {
@@ -191,7 +189,8 @@ uint8_t bankChargeLoad() { return cookPrefs.getUChar("bankPct", 100); }
 
 void bankChargeSave(uint8_t pct) { cookPrefs.putUChar("bankPct", pct); }
 
-// Writes the charge count now, rather than at the next 5-minute checkpoint. Used after a bank reset.
+// Writes the charge count now, rather than at the next 5-minute checkpoint. Used after a bank
+// reset.
 void cookForceCheckpoint(float charge_mAh) {
   if (!activeCache) {
     return;

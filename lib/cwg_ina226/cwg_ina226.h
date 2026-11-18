@@ -11,7 +11,7 @@
  *    1) RobTillaart/INA226 library, licenced under MIT Licence
  *         reference:  https://github.com/RobTillaart/INA226
  *
- *   Written with AI assistance (Claude). Under review by the author.
+ *   Written with AI assistance (Claude) with review by the author.
  * ************************************************************* */
 
 #ifndef CWG_INA226_H

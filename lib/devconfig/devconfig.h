@@ -5,7 +5,7 @@
  *   Licence: GPLv3 (Licensed under the GNU GPLv3: Free to use and modify, but any public
  *     distribution must also share the full source code under this same license.)
  *
- *   Written with AI assistance (Claude). Under review by the author.
+ *   Written with AI assistance (Claude) with review by the author.
  * *************************************************************** */
 
 #ifndef DEVCONFIG_H
@@ -23,7 +23,7 @@ void devSetNtfyTopic(const String& topic);
 void devSetThingSpeakKey(const String& key);
 uint32_t devBlePasskey();  // six-digit random code, created on first use
 
-String devOtaPassword();  // created on first use, never empty
+String devOtaPassword();     // created on first use, never empty
 String devOtaPasswordGet();  // returns the stored OTA password, or empty if none; never creates one
 
 #ifdef DEBUG_OTA

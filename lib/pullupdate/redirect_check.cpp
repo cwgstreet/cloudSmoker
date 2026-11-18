@@ -9,16 +9,17 @@
  *     Arduino-ESP32 core (Espressif Systems): HTTPClient and WiFiClientSecure.
  *     This file calls their functions and does not copy their code.
  *
- *   Written with AI assistance (Claude). Under review by the author.
+ *   Written with AI assistance (Claude) with review by the author.
  * *************************************************************** */
 
 #include "redirect_check.h"
+
 #include <HTTPClient.h>
 
 // The trailing slash makes the host match exact, so a lookalike host fails.
-static const char *kReleaseHostPrefix = "https://release-assets.githubusercontent.com/";
+static const char* kReleaseHostPrefix = "https://release-assets.githubusercontent.com/";
 
-bool fetchRedirectTarget(WiFiClientSecure &client, const String &url, String &out) {
+bool fetchRedirectTarget(WiFiClientSecure& client, const String& url, String& out) {
   HTTPClient http;
   http.setFollowRedirects(HTTPC_DISABLE_FOLLOW_REDIRECTS);
   bool ok = false;

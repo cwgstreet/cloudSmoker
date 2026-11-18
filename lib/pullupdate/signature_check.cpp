@@ -4,7 +4,7 @@
  * C W Greenstreet, cloudSmoker2, 14Nov26
  * Licence: GPLv3 (see manifest_parser.h)
  *
- *   Written with AI assistance (Claude). Under review by the author.
+ *   Written with AI assistance (Claude) with review by the author.
  *************************************************************** */
 
 #include "signature_check.h"
@@ -15,8 +15,7 @@
 #include "mbedtls/sha256.h"
 
 bool verifyManifestSignature(const unsigned char* manifest, size_t manifestLen,
-                             const unsigned char* sig, size_t sigLen,
-                             const char* publicKeyPem) {
+                             const unsigned char* sig, size_t sigLen, const char* publicKeyPem) {
   if (manifest == nullptr || sig == nullptr || publicKeyPem == nullptr || manifestLen == 0 ||
       sigLen == 0 || sigLen > 100) {
     return false;

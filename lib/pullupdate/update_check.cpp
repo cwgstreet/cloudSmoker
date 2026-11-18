@@ -9,14 +9,16 @@
  *     Arduino-ESP32 core (Espressif Systems): WiFi, HTTPClient and WiFiClientSecure.
  *     This file calls their functions and does not copy their code.
  *
- *   Written with AI assistance (Claude). Under review by the author.
+ *   Written with AI assistance (Claude) with review by the author.
  * *************************************************************** */
 
 #include "update_check.h"
+
 #include <Arduino.h>
 #include <HTTPClient.h>
 #include <WiFi.h>
 #include <WiFiClientSecure.h>
+
 #include "cookstore.h"
 #include "firmware_version.h"
 #include "image_download.h"
@@ -31,15 +33,13 @@
 #ifndef UPDATE_TAG
 #define UPDATE_TAG "cloudSmoker2-stable"
 #endif
-static const String kManifestUrl =
-    String(RELEASE_URL_PREFIX) + UPDATE_TAG + "/manifest.txt";
-static const String kSigUrl =
-    String(RELEASE_URL_PREFIX) + UPDATE_TAG + "/manifest.sig";
+static const String kManifestUrl = String(RELEASE_URL_PREFIX) + UPDATE_TAG + "/manifest.txt";
+static const String kSigUrl = String(RELEASE_URL_PREFIX) + UPDATE_TAG + "/manifest.sig";
 
 // The clients keep this pointer until the handshake, so it must outlive every request.
 static String gCaPem;
 
-static const char *caPem() {
+static const char* caPem() {
   if (gCaPem.length() == 0) {
     gCaPem = String(ROOT_ISRG_X1_PEM) + String(ROOT_USERTRUST_ECC_PEM);
   }
@@ -47,7 +47,7 @@ static const char *caPem() {
 }
 
 // Fetches a small release file through the checked redirect. Returns its length, or -1.
-static int fetchSmallFile(const String &url, uint8_t *buf, size_t maxLen) {
+static int fetchSmallFile(const String& url, uint8_t* buf, size_t maxLen) {
   String target;
   {
     WiFiClientSecure first;
@@ -78,7 +78,7 @@ static int fetchSmallFile(const String &url, uint8_t *buf, size_t maxLen) {
     return -1;
   }
 
-  WiFiClient *stream = http.getStreamPtr();
+  WiFiClient* stream = http.getStreamPtr();
   size_t got = 0;
   uint32_t lastData = millis();
   while (got < (size_t)len) {
@@ -97,7 +97,7 @@ static int fetchSmallFile(const String &url, uint8_t *buf, size_t maxLen) {
   return got == (size_t)len ? len : -1;
 }
 
-UpdateStatus runUpdateChain(const String &manifestUrl, const String &sigUrl, bool commit) {
+UpdateStatus runUpdateChain(const String& manifestUrl, const String& sigUrl, bool commit) {
   if (cookStoreActive()) {
     Serial.printf("update check: skipped, a cook is stored\n");
     return UPDATE_COOK_ACTIVE;
@@ -123,7 +123,7 @@ UpdateStatus runUpdateChain(const String &manifestUrl, const String &sigUrl, boo
     return UPDATE_FAILED;
   }
   ManifestFields f;
-  if (!parseManifest((const char *)manifest, mLen, RELEASE_KEY_ID, f)) {
+  if (!parseManifest((const char*)manifest, mLen, RELEASE_KEY_ID, f)) {
     log_e("update check: manifest parse failed");
     return UPDATE_FAILED;
   }

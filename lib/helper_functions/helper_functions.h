@@ -4,7 +4,7 @@
  *   C W Greenstreet, cloudSmoker2, 25Oct2026
  *   Licence (this file): GPLv3
  *
- *   Written with AI assistance (Claude). Under review by the author.
+ *   Written with AI assistance (Claude) with review by the author.
  * ************************************************************* */
 
 #ifndef HELPER_FUNCTIONS_H

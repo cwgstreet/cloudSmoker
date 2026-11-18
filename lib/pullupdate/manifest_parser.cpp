@@ -7,13 +7,14 @@
  * The signature is checked on the raw bytes before this runs. The parser
  * accepts only the exact format and refuses anything else.
  *
- *   Written with AI assistance (Claude). Under review by the author.
+ *   Written with AI assistance (Claude) with review by the author.
  *************************************************************** */
 
 #include "manifest_parser.h"
-#include "release_source.h"
 
 #include <cstring>
+
+#include "release_source.h"
 
 namespace {
 
@@ -22,10 +23,9 @@ constexpr size_t kMaxLineBytes = 200;
 constexpr size_t kFieldCount = 10;
 
 // Fixed order. A missing, extra, or misplaced line makes the parse fail.
-const char* const kKeys[kFieldCount] = {
-    "schema", "product", "board", "version", "version_name",
-    "image_name", "image_size", "image_sha256", "image_url", "key_id"};
-
+const char* const kKeys[kFieldCount] = {"schema",       "product",    "board",      "version",
+                                        "version_name", "image_name", "image_size", "image_sha256",
+                                        "image_url",    "key_id"};
 
 bool isDigit(char c) { return c >= '0' && c <= '9'; }
 bool isLowerHex(char c) { return isDigit(c) || (c >= 'a' && c <= 'f'); }
@@ -70,8 +70,8 @@ bool copyValue(char* dst, size_t dstSize, const char* value, size_t valueLen) {
 }
 
 // Checks one "key=value" line against the field expected at this position.
-bool handleLine(const char* line, size_t lineLen, size_t field,
-                const char* expectedKeyId, ManifestFields& f) {
+bool handleLine(const char* line, size_t lineLen, size_t field, const char* expectedKeyId,
+                ManifestFields& f) {
   if (memchr(line, ' ', lineLen) != nullptr) return false;  // no spaces anywhere
 
   const char* key = kKeys[field];
@@ -118,7 +118,8 @@ bool handleLine(const char* line, size_t lineLen, size_t field,
 
 }  // namespace
 
-bool parseManifest(const char* text, size_t length, const char* expectedKeyId, ManifestFields& out) {
+bool parseManifest(const char* text, size_t length, const char* expectedKeyId,
+                   ManifestFields& out) {
   if (text == nullptr || expectedKeyId == nullptr) return false;
   if (length == 0 || length > kMaxFileBytes) return false;
   if (text[length - 1] != '\n') return false;  // the last line must end with a newline

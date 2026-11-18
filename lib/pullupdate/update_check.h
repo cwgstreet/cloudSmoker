@@ -5,7 +5,7 @@
  *   Licence: GPLv3 (Licensed under the GNU GPLv3: Free to use and modify, but any public
  *     distribution must also share the full source code under this same license.)
  *
- *   Written with AI assistance (Claude). Under review by the author.
+ *   Written with AI assistance (Claude) with review by the author.
  * *************************************************************** */
 
 #pragma once
@@ -24,7 +24,7 @@ enum UpdateStatus {
 
 // The full signed chain against any manifest and signature URL. commit=false verifies the
 // image and discards it. commit=true refuses a release that isn't newer, then stages it.
-UpdateStatus runUpdateChain(const String &manifestUrl, const String &sigUrl, bool commit);
+UpdateStatus runUpdateChain(const String& manifestUrl, const String& sigUrl, bool commit);
 
 // The official check, using the release tag this build was compiled for.
 UpdateStatus runUpdateCheck();

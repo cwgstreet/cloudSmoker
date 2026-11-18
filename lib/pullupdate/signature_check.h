@@ -4,7 +4,7 @@
  * C W Greenstreet, cloudSmoker2, 14Nov26
  * Licence: GPLv3 (see manifest_parser.h)
  *
- *   Written with AI assistance (Claude). Under review by the author.
+ *   Written with AI assistance (Claude) with review by the author.
  *************************************************************** */
 
 #ifndef SIGNATURE_CHECK_H
@@ -15,7 +15,6 @@
 // Returns true only if sig is a valid ECDSA P-256 / SHA-256 signature of the
 // exact manifest bytes, made with the private key that matches publicKeyPem.
 bool verifyManifestSignature(const unsigned char* manifest, size_t manifestLen,
-                             const unsigned char* sig, size_t sigLen,
-                             const char* publicKeyPem);
+                             const unsigned char* sig, size_t sigLen, const char* publicKeyPem);
 
 #endif  // SIGNATURE_CHECK_H

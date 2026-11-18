@@ -12,7 +12,7 @@
  *     ArduinoOTA, part of the Arduino-ESP32 core (Espressif Systems). This library
  *     calls its functions and does not copy its code.
  *
- *   Written with AI assistance (Claude). Under review by the author.
+ *   Written with AI assistance (Claude) with review by the author.
  * *************************************************************** */
 
 #pragma once

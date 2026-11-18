@@ -9,11 +9,12 @@
  *     Arduino-ESP32 core (Espressif Systems): NVS statistics API (nvs.h).
  *     This file calls their functions and does not copy their code.
  *
- *   Written with AI assistance (Claude). Under review by the author.
+ *   Written with AI assistance (Claude) with review by the author.
  * *************************************************************** */
 
 #ifdef DEBUG_NVS_STATS
 #include <Arduino.h>
+
 #include "nvs.h"
 
 void printNvsStats() {
@@ -23,7 +24,7 @@ void printNvsStats() {
     Serial.printf("NVS stats error: %d\n", err);
     return;
   }
-  Serial.printf("NVS entries: used %u, free %u, total %u\n",
-                stats.used_entries, stats.free_entries, stats.total_entries);
+  Serial.printf("NVS entries: used %u, free %u, total %u\n", stats.used_entries, stats.free_entries,
+                stats.total_entries);
 }
 #endif

@@ -9,18 +9,18 @@
  *     NimBLE-Arduino by h2zero (https://github.com/h2zero/NimBLE-Arduino): BLE stack.
  *     Arduino-ESP32 core (Espressif Systems): NVS API (nvs.h).
  *
- *   Written with AI assistance (Claude). Under review by the author.
+ *   Written with AI assistance (Claude) with review by the author.
  * *************************************************************** */
 
 #include "bleserial.h"
 
 #include <NimBLEDevice.h>
-
-#include "nvs.h"
-#include "devconfig.h"
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
+
+#include "devconfig.h"
+#include "nvs.h"
 
 // Defined in calibration.cpp: runs one command line exactly as the USB port does
 void calRunCommand(const String& cmd);
@@ -89,9 +89,7 @@ void BleTee::setEnabled(bool on) {
   portEXIT_CRITICAL(&ringMux);
 }
 
-bool BleTee::enabled() const {
-  return teeOn;
-}
+bool BleTee::enabled() const { return teeOn; }
 
 size_t BleTee::available() const {
   portENTER_CRITICAL(&ringMux);
@@ -122,8 +120,8 @@ uint32_t BleTee::takeDropped() {
 
 // ---------- BLE link: Nordic UART Service ----------
 static const char* NUS_SERVICE = "6E400001-B5A3-F393-E0A9-E50E24DCCA9E";
-static const char* NUS_RX      = "6E400002-B5A3-F393-E0A9-E50E24DCCA9E";
-static const char* NUS_TX      = "6E400003-B5A3-F393-E0A9-E50E24DCCA9E";
+static const char* NUS_RX = "6E400002-B5A3-F393-E0A9-E50E24DCCA9E";
+static const char* NUS_TX = "6E400003-B5A3-F393-E0A9-E50E24DCCA9E";
 
 static const size_t PIECE_BYTES = 20;            // fits the default BLE MTU of 23
 static const uint32_t STATUS_TIMEOUT_MS = 2000;  // resend a piece if no status callback
@@ -192,7 +190,8 @@ class TxCallbacks : public NimBLECharacteristicCallbacks {
 
 class RxCallbacks : public NimBLECharacteristicCallbacks {
   void onWrite(NimBLECharacteristic* c, NimBLEConnInfo& info) override {
-    Serial.print(F("BLE rx write, bytes: ")); Serial.println(c->getValue().size());
+    Serial.print(F("BLE rx write, bytes: "));
+    Serial.println(c->getValue().size());
     if (!Log.enabled()) {
       return;
     }
@@ -219,16 +218,22 @@ class ServerCallbacks : public NimBLEServerCallbacks {
     linkCount++;
     connectedAtMs = millis();
     encChecked = false;
-    Serial.print(F("BLE connected, encrypted: ")); Serial.print(info.isEncrypted()); Serial.print(F(", bonded: ")); Serial.println(info.isBonded());
+    Serial.print(F("BLE connected, encrypted: "));
+    Serial.print(info.isEncrypted());
+    Serial.print(F(", bonded: "));
+    Serial.println(info.isBonded());
   }
 #ifdef DEBUG_BLE_STATUS
   void onAuthenticationComplete(NimBLEConnInfo& info) override {
-    Serial.print(F("BLE auth complete, encrypted: ")); Serial.print(info.isEncrypted());
-    Serial.print(F(", bonded: ")); Serial.println(info.isBonded());
+    Serial.print(F("BLE auth complete, encrypted: "));
+    Serial.print(info.isEncrypted());
+    Serial.print(F(", bonded: "));
+    Serial.println(info.isBonded());
   }
 #endif
   void onDisconnect(NimBLEServer* server, NimBLEConnInfo& info, int reason) override {
-    Serial.print(F("BLE disconnected, reason ")); Serial.println(reason);
+    Serial.print(F("BLE disconnected, reason "));
+    Serial.println(reason);
     if (linkCount > 0) {
       linkCount--;
     }
@@ -263,18 +268,26 @@ void bleSerialStart() {
   NimBLEDevice::setCustomGapHandler(bleDebugGap);
 #endif
 #ifdef DEBUG_NVS_STATS
-  { nvs_stats_t st; nvs_get_stats(NULL, &st);
-    Serial.printf("NVS used %u, free %u, of %u entries\n", (unsigned)st.used_entries, (unsigned)st.free_entries, (unsigned)st.total_entries);
-    Serial.printf("BLE stored bonds: %d\n", (int)NimBLEDevice::getNumBonds()); }
+  {
+    nvs_stats_t st;
+    nvs_get_stats(NULL, &st);
+    Serial.printf("NVS used %u, free %u, of %u entries\n", (unsigned)st.used_entries,
+                  (unsigned)st.free_entries, (unsigned)st.total_entries);
+    Serial.printf("BLE stored bonds: %d\n", (int)NimBLEDevice::getNumBonds());
+  }
 #endif
-  NimBLEDevice::setSecurityAuth(true, true, true);          // bonding, MITM protection, secure connections
-  NimBLEDevice::setSecurityIOCap(BLE_HS_IO_DISPLAY_ONLY);  // device side shows a code, phone types it
+  NimBLEDevice::setSecurityAuth(true, true, true);  // bonding, MITM protection, secure connections
+  NimBLEDevice::setSecurityIOCap(
+      BLE_HS_IO_DISPLAY_ONLY);  // device side shows a code, phone types it
   NimBLEDevice::setSecurityPasskey(devBlePasskey());
 #ifdef DEBUG_BLE_STATUS
-  Serial.print(F("BLE passkey given to stack: ")); Serial.println(devBlePasskey());
+  Serial.print(F("BLE passkey given to stack: "));
+  Serial.println(devBlePasskey());
 #endif
-  NimBLEDevice::setSecurityInitKey(BLE_SM_PAIR_KEY_DIST_ENC | BLE_SM_PAIR_KEY_DIST_ID | BLE_SM_PAIR_KEY_DIST_SIGN);
-  NimBLEDevice::setSecurityRespKey(BLE_SM_PAIR_KEY_DIST_ENC | BLE_SM_PAIR_KEY_DIST_ID | BLE_SM_PAIR_KEY_DIST_SIGN);
+  NimBLEDevice::setSecurityInitKey(BLE_SM_PAIR_KEY_DIST_ENC | BLE_SM_PAIR_KEY_DIST_ID |
+                                   BLE_SM_PAIR_KEY_DIST_SIGN);
+  NimBLEDevice::setSecurityRespKey(BLE_SM_PAIR_KEY_DIST_ENC | BLE_SM_PAIR_KEY_DIST_ID |
+                                   BLE_SM_PAIR_KEY_DIST_SIGN);
 
   NimBLEServer* server = NimBLEDevice::createServer();
   server->setCallbacks(new ServerCallbacks());
@@ -284,8 +297,8 @@ void bleSerialStart() {
   txChar = svc->createCharacteristic(NUS_TX, NIMBLE_PROPERTY::NOTIFY | NIMBLE_PROPERTY::READ_ENC);
   txChar->setCallbacks(new TxCallbacks());
 
-  NimBLECharacteristic* rxChar =
-      svc->createCharacteristic(NUS_RX, NIMBLE_PROPERTY::WRITE | NIMBLE_PROPERTY::WRITE_NR | NIMBLE_PROPERTY::WRITE_ENC);
+  NimBLECharacteristic* rxChar = svc->createCharacteristic(
+      NUS_RX, NIMBLE_PROPERTY::WRITE | NIMBLE_PROPERTY::WRITE_NR | NIMBLE_PROPERTY::WRITE_ENC);
   rxChar->setCallbacks(new RxCallbacks());
 
   NimBLEAdvertising* adv = NimBLEDevice::getAdvertising();
@@ -305,7 +318,6 @@ void bleSerialApply(bool on) {
   }
 }
 
-
 void bleSerialPump() {
 #ifdef DEBUG_BLE_STATUS
   static uint32_t statusMs = 0;
@@ -313,18 +325,21 @@ void bleSerialPump() {
     statusMs = millis();
     nvs_stats_t nst;
     nvs_get_stats(NULL, &nst);
-    Serial.printf("pump: line=%u inbox=%u since_rx=%lu passkey=%06lu bonds=%d free_nvs=%u addr=%s\n",
-                  (unsigned)lineLen, (unsigned)inboxCount,
-                  (unsigned long)(millis() - lastRxMs), (unsigned long)devBlePasskey(),
-                  NimBLEDevice::getNumBonds(), (unsigned)nst.free_entries,
-                  NimBLEDevice::getAddress().toString().c_str());
+    Serial.printf(
+        "pump: line=%u inbox=%u since_rx=%lu passkey=%06lu bonds=%d free_nvs=%u addr=%s\n",
+        (unsigned)lineLen, (unsigned)inboxCount, (unsigned long)(millis() - lastRxMs),
+        (unsigned long)devBlePasskey(), NimBLEDevice::getNumBonds(), (unsigned)nst.free_entries,
+        NimBLEDevice::getAddress().toString().c_str());
   }
 #endif  // DEBUG_BLE_STATUS
-  if (linkCount > 0 && !encChecked && connectedAtMs != 0 && (uint32_t)(millis() - connectedAtMs) > 2000) {
+  if (linkCount > 0 && !encChecked && connectedAtMs != 0 &&
+      (uint32_t)(millis() - connectedAtMs) > 2000) {
     encChecked = true;
     NimBLEConnInfo peer = NimBLEDevice::getServer()->getPeerInfo(0);
-    Serial.print(F("BLE link after 2 s, encrypted: ")); Serial.print(peer.isEncrypted());
-    Serial.print(F(", bonds stored: ")); Serial.println(NimBLEDevice::getNumBonds());
+    Serial.print(F("BLE link after 2 s, encrypted: "));
+    Serial.print(peer.isEncrypted());
+    Serial.print(F(", bonds stored: "));
+    Serial.println(NimBLEDevice::getNumBonds());
   }
   // Phone commands: run one completed line per loop pass, echoed so the phone sees what ran
   if (lineLen > 0 && (uint32_t)(millis() - lastRxMs) > 300) {
@@ -340,7 +355,8 @@ void bleSerialPump() {
 
   // Output: send the next piece of the ring to the phone
   if (!bleInited || txChar == nullptr || linkCount == 0 || !Log.enabled() ||
-      (uint32_t)(millis() - connectedAtMs) < 5000) {  // hold output for 5 s after connect: pairing runs first
+      (uint32_t)(millis() - connectedAtMs) <
+          5000) {  // hold output for 5 s after connect: pairing runs first
     return;
   }
 
