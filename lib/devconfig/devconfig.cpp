@@ -68,6 +68,8 @@ String devOtaPassword() {
   return pw;
 }
 
+// Read-only: returns the stored OTA password without creating one.
+String devOtaPasswordGet() { return cfg.getString("otapw", ""); }
 
 #ifdef DEBUG_OTA
 // One-off: removes the stored OTA password. devOtaPassword() creates a new one when next called.

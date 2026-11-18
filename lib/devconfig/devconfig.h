@@ -24,6 +24,7 @@ void devSetThingSpeakKey(const String& key);
 uint32_t devBlePasskey();  // six-digit random code, created on first use
 
 String devOtaPassword();  // created on first use, never empty
+String devOtaPasswordGet();  // returns the stored OTA password, or empty if none; never creates one
 
 #ifdef DEBUG_OTA
 void devOtaPasswordClear();

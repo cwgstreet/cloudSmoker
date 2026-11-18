@@ -45,6 +45,7 @@
 
 #include "bleserial.h"
 #include "cookstore.h"   // stored cook state, for the cookShow and cookEnd bench commands
+#include "devconfig.h"   // OTA password getter, for the otapw bench command
 #ifdef DEBUG_COOK_CMDS
 #include "update_test.h"  // bench commands: signed update dry run, gate test and install
 #endif
@@ -191,6 +192,9 @@ void calPrintHelp() {
   Log.println(F("  passkey                         show the BLE pair code"));
 #ifdef DEBUG_COOK_CMDS
   Log.println(F("  cookShow                        debug: show whether a cook is stored"));
+#ifdef DEBUG_OTA
+  Log.println(F("  otapw                           debug: print OTA password (USB only)"));
+#endif
   Log.println(F("  cookEnd                         debug: clear the stored cook"));
   Log.println(F("  cookInfo                        debug: stored cook, charge and lastSeen age"));
   Log.println(F("  cookAge <hours>                 debug: move stored lastSeen back (stale test)"));
@@ -352,6 +356,12 @@ static void handleCommand(String cmd) {
   }
 #endif
 
+#ifdef DEBUG_OTA
+  if (cmd == "otapw") {
+    Serial.println(devOtaPasswordGet());  // USB only, Log also feeds BLE
+    return;
+  }
+#endif
 #ifdef DEBUG_COOK_CMDS
   if (cmd == "cookInfo") {
     float meatT[3], pitMinT, pitMaxT, charge;
