@@ -44,7 +44,7 @@
 #include <math.h>         // isnan(), isfinite()
 
 #include "bleserial.h"
-#include "cookstore.h"   // stored cook state, for the cookShow and cookEnd bench commands
+#include "cookstore.h"   // stored cook state, for cookShow, cookInfo, and the debug cookEnd and cookAge
 #include "devconfig.h"   // OTA password getter, for the otapw bench command
 #ifdef DEBUG_COOK_CMDS
 #include "update_test.h"  // bench commands: signed update dry run, gate test and install
@@ -196,14 +196,14 @@ void calPrintHelp() {
   Log.println(F("  yes                             apply a change held for confirmation"));
   Log.println(F("  no or cancel                    drop the held change"));
 #ifdef DEBUG_COOK_CMDS
-#ifdef DEBUG_OTA
-  Log.println(F("  otapw                           debug: print OTA password (USB only)"));
-#endif
   Log.println(F("  cookEnd                         debug: clear the stored cook"));
   Log.println(F("  cookAge <hours>                 debug: move stored lastSeen back (stale test)"));
   Log.println(F("  updatetest                      debug: signed update dry run, nothing staged"));
   Log.println(F("  updatecommit                    debug: gate test, must be refused as not newer"));
   Log.println(F("  updateinstall                   debug: stage release 101 for the next boot"));
+#endif
+#ifdef DEBUG_OTA
+  Log.println(F("  otapw                           debug: print OTA password (USB only)"));
 #endif
   Log.println(F("=============================================================="));
   Log.println(F("Type a command and press Enter. The device echoes what you type."));
@@ -277,8 +277,6 @@ static void handleCommand(String cmd) {
     Log.println(F("Expert use only. Type yes to apply, or no to cancel."));
     return;
   }
-
-  cmd.trim();
 
   if (cmd == "help") {
     calPrintHelp();
