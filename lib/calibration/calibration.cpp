@@ -190,13 +190,15 @@ void calPrintHelp() {
   Log.println(F("  charge                          show charge drawn from the power bank"));
   Log.println(F("  chargeReset                     restart the charge count at 0"));
   Log.println(F("  passkey                         show the BLE pair code"));
+  Log.println(F("  cookShow                        show whether a cook is stored"));
+  Log.println(F("  cookInfo                        show the stored cook, charge and checkpoint age"));
+  Log.println(F("  yes                             apply the held change"));
+  Log.println(F("  no or cancel                    drop the held change"));
 #ifdef DEBUG_COOK_CMDS
-  Log.println(F("  cookShow                        debug: show whether a cook is stored"));
 #ifdef DEBUG_OTA
   Log.println(F("  otapw                           debug: print OTA password (USB only)"));
 #endif
   Log.println(F("  cookEnd                         debug: clear the stored cook"));
-  Log.println(F("  cookInfo                        debug: stored cook, charge and lastSeen age"));
   Log.println(F("  cookAge <hours>                 debug: move stored lastSeen back (stale test)"));
 #endif
   Log.println(F("=============================================================="));
@@ -388,42 +390,12 @@ static void handleCommand(String cmd) {
     return;
   }
 
-#ifdef DEBUG_COOK_CMDS
-  if (cmd == "updatetest") {
-    // Dry run: verifies the signed chain and the image, then discards it. Nothing is staged.
-    bool ok = runBenchUpdate("cloudSmoker2-test-100", false);
-    Log.println(ok ? F("updatetest: ok (dry run, nothing staged)") : F("updatetest: FAILED, see the lines above"));
-  }
-  if (cmd == "updatecommit") {
-    // Gate test: a version 100 release with commit=true must be refused as not newer.
-    bool ok = runBenchUpdate("cloudSmoker2-test-100", true);
-    Log.println(ok ? F("updatecommit: UNEXPECTED ok") : F("updatecommit: refused, as expected"));
-  }
-  if (cmd == "updateinstall") {
-    // Real install of release 101 for the next boot. Reset the board by hand afterwards.
-    bool ok = runBenchUpdate("cloudSmoker2-test-101", true);
-    Log.println(ok ? F("updateinstall: staged, press reset to boot 1.1") : F("updateinstall: FAILED, see the lines above"));
-  }
   if (cmd == "cookShow") {
     Log.print(F("stored cook active: "));
     Log.println(cookStoreActive() ? F("yes") : F("no"));
     return;
   }
 
-  if (cmd == "cookEnd") {
-    cookSaveEnd();  // clears the stored cook flag only; charge count and targets untouched
-    Log.println(F("stored cook cleared"));
-    return;
-  }
-#endif
-
-#ifdef DEBUG_OTA
-  if (cmd == "otapw") {
-    Serial.println(devOtaPasswordGet());  // USB only, Log also feeds BLE
-    return;
-  }
-#endif
-#ifdef DEBUG_COOK_CMDS
   if (cmd == "cookInfo") {
     float meatT[3], pitMinT, pitMaxT, charge;
     bool degC;
@@ -459,6 +431,34 @@ static void handleCommand(String cmd) {
       Log.print(ageH, 2);
       Log.println(F(" h"));
     }
+    return;
+  }
+#ifdef DEBUG_COOK_CMDS
+  if (cmd == "updatetest") {
+    // Dry run: verifies the signed chain and the image, then discards it. Nothing is staged.
+    bool ok = runBenchUpdate("cloudSmoker2-test-100", false);
+    Log.println(ok ? F("updatetest: ok (dry run, nothing staged)") : F("updatetest: FAILED, see the lines above"));
+  }
+  if (cmd == "updatecommit") {
+    // Gate test: a version 100 release with commit=true must be refused as not newer.
+    bool ok = runBenchUpdate("cloudSmoker2-test-100", true);
+    Log.println(ok ? F("updatecommit: UNEXPECTED ok") : F("updatecommit: refused, as expected"));
+  }
+  if (cmd == "updateinstall") {
+    // Real install of release 101 for the next boot. Reset the board by hand afterwards.
+    bool ok = runBenchUpdate("cloudSmoker2-test-101", true);
+    Log.println(ok ? F("updateinstall: staged, press reset to boot 1.1") : F("updateinstall: FAILED, see the lines above"));
+  }
+  if (cmd == "cookEnd") {
+    cookSaveEnd();  // clears the stored cook flag only; charge count and targets untouched
+    Log.println(F("stored cook cleared"));
+    return;
+  }
+#endif
+
+#ifdef DEBUG_OTA
+  if (cmd == "otapw") {
+    Serial.println(devOtaPasswordGet());  // USB only, Log also feeds BLE
     return;
   }
 #endif
