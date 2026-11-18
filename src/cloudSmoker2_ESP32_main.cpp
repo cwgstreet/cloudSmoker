@@ -46,12 +46,12 @@
 #include "cwg_steinhartHart.h"
 #include "cwg_wifi.hpp"
 #include "devconfig.h"
-#include "rollback_guard.h"
-#include "update_check.h"
 #include "lcd.h"          // UPGRADED: with new TFT_eSPI adapter class framework
 #include "myConstants.h"  // All pin mappings and constants
+#include "rollback_guard.h"
+#include "update_check.h"
 #ifdef ENABLE_OTA
-#include "ota.h"          // ArduinoOTA: Wi-Fi upload from a computer (bench and OTA builds only)
+#include "ota.h"  // ArduinoOTA: Wi-Fi upload from a computer (bench and OTA builds only)
 #endif
 #include "peripherals.h"
 #include "press_type.h"    // Wrapper library abstracting Yabl / Bounce2 routines
@@ -245,11 +245,11 @@ void setup() {
 
 void loop() {
   rollbackGuardLoop();
-  // Keep processor threads stable on underlying FreeRTOS environments
+  // seek to avoid ESP32 watchdog timer resets
   yield();
 
 #ifdef ENABLE_OTA
-  // handle any pending ArduinoOTA Wi-Fi upload (bench and OTA builds only)
+  // handle any pending ArduinoOTA Wi-Fi push upload (bench and OTA builds only)
   otaLoop();
 #endif
 
@@ -259,7 +259,7 @@ void loop() {
   // Handle primary state machine transitions passing the updated display reference
   processState(lcd);
 
-  // cal / calShow / calReset from the serial monitor
+  // cal / calShow / calReset commands from the serial monitor
   calPollSerial();
 
   ina226.updateCharge();  // coulomb counter for power bank SOC, once per second
