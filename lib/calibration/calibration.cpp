@@ -1,7 +1,7 @@
 /* ***************************************************************
  * calibration.cpp - library to manage calibration coefficients of thermistor probes
  *
- *  per-probe two-point calibration (gain and offset) for cloudSmoker2
+ *  per-probe two-point linear calibration (gain and offset) for cloudSmoker2
  *
  * Each probe's Steinhart-Hart calculated temperature (in degF, the firmware's working unit)
  *  is corrected with:
@@ -20,22 +20,7 @@
  *  C W Greenstreet, Ver1, 31Oct2026
  *    GPLv3 Licence
  *
- ** ************************************************************* */
-
-#/* ***************************************************************
- * calibration.cpp - per-probe calibration (gain and offset) and measured rail voltage
- *
- *  Each probe's temperature (degF) is corrected with:
- *    T_corrected = gain * T_measured + offset
- *
- *  The bias rail voltage is used by the Steinhart-Hart calculation, so it must be
- *  measured, not assumed. Values are stored in ESP32 NVS (flash).
- *
- *  Ref: https://github.com/cwgstreet/cloudSmoker/wiki/Calibration
- *
- *  C W Greenstreet, Ver1, 31Oct2026
- *    GPLv3 Licence
- *
+ *   Written with AI assistance (Claude) with review by the author.
  ** ************************************************************* */
 
 #include "calibration.h"
@@ -44,8 +29,8 @@
 #include <math.h>         // isnan(), isfinite()
 
 #include "bleserial.h"
-#include "cookstore.h"   // stored cook state, for cookShow, cookInfo, and the debug cookEnd and cookAge
-#include "devconfig.h"   // OTA password getter, for the otapw bench command
+#include "cookstore.h"  // stored cook state, for cookShow, cookInfo, and the debug cookEnd and cookAge
+#include "devconfig.h"  // OTA password getter, for the otapw bench command
 #ifdef DEBUG_COOK_CMDS
 #include "update_test.h"  // bench commands: signed update dry run, gate test and install
 #endif
@@ -139,8 +124,8 @@ float calApplyF(ProbeId id, float tempF) {
 }
 
 /// Returns the rail voltage required by the Steinhart-Hart calculation.
-// Uses the live INA226 reading when it's present and within the rail limits.
-// Otherwise falls back to the stored value set with railV.
+// Uses the live INA226 measured reading when it's present and within the rail limits.
+// Otherwise falls back to the stored value set with railV (generally a multimeter reading).
 float calRailV() {
   float live = ina226.getRailV();  // NaN if the INA226 is not present
   if (railOk(live)) {
@@ -192,14 +177,16 @@ void calPrintHelp() {
   Log.println(F("                                  needs yes: cal, calReset, railV, chargeReset"));
   Log.println(F("  passkey                         show the BLE pair code"));
   Log.println(F("  cookShow                        show whether a cook is stored"));
-  Log.println(F("  cookInfo                        show the stored cook, charge and checkpoint age"));
+  Log.println(
+      F("  cookInfo                        show the stored cook, charge and checkpoint age"));
   Log.println(F("  yes                             apply a change held for confirmation"));
   Log.println(F("  no or cancel                    drop the held change"));
 #ifdef DEBUG_COOK_CMDS
   Log.println(F("  cookEnd                         debug: clear the stored cook"));
   Log.println(F("  cookAge <hours>                 debug: move stored lastSeen back (stale test)"));
   Log.println(F("  updatetest                      debug: signed update dry run, nothing staged"));
-  Log.println(F("  updatecommit                    debug: gate test, must be refused as not newer"));
+  Log.println(
+      F("  updatecommit                    debug: gate test, must be refused as not newer"));
   Log.println(F("  updateinstall                   debug: stage release 101 for the next boot"));
 #endif
 #ifdef DEBUG_OTA
@@ -210,22 +197,24 @@ void calPrintHelp() {
   Log.println();
 }
 
-// Confirmation for dangerous setters: the command is held until the user types yes.
+// Confirmation for dangerous setters (where incorrect settings could impact measurement):
+//    the command is held until the user types yes.
 static String pendingCmd;
 static unsigned long pendingAtMs = 0;
 static bool confirmedRun = false;
 static const unsigned long CONFIRM_TIMEOUT_MS = 30000;
 
 static bool isDangerousCmd(const String& cmd) {
-  return cmd == "calReset" || cmd.startsWith("calReset ") ||
-         cmd.startsWith("cal ") || cmd.startsWith("railV ") ||
-         cmd == "chargeReset";
+  return cmd == "calReset" || cmd.startsWith("calReset ") || cmd.startsWith("cal ") ||
+         cmd.startsWith("railV ") || cmd == "chargeReset";
 }
 
 // One line per command, saying what it actually changes.
 static String warningFor(const String& cmd) {
-  if (cmd.startsWith("cal ")) return "Replace this probe's calibration? Changes every reading from it.";
-  if (cmd.startsWith("railV ")) return "Change the 5 V rail reference? Changes every temperature reading.";
+  if (cmd.startsWith("cal "))
+    return "Replace this probe's calibration? Changes every reading from it.";
+  if (cmd.startsWith("railV "))
+    return "Change the 5 V rail reference? Changes every temperature reading.";
   if (cmd == "chargeReset") return "Reset the charge count to 0? The battery estimate restarts.";
   return "Reset calibration to defaults? Readings stay, but lose their correction.";
 }
@@ -439,7 +428,8 @@ static void handleCommand(String cmd) {
   if (cmd == "updatetest") {
     // Dry run: verifies the signed chain and the image, then discards it. Nothing is staged.
     bool ok = runBenchUpdate("cloudSmoker2-test-100", false);
-    Log.println(ok ? F("updatetest: ok (dry run, nothing staged)") : F("updatetest: FAILED, see the lines above"));
+    Log.println(ok ? F("updatetest: ok (dry run, nothing staged)")
+                   : F("updatetest: FAILED, see the lines above"));
   }
   if (cmd == "updatecommit") {
     // Gate test: a version 100 release with commit=true must be refused as not newer.
@@ -449,7 +439,8 @@ static void handleCommand(String cmd) {
   if (cmd == "updateinstall") {
     // Real install of release 101 for the next boot. Reset the board by hand afterwards.
     bool ok = runBenchUpdate("cloudSmoker2-test-101", true);
-    Log.println(ok ? F("updateinstall: staged, press reset to boot 1.1") : F("updateinstall: FAILED, see the lines above"));
+    Log.println(ok ? F("updateinstall: staged, press reset to boot 1.1")
+                   : F("updateinstall: FAILED, see the lines above"));
   }
   if (cmd == "cookEnd") {
     cookSaveEnd();  // clears the stored cook flag only; charge count and targets untouched

@@ -2,12 +2,13 @@
  * cookstore.h - library to manage cook state persistence and time sync
  *       1) Cook state persistence (NVS namespace "cook") and time sync.
  *       2) Writes are kept rare: targets and flags are written on events, the charge count and
- *        3) lastSeen only every 5 min, and only when the count has moved 1 mAh or 30 min has
- * passed.
+ *       3) lastSeen only every 5 min, and only when the count has moved 1 mAh or 30 min has
+ *             passed.
  *
  *  C W Greenstreet, Ver1, 5Nov2026
  *    GPLv3 Licence
  *
+ *   Written with AI assistance (Claude) with review by the author.
  ** ************************************************************* */
 
 #ifndef COOKSTORE_H
@@ -46,8 +47,10 @@ void cookSaveEnd();
 // Boot decision for an interrupted cook: resume, resume with unverified time, or finished (stale).
 CookBoot_t cookBootCheck();
 
-void cookSaveStart(const float meatT[3], float pitMin_F, float pitMax_F, bool degC, float charge_mAh);
-bool cookLoad(float meatT[3], float& pitMin_F, float& pitMax_F, bool& degC, float& charge_mAh, uint8_t& flags);
+void cookSaveStart(const float meatT[3], float pitMin_F, float pitMax_F, bool degC,
+                   float charge_mAh);
+bool cookLoad(float meatT[3], float& pitMin_F, float& pitMax_F, bool& degC, float& charge_mAh,
+              uint8_t& flags);
 
 // Power bank: capacity is a device setting (kept across cooks); the usable base is stored per cook
 float bankCapacityLoad();
@@ -58,7 +61,7 @@ uint8_t bankChargeLoad();
 void bankChargeSave(uint8_t pct);
 
 void cookForceCheckpoint(float charge_mAh);
-float cookLastSeenAgeHours();  // hours since lastSeen, or -1 if unknown
+float cookLastSeenAgeHours();               // hours since lastSeen, or -1 if unknown
 bool cookSetLastSeenAgeHours(float hours);  // debug: move stored lastSeen back
 void cookSaveCooldown(const uint32_t dangerAt[3], uint16_t bits);
 bool cookLoadCooldown(uint32_t dangerAt[3], uint16_t& bits);

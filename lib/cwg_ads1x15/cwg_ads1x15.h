@@ -12,6 +12,7 @@
  *    2) Median filter: cwg_MedianFilterLib2, derived from Luis Llamas/Arduino-MedianFilter,
  *         licenced under Apache Licence 2.0
  *         reference:
+ *
  * https://github-com.translate.goog/luisllamasbinaburo/Arduino-MedianFilter?_x_tr_sl=auto&_x_tr_tl=en&_x_tr_hl=en
  *    3) Gain table: taken from the Adafruit ADS1x15 library
  * ************************************************************* */

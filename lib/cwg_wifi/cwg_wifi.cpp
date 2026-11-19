@@ -1,7 +1,9 @@
 /* ***************************************************************
  * cwg_wifi.cpp - implementation of cwg_wifi.hpp
  *   Boot connection (WifiManager_initialise) and the non-blocking setup portal (portalOpen,
- *   portalPump, portalClose). The portal stores the ThingSpeak key and ntfy topic via devconfig.
+ *   portalPump, portalClose).
+ *
+ *   Extended so the portal also stores the ThingSpeak key and ntfy topic via devconfig.
  *
  *   C W Greenstreet, cloudSmoker2, 17Nov2026
  *   Licence (this file): GPLv3
@@ -13,6 +15,7 @@
 
 #include <Arduino.h>      // Arduino framework
 #include <WiFiManager.h>  // https://github.com/tzapu/WiFiManager
+
 #include "devconfig.h"
 
 // Blank-or-valid check for the ntfy topic: letters, digits, hyphen and underscore only
@@ -27,7 +30,6 @@ static bool ntfyTopicValid(const char* t) {
   }
   return true;
 }
-
 
 // Setup portal, with Wi-Fi, ThingSpeak key and ntfy topic on one page.
 // openPortalNow = false (boot): join saved Wi-Fi; open the portal only if that fails.
@@ -99,9 +101,7 @@ static WiFiManagerParameter* portalNtfy = nullptr;
 static uint32_t portalStartMs = 0;
 static const uint32_t PORTAL_WINDOW_MS = 180000UL;  // three minutes
 
-bool portalIsOpen() {
-  return portalWm != nullptr;
-}
+bool portalIsOpen() { return portalWm != nullptr; }
 
 void portalOpen() {
   if (portalIsOpen()) {
@@ -115,7 +115,8 @@ void portalOpen() {
 
   String keyNow = devThingSpeakKey();
   String topicNow = devNtfyTopic();
-  portalTs = new WiFiManagerParameter("tskey", "ThingSpeak write key (blank = off)", keyNow.c_str(), 40);
+  portalTs =
+      new WiFiManagerParameter("tskey", "ThingSpeak write key (blank = off)", keyNow.c_str(), 40);
   portalNtfy = new WiFiManagerParameter("ntfy", "ntfy topic (blank = off)", topicNow.c_str(), 40);
   portalWm->addParameter(portalTs);
   portalWm->addParameter(portalNtfy);
