@@ -48,9 +48,13 @@ void WifiManager_initialise(bool openPortalNow) {
   WiFiManagerParameter ntfyParam("ntfy", "ntfy topic (blank = off)", topicNow.c_str(), 40);
   wm.addParameter(&tsParam);
   wm.addParameter(&ntfyParam);
+  String chanNow = devThingSpeakChannel();
+  WiFiManagerParameter chanParam("tschan", "ThingSpeak channel ID (blank = no link)", chanNow.c_str(), 12);
+  wm.addParameter(&chanParam);
   // Save on submit, so the values are stored even if the portal never returns
   wm.setSaveParamsCallback([&]() {
     devSetThingSpeakKey(String(tsParam.getValue()));
+    devSetThingSpeakChannel(String(chanParam.getValue()));
     if (ntfyTopicValid(ntfyParam.getValue())) {
       devSetNtfyTopic(String(ntfyParam.getValue()));
     }
@@ -75,6 +79,7 @@ void WifiManager_initialise(bool openPortalNow) {
 
   // Save the fields. A blank value is stored as blank, which turns that feature off.
   devSetThingSpeakKey(String(tsParam.getValue()));
+  devSetThingSpeakChannel(String(chanParam.getValue()));
   if (ntfyTopicValid(ntfyParam.getValue())) {
     devSetNtfyTopic(String(ntfyParam.getValue()));
   } else {
@@ -98,6 +103,7 @@ void WifiManager_initialise(bool openPortalNow) {
 static WiFiManager* portalWm = nullptr;
 static WiFiManagerParameter* portalTs = nullptr;
 static WiFiManagerParameter* portalNtfy = nullptr;
+static WiFiManagerParameter* portalChan = nullptr;
 static uint32_t portalStartMs = 0;
 static const uint32_t PORTAL_WINDOW_MS = 180000UL;  // three minutes
 
@@ -119,11 +125,15 @@ void portalOpen() {
       new WiFiManagerParameter("tskey", "ThingSpeak write key (blank = off)", keyNow.c_str(), 40);
   portalNtfy = new WiFiManagerParameter("ntfy", "ntfy topic (blank = off)", topicNow.c_str(), 40);
   portalWm->addParameter(portalTs);
+  String chanNow = devThingSpeakChannel();
+  portalChan = new WiFiManagerParameter("tschan", "ThingSpeak channel ID (blank = no link)", chanNow.c_str(), 12);
+  portalWm->addParameter(portalChan);
   portalWm->addParameter(portalNtfy);
 
   // Saves on submit, so the values are stored even while the portal stays open
   portalWm->setSaveParamsCallback([]() {
     devSetThingSpeakKey(String(portalTs->getValue()));
+    devSetThingSpeakChannel(String(portalChan->getValue()));
     if (ntfyTopicValid(portalNtfy->getValue())) {
       devSetNtfyTopic(String(portalNtfy->getValue()));
     }
@@ -163,6 +173,8 @@ void portalClose() {
   portalTs = nullptr;
   delete portalNtfy;
   portalNtfy = nullptr;
+  delete portalChan;
+  portalChan = nullptr;
 
   WiFi.mode(WIFI_STA);
   WiFi.begin();  // rejoin the saved Wi-Fi

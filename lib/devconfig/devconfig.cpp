@@ -38,6 +38,19 @@ void devSetNtfyTopic(const String& topic) { cfg.putString("ntfy", topic); }
 
 void devSetThingSpeakKey(const String& key) { cfg.putString("tskey", key); }
 
+// Digits only, so a typo can't build a broken link. Blank clears the channel.
+void devSetThingSpeakChannel(const String& channel) {
+  bool digits = true;
+  for (size_t i = 0; i < channel.length(); i++) {
+    if (!isDigit(channel[i])) {
+      digits = false;
+    }
+  }
+  if (digits) {
+    cfg.putString("tschan", channel);
+  }
+}
+
 uint32_t devBlePasskey() {
   if (!cfg.isKey("passkey")) {
     cfg.putUInt("passkey", 100000 + esp_random() % 900000);  // always six digits
@@ -47,6 +60,8 @@ uint32_t devBlePasskey() {
 
 // ThingSpeak key entered on the setup portal. Blank = cloud logging off.
 String devThingSpeakKey() { return cfg.getString("tskey", ""); }
+
+String devThingSpeakChannel() { return cfg.getString("tschan", ""); }
 
 // Random OTA password, created on first use and stored in NVS. Uses no lookalike characters.
 String devOtaPassword() {

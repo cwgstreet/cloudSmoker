@@ -21,6 +21,8 @@ String devNtfyTopic();      // empty = phone alerts off
 String devThingSpeakKey();  // empty = cloud logging off
 void devSetNtfyTopic(const String& topic);
 void devSetThingSpeakKey(const String& key);
+String devThingSpeakChannel();  // ThingSpeak channel ID, empty = no dashboard link
+void devSetThingSpeakChannel(const String& channel);  // digits only, blank clears
 uint32_t devBlePasskey();  // six-digit random code, created on first use
 
 String devOtaPassword();     // created on first use, never empty
