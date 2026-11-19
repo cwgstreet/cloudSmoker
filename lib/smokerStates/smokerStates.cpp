@@ -189,6 +189,11 @@ bool sendNtfyAlert(const String& message) {
   http.begin(client, url);
   http.setTimeout(5000);
   http.addHeader("Icon", NTFY_ICON_URL);  // app icon shown in the notification
+  // Tapping the notification opens the ThingSpeak dashboard, if a channel ID is set
+  String chan = devThingSpeakChannel();
+  if (chan.length() > 0) {
+    http.addHeader("Click", String("https://thingspeak.mathworks.com/channels/") + chan + "/private_show");
+  }
   int code = http.POST(message);
   http.end();
   Log.print(F("ntfy HTTP code: "));
