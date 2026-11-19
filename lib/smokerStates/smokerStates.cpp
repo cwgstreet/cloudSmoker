@@ -173,6 +173,10 @@ DoneStatus probeDoneStatus(float tempF, float targetF) {
   return (tempF >= targetF) ? DONE : NOT_DONE;
 }
 
+// Icon shown next to each push notification (must be a public JPEG or PNG URL)
+static const char* NTFY_ICON_URL =
+    "https://raw.githubusercontent.com/cwgstreet/cloudSmoker/main/Images/cloudSmoker2_icon/cloudSmoker2_icon_512.png";
+
 // Sends one message to the ntfy topic over HTTPS. Returns true only on HTTP 200.
 bool sendNtfyAlert(const String& message) {
   if (devNtfyTopic().length() == 0) {
@@ -184,6 +188,7 @@ bool sendNtfyAlert(const String& message) {
   String url = String("https://ntfy.sh/") + devNtfyTopic();
   http.begin(client, url);
   http.setTimeout(5000);
+  http.addHeader("Icon", NTFY_ICON_URL);  // app icon shown in the notification
   int code = http.POST(message);
   http.end();
   Log.print(F("ntfy HTTP code: "));
